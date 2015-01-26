@@ -1,4 +1,15 @@
 ----------------------------------------------------
+Part I: Find Machine Characteristics
+----------------------------------------------------
+What CPU are you using?
+Intel(R) Core(TM) i7-2600 CPU (2 cores)
+
+What is the operating frequency of the cores:
+Max CPU operating frequency is 3.4 GHz
+Current CPU operating frequency is 1.6 GHz
+
+
+----------------------------------------------------
 Part II: Timers
 ----------------------------------------------------
 
