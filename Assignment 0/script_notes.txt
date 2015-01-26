@@ -2,11 +2,22 @@
 Part I: Find Machine Characteristics
 ----------------------------------------------------
 What CPU are you using?
-Intel(R) Core(TM) i7-2600 CPU (2 cores)
+Intel(R) Core(TM) i7-2600 CPU (4 cores)
 
 What is the operating frequency of the cores:
 Max CPU operating frequency is 3.4 GHz
 Current CPU operating frequency is 1.6 GHz
+
+Cache size?
+4x32kB Level 1 cache
+4x256kB Level 2 cache
+8MB Level 3 shared cache
+
+Microarchitecture?
+Sandy Bridge
+
+Number of cores?
+There are 4 cores
 
 
 ----------------------------------------------------
