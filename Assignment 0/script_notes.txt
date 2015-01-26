@@ -1,0 +1,27 @@
+----------------------------------------------------
+Part II: Timers
+----------------------------------------------------
+
+Use -O0 optimization
+-lrt needed for clock_gettime()
+
+simplest timing method - shell-level time command
+ex:
+$time ./test_timers
+real 0m0.993s
+user 0.0.989s
+sys  0m0.002s
+
+Measuring time intervals within code:
+times() - elapsed time in ticks
+gettimeofday() - elapsed time in us
+RDTSC - assembly level rdtsc for cycle count (low overhead, calibration needed)
+clock_gettime() - ns resolution high overhead
+
+Q: What problems do RDTSC methods have?
+With new multiple CPU chips, there is no promise the timestamp counters on the different CPUs are the same. This may lead to the problem where you are measurering time on on CPU, but get a completely different reading on another CPU.
+With power-saving features on the OS, the reading may not be accurate. For example, if the system is hibernated and resumed, you will reset the timer.
+Out of order instructions may also cause the timing command to be run at a different time than expected, skewing time measurement.
+
+The timer can still be useful if these issues are corrected. For example, the timestamp counter can be synchronized before RDTSC is run. Power-saving features can be turned off in the OS, eliminating this problem. Finally by running a serializing version of RDTSC you can keep track of when instructions are run, eliminating skewing from out-of-order instructions.
+
