@@ -6,9 +6,9 @@
 
 #include <stdio.h>
 #include <string.h>		// memset
-#include <sys\time.h>		// get time of day
-#include <sys\times.h>		// get time of day
-#include <sys\mman.h>		// mmap
+#include <sys/time.h>		// get time of day
+#include <sys/times.h>		// get time of day
+#include <sys/mman.h>		// mmap
 #include <unistd.h>		// getpid
 
 // Used by gettimeofday --> NEED TO CHECK THIS AND POSSIBLY CHANGE FOR CORRECT TIMING
