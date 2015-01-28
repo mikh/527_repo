@@ -1,0 +1,34 @@
+
+ Using gettimeofday: 
+
+ Time =     0.207444000
+ Time =     0.019944000
+ Time =     0.001984000
+ Time =     0.000198000
+ Time =     0.000020000
+ Time =     0.000003000
+
+ Using RDTSC: 
+1  406558074
+
+Time =     0.198510984 (cycles = 674937367) 
+Time =     0.019828000 (cycles = 67415203) 
+Time =     0.002004397 (cycles = 6814951) 
+Time =     0.000197943 (cycles = 673005) 
+Time =     0.000020052 (cycles = 68177) 
+Time =     0.000002126 (cycles = 7228) 
+Time =     0.000000236 (cycles = 801) 
+Time =     0.000000037 (cycles = 127) 
+
+ Using times(): 
+
+ Seconds =     0.20000000
+ Seconds =     0.02000000
+ Seconds =     0.00000000
+ Seconds =     0.00000000
+ Seconds =     0.00000000
+ Seconds =     0.00000000
+ Seconds =     0.00000000
+ Seconds =     0.00000000
+ Seconds =     0.00000000
+ done
