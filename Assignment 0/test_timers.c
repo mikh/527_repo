@@ -108,6 +108,7 @@ int main(int argc, char *argv[])
   for (i = 0; i <= 100000000; i++) steps = steps + 3;
   RDTSC(t_1);
   delta_int[0] = t_1.int64-t_0.int64;
+  printf("%d  %d\n", t_1.int32.hi - t_0.int32.hi, t_1.int32.lo, t_0.int32.lo);
 
   RDTSC(t_0);
   for (i = 0; i <= 10000000; i++) steps = steps + 3;
