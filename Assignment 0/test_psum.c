@@ -27,7 +27,7 @@ main(int argc, char *argv[])
   for (i = 0; i < SIZE; i++) in[i] = (float)(i);
   
 
-  for(i = 0; i < 301; i += 50){
+  for(i = 1; i <= 301; i += 50){
 	  // process psum1 for various array sizes and collect timing
 	  clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1);
 	  psum1(in, out, i);
