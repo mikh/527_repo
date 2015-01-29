@@ -28,7 +28,67 @@ main(int argc, char *argv[])
   clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1);
 
   // some stuff that takes one second
-  for(ii = 0; ii < 500023000; ii++){
+  for(ii = 0; ii < 500025000; ii++){
+    step += 3;
+  }
+
+  // read the clock again
+  clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time2);
+
+  // call diff to find the elapsed time and print it.
+  time_e = diff(time1, time2);
+  printf("Elapsed time is %d s and %d ns\n", time_e.tv_sec, time_e.tv_nsec);
+
+    // read the clock
+  clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1);
+
+  // some stuff that takes one second
+  for(ii = 0; ii < 500023555; ii++){
+    step += 3;
+  }
+
+  // read the clock again
+  clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time2);
+
+  // call diff to find the elapsed time and print it.
+  time_e = diff(time1, time2);
+  printf("Elapsed time is %d s and %d ns\n", time_e.tv_sec, time_e.tv_nsec);
+
+    // read the clock
+  clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1);
+
+  // some stuff that takes one second
+  for(ii = 0; ii < 500024500; ii++){
+    step += 3;
+  }
+
+  // read the clock again
+  clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time2);
+
+  // call diff to find the elapsed time and print it.
+  time_e = diff(time1, time2);
+  printf("Elapsed time is %d s and %d ns\n", time_e.tv_sec, time_e.tv_nsec);
+
+    // read the clock
+  clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1);
+
+  // some stuff that takes one second
+  for(ii = 0; ii < 500023500; ii++){
+    step += 3;
+  }
+
+  // read the clock again
+  clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time2);
+
+  // call diff to find the elapsed time and print it.
+  time_e = diff(time1, time2);
+  printf("Elapsed time is %d s and %d ns\n", time_e.tv_sec, time_e.tv_nsec);
+
+    // read the clock
+  clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1);
+
+  // some stuff that takes one second
+  for(ii = 0; ii < 500024000; ii++){
     step += 3;
   }
 
