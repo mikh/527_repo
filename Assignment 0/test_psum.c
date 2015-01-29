@@ -14,6 +14,7 @@
 main(int argc, char *argv[])
 {
   int clock_gettime(clockid_t clk_id, struct timespec *tp);
+  struct timespec diff(struct timespec start, struct timespec end);
   void psum1(float a[], float p[], long int n);
   void psum2(float a[], float p[], long int n);
   float *in, *out;
