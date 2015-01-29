@@ -12,10 +12,10 @@
 
 struct timespec diff(struct timespec start, struct timespec end);
 
-struct timespec {
-  time_t tv_sec; /* seconds */
-  long tv_nsec;  /* nanoseconds */
-};
+//struct timespec {
+//  time_t tv_sec; /* seconds */
+//  long tv_nsec;  /* nanoseconds */
+//};
 
 /******************************************************************************/
 main(int argc, char *argv[])
@@ -32,7 +32,7 @@ main(int argc, char *argv[])
   clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time2);
 
   // call diff to find the elapsed time and print it.
-  time_e = diff(&time1, &time2);
+  time_e = diff(time1, time2);
   printf("Elapsed time is %d s and %d ns\n", time_e.tv_sec, time_e.tv_nsec);
 
 }/* end main */
