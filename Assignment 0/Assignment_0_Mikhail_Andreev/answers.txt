@@ -1,0 +1,136 @@
+Author: Mikhail Andreev
+Class: EC527
+Due Date: 1-29-15
+Machine Used: VLSI21
+
+--------------------------------------------------------------------------
+                                Assignment 0
+--------------------------------------------------------------------------
+
+----------------------------------------------------
+Part I: Find Machine Characteristics
+----------------------------------------------------
+What CPU are you using?
+Intel(R) Core(TM) i7-2600 CPU (4 cores)
+
+What is the operating frequency of the cores:
+Max CPU operating frequency is 3.4 GHz
+Current CPU operating frequency is 1.6 GHz
+
+Cache size?
+4x32kB Level 1 cache
+4x256kB Level 2 cache
+8MB Level 3 shared cache
+
+Microarchitecture?
+Sandy Bridge
+
+Number of cores?
+There are 4 cores
+
+----------------------------------------------------
+Part II: Timers
+----------------------------------------------------
+
+How do you determine accuracy generally?
+ The way you can determine how accurate a timer is, is by starting with repetitive  operation that you perform many times. After this, you can take the average of time taken per run. From there, you decrease the number of iterations, and compare the calculated value with the obtained value. Once those numbers start diverging, you know you have reached the limit of accuracy. 	
+
+What is the resolution?
+Using gettimeofday your resolution can be determined by how few iterations can be done before you don't get a value. From the progression, we can see that if you go below 100 iterations, you will get a time of 0, meaning the maximum resolution of the timer is 1 us.
+
+For RDTSC:
+By taking the total time and dividing by the number of iterations, we have the timer per iteration taking between 3.4~3.6ns, until we get to about 10 iterations where the time jumps to 6.5ns. This means that the accuracy of the timer holds until you get to about the tens of ns, after which timing accuracy gets conflicted with other processes.
+
+For times:
+We can see that the measurements go to 0 if the timing goes below .02s, making that the limit of the timer.
+
+
+Q: What problems do RDTSC methods have?
+With new multiple CPU chips, there is no promise the timestamp counters on the different CPUs are the same. This may lead to the problem where you measure time on CPU, but get a completely different reading on another CPU.
+With power-saving features on the OS, the reading may not be accurate. For example, if the system is hibernated and resumed, you will reset the timer.
+Out of order instructions may also cause the timing command to be run at a different time than expected, skewing time measurement.
+
+
+Can these timers still be useful?
+The timer can still be useful if these issues are corrected. For example, the timestamp counter can be synchronized before RDTSC is run. Power-saving features can be turned off in the OS, eliminating this problem. Finally by running a serializing version of RDTSC you can keep track of when instructions are run, eliminating skewing from out-of-order instructions.
+
+
+What needs to be done for each timer?
+
+gettimeofday
+The processes run by the function do some internal calibration during startup. In the code however, the end result of the function is corrected by dividing by GET_TOD_TICS. All this seems to do however, is convert from microseconds to seconds. Since this constant is set to 1e6, which is correct, there is no need to change anything.
+
+
+RDTSC
+
+The 2 parts of calibration used by the RDTSC is the rollover from microseconds to seconds, and the division by the clockrate. Both of these parts are done incorrectly. For the rollover, the time is stored in a union of a low and a high 32-bit integer, and a 64-bit integer. What this means is that the low 32-bit integer is the lower 32 bits of the 64-bit integer, and the hi 32-bit integer, is the higher 32 bits of the 64-bit integer. The lo is used to store microseconds, and hi is used to store seconds. The problem with doing this is that if the lo microseconds rollover at 1000000, they will increment the hi integer. But this would create a gain of a 2^32 in the 64-bit integer. Since the 64 bit integer is what is used to track the time, it will invalidate the obtained time. The way to fix this is to use the lo and hi separately instead of as one unit. Fortunately in this case this is not an issue as no rollover occurs.
+
+The clockrate is currently set to 2GHz. However, as seen in part 1, this is incorrect for this chip. This must be set to 3.4Ghz to be correct. 
+
+After this is set we get the following values:
+Time =     0.198510984 (cycles = 674937367) 
+Time =     0.019828000 (cycles = 67415203) 
+Time =     0.002004397 (cycles = 6814951) 
+Time =     0.000197943 (cycles = 673005) 
+Time =     0.000020052 (cycles = 68177) 
+Time =     0.000002126 (cycles = 7228) 
+Time =     0.000000236 (cycles = 801) 
+Time =     0.000000037 (cycles = 127) 
+
+Which is much closer to the output obtained by gettimeofday.
+
+times
+Times gets the number of clock ticks that have occurred during the calling process operation. The calibration needed for this is to determine how much time a clock tick takes. The current number used for this clock is correct, so no changes are needed.
+
+
+
+clock_gettime
+
+
+Can get to within 1ms before there seems to be a variance from beyond the code, likely from the way the code functions within memory. The variance oscillates between +1ms to -1ms from 1 second.
+
+
+
+----------------------------------------------------
+Part IV: Performance Evaluation by Cycles
+----------------------------------------------------
+
+For psum1, it takes about 3 cycles per element, and for psum2 it takes about 2.5 cycles per element. This is a lot smaller than the example in B&O. The most likely reason for this is because we are using O1 settings for compilation which will take advantage of certain processor features to decrease the number of computations needed.
+
+----------------------------------------------------
+Part V: Interacting with the compiler
+----------------------------------------------------
+1.
+real 0m0.210s
+user 0m0.206s
+sys  0m0.001s
+
+2.
+real 0m0.006s
+user 0m0.000s
+sys  0m0.002s
+
+4.
+All the calls to steps are eliminated, as well as the for loop. It is much shorter than the O0 version, and does not contain the loop. The reason this happens is because we are doing only writes to the variable, not any reads, so the value there is irrelevant.
+
+5.
+The output after the change is 
+real 0m0.003s
+user 0m0.000s
+sys  0m0.002s
+
+The assembly has changed to store the output of steps in memory. It still does not perform the loop because it has calculated the result directly. That is the main reason the time to run the code has not changed.
+
+
+----------------------------------------------------
+Part VI: QC
+----------------------------------------------------
+
+
+1. No, everything in the assignment has either been covered or should be known from previous courses.
+
+2. About 5 hours, including the reading. Most of the time was spent either researching the different functions, or understanding what needed to be done.
+
+3. Everything was a reasonable time. 
+
+4. Everything within the lab seems to work correctly.
