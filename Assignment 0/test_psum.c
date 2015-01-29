@@ -18,19 +18,30 @@ main(int argc, char *argv[])
   void psum2(float a[], float p[], long int n);
   float *in, *out;
   long int i, j, k;
+  struct timespec time1, time2, time_psum1, time_psum2;
 
   // initialize
   in = (float *) malloc(SIZE * sizeof(*in));
   out = (float *) malloc(SIZE * sizeof(*out));
   for (i = 0; i < SIZE; i++) in[i] = (float)(i);
   
-  // process psum1 for various array sizes and collect timing
 
+  for(i = 0; i < 301; i += 50){
+	  // process psum1 for various array sizes and collect timing
+	  clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1);
+	  psum1(in, out, i);
+	  clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time2);
+	  time_psum1 = diff(time1, time2);
 
-  // process psum2 for various array sizes and collect timing
+	  // process psum2 for various array sizes and collect timing
+	  clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1);
+	  psum2(in, out, i);
+	  clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time2);
+	  time_psum2 = diff(time1, time2);
 
-
-  // output timing
+	  // output timing
+	  printf("%d,\t%d,\t%d\n", i, time_psum1.tv_sec*1000000000+time_psum1.tv_nsec, time_psum2.tv_sec*1000000000+time_psum2.tv_nsec)
+  }
 
   
 }/* end main */
