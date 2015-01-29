@@ -96,8 +96,10 @@ Times gets the number of clock ticks that have occured during the calling proces
 
 
 
+clock_gettime
 
 
+Can get to within 1ms before there seems to be a variance from beyond the code, likely from the way the code functions within memory. The variance oscillates between +1ms to -1ms from 1 second.
 
 
 
