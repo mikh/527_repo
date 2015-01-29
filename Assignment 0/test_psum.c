@@ -41,7 +41,7 @@ main(int argc, char *argv[])
 	  time_psum2 = diff(time1, time2);
 
 	  // output timing
-	  printf("%d,\t%d,\t%d\n", i, time_psum1.tv_sec*1000000000+time_psum1.tv_nsec, time_psum2.tv_sec*1000000000+time_psum2.tv_nsec)
+	  printf("%d,\t%d,\t%d\n", i, time_psum1.tv_sec*1000000000+time_psum1.tv_nsec, time_psum2.tv_sec*1000000000+time_psum2.tv_nsec);
   }
 
   
