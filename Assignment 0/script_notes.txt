@@ -92,7 +92,7 @@ Time =     0.000000037 (cycles = 127)
 Which is much closer to the output obtained by gettimeofday.
 
 times
-Times gets the number of clock ticks that have occured during the calling process operation. The calibration needed for this is to determine how much time a clock tick takes. The current number used is incorrect. 
+Times gets the number of clock ticks that have occured during the calling process operation. The calibration needed for this is to determine how much time a clock tick takes. The current number used for this clock is correct, so no changes are needed.
 
 
 
@@ -128,8 +128,12 @@ sys  0m0.002s
 All the calls to steps are eliminated, as well as the for loop. It is much shorter than the O0 version, and does not contain the loop. The reason this happens is because we are doing only writes to the variable, not any reads, so the value there is irrelevant.
 
 5.
+The output after the change is 
+real 0m0.003s
+user 0m0.000s
+sys  0m0.002s
 
-
+The assembly has changed to store the output of steps in memory. It still does not perform the loop because it has calculated the result directly. That is the main reason the time to run the code has not changed.
 
 
 asdfasdf
