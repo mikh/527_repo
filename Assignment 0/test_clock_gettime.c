@@ -28,7 +28,7 @@ main(int argc, char *argv[])
   clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1);
 
   // some stuff that takes one second
-  for(ii = 0; ii < 500025000; ii++){
+  for(ii = 0; ii < 500024900; ii++){
     step += 3;
   }
 
@@ -43,7 +43,7 @@ main(int argc, char *argv[])
   clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1);
 
   // some stuff that takes one second
-  for(ii = 0; ii < 500023555; ii++){
+  for(ii = 0; ii < 500024950; ii++){
     step += 3;
   }
 
@@ -58,7 +58,7 @@ main(int argc, char *argv[])
   clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1);
 
   // some stuff that takes one second
-  for(ii = 0; ii < 500024500; ii++){
+  for(ii = 0; ii < 500028500; ii++){
     step += 3;
   }
 
@@ -73,7 +73,7 @@ main(int argc, char *argv[])
   clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1);
 
   // some stuff that takes one second
-  for(ii = 0; ii < 500023500; ii++){
+  for(ii = 0; ii < 500028555; ii++){
     step += 3;
   }
 
@@ -88,7 +88,7 @@ main(int argc, char *argv[])
   clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1);
 
   // some stuff that takes one second
-  for(ii = 0; ii < 500024000; ii++){
+  for(ii = 0; ii < 500027500; ii++){
     step += 3;
   }
 
