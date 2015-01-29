@@ -75,17 +75,24 @@ The processes run by the function do some internal calibration during startup. I
 
 RDTSC
 
-<<<<<<< HEAD
-The 2 parts of calibration used by the RDTSC is the rollover from microseconds to seconds, and the division by the clockrate. Both of these parts are done incorrectly. For the rollover, the time is stored in a union of a low and a high 32-bit integer, and a 64-bit integer. What this means is that the low 32-bit integer is the lower 32 bits of the 64-bit integer, and the hi 32-bit integer, is the higher 32 bits of the 64-bit integer. The lo is used to store microseconds, and hi is used to store seconds. The problem with doing this is that if the lo microseconds rollover at 1000000, they will increment the hi integer. But this would create a gain of a 2^32 in the 64-bit integer. Since the 64 bt integer is what is used to track the time, it will invalidate the obtained time. The way to fix this is to use the lo and hi seperately instead of as one unit. 
+The 2 parts of calibration used by the RDTSC is the rollover from microseconds to seconds, and the division by the clockrate. Both of these parts are done incorrectly. For the rollover, the time is stored in a union of a low and a high 32-bit integer, and a 64-bit integer. What this means is that the low 32-bit integer is the lower 32 bits of the 64-bit integer, and the hi 32-bit integer, is the higher 32 bits of the 64-bit integer. The lo is used to store microseconds, and hi is used to store seconds. The problem with doing this is that if the lo microseconds rollover at 1000000, they will increment the hi integer. But this would create a gain of a 2^32 in the 64-bit integer. Since the 64 bt integer is what is used to track the time, it will invalidate the obtained time. The way to fix this is to use the lo and hi seperately instead of as one unit. Fortunately in this case this is not an issue as no rollover occurs.
 
-The clockrate is currently set to 2GHz. However, as seen in part 1, this is incorrect for this chip. This must be set to 1.6Ghz to be correct. 
+The clockrate is currently set to 2GHz. However, as seen in part 1, this is incorrect for this chip. This must be set to 3.4Ghz to be correct. 
+
+After this is set we get the following values:
+Time =     0.198510984 (cycles = 674937367) 
+Time =     0.019828000 (cycles = 67415203) 
+Time =     0.002004397 (cycles = 6814951) 
+Time =     0.000197943 (cycles = 673005) 
+Time =     0.000020052 (cycles = 68177) 
+Time =     0.000002126 (cycles = 7228) 
+Time =     0.000000236 (cycles = 801) 
+Time =     0.000000037 (cycles = 127) 
+
+Which is much closer to the output obtained by gettimeofday.
 
 times
 Times gets the number of clock ticks that have occured during the calling process operation. The calibration needed for this is to determine how much time a clock tick takes. The current number used is incorrect. 
-=======
-
-
->>>>>>> 7a4bf729006364bc6c02fb22dfac2f85267bd27b
 
 
 
