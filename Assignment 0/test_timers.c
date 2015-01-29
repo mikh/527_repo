@@ -18,7 +18,7 @@
 #define CLK_RATE 3.4e9 
 
 // Used by get_seconds --> NEED TO CHECK THIS AND POSSIBLY CHANGE FOR CORRECT TIMING
-#define GET_SECONDS_TICS 100	z
+#define GET_SECONDS_TICS 100000
 
 struct timeval tim;    // used by gettimeofday
 
