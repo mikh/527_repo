@@ -21,14 +21,14 @@ struct timespec diff(struct timespec start, struct timespec end);
 main(int argc, char *argv[])
 {
   struct timespec time1, time2, time_e;
-  int ii, step = 0;
+  long ii, step = 0;
   int clock_gettime(clockid_t clk_id, struct timespec *tp);
 
   // read the clock
   clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1);
 
   // some stuff that takes one second
-  for(ii = 0; ii < 50000000; ii++){
+  for(ii = 0; ii < 500000000; ii++){
     step += 3;
   }
 
