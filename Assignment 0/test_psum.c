@@ -27,6 +27,14 @@ main(int argc, char *argv[])
   for (i = 0; i < SIZE; i++) in[i] = (float)(i);
   
 
+	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1);
+	  psum1(in, out, 1);
+	  clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time2);
+	  	  clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1);
+	  psum2(in, out, 1);
+	  clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time2);
+	  printf("%d,\t%d,\t%d\n", 1, time_psum1.tv_sec*1000000000+time_psum1.tv_nsec, time_psum2.tv_sec*1000000000+time_psum2.tv_nsec);
+
   for(i = 1; i <= 301; i += 50){
 	  // process psum1 for various array sizes and collect timing
 	  clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1);
