@@ -28,7 +28,7 @@ main(int argc, char *argv[])
   clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1);
 
   // some stuff that takes one second
-  for(ii = 0; ii < 500050000; ii++){
+  for(ii = 0; ii < 500005000; ii++){
     step += 3;
   }
 
