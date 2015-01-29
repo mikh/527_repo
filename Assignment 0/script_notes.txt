@@ -104,17 +104,35 @@ Can get to within 1ms before there seems to be a variance from beyond the code, 
 
 
 
+----------------------------------------------------
+Part IV: Performance Evaulation by Cycles
+----------------------------------------------------
+For psum1, it takes about 3 cycles per element, and for psum2 it takes about 2.5 cycles per element. This is a lot smaller than the example in B&O. The most likely reason for this is because we are using O1 settings for compilation which will take advantage of certain processor features to decrease the number of computations needed.
+
+
+
+----------------------------------------------------
+Part V: Interacting with the compiler
+----------------------------------------------------
+1.
+real 0m0.210s
+user 0m0.206s
+sys  0m0.001s
+
+2.
+real 0m0.006s
+user 0m0.000s
+sys  0m0.002s
+
+4.
+All the calls to steps are eliminated, as well as the for loop. It is much shorter than the O0 version, and does not contain the loop. The reason this happens is because we are doing only writes to the variable, not any reads, so the value there is irrelevant.
+
+5.
 
 
 
 
-
-
-
-
-
-
-
+asdfasdf
 
 
 

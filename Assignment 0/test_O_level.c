@@ -16,6 +16,8 @@ int main(int argc, char *argv[])
   
   for (i = 0; i <= 100000000; i++) steps = steps + 3;
 
+  	printf("%d\n", steps);
+
   printf("\n done \n");
 }
 
