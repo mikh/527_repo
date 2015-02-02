@@ -10,8 +10,6 @@
 #define GIG 1000000000
 #define CPG 2.53           // Cycles per GHz -- Adjust to your computer
 
-#define CLK_RATE 2.53e9 
-
 #define BASE  30
 #define ITERS 200
 #define DELTA 1
@@ -27,17 +25,6 @@ typedef struct {
   long int len;
   data_t *data;
 } vec_rec, *vec_ptr;
-
-typedef union {        // used by RDTSC
-  unsigned long long int64;
-  struct {unsigned int lo, hi;} int32;
-} tsc_counter;
-
-// RDTSC is an intrinsic that executes the assembly language instruction rdtsc
-#define RDTSC(cpu_c)              \
-  __asm__ __volatile__ ("rdtsc" : \
-  "=a" ((cpu_c).int32.lo),        \
-  "=d"((cpu_c).int32.hi))
 
 /*****************************************************************************/
 main(int argc, char *argv[])

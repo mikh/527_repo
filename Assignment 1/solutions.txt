@@ -1,0 +1,46 @@
+Mikhail Andreev
+EC527 Assignment 1
+Due: 2/3/15
+Using: hpcl-18 (2.53 GHz)
+
+Solutions:
+
+---------------------------------------------------------------------------------------------
+-   Part I: Testing Code Transformations: Optimize combining data from 2D arrays            -
+---------------------------------------------------------------------------------------------
+
+Q1.
+
+Q: How big can you make the array before you run into execution problems?
+
+A:
+BASE   |  ITERS   | DELTA  | EXE SPEED
+--------------------------------------
+  0    |   300    |  200   |  FAIL
+  0    |   200    |  200   |  FAIL
+  0    |   30     |  200   |  10s<
+  0    |   150    |  200   |  FAIL
+  0    |   100    |  200   |  >2m
+  0    |   125    |  200   |  >2m
+  0    |   131    |  200   |  FAIL
+  0    |   130    |  200   |  >2m MAX
+  0    |   80     |  200   |  2m
+  0    |   50     |  200   |  30s
+  0    |   60     |  200   |  47s
+
+We can make the array at a maximum size of 26200 elements before the code completely crashes. This gives us BASE = 0, ITERS = 130, DELTA = 200, or another combination with the same end result. If we make the arbitrary decision that we don't want to wait for any code that takes longer than 2 minutes, we can say that a maxsize of 16200 (BASE = 0, ITERS = 80, DELTA = 200), is our limit.
+
+Q: Which function is faster?
+
+A:
+combine2d is faster by about 1.5 times on average. In certain cases for specific array sizes, it can be as much as 5.25 times faster.
+
+Q: At what array sizes do interesting things happen?
+
+A:
+6400, 8000, 9600, 11200, 12800, 14400, 16000
+
+These are intersting locations because the execution time for combine2d_rev spikes sharply at these areas, indicating particularly bad memory optimization.
+
+Q2.
+

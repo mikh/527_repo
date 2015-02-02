@@ -8,13 +8,15 @@
 #include <math.h>
 
 #define GIG 1000000000
-#define CPG 2.53           // Cycles per GHz -- Adjust to your computer
+#define CPG 2.0           // Cycles per GHz -- Adjust to your computer
 
-#define CLK_RATE 2.53e9 
+#define BASE  0
+#define ITERS 41
+#define DELTA 200
 
-#define BASE  30
-#define ITERS 200
-#define DELTA 1
+#define START_ITERS 1
+#define ITERS_SWEEP_PARTS 20
+
 
 #define OPTIONS 2
 #define IDENT 0
@@ -27,17 +29,6 @@ typedef struct {
   long int len;
   data_t *data;
 } vec_rec, *vec_ptr;
-
-typedef union {        // used by RDTSC
-  unsigned long long int64;
-  struct {unsigned int lo, hi;} int32;
-} tsc_counter;
-
-// RDTSC is an intrinsic that executes the assembly language instruction rdtsc
-#define RDTSC(cpu_c)              \
-  __asm__ __volatile__ ("rdtsc" : \
-  "=a" ((cpu_c).int32.lo),        \
-  "=d"((cpu_c).int32.hi))
 
 /*****************************************************************************/
 main(int argc, char *argv[])
@@ -58,17 +49,21 @@ main(int argc, char *argv[])
 
   long int i, j, k;
   long int time_sec, time_ns;
+  long int c_iters;
+
   long int MAXSIZE = BASE+(ITERS+1)*DELTA;
 
   printf("\n Hello World -- 2D Combine \n");
 
-  // declare and initialize the vector structure
-  vec_ptr v0 = new_vec(MAXSIZE);
-  data_holder = (data_t *) malloc(sizeof(data_t));
-  init_vector(v0, MAXSIZE);
+  for(c_iters = START_ITERS; c_iters <= ITERS; c_iters += (ITERS-START_ITERS)/ITERS_SWEEP_PARTS){
+    MAXSIZE = BASE + (c_iters+1)*DELTA;
+    vec_ptr v0 = new_vec(MAXSIZE);
+    data_holder = (data_t *) malloc(sizeof(data_t));
+    init_vector(v0, MAXSIZE);
+  
 
   OPTION = 0;
-  for (i = 0; i < ITERS; i++) {
+  for (i = 0; i < c_iters; i++) {
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1);
     set_vec_length(v0,BASE+(i+1)*DELTA);
     combine2D(v0, data_holder);
@@ -77,7 +72,7 @@ main(int argc, char *argv[])
   }
 
   OPTION++;
-  for (i = 0; i < ITERS; i++) {
+  for (i = 0; i < c_iters; i++) {
     set_vec_length(v0,BASE+(i+1)*DELTA);
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1);
     combine2D_rev(v0, data_holder);
@@ -85,7 +80,7 @@ main(int argc, char *argv[])
     time_stamp[OPTION][i] = diff(time1,time2);
   }
 
-  for (i = 0; i < ITERS; i++) {
+  for (i = 0; i < c_iters; i++) {
     printf("\n%d, ", BASE+(i+1)*DELTA);
     for (j = 0; j < OPTIONS; j++) {
       if (j != 0) printf(", ");
@@ -97,6 +92,7 @@ main(int argc, char *argv[])
   printf("\n");
   free_vec(v0);
   free(data_holder);
+}
   
 }/* end main */
 /*********************************/
