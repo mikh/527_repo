@@ -11,7 +11,7 @@
 #define CPG 2.0           // Cycles per GHz -- Adjust to your computer
 
 #define BASE  0
-#define ITERS 300
+#define ITERS 200
 #define DELTA 200
 
 #define OPTIONS 2
