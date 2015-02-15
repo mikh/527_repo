@@ -1,0 +1,66 @@
+Attached to this topic you will find a file bigNumT.h (1), which is a templatized version of the bigNum class you used in the last homework for arithmetic on arbitrarily sized integers. The header and implementation might seem intimidating at first, but if you work through them, you will see that they basically implement arithmetic as you learned it in nursery school.
+
+For example, to add 2 and 3 with big numbers, you would use the following main function:
+
+
+#include "bigNum.h"
+
+int main() {
+        bigNumT<> foo(2);
+        bigNumT<> bar(3);
+        bigNumT<> answer = foo+bar;
+        cout << answer.print() << endl;
+}
+
+
+Note that bigNumT takes a template parameter STORAGE which indicates what type of data structure is used to store the digits of a number. By default, it is a vector of integers (i.e. vector<int>).
+
+3a. Subtraction [10 points] 
+
+You will notice that the subtraction operator (operator-) has not been implemented. Create a subclass bigNumTwithMinus of bigNumT that implements the subtraction operator and is templatized as is bigNumT. Attach your solution as 3a.h and make sure to test it properly, as we will heavily penalize incorrect code.
+
+3b. Running time [20 points] 
+
+Consider bigNumT 's operator+ adding two numbers with n digits each.
+	
+	What is the worst-case asymptotic running time with bigNumT uses vector for storage?
+	What is the worst-case asymptotic running time with bigNumT uses list for storage?
+
+Notes:
+Running times for stl methods can be found in the online documentation. For example, vector::size has constant running time.
+You may assume that vector does not require any reallocation on its back end (i.e. it is allocated a large chunk of memory).
+
+3c. Collatz [15 points] 
+
+Consider the following code for computing how many Collatz iterations reduce a given input to 1.
+
+/**
+* @requires  >= 1
+* @param nn The starting parameter.
+* @return The number of Collatz calls needed to reach 1 from the parameter .
+*         This implementation is iterative to avoid stack overflows
+*/
+template <typename T>
+T CollatzCount(T nn) {
+        T ONE("1");   T TWO("2");   T THREE("3");
+        
+        T result("1");
+        for (;!(nn==ONE);result=result+ONE) {
+                if (TWO*(nn/TWO)==nn) // i.e. nn is even
+                nn = nn/TWO;
+                else                  // i.e. nn is odd
+                nn = THREE*nn+ONE;
+        }
+        return result;
+}
+
+
+What is the C++ code for running this function on a bigNumT 81172150 using a list < int > to store digits?
+
+Order the following methods of storing bigNumT digits from (i) fastest to slowest and (ii) least memory to most memory(2), in terms of a CollatzCount computation on a large parameter nn. Make sure to provide a short explanation for your orderings.
+
+The default vector < int >
+deque < int>
+list < int>
+
+Design a storage data structure that makes CollatzCount with as little memory as possible. Upload your design on the course TWiki for a chance at extra credit.

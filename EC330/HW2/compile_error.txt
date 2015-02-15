@@ -1,0 +1,7 @@
+In file included from main.cpp:2:0:
+3a.h: In member function 'bigNumTwithMinus<T>& bigNumTwithMinus<STORAGE>::operator-(bigNumTwithMinus<STORAGE>&)':
+3a.h:37:9: error: 'digits' was not declared in this scope
+3a.h:59:9: error: 'results' was not declared in this scope
+3a.h:71:9: error: 'results' was not declared in this scope
+main.cpp: In function 'int main()':
+main.cpp:12:36: error: conversion from 'bigNumT<>' to non-scalar type 'bigNumTwithMinus<>' requested

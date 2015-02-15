@@ -1,0 +1,343 @@
+---+EC330 - Spring 2013 - Homework 2  for WeizhouHe
+%TOC%
+
+---++_Assigned:_  Wednesday, February 11, 2015
+---++_Due:_  Thursday, February 19, 2015 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(WeizhouHe),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(10+$MOD(%PHI%,7))}%
+   * Set PHI2 = %CALCULATE{$EVAL(11+$MOD(%PHI%,11))}%
+   * Set PHI3 = %CALCULATE{$EVAL(12+$MOD(%PHI%,13))}%
+-->
+
+
+---+ Problem 1 *[Recurrences II, 40 points]*
+---++ a. T(n) = T(n-1) + n<sup> %PHI1% </sup>.
+---+++ !!Upper bound & Lower bound:
+<latex> T(n) = \Theta(n^{\Phi+1})</latex>
+
+
+---+++ !!Explanation:
+Expanding out the T(n-1), we can see that this becomes:<br><br>
+<latex> T(n) = n^{\Phi} + (n-1)^{\Phi} + (n-2)^{\Phi} + ... = \sum_{k=1}^n k^{\Phi}</latex><br><br>
+
+There are 2 ways to prove this. You can either start at the definition for <latex> \sum_{k=1}^n k^3 </latex> and integrate both sides until you reach the correct <latex>\Phi</latex>, or you can bound the summation  by integrals. Here I will show the second method:<br><br>
+A summation can be bounded by:<br><br>
+<latex> \int_{m-1}^{n} f(x) dx \leq \sum_{k=m}^n f(k) \leq \int_{m}^{n+1} f(x)dx </latex><br><br>
+If f(k) is monotonically increasing, as is the case here.<br><br>
+<latex> \int_{0}^{n} x^{\Phi} dx \leq \sum_{k=1}^{n} k^{\Phi} \leq \int_{1}^{n+1} x^{\Phi} dx </latex><br><br>
+<latex> \frac{x^{\Phi+1}}{\Phi+1} \leq \sum_{k=1}^{n} k^{\Phi} \leq \frac{x^{\Phi+1}}{\Phi+1}</latex><br><br>
+<latex> \frac{n^{\Phi+1}}{\Phi+1} \leq \sum_{k=1}^{n} k^{\Phi} \leq \frac{(n+1)^{\Phi+1}}{\Phi+1}</latex><br><br>
+<latex> \Theta(n^{\Phi+1}) \leq \sum_{k=1}^{n} k^{\Phi} \leq \Theta(n^{\Phi+1})</latex><br><br>
+<latex> T(n) = \Theta(n^{\Phi+1}) </latex><br><br><br>
+
+---++ b. T(n) = 3 T(n/2) + n<sup>2</sup>.
+---+++ !!Upper bound & Lower bound:
+<latex>T(n) = \Theta(n^2)</latex>
+
+---+++ !!Explanation:
+Using the master method, we compare <latex> n^2 </latex> to <latex> n^{\log_{2}(3)} </latex>, which is <latex> n^1 < n^{\log_{2}(3)} < n^2 </latex>.<br><br>
+<latex>n^2 = \Omega(n^{\log_{2}(3)+\epsilon})</latex>  if  <latex>\epsilon < 2-\log_{2}(3)</latex><br><br>
+This puts us into case 3 of the master method, at which point we have to do a second check:<br><br>
+<latex> 3(\frac{n}{2})^2 \leq cn^2</latex> if <latex>\frac{3}{4} \leq c < 1</latex><br><br>
+<latex> T(n) = \Theta(n^2) </latex>
+
+---++ c. T(n) = %PHI2% T(n/3) + n<sup>2</sup>.
+---+++ !!Upper bound & Lower bound:
+<latex> T(n) = \Theta(n^{\log_3 \Phi}\lg(n)) </latex> or <latex> T(n) = \Theta(n^{\log_3 \Phi}) </latex> or <latex>T(n) = \Theta(n^2)</latex> depending on the value of <latex> \Phi</latex>
+
+---+++ !!Explanation:
+This problem can be solved through the master method, whose cases will change depending on the value of <latex>\Phi</latex>.<br><br>
+If <latex> log_{3} \Phi = 2 </latex> then, it is case 2, so: <latex> T(n) = \Theta(n^{\log_3 \Phi}\lg(n))</latex><br><br>
+If <latex> log_{3} \Phi > 2 </latex> then, it is case 1, so: <latex> T(n) = \Theta(n^{\log_3 \Phi})</latex><br><br>
+If <latex> log_{3} \Phi < 2 </latex> then, it is case 3, then check:<br><br>
+<latex> \frac{\Phi}{9}n^2 \leq cf(n) </latex><br><br>
+This is valid if <latex>\frac{\Phi}{9} < 1</latex> which is always true, since if <latex>\Phi \geq 9 </latex> then, this would no longer be case 3.<br><br>
+<latex> T(n) = \Theta(n^2)</latex><br><br>
+
+
+---++ d. T(n) = %CALCULATE{$EVAL(%PHI1% + 1)}% T(n/ %PHI1%) + n log n.
+---+++ !!Upper bound & Lower bound:
+<latex>T(n) = \Theta(n^{\log_{\Phi} \Phi+1})</latex><br><br>
+
+---+++ !!Explanation:
+<latex>n^{\log_{\Phi} \Phi+1} \textgreater 1</latex><br><br>
+So, we are using case 1 of the master method, since:<br><br>
+<latex>n \log(n) = O(n^{\log_{\Phi} (\Phi+1) - \epsilon}) </latex><br><br>
+Valid if epsilon <latex> 0 < \epsilon \textless \log_{\Phi}^{\Phi+1}-1</latex><br><br>
+<latex>T(n) = \Theta(n^{\log_{\Phi}(\Phi+1)})</latex><br><br>
+
+---++ e. T(n) = 4 T(n/2) +  n <sup>2</sup>  &#8730;n.
+---+++ !!Upper bound & Lower bound:
+<latex>T(n) = \Theta(n^2\sqrt(n))</latex><br><br>
+
+---+++ !!Explanation:
+Using the Master method, we compare <latex> n^{\log_{2}4} = n^2 </latex> to <latex> n^2\sqrt(n) = n^{2.5}</latex><br><br>
+<latex> n^{2.5} = \Omega(n^2)</latex><br><br>
+So, we are using case 3, and must make the second check:<br><br>
+<latex> 4\frac{n^{2.5}}{2^{2.5}} \leq cn^{2.5} </latex><br><br>
+This is valid for <latex>\frac{1}{\sqrt(2)} \leq c \textless 1 </latex><br><br>
+<latex>T(n) = \Theta(n^2\sqrt(n))</latex>
+
+---++ f. T(n) = n(T(n/2) <sup>2</sup>).
+---+++ !!Upper bound & Lower bound:
+<latex>T(n) = \Theta(2^{(\log(n))^3})</latex><br><br>
+
+---+++ !!Explanation:
+Expanding out the T(n/2) term we get:<br><br>
+<latex>T(n) = n(\frac{n}{2})^2(\frac{n}{4})^4(\frac{n}{8})^8...</latex><br><br>
+<latex>T(n) = \prod_{i=0}^{\log(n)} (\frac{n}{2^i})^{2^i}</latex><br><br>
+<latex>\log(T(n)) = \sum_{i=0}^{\log(n)} \log(\frac{n}{2^i}^{2^i})</latex><br><br>
+<latex>\sum_{i=0}^{\log(n)} 2i \log(\frac{n}{2i}) </latex><br><br>
+<latex>\sum_{i=0}^{\log(n)} 2i(\log(n)-\log(2i)) </latex><br><br>
+<latex>\sum_{i=0}^{\log(n)} 2i \log(n) - (\sum_{i=0}^{\log(n)} 2i \log(2) + \sum_{i=0}^{\log(n)} 2i\log(i))</latex><br><br>
+<latex>2\log(n)\sum_{i=0}^{\log(n)} i - 2 \sum_{i=0}^{\log(n)} i - 2\sum_{i=0}^{\log(n)} i\log(i)</latex><br><br>
+<latex>2\log(n)\frac{\log(n)(\log(n)+1)}{2} - 2\frac{\log(n)(\log(n)+1)}{2} - 2\sum_{i=0}^{\log(n)} i\log(i)</latex><br><br>
+Using the integral of the term within the last summation:<br><br>
+<latex>\int i\log(i) = \frac{1}{4}i^2(2\log(i)-1)</latex><br><br>
+We can bound the final summation as <latex> \Theta(\log(n)^2\log(\log(n)))</latex><br><br>
+<latex>\lg(T(n)) = \Theta(\log(n)^3) - \Theta(\log(n)^2) - \Theta(\log(n)^2\log(\log(n)))</latex>
+<latex>T(n) = \Theta(2^{(\log(n))^3})</latex><br><br>
+
+---++ g. T(n) = T(n-1) + %PHI2% lg n.
+---+++ !!Upper bound & Lower bound:
+<latex>T(n) = \Theta(n\log(n))</latex><br><br>
+
+---+++ !!Explanation:
+Expanding out T(n-1) we get:<br><br>
+<latex>T(n) = \Phi(\log(n)) + \Phi(\log(n-1)) + \Phi(\log(n-2)) + ...</latex><br><br>
+<latex>\Phi(\log(n) + \log(n-1) + \log(n-2) + ...)</latex><br><br>
+<latex>T(n) = \Phi \log(n!)</latex><br><br>
+Using Stirling's approximation, we get:<br><br>
+<latex>\Phi(n\log(n) - n + O(\log(n)))</latex><br><br>
+<latex>T(n) = \Theta(n\log(n))</latex><br><br>
+
+---++ h. T(n) = T(n-1) + log<sup>2</sup>(n).
+---+++ !!Upper bound & Lower bound:
+<latex>T(n) = \Theta(n\log^2(n))</latex><br><br>
+
+---+++ !!Explanation:
+Expanding out as in the previous problem we have:<br><br>
+<latex>T(n) = \sum_{i=1}^n \log^2(i) </latex><br><br>
+<latex>\sum_{i=2}^n \log^2(i) + \log^2(1) </latex><br><br>
+<latex>\log^2(x)</latex> is monotonically increasing as long as x >= 1. So using this fact and the bounding:<br><br>
+<latex> \int_{m-1}^{n} f(x) dx \leq \sum_{k=m}^n f(k) \leq \int_{m}^{n+1} f(x)dx </latex><br><br>
+And using the integral:<br><br>
+<latex>\int \log^2(x)dx = x(\log^2(x) - 2\log(x) + 2) + C</latex><br><br>
+We can bound the summation as:<br><br>
+<latex>\Theta(n\log^2(n)) \leq \sum_{i=2}^n \log^2(i) \leq \Theta(n\log^2(n))</latex><br><br>
+<latex>T(n) = \Theta(n\log^2(n))</latex><br><br>
+
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2 *[Applied recurrences, 15 points]*
+---++ 2a.
+---+++ !!Recurrence
+<latex>T(n) = n^2 </latex><br><br>
+
+---+++ !!Running Time
+<latex> T = \Theta(n^2)</latex><br><br>
+
+---+++ !!Explanation
+There is no recurrence in this code. This a double for loop with the inner loop occuring as a sequence of:<br><br>
+<latex>1 + 2 + 3 + 4 + ...</latex><br><br>
+Up until n. This gives the summation:<br><br>
+<latex>T(n) = \sum_{i=1}^n i = \frac{n(n+1)}{2}</latex><br><br>
+<latex>T(n) = \Theta(n^2) </latex><br><br>
+
+---++ 2b.
+---+++ !!Recurrence
+<latex>T(n) = T(n/\Phi) + 1</latex><br><br>
+
+---+++ !!Running Time
+<latex>T = \Theta(\log_{\Phi} n)</latex><br><br>
+
+---+++ !!Explanation
+The first if statement will only return 0, if nn is 0, so it only adds 1 to running time. The recurrence at the end will divide nn down by <latex>\Phi</latex> each time it is called.<br><br>
+<latex>T(n) = \sum_{i=0}^{\log_{\Phi}n} 1</latex><br><br>
+<latex>T(n) = \Theta(\log_{\Phi} n)</latex><br><br>
+
+---++ 2c.
+---+++ !!Recurrence
+<latex>T(n) = n + O(1)</latex>
+
+---+++ !!Running Time
+<latex>T = \Theta(n)</latex>
+
+---+++ !!Explanation
+The function spends n-15 time within the while loop. When nn = 15, it exits the while loop, and enters the recurrences. However, since the maximum value of the input to each of the recurrences is 15/2 or 15/4 respectively, and since the recurrences cannot enter the while loop since their input is so low, that part of the function can be treated as taking constant time.
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+Problem 3 *[Collatz, 45 points]*
+---++ 3a.  Subtraction [10 points]
+Attach your solution as =3a.h=.
+
+---++ 3b.  Running time [20 points]
+---+++ i. Vector
+----++++ !!Running time:
+<latex>T(n) = \Theta(n)</latex><br><br>
+
+----++++ !!Explanation:
+%CODE{"cpp"}%
+template <typename T>
+bigNumT<T>& bigNumT<T>::operator+(bigNumT<T>& addend) {
+    bigNumT<T> first, second;    //O(1)
+    bigNumT<T> *result = new bigNumT<T>();  //construction takes O(n+1) time
+
+    if (digits.size() > addend.digits.size()) { //O(1)
+                                                 
+        first = addend;     //O(1)  only manipulating pointers
+        second = *this;     //O(1)
+    } else {
+        first = *this;      //O(1)
+        second = addend;    //O(1)
+    }
+
+    int ii;
+    int carry = 0;
+    typename T::iterator first_ii = first.digits.begin();   //O(1)
+    typename T::iterator second_ii = second.digits.begin(); //O(1)
+    for (; first_ii != first.digits.end(); first_ii++, second_ii++) {  //O(n)
+        int sum = *first_ii + *second_ii;                   //O(1)
+        result->digits.push_back((sum + carry) % base);     //Assuming that allocation is large, then this takes O(1). If vector resizing were to occur, this could take much longer
+        if (sum + carry > (base - 1)) {                    //O(1)
+            carry = 1;
+        } else {
+            carry = 0;
+        }
+    }
+
+    for (; second_ii != second.digits.end(); second_ii++)   //since both numbers are n digits long, this loop does not actually run, so O(1)
+        if (carry) {
+            int dig = (*second_ii + carry);
+            result->digits.push_back(dig % base);
+            carry = (dig > (base - 1) ? dig / base : 0);
+        } else
+            result->digits.push_back(*second_ii);
+    if (carry)  //O(1)
+        result->digits.push_back(carry); //O(1)
+
+    return *result;
+}
+
+//Total: O(n) + O(n)*O(1) + O(1) = O(n)
+%ENDCODE%
+
+---+++ ii. List
+----++++ !!Running time:
+<latex>T(n) = \Theta(n)</latex><br><br>
+
+----++++ !!Explanation:
+%CODE{"cpp"}%
+template <typename T>
+bigNumT<T>& bigNumT<T>::operator+(bigNumT<T>& addend) {
+    bigNumT<T> first, second; 
+    bigNumT<T> *result = new bigNumT<T>();  //assume enough space is allocated initially, O(n)
+
+    if (digits.size() > addend.digits.size()) { //assuming most recent version of C++, this is O(1), older versions of the compiler may take up to O(n)
+                                                 
+        first = addend;
+        second = *this;
+    } else {
+        first = *this;
+        second = addend;
+    }
+
+    int ii;
+    int carry = 0;
+    typename T::iterator first_ii = first.digits.begin();  // O(1)
+    typename T::iterator second_ii = second.digits.begin(); //O(1)
+    for (; first_ii != first.digits.end(); first_ii++, second_ii++) {   //O(n)
+        int sum = *first_ii + *second_ii;                   //O(1)
+        result->digits.push_back((sum + carry) % base);     //O(1)
+        if (sum + carry > (base - 1)) {                     //O(1)
+            carry = 1;
+        } else {
+            carry = 0;
+        }
+    }
+
+    for (; second_ii != second.digits.end(); second_ii++)   //O(1) since this loop does not run
+        if (carry) {
+            int dig = (*second_ii + carry);
+            result->digits.push_back(dig % base);
+            carry = (dig > (base - 1) ? dig / base : 0);
+        } else
+            result->digits.push_back(*second_ii);
+    if (carry)  //O(1)
+        result->digits.push_back(carry);
+
+    return *result;
+}
+
+//Total: O(n)
+%ENDCODE%
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---++ 3c. Collatz [15 points]
+---+++ i. Code
+%CODE{"cpp"}%
+#include "bigNumT.h"
+#include <iostream>
+#include <cstdio>
+#include <list>
+
+
+using namespace std;
+
+/**
+* @requires  >= 1
+* @param nn The starting parameter.
+* @return The number of Collatz calls needed to reach 1 from the parameter .
+*         This implementation is iterative to avoid stack overflows
+*/
+template <typename T>
+T CollatzCount(T nn) {
+        T ONE("1");   T TWO("2");   T THREE("3");
+        
+        T result("1");
+        for (;!(nn==ONE);result=result+ONE) {
+                if (TWO*(nn/TWO)==nn) // i.e. nn is even
+                nn = nn/TWO;
+                else                  // i.e. nn is odd
+                nn = THREE*nn+ONE;
+        }
+        return result;
+}
+
+int main(){
+    bigNumT<list<int> > foo("81172150");
+    bigNumT<list<int> > result = CollatzCount(foo);
+    cout << result.print() << endl;
+}
+
+%ENDCODE%
+---+++ ii. Order
+<pre>
+Put your answer here. You may use < to denote asymptotic less-than, and = to denote asymptotic equality. 
+For example, i < ii < iii
+</pre>
+---+++ iii. Design
+<pre>
+Put your design  here
+</pre>
+
+---+++ iv. Extra credit
+Please submit this online.
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
