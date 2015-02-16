@@ -32,3 +32,48 @@ We can make the array at a maximum size of 26200 elements before the code comple
 
 Q: Which function is faster?
 
+A:
+combine2d is faster by about 1.5 times on average. In certain cases for specific array sizes, it can be as much as 5.25 times faster.
+
+Q: At what array sizes do interesting things happen?
+
+A:
+Around 10000 elements. This area is particularly intersting Since here we see a sharp deviation in performance between combine2d and combine2d_rev.
+
+[Figure 1]
+
+These are intersting locations because the execution time for combine2d_rev spikes sharply at these areas, indicating particularly bad memory optimization.
+
+Q2.
+For a low array size, BASE = 30, ITERS = 200, DELTA = 1, we see that we have fairly stable rise. As size increases, cycles also linearly increase for both versions. This is to be expected as at that range, most of the operations are still carried out within cache space, so there is no difference in the loop interchange.
+
+[Figure 2]
+[Figure 3]
+
+For high array size, BASE=9500, ITERS=200, DELTA=5, we see that combine2d_rev consistently takes 50% more cycles than regular combine2d. What this means is that the rate of cache misses is much higher in the second function. Before, on low array size, this was not an issue, as the entire array could be stored cache, but now, there are more cache misses occuring, so we can see how different ways of accessing the elements will change what is in the cache.
+
+[Figure 4]
+[Figure 5]
+
+Q3.
+This is the original graph for d and e:
+
+[Figure 6]
+
+When zoomed in, BASE = 9500, ITERS = 200, DELTA = 10, we see combine2d_rev greatly increases the amount of cycles per element. This is being caused by poor cache allocation. We can not really see a U-shape in combine2d, however, if there were the shape one reason for performance imporvement would be improved utilization of the block. If values are taken from memory and stored in the cache then perhaps for some time, the more values you grab, the less you have to go back to memory. So, while overall, the function takes longer to run for longer block cycles, the ratio of cache misses versus cache hits decreases, leading to better performance per element. However, once the cache runs out of space, you have saturated the ratio of cache misses to cache hits, and so your performance per element will decrease as you have to go back to memory more often.
+
+One reason for jumpiness for the combine2d_rev, could be taht for certain array sizes, the ratio of misses to hits falls badly, so you end up having to fetch data from memory more often because the block size is not being used efficiently.
+
+[Figure 7]
+
+---------------------------------------------------------------------------------------------
+-   Part II: Using these ideas on a more complex code                                       -
+---------------------------------------------------------------------------------------------
+
+Q1.
+For the kij variation, there are no plateaus. The cycles rise linearly with matrix size. For ijk, there is a plateau at about 1000 elements and again close to 2000. For the jki variation, there is a plateau close to 2000 elements
+
+[Figure 8]
+
+We use 2000 to ensure that we can see what happens when different parts of memory are loaded into the cache and how this will affect performance. 
+

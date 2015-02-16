@@ -10,9 +10,9 @@
 #define GIG 1000000000
 #define CPG 2.53           // Cycles per GHz -- Adjust to your computer
 
-#define BASE  800
+#define BASE  0
 #define ITERS 20
-#define DELTA 20
+#define DELTA 113
 
 #define OPTIONS 3
 #define IDENT 0

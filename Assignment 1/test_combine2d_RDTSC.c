@@ -10,13 +10,16 @@
 #define GIG 1000000000
 #define CPG 2.53           // Cycles per GHz -- Adjust to your computer
 
-#define CLK_RATE 2.53e9 
+ 
+// Used by RDTSC --> NEED TO CHECK THIS AND POSSIBLY CHANGE FOR CORRECT TIMING
+#define CLK_RATE 2.53e9
 
-#define BASE  10000
+#define BASE  9500
 #define ITERS 200
-#define DELTA 10
+#define DELTA 5
 
 #define OPTIONS 2
+#define TIMERS 2
 #define IDENT 0
 #define OP *
 
@@ -42,10 +45,11 @@ typedef union {        // used by RDTSC
 /*****************************************************************************/
 main(int argc, char *argv[])
 {
-  int OPTION;
+  int OPTION, TIMER;
   struct timespec diff(struct timespec start, struct timespec end);
   struct timespec time1, time2;
   struct timespec time_stamp[OPTIONS][ITERS+1];
+  long int time_stamp_rdtsc[OPTIONS][ITERS+1];
   int clock_gettime(clockid_t clk_id, struct timespec *tp);
   vec_ptr new_vec(long int len);
   int set_vec_length(vec_ptr v, long int index);
@@ -56,7 +60,9 @@ main(int argc, char *argv[])
   void combine2D_rev(vec_ptr v, data_t *dest);
   void free_vec(vec_ptr vec);
 
-  long int i, j, k;
+  tsc_counter t_0,t_1;                  /* used by RDTSC */
+
+  long int i, j, k, t;
   long int time_sec, time_ns;
   long int MAXSIZE = BASE+(ITERS+1)*DELTA;
 
@@ -67,10 +73,13 @@ main(int argc, char *argv[])
   data_holder = (data_t *) malloc(sizeof(data_t));
   init_vector(v0, MAXSIZE);
 
+//clock_gettime
   OPTION = 0;
+  TIMER = 0;
   for (i = 0; i < ITERS; i++) {
-    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1);
+    
     set_vec_length(v0,BASE+(i+1)*DELTA);
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1);
     combine2D(v0, data_holder);
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time2);
     time_stamp[OPTION][i] = diff(time1,time2);
@@ -84,6 +93,31 @@ main(int argc, char *argv[])
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time2);
     time_stamp[OPTION][i] = diff(time1,time2);
   }
+//end clock_gettime
+
+
+//RDTSC
+  TIMER++;
+  OPTION = 0;
+  for (i = 0; i < ITERS; i++) {
+    
+    set_vec_length(v0,BASE+(i+1)*DELTA);
+    RDTSC(t_0);
+    combine2D(v0, data_holder);
+    RDTSC(t_1);
+    time_stamp_rdtsc[OPTION][i] = t_1.int64-t_0.int64;
+  }
+
+  OPTION++;
+  for (i = 0; i < ITERS; i++) {
+    set_vec_length(v0,BASE+(i+1)*DELTA);
+    RDTSC(t_0);
+    combine2D_rev(v0, data_holder);
+    RDTSC(t_1);
+    time_stamp_rdtsc[OPTION][i] = t_1.int64 - t_0.int64;
+  }
+//end RDTSC
+
 
   for (i = 0; i < ITERS; i++) {
     printf("\n%d, ", BASE+(i+1)*DELTA);
@@ -93,6 +127,16 @@ main(int argc, char *argv[])
 		 (GIG * time_stamp[j][i].tv_sec + time_stamp[j][i].tv_nsec)));
     }
   }
+  printf("\n\n");
+
+  for(i  = 0; i < ITERS; i++){
+    printf("\n%d, ", BASE+(i+1)*DELTA);
+    for(j = 0; j < OPTIONS; j++){
+      if(j!= 0) printf(", ");
+      printf("%ld", (long int) time_stamp_rdtsc[j][i]);
+    }
+ }
+
 
   printf("\n");
   free_vec(v0);

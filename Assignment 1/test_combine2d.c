@@ -12,9 +12,9 @@
 
 #define CLK_RATE 2.53e9 
 
-#define BASE  30
+#define BASE  9500
 #define ITERS 200
-#define DELTA 1
+#define DELTA 10
 
 #define OPTIONS 2
 #define IDENT 0
