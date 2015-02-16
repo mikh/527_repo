@@ -37,8 +37,8 @@ int main(){
         long rss_s, rss_e, ixrss_s, ixrss_e, idrss_s, idrss_e, isrss_s, isrss_e;
 
 	bigNumT<vector<int> > foo("81172150");
-        bigNumT<deque<int> > foo2("81172150");
-        bigNumT<list<int> > foo3("81172150");
+       // bigNumT<deque<int> > foo2("81172150");
+       // bigNumT<list<int> > foo3("81172150");
 	
         getrusage(RUSAGE_SELF, &usage);
         start = usage.ru_stime;
