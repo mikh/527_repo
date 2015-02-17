@@ -36,6 +36,10 @@ public:
 	student();
 	void push_back(T value);
 	void insert(iterator position, T value);
+	T pop_back();
+	int size();
+	iterator begin();
+	iterator end();
 private:
 	T *array;
 	int index_head;
@@ -76,7 +80,40 @@ void student<T>::push_back(T value){
 
 template <typename T>
 void student<T>::insert(iterator position, T value){
-	if()
+	if(distance(begin(), end()) + 1 > max_size){
+		T *new_array = new T[max_size*2];
+		max_size *= 2;
+		for(int ii = 0; ii < distance(begin(), end()); ii++){
+			new_array[ii] = array[ii];
+		}
+		delete[] array;
+		array = new_array;
+	}
+	for(int ii = distance(begin(), end())-1; ii >= distance(begin(), position)+1;  ii--){
+		array[ii+1] = array[ii];
+	}
+	array[distance(begin(), position)] = value;
+	index_head++;
+}
+
+template <typename T>
+T student<T>::pop_back(){
+	return array[index_head--];
+}
+	
+template <typename T>
+int student<T>::size(){
+	return index_head;
+}
+
+template <typename T>
+student<T>::iterator student<T>::begin(){
+	return iterator(array);
+}
+
+template <typename T>
+student<T>::iterator student<T>::end(){
+	return iterator(&array[index_head]);
 }
 
 #endif
