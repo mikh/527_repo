@@ -15,7 +15,7 @@
 
 #define OPTIONS 12
 #define IDENT 1.0
-#define OP *
+#define OP +
 
 #define TEST_COMBINE_8  //loop unrolling 5x
 #define TEST_COMBINE_9  //loop unrolling 6x
