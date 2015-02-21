@@ -13,9 +13,15 @@
 #define DELTA 10
 #define BASE 0
 
-#define OPTIONS 7
+#define OPTIONS 12
 #define IDENT 1.0
 #define OP *
+
+#define TEST_COMBINE_8  //loop unrolling 5x
+#define TEST_COMBINE_9  //loop unrolling 6x
+#define TEST_COMBINE_10 //loop unrolling 8x
+#define TEST_COMBINE_11 //loop unrolling 10x
+#define TEST_COMBINE_12 //loop unrolling 10x, parallelism x2, associativity change
 
 typedef double data_t;
 
@@ -51,6 +57,12 @@ main(int argc, char *argv[])
   void combine5(vec_ptr v, data_t *dest);
   void combine6(vec_ptr v, data_t *dest);
   void combine7(vec_ptr v, data_t *dest);
+  void combine8(vec_ptr v, data_t *dest);
+  void combine9(vec_ptr v, data_t *dest);
+  void combine10(vec_ptr v, data_t *dest);
+  void combine11(vec_ptr v, data_t *dest);
+  void combine12(vec_ptr v, data_t *dest);
+
 
   long int i, j, k;
   long long int time_sec, time_ns;
@@ -126,6 +138,61 @@ main(int argc, char *argv[])
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time2);
     time_stamp[OPTION][i] = diff(time1,time2);
   }
+
+  OPTION++;
+  #ifdef TEST_COMBINE_8
+  for (i = 0; i < ITERS; i++) {
+    set_vec_length(v0,BASE+(i+1)*DELTA);
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1);
+    combine8(v0, data_holder);
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time2);
+    time_stamp[OPTION][i] = diff(time1,time2);
+  }
+  #endif
+
+  OPTION++;
+  #ifdef TEST_COMBINE_9
+  for (i = 0; i < ITERS; i++) {
+    set_vec_length(v0,BASE+(i+1)*DELTA);
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1);
+    combine9(v0, data_holder);
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time2);
+    time_stamp[OPTION][i] = diff(time1,time2);
+  }
+  #endif
+
+  OPTION++;
+  #ifdef TEST_COMBINE_10
+  for (i = 0; i < ITERS; i++) {
+    set_vec_length(v0,BASE+(i+1)*DELTA);
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1);
+    combine10(v0, data_holder);
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time2);
+    time_stamp[OPTION][i] = diff(time1,time2);
+  }
+  #endif
+
+  OPTION++;
+  #ifdef TEST_COMBINE_11
+  for (i = 0; i < ITERS; i++) {
+    set_vec_length(v0,BASE+(i+1)*DELTA);
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1);
+    combine11(v0, data_holder);
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time2);
+    time_stamp[OPTION][i] = diff(time1,time2);
+  }
+  #endif
+
+  OPTION++;
+  #ifdef TEST_COMBINE_12
+  for (i = 0; i < ITERS; i++) {
+    set_vec_length(v0,BASE+(i+1)*DELTA);
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1);
+    combine12(v0, data_holder);
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time2);
+    time_stamp[OPTION][i] = diff(time1,time2);
+  }
+  #endif
 
   /* output times */
   for (i = 0; i < ITERS; i++) {
@@ -359,4 +426,124 @@ void combine7(vec_ptr v, data_t *dest)
   *dest = acc;
 }
 
+/* Combine8:  Unroll loop by 5
+ * Example of --> Loop unrolling */
+void combine8(vec_ptr v, data_t *dest)
+{
+  long int i;
+  long int get_vec_length(vec_ptr v);
+  data_t *get_vec_start(vec_ptr v);
+  long int length = get_vec_length(v);
+  long int limit = length - 1;
+  data_t *data = get_vec_start(v);
+  data_t acc = IDENT;
 
+  /* Combine two elements at a time */
+  for (i = 0; i < limit; i+=5) {
+    acc = ((((acc OP data[i]) OP data[i+1]) OP data[i+2]) OP data[i+3]) OP data[i+4];
+  }
+
+  /* Finish remaining elements */
+  for (; i < length; i++) {
+    acc = acc OP data[i];
+  }
+  *dest = acc;
+}
+
+/* Combine9:  Unroll loop by 6
+ * Example of --> Loop unrolling */
+void combine9(vec_ptr v, data_t *dest)
+{
+  long int i;
+  long int get_vec_length(vec_ptr v);
+  data_t *get_vec_start(vec_ptr v);
+  long int length = get_vec_length(v);
+  long int limit = length - 1;
+  data_t *data = get_vec_start(v);
+  data_t acc = IDENT;
+
+  /* Combine two elements at a time */
+  for (i = 0; i < limit; i+=6) {
+    acc = (((((acc OP data[i]) OP data[i+1]) OP data[i+2]) OP data[i+3]) OP data[i+4]) OP data[i+5];
+  }
+
+  /* Finish remaining elements */
+  for (; i < length; i++) {
+    acc = acc OP data[i];
+  }
+  *dest = acc;
+}
+
+/* Combine10:  Unroll loop by 8
+ * Example of --> Loop unrolling */
+void combine10(vec_ptr v, data_t *dest)
+{
+  long int i;
+  long int get_vec_length(vec_ptr v);
+  data_t *get_vec_start(vec_ptr v);
+  long int length = get_vec_length(v);
+  long int limit = length - 1;
+  data_t *data = get_vec_start(v);
+  data_t acc = IDENT;
+
+  /* Combine two elements at a time */
+  for (i = 0; i < limit; i+=8) {
+    acc = (((((((acc OP data[i]) OP data[i+1]) OP data[i+2]) OP data[i+3]) OP data[i+4]) OP data[i+5]) OP data[i+6]) OP data[i+7];
+  }
+
+  /* Finish remaining elements */
+  for (; i < length; i++) {
+    acc = acc OP data[i];
+  }
+  *dest = acc;
+}
+
+/* Combine11:  Unroll loop by 10
+ * Example of --> Loop unrolling */
+void combine11(vec_ptr v, data_t *dest)
+{
+  long int i;
+  long int get_vec_length(vec_ptr v);
+  data_t *get_vec_start(vec_ptr v);
+  long int length = get_vec_length(v);
+  long int limit = length - 1;
+  data_t *data = get_vec_start(v);
+  data_t acc = IDENT;
+
+  /* Combine two elements at a time */
+  for (i = 0; i < limit; i+=10) {
+    acc = (((((((((acc OP data[i]) OP data[i+1]) OP data[i+2]) OP data[i+3]) OP data[i+4]) OP data[i+5]) OP data[i+6]) OP data[i+7]) OP data[i+8]) OP data[i+9];
+  }
+
+  /* Finish remaining elements */
+  for (; i < length; i++) {
+    acc = acc OP data[i];
+  }
+  *dest = acc;
+}
+
+/* Combine12:  Unroll loop by 10, using parallelization x2, using reassociative transformation
+ * Example of --> Loop unrolling */
+void combine12(vec_ptr v, data_t *dest)
+{
+  long int i;
+  long int get_vec_length(vec_ptr v);
+  data_t *get_vec_start(vec_ptr v);
+  long int length = get_vec_length(v);
+  long int limit = length - 1;
+  data_t *data = get_vec_start(v);
+  data_t acc0 = IDENT;
+  data_t acc1 = IDENT;
+
+  /* Combine two elements at a time */
+  for (i = 0; i < limit; i+=10) {
+    acc0 = acc0 OP (data[i] OP (data[i+1] OP (data[i+2] OP (data[i+3] OP data[i+4]))));
+    acc1 = acc1 OP (data[i+5] OP (data[i+6] OP (data[i+7] OP (data[i+8] OP data[i+9]))));
+  }
+
+  /* Finish remaining elements */
+  for (; i < length; i++) {
+    acc = acc OP data[i];
+  }
+  *dest = acc0 OP acc1;
+}

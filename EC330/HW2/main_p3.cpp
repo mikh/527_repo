@@ -5,7 +5,7 @@
 #include <deque>
 //#include <sys/time.h>
 //#include <sys/resource.h>
-#include "student.h"
+#include "student_2.h"
 
 
 
@@ -22,12 +22,17 @@ T CollatzCount(T nn) {
         T ONE("1");   T TWO("2");   T THREE("3");
         
         T result("1");
+
+
         for (;!(nn==ONE);result=result+ONE) {	//addition
-                if (TWO*(nn/TWO)==nn) // i.e. nn is even	//multiplication, division, comparison
-                nn = nn/TWO;	//assignment and division
-                else                  // i.e. nn is odd
+                if (TWO*(nn/TWO)==nn){ // i.e. nn is even	//multiplication, division, comparison
+                    nn = nn/TWO;	//assignment and division
+                }else{                  // i.e. nn is odd
                 nn = THREE*nn+ONE;	//multiplication and addition
+                }
         }
+
+        cout<<"end"<<endl;
         return result;
 }
 
@@ -38,9 +43,18 @@ int main(){
 //        struct timeval start, end;
 //        long rss_s, rss_e, ixrss_s, ixrss_e, idrss_s, idrss_e, isrss_s, isrss_e;
 
+    bigNumT<student<int> > foo4("81172150");
 	bigNumT<vector<int> > foo("81172150");
         bigNumT<deque<int> > foo2("81172150");
         bigNumT<list<int> > foo3("81172150");
+
+    cout<<"student"<<endl;
+    bigNumT<student<int> > result4 = CollatzCount(foo4);
+    
+    cout << result4.print() << endl;
+
+
+
 	cout<<"vector"<<endl;
 
  /*       getrusage(RUSAGE_SELF, &usage);
