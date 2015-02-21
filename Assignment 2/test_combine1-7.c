@@ -543,7 +543,7 @@ void combine12(vec_ptr v, data_t *dest)
 
   /* Finish remaining elements */
   for (; i < length; i++) {
-    acc = acc OP data[i];
+    acc0 = acc0 OP data[i];
   }
   *dest = acc0 OP acc1;
 }
