@@ -16,6 +16,11 @@
 #define IDENT 1.0
 #define OP *
 
+#define ONE_CHOICE
+//#define SPLIT
+//#define UPDOWN
+//#define RANDOM
+
 typedef double data_t;
 
 /* Create abstract data type for vector */
@@ -177,11 +182,31 @@ int set_vec_length(vec_ptr v, long int index)
 /* initialize vector with first pattern */
 int init_vector1(vec_ptr v, long int len)
 {
+  double fRand(double fMin, double fMax);
   long int i;
 
   if (len > 0) {
     v->len = len;
-    /*    for (i = 0; i < len; i++) v->data[i] = ; */
+        for (i = 0; i < len; i++){
+          #ifdef ONE_CHOICE
+            v->data[i] = 5;
+          #endif
+          #ifdef SPLIT
+            if(i > len/2)
+              v->data[i] = 1;
+            else
+              v->data[i] = 5;
+          #endif
+          #ifdef UPDOWN
+            if(i%2)
+              v->data[i] = 10;
+            else
+              v->data[i] = 1;
+          #endif
+          #ifdef RANDOM
+            v->data[i] = fRand(0, 100);
+          #endif
+        } 
     return 1;
   }
   else return 0;
@@ -190,11 +215,31 @@ int init_vector1(vec_ptr v, long int len)
 /* initialize vector with another */
 int init_vector2(vec_ptr v, long int len)
 {
+  double fRand(double fMin, double fMax);
   long int i;
 
   if (len > 0) {
     v->len = len;
-    /* for (i = 0; i < len; i++) v->data[i] = ; */
+    for (i = 0; i < len; i++){
+      #ifdef ONE_CHOICE
+        v->data[i] = 1;
+      #endif
+      #ifdef SPLIT
+        if(i > len/2)
+          v->data[i] = 5;
+        else
+          v->data[i] = 1;
+      #endif
+      #ifdef UPDOWN
+        if(i%2)
+          v->data[i] = 1;
+        else
+          v->data[i] = 10;
+      #endif
+      #ifdef RANDOM
+        v->data[i] = fRand(0,100);
+      #endif
+    } 
     return 1;
   }
   else return 0;
