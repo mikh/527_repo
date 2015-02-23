@@ -244,6 +244,7 @@ void dot_base(vec_ptr v0, vec_ptr v1, data_t *dest)
   data_t *get_vec_start(vec_ptr v);
 
   long int len_0 = get_vec_length(v0), len_1 = get_vec_length(v1);
+  long int length = (len_0 < len_1) ? len_0 : len_1;
   data_t *data0 = get_vec_start(v0), *data1 = get_vec_start(v1);
   data_t acc = IDENT;
 
@@ -262,6 +263,7 @@ void dot_1(vec_ptr v0, vec_ptr v1, data_t *dest)
   data_t *get_vec_start(vec_ptr v);
 
   long int len_0 = get_vec_length(v0), len_1 = get_vec_length(v1);
+  long int length = (len_0 < len_1) ? len_0 : len_1;
   data_t *data0 = get_vec_start(v0), *data1 = get_vec_start(v1);
   data_t acc = IDENT;
 
@@ -284,6 +286,7 @@ void dot_2(vec_ptr v0, vec_ptr v1, data_t *dest)
   data_t *get_vec_start(vec_ptr v);
 
   long int len_0 = get_vec_length(v0), len_1 = get_vec_length(v1);
+  long int length = (len_0 < len_1) ? len_0 : len_1;
   data_t *data0 = get_vec_start(v0), *data1 = get_vec_start(v1);
   data_t acc = IDENT;
 
@@ -307,6 +310,7 @@ void dot_3(vec_ptr v0, vec_ptr v1, data_t *dest)
   data_t *get_vec_start(vec_ptr v);
 
   long int len_0 = get_vec_length(v0), len_1 = get_vec_length(v1);
+  long int length = (len_0 < len_1) ? len_0 : len_1;
   data_t *data0 = get_vec_start(v0), *data1 = get_vec_start(v1);
   data_t acc = IDENT;
 
@@ -329,6 +333,7 @@ void dot_4(vec_ptr v0, vec_ptr v1, data_t *dest)
   data_t *get_vec_start(vec_ptr v);
 
   long int len_0 = get_vec_length(v0), len_1 = get_vec_length(v1);
+  long int length = (len_0 < len_1) ? len_0 : len_1;
   data_t *data0 = get_vec_start(v0), *data1 = get_vec_start(v1);
   data_t acc = IDENT;
 
@@ -351,6 +356,7 @@ void dot_5(vec_ptr v0, vec_ptr v1, data_t *dest)
   data_t *get_vec_start(vec_ptr v);
 
   long int len_0 = get_vec_length(v0), len_1 = get_vec_length(v1);
+  long int length = (len_0 < len_1) ? len_0 : len_1;
   data_t *data0 = get_vec_start(v0), *data1 = get_vec_start(v1);
   data_t acc0 = IDENT, acc1 = IDENT;
 
@@ -374,6 +380,7 @@ void dot_6(vec_ptr v0, vec_ptr v1, data_t *dest)
   data_t *get_vec_start(vec_ptr v);
 
   long int len_0 = get_vec_length(v0), len_1 = get_vec_length(v1);
+  long int length = (len_0 < len_1) ? len_0 : len_1;
   data_t *data0 = get_vec_start(v0), *data1 = get_vec_start(v1);
   data_t acc0 = IDENT, acc1 = IDENT, acc2 = IDENT, acc3 = IDENT, acc4 = IDENT;
 
@@ -400,6 +407,7 @@ void dot_7(vec_ptr v0, vec_ptr v1, data_t *dest)
   data_t *get_vec_start(vec_ptr v);
 
   long int len_0 = get_vec_length(v0), len_1 = get_vec_length(v1);
+  long int length = (len_0 < len_1) ? len_0 : len_1;
   data_t *data0 = get_vec_start(v0), *data1 = get_vec_start(v1);
   data_t acc0 = IDENT, acc1 = IDENT, acc2 = IDENT, acc3 = IDENT, acc4 = IDENT;
 
