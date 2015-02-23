@@ -13,7 +13,7 @@
 #define DELTA 10
 #define BASE 0
 
-#define OPTIONS 1
+#define OPTIONS 8
 #define IDENT 0
 #define OP +
 
@@ -47,7 +47,13 @@ main(int argc, char *argv[])
   data_t *data_holder;
 
   void dot_base(vec_ptr v0, vec_ptr v1, data_t *dest);
-
+  void dot_1(vec_ptr v0, vec_ptr v1, data_t *dest);
+  void dot_2(vec_ptr v0, vec_ptr v1, data_t *dest);
+  void dot_3(vec_ptr v0, vec_ptr v1, data_t *dest);
+  void dot_4(vec_ptr v0, vec_ptr v1, data_t *dest);
+  void dot_5(vec_ptr v0, vec_ptr v1, data_t *dest);
+  void dot_6(vec_ptr v0, vec_ptr v1, data_t *dest);
+  void dot_7(vec_ptr v0, vec_ptr v1, data_t *dest);
 
   long int i, j, k;
   long long int time_sec, time_ns;
@@ -67,6 +73,69 @@ main(int argc, char *argv[])
     set_vec_length(v0,BASE+(i+1)*DELTA);
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1);
     dot_base(v0, v1, data_holder);
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time2);
+    time_stamp[OPTION][i] = diff(time1,time2);
+  }
+
+  OPTION++;
+  for (i = 0; i < ITERS; i++) {
+    set_vec_length(v0,BASE+(i+1)*DELTA);
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1);
+    dot_1(v0, v1, data_holder);
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time2);
+    time_stamp[OPTION][i] = diff(time1,time2);
+  }
+
+  OPTION++;
+  for (i = 0; i < ITERS; i++) {
+    set_vec_length(v0,BASE+(i+1)*DELTA);
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1);
+    dot_2(v0, v1, data_holder);
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time2);
+    time_stamp[OPTION][i] = diff(time1,time2);
+  }
+
+  OPTION++;
+  for (i = 0; i < ITERS; i++) {
+    set_vec_length(v0,BASE+(i+1)*DELTA);
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1);
+    dot_3(v0, v1, data_holder);
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time2);
+    time_stamp[OPTION][i] = diff(time1,time2);
+  }
+
+  OPTION++;
+  for (i = 0; i < ITERS; i++) {
+    set_vec_length(v0,BASE+(i+1)*DELTA);
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1);
+    dot_4(v0, v1, data_holder);
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time2);
+    time_stamp[OPTION][i] = diff(time1,time2);
+  }
+
+  OPTION++;
+  for (i = 0; i < ITERS; i++) {
+    set_vec_length(v0,BASE+(i+1)*DELTA);
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1);
+    dot_5(v0, v1, data_holder);
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time2);
+    time_stamp[OPTION][i] = diff(time1,time2);
+  }
+
+  OPTION++;
+  for (i = 0; i < ITERS; i++) {
+    set_vec_length(v0,BASE+(i+1)*DELTA);
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1);
+    dot_6(v0, v1, data_holder);
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time2);
+    time_stamp[OPTION][i] = diff(time1,time2);
+  }
+
+  OPTION++;
+  for (i = 0; i < ITERS; i++) {
+    set_vec_length(v0,BASE+(i+1)*DELTA);
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1);
+    dot_7(v0, v1, data_holder);
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time2);
     time_stamp[OPTION][i] = diff(time1,time2);
   }
@@ -275,7 +344,7 @@ void dot_4(vec_ptr v0, vec_ptr v1, data_t *dest)
 
 /* dot_5:  Dot product with parallelization x2
  * Example of --> Eliminate unneeded memory references */
-void dot_4(vec_ptr v0, vec_ptr v1, data_t *dest)
+void dot_5(vec_ptr v0, vec_ptr v1, data_t *dest)
 {
   long int i;
   long int get_vec_length(vec_ptr v);
@@ -286,11 +355,64 @@ void dot_4(vec_ptr v0, vec_ptr v1, data_t *dest)
   data_t acc0 = IDENT, acc1 = IDENT;
 
   for (i = 0; i < length; i+=10) {
-    acc0 = (((((((((acc OP (data0[i] * data1[i])) OP (data0[i+1] * data1[i+1])) OP (data0[i+2] * data1[i+2])) OP (data0[i+3] * data1[i+3])) OP (data0[i+4] * data1[i+4])) OP (data0[i+5] * data1[i+5])) OP (data0[i+6] * data1[i+6])) OP (data0[i+7] * data1[i+7])) OP (data0[i+8] * data1[i+8])) OP (data0[i+9] * data1[i+9]);
-    acc1 =   }
+    acc0 = ((((acc0 OP (data0[i+5] * data1[i+5])) OP (data0[i+6] * data1[i+6])) OP (data0[i+7] * data1[i+7])) OP (data0[i+8] * data1[i+8])) OP (data0[i+9] * data1[i+9]);
+    acc1 = ((((acc1 OP (data0[i] * data1[i])) OP (data0[i+1] * data1[i+1])) OP (data0[i+2] * data1[i+2])) OP (data0[i+3] * data1[i+3])) OP (data1[i+4] * data[i+4]); 
+  }
 
   for(; i < length; i++){
-    acc = acc OP (data0[i] * data1[i]);
+    acc0 = acc0 OP (data0[i] * data1[i]);
   }
-  *dest = acc;
+  *dest = acc0 OP acc1;
+}
+
+/* dot_6:  Dot product with parallelization x5
+ * Example of --> Eliminate unneeded memory references */
+void dot_6(vec_ptr v0, vec_ptr v1, data_t *dest)
+{
+  long int i;
+  long int get_vec_length(vec_ptr v);
+  data_t *get_vec_start(vec_ptr v);
+
+  long int len_0 = get_vec_length(v0), len_1 = get_vec_length(v1);
+  data_t *data0 = get_vec_start(v0), *data1 = get_vec_start(v1);
+  data_t acc0 = IDENT, acc1 = IDENT, acc2 = IDENT, acc3 = IDENT, acc4 = IDENT;
+
+  for (i = 0; i < length; i+=10) {
+    acc0 = (acc0 OP (data0[i] * data1[i])) OP (data0[i+1] * data1[i+1]);
+    acc1 = (acc1 OP (data0[i+2] * data1[i+2])) OP (data0[i+3] * data1[i+3]);
+    acc2 = (acc2 OP (data0[i+4] * data1[i+4])) OP (data0[i+5] * data1[i+5]);
+    acc3 = (acc3 OP (data0[i+6] * data1[i+6])) OP (data0[i+7] * data1[i+7]);
+    acc4 = (acc4 OP (data0[i+8] * data1[i+8])) OP (data0[i+9] * data1[i+9]);
+  }
+
+  for(; i < length; i++){
+    acc0 = acc0 OP (data0[i] * data1[i]);
+  }
+  *dest = (((acc0 OP acc1) OP acc2) OP acc3) OP acc4;
+}
+
+/* dot_7:  Dot product with parallelization x5 with reference
+ * Example of --> Eliminate unneeded memory references */
+void dot_7(vec_ptr v0, vec_ptr v1, data_t *dest)
+{
+  long int i;
+  long int get_vec_length(vec_ptr v);
+  data_t *get_vec_start(vec_ptr v);
+
+  long int len_0 = get_vec_length(v0), len_1 = get_vec_length(v1);
+  data_t *data0 = get_vec_start(v0), *data1 = get_vec_start(v1);
+  data_t acc0 = IDENT, acc1 = IDENT, acc2 = IDENT, acc3 = IDENT, acc4 = IDENT;
+
+  for (i = 0; i < length; i+=10) {
+    acc0 = acc0 OP ((data0[i] * data1[i]) OP (data0[i+1] * data1[i+1]));
+    acc1 = acc1 OP ((data0[i+2] * data1[i+2]) OP (data0[i+3] * data1[i+3]));
+    acc2 = acc2 OP ((data0[i+4] * data1[i+4]) OP (data0[i+5] * data1[i+5]));
+    acc3 = acc3 OP ((data0[i+6] * data1[i+6]) OP (data0[i+7] * data1[i+7]));
+    acc4 = acc4 OP ((data0[i+8] * data1[i+8]) OP (data0[i+9] * data1[i+9]));
+  }
+
+  for(; i < length; i++){
+    acc0 = acc0 OP (data0[i] * data1[i]);
+  }
+  *dest = (((acc0 OP acc1) OP acc2) OP acc3) OP acc4;
 }
