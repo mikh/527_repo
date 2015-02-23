@@ -18,8 +18,8 @@
 
 //#define ONE_CHOICE
 //#define SPLIT
-#define UPDOWN
-//#define RANDOM
+//#define UPDOWN
+#define RANDOM
 
 typedef double data_t;
 
