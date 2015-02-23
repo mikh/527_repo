@@ -362,7 +362,7 @@ void dot_5(vec_ptr v0, vec_ptr v1, data_t *dest)
 
   for (i = 0; i < length; i+=10) {
     acc0 = ((((acc0 OP (data0[i+5] * data1[i+5])) OP (data0[i+6] * data1[i+6])) OP (data0[i+7] * data1[i+7])) OP (data0[i+8] * data1[i+8])) OP (data0[i+9] * data1[i+9]);
-    acc1 = ((((acc1 OP (data0[i] * data1[i])) OP (data0[i+1] * data1[i+1])) OP (data0[i+2] * data1[i+2])) OP (data0[i+3] * data1[i+3])) OP (data1[i+4] * data[i+4]); 
+    acc1 = ((((acc1 OP (data0[i] * data1[i])) OP (data0[i+1] * data1[i+1])) OP (data0[i+2] * data1[i+2])) OP (data0[i+3] * data1[i+3])) OP (data0[i+4] * data1[i+4]); 
   }
 
   for(; i < length; i++){
