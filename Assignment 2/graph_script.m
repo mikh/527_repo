@@ -70,11 +70,11 @@ scatter(q1_data(:,1), q1_data(:,7), 5, 'b');
 scatter(q1_data(:,1), q1_data(:,8), 5, 'w');
 xlabel('data elements');
 ylabel('cycles');
-title('combine3');
+title('All combines double and *');
 legend('combine1', 'combine2', 'combine3', 'combine4', 'combine5', 'combine6', 'combine7');
 hold off
 
-filename = 'q1_data_double_multiply.txt';
+filename = 'q1_data_double_add.txt';
 delimiterIn = ',';
 q1_data = importdata(filename, delimiterIn);
 
@@ -91,6 +91,70 @@ scatter(q1_data(:,1), q1_data(:,7), 5, 'b');
 scatter(q1_data(:,1), q1_data(:,8), 5, 'w');
 xlabel('data elements');
 ylabel('cycles');
-title('combine3');
+title('All combines double and +');
 legend('combine1', 'combine2', 'combine3', 'combine4', 'combine5', 'combine6', 'combine7');
 hold off
+
+filename = 'q1_data_single_multiply.txt';
+delimiterIn = ',';
+q1_data = importdata(filename, delimiterIn);
+
+%double multiply
+%combine 1-7
+figure(3);
+hold on
+scatter(q1_data(:,1), q1_data(:,2), 5, 'y');
+scatter(q1_data(:,1), q1_data(:,3), 5, 'm');
+scatter(q1_data(:,1), q1_data(:,4), 5, 'c');
+scatter(q1_data(:,1), q1_data(:,5), 5, 'r');
+scatter(q1_data(:,1), q1_data(:,6), 5, 'g');
+scatter(q1_data(:,1), q1_data(:,7), 5, 'b');
+scatter(q1_data(:,1), q1_data(:,8), 5, 'w');
+xlabel('data elements');
+ylabel('cycles');
+title('All combines single and *');
+legend('combine1', 'combine2', 'combine3', 'combine4', 'combine5', 'combine6', 'combine7');
+hold off
+
+filename = 'q1_data_int_add.txt';
+delimiterIn = ',';
+q1_data = importdata(filename, delimiterIn);
+
+%double multiply
+%combine 1-7
+figure(4);
+hold on
+scatter(q1_data(:,1), q1_data(:,2), 5, 'y');
+scatter(q1_data(:,1), q1_data(:,3), 5, 'm');
+scatter(q1_data(:,1), q1_data(:,4), 5, 'c');
+scatter(q1_data(:,1), q1_data(:,5), 5, 'r');
+scatter(q1_data(:,1), q1_data(:,6), 5, 'g');
+scatter(q1_data(:,1), q1_data(:,7), 5, 'b');
+scatter(q1_data(:,1), q1_data(:,8), 5, 'w');
+xlabel('data elements');
+ylabel('cycles');
+title('All combines int and +');
+legend('combine1', 'combine2', 'combine3', 'combine4', 'combine5', 'combine6', 'combine7');
+hold off
+
+filename = 'q1_data_int_multiply.txt';
+delimiterIn = ',';
+q1_data = importdata(filename, delimiterIn);
+
+%double multiply
+%combine 1-7
+figure(5);
+hold on
+scatter(q1_data(:,1), q1_data(:,2), 5, 'y');
+scatter(q1_data(:,1), q1_data(:,3), 5, 'm');
+scatter(q1_data(:,1), q1_data(:,4), 5, 'c');
+scatter(q1_data(:,1), q1_data(:,5), 5, 'r');
+scatter(q1_data(:,1), q1_data(:,6), 5, 'g');
+scatter(q1_data(:,1), q1_data(:,7), 5, 'b');
+scatter(q1_data(:,1), q1_data(:,8), 5, 'w');
+xlabel('data elements');
+ylabel('cycles');
+title('All combines int and *');
+legend('combine1', 'combine2', 'combine3', 'combine4', 'combine5', 'combine6', 'combine7');
+hold off
+
