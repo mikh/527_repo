@@ -16,8 +16,8 @@
 #define IDENT 1.0
 #define OP *
 
-#define ONE_CHOICE
-//#define SPLIT
+//#define ONE_CHOICE
+#define SPLIT
 //#define UPDOWN
 //#define RANDOM
 
