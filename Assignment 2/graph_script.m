@@ -198,3 +198,26 @@ ylabel('cycles');
 title('Loop unrolling');
 legend('5x', '6x', '8x', '10x', 'parallelized');
 hold off
+
+%% Q2
+
+filename = 'q2_data';
+delimiterIn = ',';
+q2_data = importdata(filename, delimiterIn);
+
+
+figure(8);
+hold on
+scatter(q2_data(:,1), q2_data(:,2)./q2_data(:,1), 5, 'y');
+scatter(q2_data(:,1), q2_data(:,3)./q2_data(:,1), 5, 'm');
+scatter(q2_data(:,1), q2_data(:,4)./q1_data(:,1), 5, 'c');
+scatter(q2_data(:,1), q2_data(:,5)./q2_data(:,1), 5, 'r');
+scatter(q2_data(:,1), q2_data(:,6)./q2_data(:,1), 5, 'w');
+scatter(q2_data(:,1), q2_data(:,7)./q2_data(:,1), 5, 'k');
+scatter(q2_data(:,1), q2_data(:,8)./q2_data(:,1), 5, 'g');
+scatter(q2_data(:,1), q2_data(:,9)./q2_data(:,1), 5, 'b');
+xlabel('data elements');
+ylabel('cycles');
+title('Dot Product');
+legend('dot_base', 'dot_1', 'dot_2', 'dot_3', 'dot_4', 'dot_5', 'dot_6', 'dot_7');
+hold off
