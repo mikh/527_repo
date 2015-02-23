@@ -59,7 +59,7 @@ main(int argc, char *argv[])
 
   // init the vectors
   init_vector1(v0, MAXSIZE);
-  init_vector1(v1, MAXSIZE);
+  init_vector2(v1, MAXSIZE);
 
   // execute and time all options 
   OPTION = 0;
@@ -74,7 +74,7 @@ main(int argc, char *argv[])
   }
 
   // init the vectors
-  init_vector2(v0, MAXSIZE);
+  init_vector1(v0, MAXSIZE);
   init_vector2(v1, MAXSIZE);
 
   OPTION++;
@@ -90,7 +90,7 @@ main(int argc, char *argv[])
 
   // init the vectors
   init_vector1(v0, MAXSIZE);
-  init_vector1(v1, MAXSIZE);
+  init_vector2(v1, MAXSIZE);
 
   // execute and time all options 
   OPTION++;
@@ -105,7 +105,7 @@ main(int argc, char *argv[])
   }
 
   // init the vectors
-  init_vector2(v0, MAXSIZE);
+  init_vector1(v0, MAXSIZE);
   init_vector2(v1, MAXSIZE);
 
   OPTION++;
