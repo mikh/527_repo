@@ -221,3 +221,65 @@ ylabel('cycles');
 title('Dot Product');
 legend('dot_base', 'dot_1', 'dot_2', 'dot_3', 'dot_4', 'dot_5', 'dot_6', 'dot_7');
 hold off
+
+%% Q3
+
+filename = 'q3_onechoice.txt';
+delimiterIn = ',';
+q3_data = importdata(filename, delimiterIn);
+
+
+figure(9);
+hold on
+scatter(q3_data(:,1), q3_data(:,2)./q3_data(:,1), 5, 'b');
+scatter(q3_data(:,1), q3_data(:,4)./q3_data(:,1), 5, 'r');
+xlabel('data elements');
+ylabel('cycles');
+title('One branch always right');
+legend('branch1', 'branch2');
+hold off
+
+filename = 'q3_split.txt';
+delimiterIn = ',';
+q3_data = importdata(filename, delimiterIn);
+
+
+figure(10);
+hold on
+scatter(q3_data(:,1), q3_data(:,2)./q3_data(:,1), 5, 'b');
+scatter(q3_data(:,1), q3_data(:,4)./q3_data(:,1), 5, 'r');
+xlabel('data elements');
+ylabel('cycles');
+title('Branch changes halfway');
+legend('branch1', 'branch2');
+hold off
+
+filename = 'q3_updown.txt';
+delimiterIn = ',';
+q3_data = importdata(filename, delimiterIn);
+
+
+figure(11);
+hold on
+scatter(q3_data(:,1), q3_data(:,2)./q3_data(:,1), 5, 'b');
+scatter(q3_data(:,1), q3_data(:,4)./q3_data(:,1), 5, 'r');
+xlabel('data elements');
+ylabel('cycles');
+title('Branch switches each iteration');
+legend('branch1', 'branch2');
+hold off
+
+filename = 'q3_random.txt';
+delimiterIn = ',';
+q3_data = importdata(filename, delimiterIn);
+
+
+figure(12);
+hold on
+scatter(q3_data(:,1), q3_data(:,2)./q3_data(:,1), 5, 'b');
+scatter(q3_data(:,1), q3_data(:,4)./q3_data(:,1), 5, 'r');
+xlabel('data elements');
+ylabel('cycles');
+title('random values');
+legend('branch1', 'branch2');
+hold off
