@@ -17,8 +17,8 @@
 #define OP *
 
 //#define ONE_CHOICE
-#define SPLIT
-//#define UPDOWN
+//#define SPLIT
+#define UPDOWN
 //#define RANDOM
 
 typedef double data_t;
