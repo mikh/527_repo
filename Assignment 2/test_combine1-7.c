@@ -15,7 +15,7 @@
 
 #define OPTIONS 12
 #define IDENT 1.0
-#define OP *
+#define OP +
 
 #define TEST_COMBINE_8  //loop unrolling 5x
 #define TEST_COMBINE_9  //loop unrolling 6x
@@ -23,7 +23,7 @@
 #define TEST_COMBINE_11 //loop unrolling 10x
 #define TEST_COMBINE_12 //loop unrolling 10x, parallelism x2, associativity change
 
-typedef float data_t;
+typedef int data_t;
 
 /* Create abstract data type for vector */
 typedef struct {
