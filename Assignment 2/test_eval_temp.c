@@ -69,8 +69,8 @@ main(int argc, char *argv[])
   }
 
   /* output times */
-  for (i = 0; i < ITERS; i++) {
-    printf("\n%d,  ", BASE+(i+1)*DELTA);
+  for (i = 0; i < LENGTH; i++) {
+    printf("\n%d,  ", i);
     for (j = 0; j < OPTIONS; j++) {
       if (j != 0) printf(", ");
       printf("%d%d", time_stamp[j][i].tv_sec, time_stamp[j][i].tv_nsec);
