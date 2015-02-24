@@ -42,6 +42,7 @@ main(int argc, char *argv[])
   struct timespec time_stamp[OPTIONS][LENGTH];
   int clock_gettime(clockid_t clk_id, struct timespec *tp);
   double poly(double a[], double x, int degree);
+  double poly_1(double a[], double x, int degree);
   data_t *data_holder;
   double a[LENGTH];
 
@@ -64,6 +65,14 @@ main(int argc, char *argv[])
   for (i = 0; i < LENGTH; i++) {
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1);
     poly(a, X, i);
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time2);
+    time_stamp[OPTION][i] = diff(time1,time2);
+  }
+
+    OPTION++;
+  for (i = 0; i < LENGTH; i++) {
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1);
+    poly_1(a, X, i);
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time2);
     time_stamp[OPTION][i] = diff(time1,time2);
   }
@@ -109,3 +118,37 @@ double poly(double a[], double x, int degree){
   return result;
 }
 
+double poly_1(double a[], double x, int degree){
+  long int i;
+  double result = a[0];
+  double xpwr = x;  /* equals x^i at start of loop */
+  for(i = 1; i <= degree; i+=10){
+    result += (a[i] * xpwr);
+    xpwr = x * xpwr;
+    result += (a[i+1] * xpwr);
+        xpwr = x * xpwr;
+    result += (a[i+2] * xpwr);
+        xpwr = x * xpwr;
+    result += (a[i+3] * xpwr);
+        xpwr = x * xpwr;
+    result += (a[i+4] * xpwr);
+        xpwr = x * xpwr;
+    result += (a[i+5] * xpwr);
+        xpwr = x * xpwr;
+    result += (a[i+6] * xpwr);
+        xpwr = x * xpwr;
+    result += (a[i+7] * xpwr);
+        xpwr = x * xpwr;
+    result += (a[i+8] * xpwr);
+        xpwr = x * xpwr;
+    result += (a[i+9] * xpwr);
+
+     xpwr = x * xpwr;
+    }
+
+  for(; i <= degree; i++){
+    result += a[i] * xpwr;
+    xpwr = x * xpwr;
+  }
+  return result;
+}
