@@ -41,12 +41,14 @@ main(int argc, char *argv[])
   struct timespec time1, time2;
   struct timespec time_stamp[OPTIONS][LENGTH];
   int clock_gettime(clockid_t clk_id, struct timespec *tp);
+  double poly(double a[], double x, int degree);
   data_t *data_holder;
   double a[LENGTH];
 
   long int i, j, k;
   long long int time_sec, time_ns;
   long int MAXSIZE = BASE+(ITERS+1)*DELTA;
+
 
   // declare and initialize the vector structure
   data_holder = (data_t *) malloc(sizeof(data_t));
