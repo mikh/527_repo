@@ -13,7 +13,7 @@
 #define DELTA 10
 #define BASE 0
 
-#define OPTIONS 1
+#define OPTIONS 2
 #define IDENT 0
 #define OP +
 
