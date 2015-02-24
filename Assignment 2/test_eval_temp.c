@@ -122,7 +122,7 @@ double poly_1(double a[], double x, int degree){
   long int i;
   double result = a[0];
   double xpwr = x;  /* equals x^i at start of loop */
-  for(i = 1; i <= degree; i+=10){
+  for(i = 1; i <= degree; i+=5){
     result += (a[i] * xpwr);
     xpwr = x * xpwr;
     result += (a[i+1] * xpwr);
@@ -133,17 +133,7 @@ double poly_1(double a[], double x, int degree){
         xpwr = x * xpwr;
     result += (a[i+4] * xpwr);
         xpwr = x * xpwr;
-    result += (a[i+5] * xpwr);
-        xpwr = x * xpwr;
-    result += (a[i+6] * xpwr);
-        xpwr = x * xpwr;
-    result += (a[i+7] * xpwr);
-        xpwr = x * xpwr;
-    result += (a[i+8] * xpwr);
-        xpwr = x * xpwr;
-    result += (a[i+9] * xpwr);
 
-     xpwr = x * xpwr;
     }
 
   for(; i <= degree; i++){
