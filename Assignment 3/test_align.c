@@ -70,7 +70,8 @@ main(int argc, char *argv[])
   for (k = 0; k < BOUNDARY_ALIGNMENT; k++) { 
     x3 = (double*)(temp+k);                  
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1);
-
+    for(i = 0; i < 99; i++)
+    	x3[i] += 1.3 + x3[i+1];
     /* NEW CODE GOES HERE */
 
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time2);
