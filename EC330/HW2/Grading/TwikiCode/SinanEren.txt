@@ -1,0 +1,222 @@
+---+EC330 - Spring 2013 - Homework 2  for ShikhaTaori
+%TOC%
+
+---++_Assigned:_  Wednesday, February 11, 2015
+---++_Due:_  Thursday, February 19, 2015 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(ShikhaTaori),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(10+$MOD(%PHI%,7))}%
+   * Set PHI2 = %CALCULATE{$EVAL(11+$MOD(%PHI%,11))}%
+   * Set PHI3 = %CALCULATE{$EVAL(12+$MOD(%PHI%,13))}%
+-->
+
+
+---+ Problem 1 *[Recurrences II, 40 points]*
+---++ a. T(n) = T(n-1) + n<sup> %PHI1% </sup>.
+O(n^12)
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ b. T(n) = 3 T(n/2) + n<sup>2</sup>.
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ c. T(n) = %PHI2% T(n/3) + n<sup>2</sup>.
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ d. T(n) = %CALCULATE{$EVAL(%PHI1% + 1)}% T(n/ %PHI1%) + n log n.
+O(n^ ((log 11)^12))
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ e. T(n) = 4 T(n/2) +  n <sup>2</sup>  &#8730;n.
+ O (n^2.5)
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ f. T(n) = n(T(n/2) <sup>2</sup>).
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ g. T(n) = T(n-1) + %PHI2% lg n.
+O(18n log n)
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ h. T(n) = T(n-1) + log<sup>2</sup>(n).
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2 *[Applied recurrences, 15 points]*
+---++ 2a.
+---+++ !!Recurrence
+<pre>
+Put the recurrence here
+</pre>
+
+---+++ !!Running Time
+<pre>
+Put the running time here
+</pre>
+
+---+++ !!Explanation
+<pre>
+Put your explanation here
+</pre>
+
+---++ 2b.
+---+++ !!Recurrence
+<pre>
+Put the recurrence here
+</pre>
+
+---+++ !!Running Time
+<pre>
+Put the running time here
+</pre>
+
+---+++ !!Explanation
+<pre>
+Put your explanation here
+</pre>
+
+---++ 2c.
+---+++ !!Recurrence
+<pre>
+Put the recurrence here
+</pre>
+
+---+++ !!Running Time
+<pre>
+Put the running time here
+</pre>
+
+---+++ !!Explanation
+<pre>
+Put your explanation here
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+Problem 3 *[Collatz, 45 points]*
+---++ 3a.  Subtraction [10 points]
+Attach your solution as =3a.h=.
+
+---++ 3b.  Running time [20 points]
+---+++ i. Vector
+----++++ !!Running time:
+<pre>
+Put the running time here
+</pre>
+
+----++++ !!Explanation:
+<pre>
+Put your explanation here if necessary
+</pre>
+
+---+++ ii. List
+----++++ !!Running time:
+<pre>
+Put the running time here
+</pre>
+
+----++++ !!Explanation:
+<pre>
+Put your explanation at here if necessary
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---++ 3c. Collatz [15 points]
+---+++ i. Code
+%CODE{"cpp"}%
+// put your code here for computing CollatzCount(%PHI%) using a list<int> to store digits
+
+%ENDCODE%
+---+++ ii. Order
+<pre>
+Put your answer here. You may use < to denote asymptotic less-than, and = to denote asymptotic equality. 
+For example, i < ii < iii
+</pre>
+---+++ iii. Design
+<pre>
+Put your design  here
+</pre>
+
+---+++ iv. Extra credit
+Please submit this online.
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+TWIKIFILEEND

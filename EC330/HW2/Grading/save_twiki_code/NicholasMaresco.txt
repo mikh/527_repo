@@ -1,0 +1,457 @@
+---+EC330 - Spring 2013 - Homework 2  for NicholasMaresco
+%TOC%
+
+---++_Assigned:_  Wednesday, February 11, 2015
+---++_Due:_  Thursday, February 19, 2015 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(NicholasMaresco),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(10+$MOD(%PHI%,7))}%
+   * Set PHI2 = %CALCULATE{$EVAL(11+$MOD(%PHI%,11))}%
+   * Set PHI3 = %CALCULATE{$EVAL(12+$MOD(%PHI%,13))}%
+-->
+
+
+---+ Problem 1 *[Recurrences II, 40 points]*
+---++ a. T(n) = T(n-1) + n<sup> %PHI1% </sup>.
+
+T(n) = T(n-1) + n^15
+
+T(1) = T(0) + 1^15
+T(2) = T(1) + 2^15 = T(0) + 1^15 + 2^15
+T(3) = T(2) + 3^15 = T(0) + 1^15 + 2^15 + 3^15
+
+T(n) = T(0) + sum from i = 1 to n+1 of (i^15)
+
+ans: T(n) is Theta(n^16)
+
+For summations from i = 1 to n of n^c they converge to polynomials of the power c + 1
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ b. T(n) = 3 T(n/2) + n<sup>2</sup>.
+
+T(n) = 3T(n/2) + n^2
+
+T(n/2) = 3T(n/4) + (n/2)^2
+T(n/4) = 3T(n/8) + (n/4)^2
+
+T(n) = 3[3[3T(n/8) + (n/4)^2] + (n/2)^2] + n^2
+     = 3*3*3T(n/8) + 3*3(n/4)^2 + 3(n/2)^2 + n^2
+	 = sum from i = 0 to lg(n) of (2^i) + theta(n^2)
+	 = (2^(lg(n)+1)-1)/(2-1) + theta(n^2)
+	 = 2^(lg(n) + 1) + theta(1) + theta(n^2)
+	 = theta(n) + theta(1) + theta(n^2)
+
+ans: T(n) is theta(n^2)
+
+The iterative method was used here to identify a recurring pattern.
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ c. T(n) = %PHI2% T(n/3) + n<sup>2</sup>.
+
+T(n) = 20T(n/3) + n^2
+	 = n^(log3(20)) + n^2		log3(20)~~2.73
+	 f(n) is O(nlog3(20)) therefore CASE 3 of master method
+	 
+ans: T(n) is theta(n^(log3(20)))
+
+
+The properties of this recurrence met the requirements more the 3rd case of the master method
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ d. T(n) = %CALCULATE{$EVAL(%PHI1% + 1)}% T(n/ %PHI1%) + n log n.
+
+T(n) = 16T(n/15) + nlog(n)
+	compare n^(log15(16)) with nlog(n)
+	--> nlogn is O(n^(log15(16))) CASE 1
+	
+ans: T(n) is theta(n^(log15(16)))
+
+The properties of this recurrence met the properties of case 1 of the master method
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ e. T(n) = 4 T(n/2) +  n <sup>2</sup>  &#8730;n.
+
+T(n) = 4T(n/2) + n^2 * sqrt(n)
+	compare n^(log2(4)) with n^(2.5)
+	--> n^(2.5) is BigOmega(n^2) CASE 3 of the master method
+	
+ans: T(n) is theta(n^2 * sqrt(n))
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ f. T(n) = n(T(n/2) <sup>2</sup>).
+
+T(n) = nT(n/2)^2
+
+log(T(n)) = log(n) + 2log(T(n/2))
+
+log(t(n/2)) = log(n/2) + 2log(T(n/4))
+log(t(n/4)) = log(n/4) + 2log(T(n/8))
+
+
+log(T(n)) = [sum from i = 0 to lg(n) of 2^i * log(n/(2^i))] + (k)*log(T(n/(2^i)))
+
+2^i = n —.> i = lg(n)
+
+log(T(n)) = [sum from i = 0 to lg(n) of n * log(n/n)] + (n)*log(T(n/(n)))
+
+ans: T(n) is theta(nlog(n))
+
+I found a logarithmic pattern that allows to solve the recurrence easier. This method was a combination of transformation and iteration
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ g. T(n) = T(n-1) + %PHI2% lg n.
+
+\T(n) = T(n-1) + 20lg(n)
+
+T(1) = T(0) + 0
+T(2) = T(1) + 20lg(2)
+T(3) = T(2) + 20lg(3)
+
+T(n) = T(0) + 20*[sum from i = 1 to n of lg(n)] = T(0) + lg(n!);
+
+ans: T(n) is theta(lg(n!))
+
+I made use of the additive property of logarithms, so essentially numbers from 1 to n are all multiplied in the nice expression n!
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ h. T(n) = T(n-1) + log<sup>2</sup>(n).
+
+
+T(n) = T(n-1) + [log(n)]^2
+
+T(1) = T(0) + 0 
+T(2) = T(1) + log(2)^2
+T(3) = T(2) + log(3)^2
+
+T(n) = T(0) + [sum from i = 1 to n of log(i)^2]
+
+
+log(n) < log(n)^2 < nlog(n)
+
+ans: T(n) is BigO(nlog(n))
+     T(n) is BigOmega(log(n))
+
+
+The bounds were not explicitly solvable, so I found the closest upper and lower bounds I felt best fit the recurrence 
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2 *[Applied recurrences, 15 points]*
+---++ 2a.
+
+T(n) = sum from i = 0 to n of (i) == (1/2)*n*(n+1)
+
+There is an inner loop iteration for every outer loop iteration 
+therefore the runtime is theta(n^2).
+
+ans: theta(n^2)
+---+++ !!Recurrence
+<pre>
+Put the recurrence here
+</pre>
+
+---+++ !!Running Time
+<pre>
+Put the running time here
+</pre>
+
+---+++ !!Explanation
+<pre>
+Put your explanation here
+</pre>
+
+---++ 2b.
+
+T(n) = T(n/17)
+
+Runtime only drastically changes for different powers of 17 inputs therefore the runtime is theta(log17(n)).
+
+ans: theta(log17(n))
+---+++ !!Recurrence
+<pre>
+Put the recurrence here
+</pre>
+
+---+++ !!Running Time
+<pre>
+Put the running time here
+</pre>
+
+---+++ !!Explanation
+<pre>
+Put your explanation here
+</pre>
+
+---++ 2c.
+
+For large cases of n >> 20,
+
+T(n) = theta(1)
+
+For very large input n, n will be reduced to 20 thus 20 will be passed to the recurrence after the first iteration. Meaning, all large n >> 20, the algorithm always runs the same time, so constant running time.
+---+++ !!Recurrence
+<pre>
+Put the recurrence here
+</pre>
+
+---+++ !!Running Time
+<pre>
+Put the running time here
+</pre>
+
+---+++ !!Explanation
+<pre>
+Put your explanation here
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+Problem 3 *[Collatz, 45 points]*
+//
+//  3a.h
+//  EC330 HW2
+//
+//  Created by Nick Maresco on 2/18/15.
+//  Copyright (c) 2015 ___MARRSS___. All rights reserved.
+//
+// Communicated with Brian Tan
+//
+
+#include "bigNumT.h"
+using namespace std;
+
+
+template <typename STORAGE = vector<int> >                          //any data of your choice
+class bigNumTwithMinus: public bigNumT<STORAGE>
+{
+public:
+    bigNumTwithMinus(string num = " ");                                     //default constructor inherits from bigNumT
+    bigNumTwithMinus& operator-(bigNumTwithMinus<STORAGE>& subtractend);    //give unique ability to subtract bigNumT's
+};
+
+template <typename T>
+bigNumTwithMinus<T>::bigNumTwithMinus(string num):bigNumT<T>(num){}
+
+template <typename T>
+bigNumTwithMinus<T>& bigNumTwithMinus<T>::operator-(bigNumTwithMinus<T>& subtractend)
+{
+    bigNumTwithMinus<T> larger, smaller;                                //to be decided which of the two are the large and smaller #
+    bigNumTwithMinus<T>* result = new bigNumTwithMinus<T>();
+    
+    unsigned long this_size = this->digits.size();
+    unsigned long subtractend_size = subtractend.digits.size();
+    
+    if(this_size > subtractend_size){                              //set the larger number to large, smaller num to smaller
+        larger = *this;                                            //*this is larger
+        smaller = subtractend;
+    }
+    else if(this_size < subtractend_size){
+        larger = subtractend;                                      //*this is smaller
+        smaller = *this;
+        
+    }
+    else if(this_size == subtractend_size){                        //both numbers are the same amount of digits
+        typename T::iterator ii = this->digits.end() - 1;          //since vectors are reverse need to begin iterator at end
+        typename T::iterator jj = subtractend.digits.end() - 1;
+        
+        bool continue_condition = true;
+        int counter = 0;
+        
+        while(continue_condition){
+            if(counter == this_size){break;}
+            if(*(ii) == *(jj)){                                 //they are the same number
+                counter++;
+                ii--;
+                jj--;
+                continue;
+            }
+            else if(*(ii) > *(jj)){                             //*this was larger
+                larger = *this;
+                smaller = subtractend;
+                continue_condition = false;
+            }
+            else if(*(ii) < *(jj)){                             //*this was smaller
+                larger = subtractend;
+                smaller = *this;
+                continue_condition = false;
+            }
+            ii--;                                               //you have to keep checking the different places (thousands, hundreds, tens) to truly see where
+            jj--;                                               //there is variation
+            counter++;
+        }
+    }
+    
+    typename T::iterator large_iter = larger.digits.begin();
+    typename T::iterator small_iter = smaller.digits.begin();
+    
+    int dig, smallP = 0;
+    while(smallP < smaller.digits.size()){
+        if(*large_iter == 0){                                   //turn 0 - n to 9 - n then take 1 away from the next place over if it alows it
+            dig = 10 - *small_iter;
+            result->digits.push_back(dig);
+
+            typename T::iterator carryCheck = large_iter + 1;
+            while(*carryCheck){
+                *carryCheck = 9;
+                carryCheck++;
+            }
+
+            *carryCheck = *carryCheck - 1;
+            large_iter++;
+            small_iter++;
+            smallP++;
+            continue;
+        }
+        else if(*small_iter > *large_iter){                        //ensures that if a smaller digit is being subtracted from a larger,
+            dig = *large_iter + 10;                                //the carry over is compensated for
+            dig = dig - *small_iter;
+            *(large_iter + 1) = *(large_iter + 1) - 1;
+            result->digits.push_back(dig);
+        }
+        else{
+            dig = *large_iter - *small_iter;
+            result->digits.push_back(dig);
+        }
+        large_iter++;
+        small_iter++;
+        smallP++;
+    }
+    
+    for(;large_iter != larger.digits.end(); large_iter++){           //handles remainders
+        result->digits.push_back(*large_iter);
+    }
+    
+    return *result;
+}
+---++ 3b.  Running time [20 points]
+
+What is the worst-case asymptotic running time with bigNumT uses vector for storage?
+
+Vectors are better utilized when making use of fast random access, that being said, the worst-case asymptotic running time with bigNumT when using vectors is when there are n digits 
+in both integers being added. Random access is actually not utilized by the addition operator which also makes it a less idea storage device. The run time at worse of this algorithm is theta(n^2). However insertion for a vector is of constant time complexity.
+
+What is the worst-case asymptotic running time with bigNumT uses list for storage?
+
+Lists are better utilized when there is a high quantity of initial insertions. In this case there is a ton of initial insertion given that the two numbers being added are established prior to the addition, and the addition can be computed without random access. Lists also behave at a constant run time and have multi-directional iterators which would be very helpful for this problem in particular. Lists are powerful for their constant time deletion and insertion. Access in a list linear time complexity due to the fact that the list much be iterated first in order to get to a particular element.
+---+++ i. Vector
+----++++ !!Running time:
+<pre>
+Put the running time here
+</pre>
+
+----++++ !!Explanation:
+<pre>
+Put your explanation here if necessary
+</pre>
+
+---+++ ii. List
+----++++ !!Running time:
+<pre>
+Put the running time here
+</pre>
+
+----++++ !!Explanation:
+<pre>
+Put your explanation at here if necessary
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---++ 3c. Collatz [15 points]
+---+++ i. Code
+%CODE{"cpp"}%
+// put your code here for computing CollatzCount(%PHI%) using a list<int> to store digits
+
+%ENDCODE%
+---+++ ii. Order
+<pre>
+Put your answer here. You may use < to denote asymptotic less-than, and = to denote asymptotic equality. 
+For example, i < ii < iii
+</pre>
+---+++ iii. Design
+<pre>
+Put your design  here
+</pre>
+
+---+++ iv. Extra credit
+Please submit this online.
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+

@@ -1,0 +1,422 @@
+---+EC330 - Spring 2013 - Homework 2  for ZhannaKaufman
+%TOC%
+
+---++_Assigned:_  Wednesday, February 11, 2015
+---++_Due:_  Thursday, February 19, 2015 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(ZhannaKaufman),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(10+$MOD(%PHI%,7))}%
+   * Set PHI2 = %CALCULATE{$EVAL(11+$MOD(%PHI%,11))}%
+   * Set PHI3 = %CALCULATE{$EVAL(12+$MOD(%PHI%,13))}%
+-->
+
+
+---+ Problem 1 *[Recurrences II, 40 points]*
+---++ a. T(n) = T(n-1) + n<sup> %PHI1% </sup>.
+---+++ !!Upper bound & Lower bound:
+<pre>
+
+<latex> \Theta = n^{17} </latex>
+
+</pre>
+
+---+++ !!Explanation:
+<pre>
+
+This problem can be solved using iteration. For instance, assuming T(0) is some constant C, 
+it is obvious that T(1) = T(0) + 1^16 = c + 1^16. Then, T(2) = c + 1^16 + 2^16. It can be seen
+that this function grows in the fashion
+
+<latex> \sum_{i=0}^{n} i^{16} </latex>
+
+While the identity for this is a complicated one, the dominating term in this sum will be 
+
+<latex> n^{17} </latex> 
+
+Making it the solution to <latex> \Theta </latex>
+
+</pre>
+
+---++ b. T(n) = 3 T(n/2) + n<sup>2</sup>.
+---+++ !!Upper bound & Lower bound:
+<pre>
+
+<latex> \Theta = n^{2} </latex>
+
+</pre>
+
+---+++ !!Explanation:
+<pre>
+
+This expression is in the form <latex> T(n) = aT(n/b) + f(n) </latex> , where a is 3, b is 2,
+and f(n) is n^2. This means the master method can be used in determining Theta. 
+
+<latex> \log_{2} 3 = 1.58 </latex>
+
+This fits into case 3 for the master method, because 
+
+<latex> n^{2} = \Theta(n^{1.58 + epsilon}) when epsilon < 0.42 </latex> 
+
+This means that for these values, n^2 grows more quickly. 
+
+Additionally, <latex> af(n/b) <= cf(n) </latex> holds true for any c for any n>0. Having 
+proven that case three works, we now know that  f(n) acts as the upper and lower bound 
+for T(n).
+
+</pre>
+
+---++ c. T(n) = %PHI2% T(n/3) + n<sup>2</sup>.
+---+++ !!Upper bound & Lower bound:
+<pre>
+
+<latex> \Theta = n^{log_3 18 = 2.63} </latex>
+
+
+</pre>
+
+---+++ !!Explanation:
+<pre>
+
+This expression is also in the correct format for the Master method of analysis, where a = 18, 
+b = 3, and f(n) = n^2
+
+<latex> log_{3}^{18} = 2.63 </latex> , so this expression fits into case 1, where 
+
+<latex> f(n) = O(n^{log_b a - epsilon}) , epsilon  <  0.63 </latex> 
+
+This gives us a solution of <latex> n^{log_b a} for \Theta </latex>
+
+</pre>
+
+---++ d. T(n) = %CALCULATE{$EVAL(%PHI1% + 1)}% T(n/ %PHI1%) + n log n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+
+<latex>  \Theta =  n^{\log_{16}^{17} = 1.02} </latex>
+</pre>
+
+---+++ !!Explanation:
+<pre>
+
+Again, the master method can be used to analyze this expression. Here, a = 17, b = 16,
+and f(n) = nlog(n). Again, this expression fits into case 1, as long as epsilon is small.
+
+<latex> nlogn = O(n^{1.02 - epsilon} ) </latex> 
+
+This means that 
+
+<latex> T(n) = \Theta (n^{1.02}) </latex>
+
+</pre>
+
+---++ e. T(n) = 4 T(n/2) +  n <sup>2</sup>  &#8730;n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+
+<latex> \Theta = n^{2.5} </latex>
+
+</pre>
+
+---+++ !!Explanation:
+<pre>
+
+Using the master method, we can see that this expression fits into case three, where
+
+<latex> f(n) = \Omega(n^{log_b{a} + epsilon}) </latex>
+
+a = 4 here, b = 2, so log2(4) = 2. Meanwhile, f(n) = n^2.5. So as long as epsilon is less
+than .5, case three works. This means that the solution becomes 
+
+<latex> f(n) = n^{2.5} </latex>
+
+</pre>
+
+---++ f. T(n) = n(T(n/2) <sup>2</sup>).
+---+++ !!Upper bound & Lower bound:
+<pre>
+
+<latex> \Theta = \frac{4^{n-1}}{n} </latex>
+
+</pre>
+
+---+++ !!Explanation:
+<pre>
+
+This problem is best solved with iteration. T(2) = 2*T(1)^2. Then, T(4) = 4*T(2)^2 = 4 * 4 * T(1) ^ 4.
+T(8) = 8*T(4)^2 = 8 * 4 * 4 * 4 * 4 * T^(1)^8. T(1) to the power of anything will always be a constant,
+so we look at the other terms, and see that at n = 4, T(n) = 4*4 = 4^2 = 4^3/4. Then, at n = 8, 
+T(n) = 2*4*4*4*4*4 = 4^6/2 = 4^7/8. This pattern continues, giving us Theta.  
+
+</pre>
+
+---++ g. T(n) = T(n-1) + %PHI2% lg n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+
+<latex> \Theta = lg(n!) </latex>
+
+</pre>
+
+---+++ !!Explanation:
+<pre>
+
+This expression can be analyzed through iteration. For instance, T(2) = T(1) + 18*lg(2). Then, 
+T(3) = T(1) + 18*lg(2) + 18*log(3), and so on. Then, we can say that 
+
+<latex> T(n) = T(1) + \sum_{i=1}^{n} 18*lg(i) </latex> 
+
+Using the fact that adding logs is the same as multiplying their terms, this becomes 
+
+<latex> T(n) = T(1) + 18*lg(n!) </latex> 
+</pre>
+
+---++ h. T(n) = T(n-1) + log<sup>2</sup>(n).
+---+++ !!Upper bound & Lower bound:
+<pre>
+
+<latex> \Theta =  \sum_{i = 1}^{n} log^2(i) </latex>
+</pre>
+
+---+++ !!Explanation:
+<pre>
+
+Again, it is simplest to look at this expression through iteration. T(2) = T(1) + log^2(2),
+and T(3) = T(1) + log^2(3) + log^2(2). This means the function growth can be 
+shown as 
+
+<latex> \sum_{i = 1}^{n} log^2(i) </latex> 
+
+There is no way to solve this function
+
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2 *[Applied recurrences, 15 points]*
+---++ 2a.
+---+++ !!Recurrence
+<pre>
+
+<latex>T(n) = T(n-1) +  n </latex>
+
+or
+
+<latex>T(n) = \sum_{i=1}^{n} i  </latex>
+
+</pre>
+
+---+++ !!Running Time
+<pre>
+
+ <latex>n^{2}</latex>
+
+</pre>
+
+---+++ !!Explanation
+<pre>
+
+This function is not a recursive function. Analyzing the function
+ through iterations, we can see that if nn is 1, the loops run one time, 
+and there is one summation. When nn is 2, the first loop runs twice, 
+and the second loop three times, once for ii = 0 and once for ii = 1 
+( the iterations of the outer loop). The summation is done three times. 
+When nn is 3, it is done six times, and so on. Each value of nn does 
+exactly nn more summations than its predecessor. If one were to 
+describe this function in terms of recursion, the equation would look like 
+
+<latex>T(n) = T(n-1) +  n </latex>
+
+or
+
+But because this isn't a recursion, this can be simplified to 
+
+<latex>T(n) = \sum_{i=1}^{n} i  </latex>
+
+and to obtain the running time it is only necessary to solve the summation
+using its identity, resulting in 
+
+<latex> \frac{n(n+1)}{2} </latex>, a relation where the <latex>n^{2}</latex> dominates.
+
+</pre>
+
+---++ 2b.
+---+++ !!Recurrence
+<pre>
+
+<latex>T(n) = T(n/14) + 1 </latex>
+
+</pre>
+
+---+++ !!Running Time
+<pre>
+
+<latex> \log_14 n </latex>
+
+</pre>
+
+---+++ !!Explanation
+<pre>
+
+This can be solved by looking at the recursive terms. Every time the function runs, it calls itself 
+for nn = nn/14. This means that it will loop through n/14 times, and once more for when this value
+is equal to zero, to return the final result. This gives the recursion 
+
+<latex>T(n) = T(n/14) + 1 </latex> 
+
+Because one is a constant, one can look at the T(n/14) term to understand the growth of the function.
+Creating a recursion tree, it can be seen that before getting to T(1), there are 
+ 
+<latex> \log_14 n </latex>
+
+recursion steps. This gives the final running time of 
+
+<latex> \log_14 n </latex>
+
+
+</pre>
+
+---++ 2c.
+---+++ !!Recurrence
+<pre>
+
+<latex>T(n) = T(n/2) + T(n/4) + n - 18 </latex> 
+
+</pre>
+
+---+++ !!Running Time
+<pre>
+
+<latex> n </latex> 
+
+</pre>
+
+---+++ !!Explanation
+<pre>
+
+Every time this function runs, it recursively calls itself for (nn/2) and (nn/4), as well as 
+calling a number of summations equal to nn-18. This means that the amount of time that
+the function will take at every step will be equal to  
+
+<latex>T(n) = T(n/2) + T(n/4) + n - 18 </latex> 
+
+The n term will dominate this expression. However, it can also be analyzed in a more
+organized fashion. Understanding that it will take much longer for the n/2 term to reach 
+1 than the n/4 term, the function can be approximated with 
+
+<latex>T(n) = T(n/2)  + n  </latex>  
+
+and analyzed with the master method. This fits into category three, as 
+
+
+<latex> n = \Omega (n^{log_2 1 + epsilon} )   </latex>  
+for any  
+<latex> epsilon < 1 </latex>
+
+Which means that <latex> T(n) is \Theta(n) </latex>
+
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+Problem 3 *[Collatz, 45 points]*
+---++ 3a.  Subtraction [10 points]
+Attach your solution as =3a.h=.
+
+---++ 3b.  Running time [20 points]
+---+++ i. Vector
+----++++ !!Running time:
+<pre>
+
+<latex> 3n + C </latex>
+
+</pre>
+
+----++++ !!Explanation:
+<pre>
+
+All of the operations in this code are constant except for assignment, which is linear. Because 
+assignment happens twice, this gives us 2n + C, with another n coming from iterating through the 
+for loops, where enough iterations happen for the number of digits of the larger number. This gives
+us an asymptotic running time of 3n + C.
+
+</pre>
+
+---+++ ii. List
+----++++ !!Running time:
+<pre>
+
+C++98 :
+<latex> 5n + C </latex>
+
+C++11:
+<latex> 3n + C </latex>
+
+</pre>
+
+----++++ !!Explanation:
+<pre>
+
+All of the operations are constant for C++98 besides assignment to the iterators and obtaining the sizes
+of the numbers, which is linear again. 
+This gives the original 3n plus 2 more n, with everything else constant. This gives 5n + C. With C++11,
+obtaining size is constant, so then the time goes back to 3n + C.
+
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---++ 3c. Collatz [15 points]
+---+++ i. Code
+%CODE{"cpp"}%
+// put your code here for computing CollatzCount(%PHI%) using a list<int> to store digits
+
+int main() {
+    bigNumT<list <int>> foo("94799382"); //initialize value
+    bignumT<list <int>> result = CollatzCount<>(foo); //run the function
+    cout<<result.print()<<endl; //print result
+
+return 0;
+}
+
+
+%ENDCODE%
+---+++ ii. Order
+<pre>
+
+
+Put your answer here. You may use < to denote asymptotic less-than, and = to denote asymptotic equality. 
+For example,<latex>  i < ii < iii </latex>
+
+Speed: <latex> ii<i<iii </latex>
+Deque is fastest, then vector, and finally list. This has been tested many times in the past, and is a stable 
+inequality.
+
+Memory: <latex> iii<i<ii </latex>
+List uses the least memory. Whenever an allocated amount of memory has been used in a vector, it doubles 
+its allocated size. Likewise, deque requires a large amount of memory for storage.
+
+
+</pre>
+---+++ iii. Design
+<pre>
+Put your design  here
+</pre>
+
+---+++ iv. Extra credit
+Please submit this online.
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+TWIKIFILEEND

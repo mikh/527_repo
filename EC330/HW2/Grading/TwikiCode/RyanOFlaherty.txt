@@ -1,0 +1,235 @@
+---+EC330 - Spring 2013 - Homework 2  for RyanOFlaherty
+%TOC%
+
+---++_Assigned:_  Wednesday, February 11, 2015
+---++_Due:_  Thursday, February 19, 2015 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(RyanOFlaherty),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(10+$MOD(%PHI%,7))}%
+   * Set PHI2 = %CALCULATE{$EVAL(11+$MOD(%PHI%,11))}%
+   * Set PHI3 = %CALCULATE{$EVAL(12+$MOD(%PHI%,13))}%
+-->
+
+
+---+ Problem 1 *[Recurrences II, 40 points]*
+---++ a. T(n) = T(n-1) + n<sup> %PHI1% </sup>.
+
+
+---+++ !!Upper bound & Lower bound:
+<pre>
+T(n) = &Theta;(n<sup>16</sup>)
+</pre>
+
+---+++ !!Explanation:
+<pre>
+This recurrence breaks down to the form T(n) = T(0) + c &Sum; n<sup>15</sup> and the largest polynomial in that sum is n<sup>15 + 1</sup> = n<sup>16</sup>
+</pre>
+
+---++ b. T(n) = 3 T(n/2) + n<sup>2</sup>.
+---+++ !!Upper bound & Lower bound:
+<pre>
+T(n) = &Theta;(n<sup>2</sup>)
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Case 3 of the master method: n<sup>2</sup> belongs to &Omega;(n<sup>log2(3)+&epsilon;</sup>) for some &epsilon; > 0
+</pre>
+
+---++ c. T(n) = %PHI2% T(n/3) + n<sup>2</sup>.
+---+++ !!Upper bound & Lower bound:
+<pre>
+T(n) = &Theta;(n<sup>log3(12)</sup>)
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Case 1 of the master method: n<sup>2</sup> belongs to O(n<sup>log3(12)-&epsilon;</sup>) for some &epsilon; > 0 
+</pre>
+
+---++ d. T(n) = %CALCULATE{$EVAL(%PHI1% + 1)}% T(n/ %PHI1%) + n log n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+T(n) = &Theta;(n<sup>log15(16)</sup>)
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Case 1 of the master method: n log(n) belongs to O(n<sup>log15(16)-&epsilon;</sup>)  for some &epsilon; > 0
+</pre>
+
+---++ e. T(n) = 4 T(n/2) +  n <sup>2</sup>  &#8730;n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+T(n) = &Theta;(n<sup>2.5</sup>)
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Case 3 of master method: n<sup>2.5</sup> belongs to &Omega;(n<sup>2+&epsilon;</sup>) for some &epsilon; > 0
+</pre>
+
+---++ f. T(n) = n(T(n/2) <sup>2</sup>).
+---+++ !!Upper bound & Lower bound:
+<pre>
+??
+</pre>
+
+---+++ !!Explanation:
+<pre>
+
+</pre>
+
+---++ g. T(n) = T(n-1) + %PHI2% lg n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+T(n) = &Theta;(n log(n))
+</pre>
+
+---+++ !!Explanation:
+<pre>
+This recurrence breaks down to T(n) = T(0) + 12&Sum;log n.  We know that sum is about equal to n log(n) due to Sterlings approximation of log(n!).
+</pre>
+
+---++ h. T(n) = T(n-1) + log<sup>2</sup>(n).
+---+++ !!Upper bound & Lower bound:
+<pre>
+T(n) = &Theta;(n log<sup>2</sup>(n))
+</pre>
+
+---+++ !!Explanation:
+<pre>
+This recurrence breaks down to T(n) = T(0) + 12&Sum;log<sup>2</sup>n.  We know that the &Sum; i<sup>c</sup> belongs to &Theta;(n * log(n)<sup>c</sup>).
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2 *[Applied recurrences, 15 points]*
+---++ 2a.
+---+++ !!Recurrence
+<pre>
+T(n) = i(n) * j(n)
+T(n) = n * n/2
+T(n) = n<sup>2</sup>/2
+</pre>
+
+---+++ !!Running Time
+<pre>
+T(n) = &Theta;(n<sup>2</sup>)
+</pre>
+
+---+++ !!Explanation
+<pre>
+There are two loops that must be executed, i and j.  The loop for i will loop through nn elements, therefore having a T(n) = n.  The loop j will only execute half of those previous loops since jj = ii and does not start at 0 on every iteration, giving it the T(n) = n/2.
+</pre>
+
+---++ 2b.
+---+++ !!Recurrence
+<pre>
+T(n) = n + 24*T(n / 24)
+</pre>
+
+---+++ !!Running Time
+<pre>
+T(n) = &Theta;(n log(n))
+</pre>
+
+---+++ !!Explanation
+<pre>
+Case 2 master theorem: log24(24) = 1.  Therefore we look at n vs. n and find that n is &Theta;(n), giving us that T(n) is ultimately &Theta;(n log(n))
+</pre>
+
+---++ 2c.
+---+++ !!Recurrence
+<pre>
+T(n) = T(1) + (n-12) + T(n/2) + (n-12)T(n/4)
+(n-12) ~ n : Therefore,
+T(n) = T(1) + n + T(n/2) + n*T(n/4)
+</pre>
+
+---+++ !!Running Time
+<pre>
+not sure how to solve the run time but explanation below might be correct
+</pre>
+
+---+++ !!Explanation
+<pre>
+int FC (int nn) {
+        if (nn==0) return 1;            // Run time of T(1) since we are checking nn against one value
+        int sum=0;
+        while (nn > 12) {                // The while loop has a run time of (n-12) ~ n
+                sum+=nn--;
+        }
+        return FC(nn/2)+sum*FC(nn/4);  // The function is called twice... FC(nn/2) has run time of T(n/2) and sum*FC(nn/4) has run time of n*T(n/4) where we assume n ~ (n-12)
+}
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+Problem 3 *[Collatz, 45 points]*
+---++ 3a.  Subtraction [10 points]
+Attach your solution as =3a.h=.
+
+---++ 3b.  Running time [20 points]
+---+++ i. Vector
+----++++ !!Running time:
+<pre>
+T(n) = n<sup>2</sup>*n<sup>2</sup> + n*n
+T(n) = &Theta;(n<sup>4</sup>)
+</pre>
+
+----++++ !!Explanation:
+<pre>
+.pushback is &Theta;(n)
+The first nested loop is then &Theta;(n<sup>2</sup>)*&Theta;(n<sup>2</sup>)
+The second loop is &Theta;(n)*&Theta;(n)
+</pre>
+
+---+++ ii. List
+----++++ !!Running time:
+<pre>
+T(n) = n<sup>2</sup> + n
+T(n) = &Theta;(n<sup>2</sup>)
+</pre>
+
+----++++ !!Explanation:
+<pre>
+Since linked lists can append or "pushback" in constant time, they reduce the time needed from a vector storage option by n<sup>2</sup>.
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---++ 3c. Collatz [15 points]
+---+++ i. Code
+%CODE{"cpp"}%
+// put your code here for computing CollatzCount(%PHI%) using a list<int> to store digits
+
+%ENDCODE%
+---+++ ii. Order
+<pre>
+Put your answer here. You may use < to denote asymptotic less-than, and = to denote asymptotic equality. 
+For example, i < ii < iii
+</pre>
+---+++ iii. Design
+<pre>
+Put your design  here
+</pre>
+
+---+++ iv. Extra credit
+Please submit this online.
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+TWIKIFILEEND

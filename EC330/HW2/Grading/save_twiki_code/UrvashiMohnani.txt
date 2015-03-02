@@ -1,0 +1,327 @@
+---+EC330 - Spring 2013 - Homework 2  for UrvashiMohnani
+%TOC%
+
+---++_Assigned:_  Wednesday, February 11, 2015
+---++_Due:_  Thursday, February 19, 2015 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(UrvashiMohnani),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(10+$MOD(%PHI%,7))}%
+   * Set PHI2 = %CALCULATE{$EVAL(11+$MOD(%PHI%,11))}%
+   * Set PHI3 = %CALCULATE{$EVAL(12+$MOD(%PHI%,13))}%
+-->
+
+
+---+ Problem 1 *[Recurrences II, 40 points]*
+---++ a. T(n) = T(n-1) + n<sup> %PHI1% </sup>.
+Using the iteration technique because the Master Theorem will not work in this case
+
+T(1) = T(0) + 1<br>
+T(2) = T(1) + 2<sup>13</sup> = T(0) + 1 + 2<sup>13</sup><br>
+T(3) = T(2) + 3<sup>13</sup> = T(0) + 1 + 2<sup>13</sup> + 3<sup>13</sup><br>
+T(n) = T(0) + 1 + 2<sup>13</sup> +3<sup>13</sup>  + ... + n<sup>13</sup><br> 
+
+The summation of n<sup>13</sup> from k = 1 to k = n gives a long polynomial with the highest power of n being 14 <br>
+Therefore T(n) is &theta; (n<sup>14</sup>) 
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ b. T(n) = 3 T(n/2) + n<sup>2</sup>.
+
+a = 3, b = 2<br>
+Applying the master theorem. Testing for case 3<br>
+g(n) = n<sup>log<sub>2</sub>3</sup> = n<sup>1.58</sup><br>
+f(n) = n<sup>2</sup><br>
+Need to check if f(n) is &#937;(g(n))<br>
+Is n<sup>2</sup> &#937;(n<sup>1.58 + &epsilon;</sup>). We know that &epsilon; > 0<br>
+As the limit of n goes to infinity for f(n)/g(n) should be a infinity, so f(n) should grow faster than g(n)<br>
+Therefore, we want 1.58 + &epsilon; < 2 which gives &epsilon; < 0.42 which is > 0 so our assumption is true and case 3 fits this function<br>
+Hence, T(n) is &theta;(n<sup>2</sup>)<br>
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ c. T(n) = %PHI2% T(n/3) + n<sup>2</sup>.
+
+a = 15, b = 3<br>
+Using the Master Theorem. Testing for case 1.<br>
+g(n) = n<sup>log<sub>3</sub>15</sup> = n<sup>2.46</sup><br>
+f(n) = n<sup>2</sup><br>
+We want to check if f(n) is O(g(n)) i.e is n<sup>2</sup> O(n<sup>2.46 - &epsilon;</sup>)<br>
+As the limit of n goes to infinity for f(n)/g(n) should be a constant. So we want g(n) to grow faster than f(n)<br>
+Therefore 2.46 - &epsilon; > 2 which gives &epsilon; < 0.46 which is > 0<br>
+So case 1 works and T(n) is &theta;(n<sup>log<sub>3</sub>15</sup>)<br>
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ d. T(n) = %CALCULATE{$EVAL(%PHI1% + 1)}% T(n/ %PHI1%) + n log n.
+
+a = 14, b = 13<br>
+Using the Master Theorem to test for case 1.<br>
+g(n) = n<sup>log<sub>13</sub>15</sup> = n<sup>1.029</sup><br>
+f(n) = n(log(n))<br>
+We want to check if f(n) is O(g(n)) i.e is n(log(n)) O(n<sup>1.029 - &epsilon;</sup>)<br>
+As the limit of n goes to infinity for f(n)/g(n) should be a constant. So we want g(n) to grow faster than f(n)<br>
+Using l'hopitals rule we find the limit as n goes to infinity of 1/[(0.29 - &epsilon;)n<sup>0.29 - &epsilon;</sup>]<br>
+So we want 0.29 - &epsilon; >0 since 1 is the same as n<sup>0</sup>. This gives us &epsilon; < 0.29 which is > 0<br>
+So case 1 works and T(n) is &theta;(n<sup>log<sub>13</sub>14</sup>)<br>
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ e. T(n) = 4 T(n/2) +  n <sup>2</sup>  &#8730;n.
+
+a = 4, b = 2<br>
+Applying the Master Theorem. Testing for case 3<br>
+g(n) = n<sup>log<sub>2</sub>4</sup> = n<sup>2</sup><br>
+f(n) = n<sup>2.5</sup><br>
+Need to check if f(n) is &#937;(g(n))<br>
+Is n<sup>2.5</sup> &#937;(n<sup>2 + &epsilon;</sup>). We know that &epsilon; > 0<br>
+As the limit of n goes to infinity for f(n)/g(n) should be a infinity, so f(n) should grow faster than g(n)<br>
+Therefore, we want 2 + &epsilon; < 2.5 which gives &epsilon; < 0.5<br> 
+This proves case 3 to be correct<br>
+Hence, T(n) is &theta;(n<sup>2</sup> &#8730;n)<br>
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ f. T(n) = n(T(n/2) <sup>2</sup>).
+
+Using Domain/Range method<br>
+Let n = 2<sup>i</sup><br>
+T(2<sup>i</sup>) = 2<sup>i</sup>[T(2<sup>i - 1</sup>)]<sup>2</sup><br>
+S(i) = i[S(i - 1)]<sup>2</sup><br>
+Therefore S(i) is &theta;(i)<br>
+T(2<sup>i</sup>) is &theta;(i)<br>
+But i = log<sub>2</sub>n which could also be log(n) <br>
+Therefore T(n) is &theta;(log(n))<br>
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ g. T(n) = T(n-1) + %PHI2% lg n.
+
+Using the Iterative method.<br>
+T(1) = T(0) + 14lg(1) = T(0)<br>
+T(2) = T(1) + 15lg(2) = T(0) + 15lg(2)<br>
+T(3) = T(2) + 15lg(3) = T(0) + 15lg(2) + 15lg(3)<br>
+T(n) = T(0) + 15lg(1) + 15lg(2) +...+15lg(n) = T(0) + 15*Summation of lg(k) for k = 1 to k = n<br>
+The summation of lg(k) from k = 1 to k = n is the same as lg(n!)<br>
+But lg(n!) is equivalent to n(lg(n))<br>
+Hence, T(n) is &theta;(n(lg(n)))<br>
+
+
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ h. T(n) = T(n-1) + log<sup>2</sup>(n).
+
+Using the Iterative method<br>
+T(1) = T(0) + log<sup>2</sup>(1) = T(0) <br>
+T(2) = T(1) + log<sup>2</sup>(2) = T(0) + log<sup>2</sup>(2)<br>
+T(3) = T(2) + log<sup>2</sup>(3) = T(0) + log<sup>2</sup>(2) + log<sup>2</sup>(3)<br>
+T(n) = T(0) + log<sup>2</sup>(1) + log<sup>2</sup>(2) + log<sup>2</sup>(3) +... + log<sup>2</sup>(n)<br>
+Therefore T(n) = T(0) + Summation of log<sup>2</sup>(k) from k = 1 to k = n<br>
+The summation of log<sup>2</sup>(k) is the same as the summation of log(k)*log(k)<br>
+We know that log(k) is equivalent to n(log(n)) so log<sup>2</sup>(k) is equivalent to n<sup>2</sup>log<sup>2</sup>(n)<br>
+But the n<sup>2</sup> dominates in this case so we can conclude that <br>
+T(n) is &theta;(n<sup>2</sup>)<br>
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2 *[Applied recurrences, 15 points]*
+---++ 2a.
+
+Recurrence is T(n) = n(n + 1) / 2<br>
+The running time is &theta;(n<sup>2</sup><br>
+
+There are two for loops in the snippet of code.<br>
+The algorithm goes in steps of T(n) = (n - 1) + (n - 2) + (n - 3) + ... + 1<br>
+This is a summation that is equivalent to n(n + 1) / 2<br>
+Therefore we take the highest power of n and that becomes the &theta; <br>
+Hence, T(n) is &theta;(n<sup>2</sup>)
+---+++ !!Recurrence
+<pre>
+Put the recurrence here
+</pre>
+
+---+++ !!Running Time
+<pre>
+Put the running time here
+</pre>
+
+---+++ !!Explanation
+<pre>
+Put your explanation here
+</pre>
+
+---++ 2b.
+Recurrence is T(n) = 16*T(n/16)<br>
+The running time is &theta;(n)<br>
+
+Using Master Theorem and applying case 1<br>
+a = 16, b = 16<br>
+g(n) = n<sup>log<sub>16</sub>16</sup> = n<sup>1</sup = n<br>
+f(n) = 0<br>
+Therefore limit as n goes to infinity of f(n)/g(n) should be a constant and in this case its 0<br>
+So T(n) is &theta;(n<sup>log<sub>16</sub>16</sup>) which is &theta;(n)
+---+++ !!Recurrence
+<pre>
+Put the recurrence here
+</pre>
+
+---+++ !!Running Time
+<pre>
+Put the running time here
+</pre>
+
+---+++ !!Explanation
+<pre>
+Put your explanation here
+</pre>
+
+---++ 2c.
+
+Recurrence is T(n) = T(n/2) + 15<br>
+The running time is &theta;(n<sup>log<sub>2</sub>1</sup>)<br>
+
+Using the Master method, testing for case 1<br>
+g(n) is n<sup>log<sub>2</sub>1</sup> = n<sup>0</sup> = 1<br>
+f(n) is 15<br>
+They are both asymptotically similar so the running time is linear.<br>
+Therefore T(n) is &theta;(n<sup>0</sup>)<br>
+---+++ !!Recurrence
+<pre>
+Put the recurrence here
+</pre>
+
+---+++ !!Running Time
+<pre>
+Put the running time here
+</pre>
+
+---+++ !!Explanation
+<pre>
+Put your explanation here
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+Problem 3 *[Collatz, 45 points]*
+---++ 3a.  Subtraction [10 points]
+Attach your solution as =3a.h=.
+
+---++ 3b.  Running time [20 points]
+---+++ i. Vector
+----++++ !!Running time:
+<pre>
+Put the running time here
+</pre>
+
+----++++ !!Explanation:
+<pre>
+Put your explanation here if necessary
+</pre>
+
+---+++ ii. List
+----++++ !!Running time:
+<pre>
+Put the running time here
+</pre>
+
+----++++ !!Explanation:
+<pre>
+Put your explanation at here if necessary
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---++ 3c. Collatz [15 points]
+---+++ i. Code
+%CODE{"cpp"}%
+// put your code here for computing CollatzCount(%PHI%) using a list<int> to store digits
+
+%ENDCODE%
+---+++ ii. Order
+<pre>
+Put your answer here. You may use < to denote asymptotic less-than, and = to denote asymptotic equality. 
+For example, i < ii < iii
+</pre>
+---+++ iii. Design
+<pre>
+Put your design  here
+</pre>
+
+---+++ iv. Extra credit
+Please submit this online.
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+   * [[%ATTACHURLPATH%/3a.h][3a.h]]: 3a.h
+
+TWIKIFILEEND

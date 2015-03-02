@@ -1,0 +1,257 @@
+---+EC330 - Spring 2013 - Homework 2  for ZacherySarkis
+%TOC%
+
+---++_Assigned:_  Wednesday, February 11, 2015
+---++_Due:_  Thursday, February 19, 2015 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(ZacherySarkis),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(10+$MOD(%PHI%,7))}%
+   * Set PHI2 = %CALCULATE{$EVAL(11+$MOD(%PHI%,11))}%
+   * Set PHI3 = %CALCULATE{$EVAL(12+$MOD(%PHI%,13))}%
+-->
+
+
+---+ Problem 1 *[Recurrences II, 40 points]*
+---++ a. T(n) = T(n-1) + n<sup> %PHI1% </sup>.
+<latex title="solution">
+  T(n)  \theta   n^{13}
+</latex>
+
+<latex title="method1">
+T(n) = T(n-1) + n^{12}</latex> is <latex title="method2">\theta   n^{13}</latex> because the expansion becomes <latex title="method3">\sum\limits_{i=1}^n n^{12}</latex> which is equal to<latex title="method4"> n^{13}</latex>.
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ b. T(n) = 3 T(n/2) + n<sup>2</sup>.
+<latex title="solution">
+T(n) \theta n^{2} </latex>
+
+<latex title="method1">
+T(n) = 3 T(n/2) + n</latex> is <latex title="method2"> \theta n^{2} </latex> by the master method where <latex title="method3">n^{2} > n^{log_{2}3}</latex>
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ c. T(n) = %PHI2% T(n/3) + n<sup>2</sup>.
+<latex title="solution">
+T(n) \theta n^{log_{3}11} </latex>
+
+<latex title="method1">
+T(n) = 11 T(n/3) + n^{2}</latex> is <latex title="method2"> \theta n^{log_{3}11} </latex> by the master method where <latex title="method3">n^{log_{3}11} > n^{2}</latex>
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ d. T(n) = %CALCULATE{$EVAL(%PHI1% + 1)}% T(n/ %PHI1%) + n log n.
+<latex title="solution">
+T(n) \theta nlog(n) </latex>
+
+<latex title="method1">
+T(n) = 14 T(n/13) + nlog(n)</latex> is <latex title="method2"> \theta nlog(n) </latex> by the master method where <latex title="method3">nlog(n) > n^{log_{13}14}</latex>
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ e. T(n) = 4 T(n/2) +  n <sup>2</sup>  &#8730;n.
+<latex title="solution">
+T(n) \theta n^{2}\sqrt{n} </latex>
+
+<latex title="method1">
+T(n) = 4 T(n/2) + n^{2}\sqrt{n}</latex> is <latex title="method2"> \theta n^{2}\sqrt{n}</latex> by the master method where <latex title="method3">n^{2}\sqrt{n} > log_{2}4</latex>
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ f. T(n) = n(T(n/2) <sup>2</sup>).
+<latex title="solution">
+T(n) \theta C^{n} </latex>
+
+<latex title="method1">
+T(n) = n(T(n/2)^{2})</latex> is <latex title="method2"> \theta C^{n}</latex> by substitution and the master method where after taking the log of the entire equation you find <latex title="method3">f(n) = log(n) + 2(f(n/2))</latex> which means  <latex title="method4"> f(n) \theta n </latex> which means <latex title="method5"> T(n) \theta C^{n}</latex>
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ g. T(n) = T(n-1) + %PHI2% lg n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ h. T(n) = T(n-1) + log<sup>2</sup>(n).
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2 *[Applied recurrences, 15 points]*
+---++ 2a.
+it is of the order <latex>n^{2}</latex> because the first for loop brings it to <latex>n</latex>, and when multiplied with the 2nd, which is <latex>n/2</latex>, it is of the order <latex>n^{2}</latex>.
+---+++ !!Recurrence
+<pre>
+Put the recurrence here
+</pre>
+
+---+++ !!Running Time
+<pre>
+Put the running time here
+</pre>
+
+---+++ !!Explanation
+<pre>
+Put your explanation here
+</pre>
+
+---++ 2b.
+it is of the order <latex>n</latex> because the recurrence brings it to <latex>n/13</latex>which is of the order <latex>n</latex>.
+---+++ !!Recurrence
+<pre>
+Put the recurrence here
+</pre>
+
+---+++ !!Running Time
+<pre>
+Put the running time here
+</pre>
+
+---+++ !!Explanation
+<pre>
+Put your explanation here
+</pre>
+
+---++ 2c.
+it is of the order <latex>n^{2}</latex> because the while loop brings it to <latex>n</latex>, and the recursion goes to <latex>n</latex> again, so it is of the order <latex>n^{2}</latex>.
+---+++ !!Recurrence
+<pre>
+Put the recurrence here
+</pre>
+
+---+++ !!Running Time
+<pre>
+Put the running time here
+</pre>
+
+---+++ !!Explanation
+<pre>
+Put your explanation here
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+Problem 3 *[Collatz, 45 points]*
+---++ 3a.  Subtraction [10 points]
+Attach your solution as =3a.h=.
+
+---++ 3b.  Running time [20 points]
+
+---+++ i. Vector
+vector if of order <latex>n</latex> because it is random.
+----++++ !!Running time:
+<pre>
+Put the running time here
+</pre>
+
+----++++ !!Explanation:
+<pre>
+Put your explanation here if necessary
+</pre>
+
+---+++ ii. List
+List is of order <latex>n^{2}</latex> because it had to iterate through all preceding elements to the one it is looking for.
+----++++ !!Running time:
+<pre>
+Put the running time here
+</pre>
+
+----++++ !!Explanation:
+<pre>
+Put your explanation at here if necessary
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---++ 3c. Collatz [15 points]
+---+++ i. Code
+%CODE{"cpp"}%
+// put your code here for computing CollatzCount(%PHI%) using a list<int> to store digits
+
+%ENDCODE%
+---+++ ii. Order
+<pre>
+Put your answer here. You may use < to denote asymptotic less-than, and = to denote asymptotic equality. 
+For example, i < ii < iii
+</pre>
+---+++ iii. Design
+<pre>
+Put your design  here
+</pre>
+
+---+++ iv. Extra credit
+Please submit this online.
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+   * [[%ATTACHURLPATH%/3a.h][3a.h]]: 3a.h
+
+TWIKIFILEEND

@@ -1,0 +1,315 @@
+---+EC330 - Spring 2013 - Homework 2  for MichaelZhu
+%TOC%
+
+---++_Assigned:_  Wednesday, February 11, 2015
+---++_Due:_  Thursday, February 19, 2015 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(MichaelZhu),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(10+$MOD(%PHI%,7))}%
+   * Set PHI2 = %CALCULATE{$EVAL(11+$MOD(%PHI%,11))}%
+   * Set PHI3 = %CALCULATE{$EVAL(12+$MOD(%PHI%,13))}%
+-->
+
+
+---+ Problem 1 *[Recurrences II, 40 points]*
+---++ a. T(n) = T(n-1) + n<sup> %PHI1% </sup>.
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+Upper bound:  &#931;i^11 from i = 1 to n
+
+Lower bound: n
+
+Answer: T(n) = &#920;(&#931;i^11 from i = 1 to n)
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+Unlike most of the other parts of problem 1, T(n) can't be put into a closed-function form by the Master Method. Therefore we use the iterative method, [;ugging in 1, 2, and 3 for n, then applying a summation that reduces to T(n) = T(0) + [1 + 2 + 3 + 4 + 5 +... n] = &#931;i^11 from i=1 to n. This is case 3..
+
+---++ b. T(n) = 3 T(n/2) + n<sup>2</sup>.
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+Upper bound:  n^2
+
+Lower bound: n^log2(3)
+
+Answer: T(n) = &#920;(n^2)
+
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+This recurrence is written in the form that allows us to apply the Master Method, whereby a*T(n/2) -> n^log b (a).
+We see that, once a and b are plugged in, n^log2(3) = n^1.5899, which is less than n^2. Therefore, this is an example of case 3 since n^log2(3) < f(n), the non-recurrent part. 
+
+Therefore, T(n) = &#920;(n^2)
+
+---++ c. T(n) = %PHI2% T(n/3) + n<sup>2</sup>.
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+Upper bound:  n^log3(19)
+
+Lower bound: n^2
+
+Answer: T(n) = &#920;(n^log3(16))
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+This is another Master Method application, by which we see that n^log3(16) is the closed-form expression of 16*T(n/3) and is equivalent to n^2.524, which is greater than n^2, making it the upper bound. This is case 1.
+
+---++ d. T(n) = %CALCULATE{$EVAL(%PHI1% + 1)}% T(n/ %PHI1%) + n log n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+Upper bound:  n^log11(12)
+
+Lower bound: n*log(n)
+
+Answer: T(n) = &#920;(n^log11(12)
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+We apply the Master Method as before and see that n^log11(12) is 0.9649, which increases faster by a great margin than n*log n. This is case 1. 
+
+---++ e. T(n) = 4 T(n/2) +  n <sup>2</sup>  &#8730;n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+Upper bound:  n^2.5
+
+Lower bound: n^log2(4)
+
+Answer: T(n) = &#920;(n^2*n^0.5)
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+First, we note that n^log2(4) is simply 4, while n^2*n^0.5 is n^2.5, which makes it greater and hence, this is case 3. 
+
+---++ f. T(n) = n(T(n/2) <sup>2</sup>).
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+Upper bound:  
+
+Lower bound:
+
+Answer:
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ g. T(n) = T(n-1) + %PHI2% lg n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+Upper bound: 19/ln2*[n*ln(n)-n]
+
+Lower bound: n
+
+Answer: T(n) = &#920;(19*log2(n!))
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+This is another recurrence that cannot be solved by the Master Method. We therefore use the iterative method by plugging in 1, 2, 3,... for n. We simplify it to: 
+
+T(n) = T(0) + 19*log2(n!, 
+where 19log2(n!) = 19[log2(1)+log2(2)+log2(3)+... log2(n)]. 
+
+Now we are able to use the Master Method to obtain a closed-form expression by using the Sterling approximation, which states that lnn! = n*ln(n)-n
+
+Therefore, 19*log2(n!) = 16/ln2 * ln(n!) = ln2[n*ln(n)-n], which is greater than n. 
+
+---++ h. T(n) = T(n-1) + log<sup>2</sup>(n).
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+Upper bound:  
+
+Lower bound:
+
+Answer:
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2 *[Applied recurrences, 15 points]*
+---++ 2a.
+---+++ !!Recurrence
+<pre>
+Put the recurrence here
+</pre>
+
+There is no recurrence here. 
+
+---+++ !!Running Time
+<pre>
+Put the running time here
+</pre>
+
+(n^2-n)/2 -> O(n^2)
+
+---+++ !!Explanation
+<pre>
+Put your explanation here
+</pre>
+
+This function is not recursive because it never calls itself. It simply runs through the double-nested for loop and returns the sum, but not as an input to successive calls of FA.
+
+---++ 2b.
+---+++ !!Recurrence
+<pre>
+Put the recurrence here
+</pre>
+
+T(n/21)+1
+
+---+++ !!Running Time
+<pre>
+Put the running time here
+</pre>
+
+log21(n) -> O(log21(n))
+
+---+++ !!Explanation
+<pre>
+Put your explanation here
+</pre>
+
+This function is recursive. n is divided by 20 every time the function gets called and is zero. Its runtime is expression from i=1 to log21(n), resulting in a constant time of log21(n). 
+
+---++ 2c.
+---+++ !!Recurrence
+<pre>
+Put the recurrence here
+</pre>
+
+T(n)=T(n/2(+T(n/4)+T(n-16)
+
+---+++ !!Running Time
+<pre>
+Put the running time here
+</pre>
+
+
+
+---+++ !!Explanation
+<pre>
+Put your explanation here
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+Problem 3 *[Collatz, 45 points]*
+---++ 3a.  Subtraction [10 points]
+Attach your solution as =3a.h=.
+
+My solution is attached as 3a.h.
+
+---++ 3b.  Running time [20 points]
+---+++ i. Vector
+----++++ !!Running time:
+
+<pre>
+Put the running time here
+</pre>
+
+3n+C
+
+----++++ !!Explanation:
+<pre>
+Put your explanation here if necessary
+</pre>
+
+The operations in this code are constant, with the exception for the assignment to the sum, which is linear. Because assignment happens twice, this gives us 2n+C. Then we add another n due to the iteration through the for-loops as the number of digits get large. This gives us an 3n+C.
+
+---+++ ii. List
+----++++ !!Running time:
+<pre>
+Put the running time here
+</pre>
+
+5n+C
+
+----++++ !!Explanation:
+<pre>
+Put your explanation at here if necessary
+</pre>
+
+The operations are constant besides assignment and, since this is a list, finding the size of the numbers. This additional operation means that we add 2 more n terms than vectors, which results in 5n+C. 
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---++ 3c. Collatz [15 points]
+---+++ i. Code
+%CODE{"cpp"}%
+// put your code here for computing CollatzCount(%PHI%) using a list<int> to store digits
+
+%ENDCODE%
+---+++ ii. Order
+<pre>
+Put your answer here. You may use < to denote asymptotic less-than, and = to denote asymptotic equality. 
+For example, i < ii < iii
+</pre>
+---+++ iii. Design
+<pre>
+Put your design  here
+</pre>
+
+---+++ iv. Extra credit
+Please submit this online.
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+TWIKIFILEEND

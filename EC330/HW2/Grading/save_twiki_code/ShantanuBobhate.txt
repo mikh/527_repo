@@ -1,0 +1,440 @@
+---+EC330 - Spring 2013 - Homework 2  for ShantanuBobhate
+%TOC%
+
+---++_Assigned:_  Wednesday, February 11, 2015
+---++_Due:_  Thursday, February 19, 2015 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(ShantanuBobhate),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(10+$MOD(%PHI%,7))}%
+   * Set PHI2 = %CALCULATE{$EVAL(11+$MOD(%PHI%,11))}%
+   * Set PHI3 = %CALCULATE{$EVAL(12+$MOD(%PHI%,13))}%
+-->
+
+
+---+ Problem 1 *[Recurrences II, 40 points]*
+---++ a. T(n) = T(n-1) + n<sup> %PHI1% </sup>.
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+
+     Both the bounds for this function are the same:
+
+          <latex>n^{16}</latex>
+
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+
+     This answer was found using the iteration method:
+           <latex>T(1) = T(0) + (1)^{16}</latex>
+           <latex>T(2) = T(1) + (2)^{16} = T(0) + (1)^{16} + (2)^{16}</latex>
+
+     Therefore,
+           T(n) is the sum of <latex>k</latex> from <latex>1</latex> to <latex>n</latex> for <latex>i^{16}</latex>
+
+     Using the approximation by integration formula we can say that:
+           <latex>T(n) = \theta (n^{16})</latex>
+           
+</pre>
+
+---++ b. T(n) = 3 T(n/2) + n<sup>2</sup>.
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+
+     Both the bounds for this function are the same:
+
+           <latex>n^{2}</latex>
+
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+
+     This answer was found using the Master Method. Looking at the function we get the following:
+
+          <latex>a = 3; b = 2; f(n) = n^{2}</latex>
+
+     We can find the value of <latex>log_{b}(a) = log_{2} (3) = 1.584</latex>
+
+     We can see that this fits case 2 of the Master Method and so:
+
+     <latex>T(n) = \theta (n^{2})</latex>
+
+</pre>
+
+---++ c. T(n) = %PHI2% T(n/3) + n<sup>2</sup>.
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+
+     Both the bounds for this function are the same:
+
+           <latex>n^{log_{2}(11)}</latex>
+
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+
+     This answer was found using the Master Method. Looking at the function we get the following:
+
+          <latex>a = 11;   b = 2;   f(n) = n^{2}</latex>
+
+     We can find the value of <latex>log_{b}(a) = log_{2} (11) = 3.459</latex>
+     Also, <latex>a*f(n/b) = (11n^{2})/4</latex>
+
+     We can see that this fits case 1 of the Master Method and so:
+
+      <latex>T(n) = \theta (n^{log_{2}(11)})</latex>
+
+</pre>
+
+---++ d. T(n) = %CALCULATE{$EVAL(%PHI1% + 1)}% T(n/ %PHI1%) + n log n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+
+     Both the bounds for this function are the same:
+
+          <latex>n^{log_{16}(17)}</latex>
+
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+
+     This answer was found using the Master Method. Looking at the function we get the following:
+
+          <latex>a = 17;   b = 16;   f(n) = n*log(n)</latex>
+
+     We can find the value of <latex>log_{b}(a) = log_{16} (17) = 1.02</latex>
+     Also, <latex>a*f(n/b) = (17n*log(n/16))/16</latex>
+
+     We can see that this fits case 1 of the Master Method and so:
+
+     <latex>T(n) = \theta(n^{log_{16}(17)})</latex>
+
+</pre>
+
+---++ e. T(n) = 4 T(n/2) +  n <sup>2</sup>  &#8730;n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+
+     Both the bounds for this function are the same:
+
+          <latex>n^{2}*log(n)</latex>
+
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+
+     This answer was found using the Master Method. Looking at the function we get the following:
+
+          <latex>a = 4;   b = 2;   f(n) = n^{2.5}</latex>
+
+     We can find the value of <latex>log_{b}(a) = log_{2} (4) = 2</latex>
+     Also, <latex>a*f(n/b) = n^{2.5}/\sqrt[2]{2}</latex>
+
+     We can see that this fits case 3 of the Master Method and so:
+
+     <latex>T(n) = \theta (n^{2}*log(n))</latex>
+
+</pre>
+
+---++ f. T(n) = n(T(n/2) <sup>2</sup>).
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+
+     Both the bounds for this function are the same:
+
+          <latex>T(n) = \theta (2^{n})</latex>
+
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+
+     Using Recursion Tree.
+
+</pre>
+
+---++ g. T(n) = T(n-1) + %PHI2% lg n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+
+     Both the bounds for this function are the same:
+
+          <latex>log(n!)</latex>
+
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+
+     The answer was found using the iteration method:
+          <latex>T(1) = T(0) + 11log_{2}(1)</latex>
+          <latex>T(2) = T(1) + 11log_{2}(2) = T(0) + 11log_{2}(2) + 11log_{2}(1)</latex>
+
+     Therefore,
+           T(n) is the sum of <latex>k</latex> from <latex>1</latex> to <latex>n</latex> for <latex>11*log_{2}(n)</latex> plus some constant T(0).
+
+     Using the log property we can write this as:
+          <latex>log(n!)</latex>
+
+     And so, <latex>T(n) = \theta (log(n!))</latex>
+
+</pre>
+
+---++ h. T(n) = T(n-1) + log<sup>2</sup>(n).
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+
+     Both the bounds for this function are the same:
+
+          <latex>log^{2}(n!)</latex>
+
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+
+The answer was found using the iteration method:
+          <latex>T(1) = T(0) + 11log^{2}(1)</latex>
+          <latex>T(2) = T(1) + 11log^{2}(2) = T(0) + 11log^{2}(2) + 11log^{2}(1)</latex>
+
+     Therefore,
+           T(n) is the sum of <latex>k</latex> from <latex>1</latex> to <latex>n</latex> for <latex>11*log^{2}(n)</latex> plus some constant T(0).
+
+     Using the log property we can write this as:
+          <latex>log^{2}(n!)</latex>
+
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2 *[Applied recurrences, 15 points]*
+---++ 2a.
+---+++ !!Recurrence
+<pre>
+Put the recurrence here
+
+     Recurrence: <latex>T(n) = n^{2}</latex>
+
+</pre>
+
+---+++ !!Running Time
+<pre>
+Put the running time here
+
+     Running Time: <latex>\theta (n^{2})</latex>
+
+</pre>
+
+---+++ !!Explanation
+<pre>
+Put your explanation here
+
+     This is an iteration and there is no recurrence. Therefore, the worst-case runtime is just the time it takes for the iteration.
+
+</pre>
+
+---++ 2b.
+---+++ !!Recurrence
+<pre>
+Put the recurrence here
+
+     Recurrence: <latex>T(n) = 16*T(n/16)</latex>
+
+</pre>
+
+---+++ !!Running Time
+<pre>
+Put the running time here
+
+     Running Time: <latex>\theta (n)</latex>
+
+</pre>
+
+---+++ !!Explanation
+<pre>
+Put your explanation here
+
+     This answer was found using the Master Method. Looking at the function we get the following:
+
+          <latex>a = 16; b = 16; f(n) = 0</latex>
+
+     We can find the value of <latex>log_{b}(a) = log_{16} (16) = 1</latex>
+
+     We can see that this fits case 1 of the Master Method and so:
+
+     T(n) is theta of <latex>n</latex>
+
+</pre>
+
+---++ 2c.
+---+++ !!Recurrence
+<pre>
+Put the recurrence here
+
+     Recurrence: <latex>T(n) = (n - 14) + C</latex> where C is some constant > 0.
+
+</pre>
+
+---+++ !!Running Time
+<pre>
+Put the running time here
+
+     Running Time: <latex>\theta (n)</latex>
+
+</pre>
+
+---+++ !!Explanation
+<pre>
+Put your explanation here
+
+     Simply looking at the function, we can treat (C - 14) as a constant and so the <latex>T(n) = \theta (n)</latex>.
+
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+Problem 3 *[Collatz, 45 points]*
+---++ 3a.  Subtraction [10 points]
+Attach your solution as =3a.h=.
+<pre>
+
+       Solution has been attached at the bottom of the page.
+
+</pre>
+---++ 3b.  Running time [20 points]
+---+++ i. Vector
+----++++ !!Running time:
+<pre>
+Put the running time here
+
+     The worst-case asymptotic running time with bigNumT using vector for storage is <latex>n^{2}</latex>.
+
+</pre>
+
+----++++ !!Explanation:
+<pre>
+Put your explanation here if necessary
+
+     Note: Vector functions 'size()', 'begin()', 'end()' and 'push_back()' have a constant time complexity (From the cplusplus online reference).
+     However, '=' takes linear time since it assigns all the digits of a particular vector to this of another vector. 
+     Further, the iteration through all the digits of the vectors will take up linear amount of time.
+     Also, incase the size of the vector has to be increased, this would add <latex>n^{2}</latex> complexity.
+
+     Therefore, the total (worse-case) time complexity of the '+' operator will approximately be <latex>n^{2}</latex>.
+
+</pre>
+
+---+++ ii. List
+----++++ !!Running time:
+<pre>
+Put the running time here
+
+     The worst-case asymptotic running time with bigNumT using list for storage is <latex>n</latex>.
+
+</pre>
+
+----++++ !!Explanation:
+<pre>
+Put your explanation at here if necessary
+
+     Note: Vector functions 'begin()', 'end()' and 'push_back()' have a constant time complexity (From the cplusplus online reference).
+     However, '=' and the function 'size()' takes linear time. There are 2 calls to the size() function.
+     Further, the 2 assignments (first and second) and the 'for' loop would add to the time complexity.
+
+    Therefore, the total (worse-case) time complexity of the '+' operator will approximately be <latex>n</latex>.
+
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---++ 3c. Collatz [15 points]
+---+++ i. Code
+%CODE{"cpp"}%
+// put your code here for computing CollatzCount(%PHI%) using a list<int> to store digits
+
+/*
+ * Note: Include the list library in bigNumT.h and set STORAGE to list <int> 
+ */
+
+bigNumT<> arg0 = bigNumT<>("87459350");   // Instantiate the argument for the Collatz function
+bigNumT<> out = CollatzCount(arg0);   // Call the Collatz function and assign its value to the variable out
+cout << out.print() << endl;   // Outputs 193
+
+%ENDCODE%
+---+++ ii. Order
+<pre>
+Put your answer here. You may use < to denote asymptotic less-than, and = to denote asymptotic equality. 
+For example, i < ii < iii
+
+     Fastest to Slowest: (I = II) > III
+     Explanation: Functions of Deques and Vectors have the same time complexity. List take linear time to access elements.
+
+     Least Memory to Most Memory: III < II < I
+     Explanation: Lists don't require a fixed amount of space and therefore there is no unused space.
+     The cplusplus reference online says that deques are better than vectors at allocating space.
+
+</pre>
+---+++ iii. Design
+<pre>
+Put your design  here
+
+//
+//  student.h
+//  Homework 2
+//
+//  Created by Shantanu Bobhate on 2/18/15.
+//  Copyright (c) 2015 Shantanu Bobhate. All rights reserved.
+//
+
+#ifndef Homework_2_student_h
+#define Homework_2_student_h
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+// Make the student class extend the vector class
+class student: public vector<short> {
+};
+
+#endif  /* STUDENT_H */
+
+</pre>
+---+++ iv. Extra credit
+Please submit this online.
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+TWIKIFILEEND

@@ -1,0 +1,433 @@
+---+EC330 - Spring 2013 - Homework 2  for MinyingLu
+%TOC%
+
+---++_Assigned:_  Wednesday, February 11, 2015
+---++_Due:_  Thursday, February 19, 2015 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(MinyingLu),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(10+$MOD(%PHI%,7))}%
+   * Set PHI2 = %CALCULATE{$EVAL(11+$MOD(%PHI%,11))}%
+   * Set PHI3 = %CALCULATE{$EVAL(12+$MOD(%PHI%,13))}%
+-->
+
+
+---+ Problem 1 *[Recurrences II, 40 points]*
+---++ a. T(n) = T(n-1) + n<sup> %PHI1% </sup>.
+
+T(n) is &#920;(n<sup>14</sup>)
+
+Explanation:
+T(1) = T(0) + 1^13
+T(2) = T(1) + 2^13 = T(0) + 1^13 + 2^13
+T(n) = T(0) + 1^13 + 2^13 + 3^13 + ............+n^13
+
+which is  &#920;(n<sup>14</sup>)
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ b. T(n) = 3 T(n/2) + n<sup>2</sup>.
+
+T(n) is &#920;(n<sup>2</sup>)
+
+
+
+Explanations:
+use master method, a = 3, b = 2 f(n) = n<sup>2</sup>
+
+n<sup>log<sub>2</sub>3</sup> is smaller than n<sup>2</sup> with epsilon, and there exists constant c that 3*(n/2)^2 less c*n^2 is true.
+
+Therefore, case 3 applies. 
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ c. T(n) = %PHI2% T(n/3) + n<sup>2</sup>.
+
+T(n) is &#920;(n<sup>log<sub>3</sub>20</sup>)
+
+Explanation:
+Use Master Method. 
+Because a = 20, b = 30, f(n) = n<sup>2</sup>, there exists an epsilon that n<sup>log<sub>3</sub>20</sup> is less than n<sup>2</sup>, case 1 applies.
+
+Therefore, T(n) is &#920;(n<sup>log<sub>3</sub>20</sup>)
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ d. T(n) = %CALCULATE{$EVAL(%PHI1% + 1)}% T(n/ %PHI1%) + n log n.
+
+T(n) is  &#920;(n*log<sup>2</sup>n)
+
+Explanation:
+
+Because n<sup>log<sub>13</sub>14</sup> is not poly-nominally smaller than nlogn. I used Domain/Range transformation.
+
+set n = 13<sup>i</sup>
+therefore T(n) = T(13<sup>i</sup>) = 14*T(13<sup>i</sup>/13) + 13<sup>i</sup>log13<sup>i</sup>
+
+set S(i) = T(13<sup>i</sup>), I have S(i) = 14S(i-1) + i*13<sup>i</sup> approximately equal to 13S(i-1) + i*13<sup>i</sup> = 13<sup>i</sup>S(1) + i*(i+1)/2*13<sup>i</sup>
+
+Therefore T(n) = nT(1) + n*(log<sub>13</sub>n*(1+log<sub>13</sub>n)/2) which is &#920;(n*log<sup>2</sup>n)
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ e. T(n) = 4 T(n/2) +  n <sup>2</sup>  &#8730;n.
+
+T(n) is &#920;(n<sup>2.5</sup>)
+
+Explanation:
+Master Method case 3
+n^2.5 is poly-nominally bigger than n^2, and there exists a constant c such that 4*(n/2)^2,5 is smaller than or equal to c*n^2.5
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ f. T(n) = n(T(n/2) <sup>2</sup>).
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ g. T(n) = T(n-1) + %PHI2% lg n.
+
+T(n) is &#920;(nlogn)
+
+Explanation:
+
+Because T(n) = T(n-1) + 20lgn = T(n-2) + 20lg(n-1) + 20lgn = T(1) + 20lg((n-2)!)  is Theta(nlogn)
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ h. T(n) = T(n-1) + log<sup>2</sup>(n).
+
+T(n) is &#920;(nlog<sup>2</sup>n)
+
+Explanation:
+
+Because T(1) = T(0) + log<sup>2</sup>1, T(2) = T(1) + log<sup>2</sup>2 = T(0) + log<sup>2</sup>1 + log<sup>2</sup>2. 
+
+T(n) = T(0) +  log<sup>2</sup>1 + log<sup>2</sup>2 + ........ +  log<sup>2</sup>n, which is &#920;(nlog<sup>2</sup>n)
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2 *[Applied recurrences, 15 points]*
+---++ 2a.
+
+T(1) = 0*0%13
+
+T(2) = 0*0%13 + 1*0%13 + 1*1%13 = T(1) + 1*0%13 + 1*1%13
+
+T(3) = 0*0%13 + 1*0%13 + 1*1%13 + 0*2%13 + 1*2%13 + 2*2%13 = T(2) + 0*2%13 + 1*2%13 + 2*2%13
+
+The inner nested loop takes running time of n^2, and the outside loop runs from 0 to n so its  running time is the summation of n^2 from 0 to n. The running time for FA is n^3. 
+
+Therefore, T(n) = T(n-1) + n^2, T(n) is Theta(n^3)
+---+++ !!Recurrence
+<pre>
+Put the recurrence here
+</pre>
+
+---+++ !!Running Time
+<pre>
+Put the running time here
+</pre>
+
+---+++ !!Explanation
+<pre>
+Put your explanation here
+</pre>
+
+---++ 2b.
+
+T(0) = 0, T(n) = 16*T(n/16)
+
+a = 16, b = 16, f(n) = 0
+
+n<sup>log<sub>b</sub>a</sup> = n<sup>log<sub>16</sub>16</sup> = n^1 = n
+
+Therefore, T(n) is Theta(n)
+---+++ !!Recurrence
+<pre>
+Put the recurrence here
+</pre>
+
+---+++ !!Running Time
+<pre>
+Put the running time here
+</pre>
+
+---+++ !!Explanation
+<pre>
+Put your explanation here
+</pre>
+
+---++ 2c.
+
+T(n) = T(n/2) + T(n/4) + n
+
+T(n/2) = T(n/4) + T(n/8) + n/2; T(n/4) = T(n/8) + T(n/16) + n/4 ...............
+
+Therefore, use recursion tree method, we have T(n) is Theta(nlogn)
+---+++ !!Recurrence
+<pre>
+Put the recurrence here
+</pre>
+
+---+++ !!Running Time
+<pre>
+Put the running time here
+</pre>
+
+---+++ !!Explanation
+<pre>
+Put your explanation here
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+Problem 3 *[Collatz, 45 points]*
+---++ 3a.  Subtraction [10 points]
+Attach your solution as =3a.h=.
+
+---++ 3b.  Running time [20 points]
+---+++ i. Vector
+
+
+Runtime T(n) is Theta(n)
+
+•	The run time for vector::size is a constant C
+
+•	Assuming there’s no need of reallocation, running time of vector::push_back is constant.  
+
+•	The operator =, requires linear runtime T(n) is Theta(n)
+
+•	In operator +, the for loop iterate through n elements to find the sum for every digit, and then append it to a new vector. The runtime for this is is linear Theta(n)
+
+•	Because the runtime of vector:size is a constant, and runtime of addition of number with n digits is Theta(n). 
+
+•	The worst case asymptotic running time using vector for storage is constant + Theta(n) + Theta(n) which is  Theta(n) 
+----++++ !!Running time:
+<pre>
+Put the running time here
+</pre>
+
+----++++ !!Explanation:
+<pre>
+Put your explanation here if necessary
+</pre>
+
+---+++ ii. List
+
+Runtime is Theta(n)
+
+•	Because list container is implemented as doubly-linked lists. Each element in list is located in different and unrelated storage location. Each element contains pointer that points to the next element and is being pointed to by the previous element. 
+
+•	The operator =, requires linear runtime T(n) is Theta(n)
+
+•	List:size is linear because we need to go through all the elements to know how many elements are there. The runtime of this is Theta(n).
+
+•	the runtime of list::push_back is also constant, because it just need to access the last element and point to another location from there and copy/move the new value in the location. 
+
+•	The runtime for doing the addition for n digits is n*constant which is Theta(n)
+
+•	Therefore the worst case asymptotic running time using list for storage is Theta(n) + Theta(n) + Theta(n) is 3n which is Theta(n)
+----++++ !!Running time:
+<pre>
+Put the running time here
+</pre>
+
+----++++ !!Explanation:
+<pre>
+Put your explanation at here if necessary
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---++ 3c. Collatz [15 points]
+---+++ i. Code
+%CODE{"cpp"}%
+// put your code here for computing CollatzCount(%PHI%) using a list<int> to store digits
+
+#include "bigNumT.h"
+#include <list>      //include std::list library
+#include <iostream>
+using namespace std;
+
+/**
+* @requires  >= 1
+* @param nn The starting parameter.
+* @return The number of Collatz calls needed to reach 1 from the parameter .
+*         This implementation is iterative to avoid stack overflows
+*/
+
+template <typename T = list<int> > //use list<int> to store digits. 
+T CollatzCount(T nn) {
+        T ONE("1");   T TWO("2");   T THREE("3");
+        
+        T result("1");
+        for (;!(nn==ONE);result=result+ONE) {
+                if (TWO*(nn/TWO)==nn) // i.e. nn is even
+                nn = nn/TWO;
+                else                  // i.e. nn is odd
+                nn = THREE*nn+ONE;
+        }
+        return result;
+}
+
+int main(){
+  bigNumT<> number("88438422");
+  bigNumT<> result = CollatzCount(number);
+  cout << "Collatzcount = " << result.print() << endl;      //cout Collatzcount = 144
+  return 0;
+}
+
+%ENDCODE%
+---+++ ii. Order
+<pre>
+Put your answer here. You may use < to denote asymptotic less-than, and = to denote asymptotic equality. 
+For example, i < ii < iii
+
+
+i)fastest to slowest
+i < ii < iii, because vector has the best random access to individual elements among this three, and list has the worst because it needs to iterate through every element before i to get the address of the ith element. 
+
+ii)least memory to most memory
+iii < ii < i, because vector stores everything continuously, so it needs to allocate a large chunk of memory, vector container requires the most memory. And list stores its element in different and unrelated address so it requires the least memory. 
+
+</pre>
+---+++ iii. Design
+<pre>
+Put your design  here
+</pre>
+
+%CODE{"cpp"}%
+#include <iostream>
+#include "bigNumT.h"
+
+template <typename T> class Node
+template <typename T> class StudentIterator
+
+template <typename T>
+class Student{
+	public:
+		typedef StudentIterator<T> iterator;   //define iterator to be a type
+		
+		Student();
+		/*
+		** default constructor of class Student
+		** initiate first, last, size
+		*/
+		
+		void push_back(T& element);
+		/*
+		** dynamically allocate this element to an address that is unrelated to the previous element
+		** create a pointer "next" that will point to the future next element (doesn't exist right now)
+		** create a pointer "previous" that points to the previous element 
+		** link this element with the previous element
+		** (i.e. the previous element's "next" pointer points to this element
+		** and this element's "previous" pointer points to the previous element
+		** increment size
+		** make the end iterator point to this element
+		*/
+		
+		void pop_back();
+		/*
+		** use the begin iterator to find the address of the back element
+		** return this element 
+		** set the begin iterator to the address that this element's "next" pointer points to
+		** remove this element
+		** decrement size
+		*/
+		
+		void insert(iterator pos, T& element);
+		/*
+		** dynamically allocate a new element
+		** find the element by iterator
+		** link this element and the new element, link new element and this element's old next element 
+		** set the new element's "next" pointer to this element's "next" pointer
+		** set this element's "next" pointer to the new element...etc
+		** increment size
+		*/
+		
+		unsigned int size(); 	//return size
+		
+		iterator begin();		//return pointer that points to the fist element of the container
+		
+		iterator end(); 		//return pointer that points to the last element of the container
+		
+	private:
+		Node<T> * first;  		//pointer to the first element
+		Node<T> * last;			//pointer to the last element
+		unsigned int size;		//the size of the container, initially 0
+};
+%ENDCODE%
+---+++ iv. Extra credit
+Please submit this online.
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+

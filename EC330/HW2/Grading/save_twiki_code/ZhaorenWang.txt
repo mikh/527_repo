@@ -1,0 +1,241 @@
+---+EC330 - Spring 2013 - Homework 2  for ZhaorenWang
+%TOC%
+
+---++_Assigned:_  Wednesday, February 11, 2015
+---++_Due:_  Thursday, February 19, 2015 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(ZhaorenWang),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(10+$MOD(%PHI%,7))}%
+   * Set PHI2 = %CALCULATE{$EVAL(11+$MOD(%PHI%,11))}%
+   * Set PHI3 = %CALCULATE{$EVAL(12+$MOD(%PHI%,13))}%
+-->
+
+
+---+ Problem 1 *[Recurrences II, 40 points]*
+---++ a. T(n) = T(n-1) + n<sup> %PHI1% </sup>.
+
+---+++ !!Upper bound & Lower bound:
+<pre>
+<latex> \theta (n^{17}) </latex>
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Just using the Feynman method, one can see that to resolve this recursion it would take n passes. N^16 n times is N*N^16 which is N^17.
+</pre>
+
+---++ b. T(n) = 3 T(n/2) + n<sup>2</sup>.
+
+
+---+++ !!Upper bound & Lower bound:
+<pre>
+<latex> \Theta (n^2) </latex>
+
+
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Using case 3 of the master theorem, I found that c > logb(a) was 2 and <latex>n^2 </latex> was <latex> \Omega (n^2) </latex>
+The regularity condition is satisfied with <latex> k > 3/2 </latex>
+</pre>
+
+---++ c. T(n) = %PHI2% T(n/3) + n<sup>2</sup>.
+---+++ !!Upper bound & Lower bound:
+<pre>
+<latex> \theta (n^{log_3(18)} ) </latex>
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Using case 1 of the master theorem, I noted that  log_b(a) was > the exponent of n.
+This fit under case 1. 
+</pre>
+
+---++ d. T(n) = %CALCULATE{$EVAL(%PHI1% + 1)}% T(n/ %PHI1%) + n log n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+ \theta (n^{log_1_6(17)}) 
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Using case one, if i choose the constant small enough I can get n^(1.09999), which n(log(n)) is big O of.
+</pre>
+
+---++ e. T(n) = 4 T(n/2) +  n <sup>2</sup>  &#8730;n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+ \theta (n^2.5)
+
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Using case 3 of the master theorem, i see that 2.5 is polynomially greater than 2.0 and 
+choosing a constant > 1 satisfies regularity conditions
+</pre>
+
+---++ f. T(n) = n(T(n/2) <sup>2</sup>).
+---+++ !!Upper bound & Lower bound:
+<pre>
+Upper bound:
+<latex> n^{(2*log_2(n)) - 1)} </latex> 
+
+
+</pre>
+
+---+++ !!Explanation:
+<pre>
+I used the tree method and found that for each iteration after the first, a factor of 2 to the iteration would be added. 
+
+</pre>
+
+---++ g. T(n) = T(n-1) + %PHI2% lg n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+<latex> \theta(n(log(n))) </latex>
+</pre>
+
+---+++ !!Explanation:
+<pre>
+For this iteration to complete, it would take n iterations.
+Each iteration takes a constant * log(n) running time.
+For n iterations it would be nlogn.
+</pre>
+
+---++ h. T(n) = T(n-1) + log<sup>2</sup>(n).
+---+++ !!Upper bound & Lower bound:
+<pre>
+<latex> \theta(nlog(n)log(n)) </latex>
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Very similarly to the last problem, the iteration repeats n times and each time takes a log(n)log(n) time.
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2 *[Applied recurrences, 15 points]*
+---++ 2a.
+---+++ !!Recurrence
+<pre>
+<latex> C + (n * n) - (n*(n-1))/2)  </latex>
+</pre>
+
+---+++ !!Running Time
+<pre>
+<latex> \theta (n^2) </latex>
+</pre>
+
+---+++ !!Explanation
+<pre>
+There isn't really a recurrence. Outside the for loop there's some constant time. Inside the for loop 
+the first runs n times, and the nested loop runs (n-1) times then (n-2) times up until (n-(n-1)) times.
+The subtracted amount is a fractional constant times n^2 and thus the n^2 term still dominates.
+</pre>
+
+---++ 2b.
+---+++ !!Recurrence
+<pre>
+T[n] = T[n/14] + c
+</pre>
+
+---+++ !!Running Time
+<pre>
+<latex> \theta(log(n))</latex>
+</pre>
+
+---+++ !!Explanation
+<pre>
+This program goes through either <latex> log_14(n)  </latex> times or  <latex> log_14(n) + 1 </latex> times depending on whether the 
+nn is a power of 14 or not, because the function will return 0 when either nn/14 is either 1 or 0. Being an int, nn will be 1 only when nn is a power of 1.
+The factor of 14 in the return does not matter, as it will only take constant time anyway to multiply 0 by 14.
+</pre>
+
+---++ 2c.
+---+++ !!Recurrence
+<pre>
+T[n] = (n-18) + c
+</pre>
+
+---+++ !!Running Time
+<pre>
+<latex> \theta(n) </latex> 
+</pre>
+
+---+++ !!Explanation
+<pre>
+Assuming nn is passed by reference and not value, the function should only take constant time. The first iteration should only take n - 18 time 
+as the function will reduce n to 18 before calling itself as 9 and 5, which should resolve in constant time as they do not depend on n. 
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+Problem 3 *[Collatz, 45 points]*
+---++ 3a.  Subtraction [10 points]
+Attach your solution as =3a.h=.
+
+---++ 3b.  Running time [20 points]
+---+++ i. Vector
+----++++ !!Running time:
+<pre>
+<latex> \theta (n^2) </latex>
+</pre>
+
+----++++ !!Explanation:
+<pre>
+digits.push_back runs in amortized constant time, which is at worst case linear.
+digits.push_back is also in a for loop which has several constants and at worst case linear operations within it,
+which makes the best case linear, and the worst case theta of n squared.
+</pre>
+
+---+++ ii. List
+----++++ !!Running time:
+<pre>
+<latex> \theta (n) </latex>
+</pre>
+
+----++++ !!Explanation:
+<pre>
+List's .push_back function runs in constant time, thus in a for loop, it runs in linear * constant time, which is theta of n.
+However, list's .size function runs in linear time, which is worse than vector's constant time .size. This doesn't change the worst case bounds though, so list's worst case is still better than vectors.
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---++ 3c. Collatz [15 points]
+---+++ i. Code
+%CODE{"cpp"}%
+// put your code here for computing CollatzCount(%PHI%) using a list<int> to store digits
+
+%ENDCODE%
+---+++ ii. Order
+<pre>
+Put your answer here. You may use < to denote asymptotic less-than, and = to denote asymptotic equality. 
+For example, i < ii < iii
+</pre>
+---+++ iii. Design
+<pre>
+Put your design  here
+</pre>
+
+---+++ iv. Extra credit
+Please submit this online.
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+TWIKIFILEEND

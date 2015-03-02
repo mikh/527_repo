@@ -1,0 +1,309 @@
+---+EC330 - Spring 2013 - Homework 2  for TaranaChowdhury
+%TOC%
+
+---++_Assigned:_  Wednesday, February 11, 2015
+---++_Due:_  Thursday, February 19, 2015 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(TaranaChowdhury),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(10+$MOD(%PHI%,7))}%
+   * Set PHI2 = %CALCULATE{$EVAL(11+$MOD(%PHI%,11))}%
+   * Set PHI3 = %CALCULATE{$EVAL(12+$MOD(%PHI%,13))}%
+-->
+
+
+---+ Problem 1 *[Recurrences II, 40 points]*
+
+
+---++ a. T(n) = T(n-1) + n<sup> %PHI1% </sup>.
+
+a. T(n)= <latex>\Theta(n^{13})</latex> because using the iteration method the function above can be written as <latex> \sum_{x=0}^{n} x^{12} </latex> = <latex> n^{13}\over 13 </latex>
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ b. T(n) = 3 T(n/2) + n<sup>2</sup>.
+
+b. T(n)= <latex> \Theta (n^{2})</latex> because using the Master Method shows that this function satisfies case 3 where <latex> f(n)=n^{2} is \Omega (n^{log_{2}(3)})</latex> , since a=3 and b=2 in <latex>(n^{log_{b}(a)}) </latex>. 
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ c. T(n) = %PHI2% T(n/3) + n<sup>2</sup>.
+
+c. T(n)= <latex> \Theta (n^{log_{3}(14)})</latex> because using the Master Method shows that this function satisfies case 1 where <latex> f(n)=n^{2} is O (n^{log_{3}(14)})</latex> , since a=14 and b=3 in <latex>(n^{log_{b}(a)}) </latex>. 
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ d. T(n) = %CALCULATE{$EVAL(%PHI1% + 1)}% T(n/ %PHI1%) + n log n.
+
+d. T(n)= <latex> \Theta (n log (n))</latex> because using the Master Method shows that this function satisfies case 3 where <latex> f(n)=n log (n) is \Omega (n^{log_{12}(13)})</latex> , since a=13 and b=12 in <latex>(n^{log_{b}(a)}) </latex>. 
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ e. T(n) = 4 T(n/2) +  n <sup>2</sup>  &#8730;n.
+
+e. T(n)= <latex> \Theta (n^ {\frac {5}{2}})</latex> because using the Master Method shows that this function satisfies case 3 where <latex> f(n)=n^ {\frac {5}{2}} is \Omega (n^{2})</latex> , since a=4 and b=2 in <latex>(n^{log_{b}(a)}) </latex>. 
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ f. T(n) = n(T(n/2) <sup>2</sup>).
+
+T(n)=\Theta (n^{log n}) 
+
+Using iteration the recurrence can be written  T(n)=n*(n\over 2 *T(n \over 2^{2}))^{2}  and if this is continued the recurrence becomes \prod_{k=0}^{n} n^{k} \over 2^{k}(T(n \over 2^{k})^{k+1}) 
+
+Assuming T(1)=1 if we set (n \ over 2^{k})=1 . We get k=log(n) plugging that in above gives \prod_{k=0}^{n} n^{log (n)} \over 2^{log(n)}(T(n \over 2^{log(n)})^{log (n)+1})  which simplifies to \Theta n^{log(n)}.
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ g. T(n) = T(n-1) + %PHI2% lg n.
+
+T(n)= <latex> \Theta (n lg n) </latex> using iteration the recurrence can be written as <latex> \sum_{x=0}^{n} 14 lg x  </latex>= 14*lg n! which is <latex> \Theta </latex> (n log n) because lg n! is both  <latex> \Omega </latex> (n lg n) and O(n lg n). 
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ h. T(n) = T(n-1) + log<sup>2</sup>(n).
+
+This can be rewritten as T(n)=T(n-1) + 2*log (n), using iteration results in T(n)= <latex> \Theta (n log n) </latex> using iteration the recurrence can be written as <latex> \sum_{x=0}^{n} log^{2} x  </latex>=log^{2} n! which is <latex> \Theta (n log^{2} n)  </latex>because lg n! is both  <latex> \Omega  (n log^{2} n) </latex>and O(n log^{2} n). 
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2 *[Applied recurrences, 15 points]*
+
+---++ 2a.
+Recurrence: In the function FA there is no recurrence because the function never calls itself. 
+
+The run time will be a function of <latex>\Theta (n^{2}) </latex> . This is because the outer loop will execute nn times while the inner loop will execute nn^{2} times since it is an Arithmetic Series <latex>(\frac {(n-1)*n}{2})=\Theta (n^{2}) </latex>. 
+---+++ !!Recurrence
+<pre>
+Put the recurrence here
+</pre>
+
+---+++ !!Running Time
+<pre>
+Put the running time here
+</pre>
+
+---+++ !!Explanation
+<pre>
+Put your explanation here
+</pre>
+
+---++ 2b.
+Recurrence: T(n)=T(<latex>n \over 17 </latex>) +2
+Running time is T(n) is  <latex>\Theta log(n) </latex>
+
+Explanation:
+This is because for the worst case scenario the if conditions will not be met and T(n) will be reduced to T(n/17) and plus two for the two arithmetic operations (multiplication and division).  
+
+Assuming T(1)=1 and using iteration gives:
+T(<latex>n \over 17 </latex>)= T(<latex>n \over 17^{2} </latex> ) +2
+
+T(n)= (T(<latex>n \over 17^{2} </latex>) +2 )+2
+
+T(n)= T(<latex>n \over 17^{k} </latex> )+2 *k
+
+T(1)=1, means <latex>17^{k}= n </latex>, then k= log(n)
+
+T(n)= 1+2*log (n), so T(n) is  <latex>\Theta log(n) </latex>.
+
+---+++ !!Recurrence
+<pre>
+Put the recurrence here
+</pre>
+
+---+++ !!Running Time
+<pre>
+Put the running time here
+</pre>
+
+---+++ !!Explanation
+<pre>
+Put your explanation here
+</pre>
+
+---++ 2c.
+Recurrence: T(n)=T(<latex>n \over 2)</latex> + T(<latex>n \over 4)</latex> </latex> + 6
+Solving gives Running Time: T(n)=<latex>\Theta log(n)</latex>.
+
+Explanation 
+For the worst case scenario the if conditions will not be satisfied and run time will be reduced to  T(<latex>n \over 2</latex> ) + T(<latex>n \over 4</latex>), + 6 for the 6 arithmetic operations (addition, subtraction,[within the while loop], then the two divisions, multiplication and addition in the final return statement).Since the next iterative input will be <latex> nn \over 2</latex> and <latex> nn \over 4</latex> the while loop will be executed half as many times and then one fourth as many time times, so the time complexity of the while loop is in logarithmic time. 
+
+---+++ !!Recurrence
+<pre>
+Put the recurrence here
+</pre>
+
+---+++ !!Running Time
+<pre>
+Put the running time here
+</pre>
+
+---+++ !!Explanation
+<pre>
+Put your explanation here
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+Problem 3 *[Collatz, 45 points]*
+---++ 3a.  Subtraction [10 points]
+Attach your solution as =3a.h=.
+
+Attached code for header at bottom.
+
+---++ 3b.  Running time [20 points]
+---+++ i. Vector
+Running Time: T(n)=<latex>\Theta (n)</latex> 
+
+Explanation: Analyzing the operator+ in bigNumT reveals that it uses the iterator member type and uses the begin function which is constant time for vectors. Similarly all the access member functions are constant time, size is constant time, and the push_back member function is also constant time complexity. It also uses the operator= which is linear in time complexity.  In vectors the look up time is <latex>\Theta (1)</latex>so if the the operator+ function accesses lists in constant time , the worst case will be constant time * n so the running time is T(n)=<latex>\Theta (n)</latex> 
+----++++ !!Running time:
+<pre>
+Put the running time here
+</pre>
+
+----++++ !!Explanation:
+<pre>
+Put your explanation here if necessary
+</pre>
+
+---+++ ii. List
+Running Time: T(n)=<latex>\Theta (n ^{2})</latex> 
+
+Explanation: Analyzing the operator+ in bigNumT reveals that it uses the iterator member type and uses the begin function which is constant time for list. Similarly all the access member functions are constant time and the push_back member function is also constant time complexity. It also uses the operator= which is linear in time complexity. In lists the look up time is <latex>\Theta (n)</latex> because lists unlike vectors do not allow direct indexing, so if the the operator+ function accesses lists in linear time n, the worst case will be n * n so the running time is T(n)=<latex>\Theta (n^{2})</latex> 
+----++++ !!Running time:
+<pre>
+Put the running time here
+</pre>
+
+----++++ !!Explanation:
+<pre>
+Put your explanation at here if necessary
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---++ 3c. Collatz [15 points]
+---+++ i. Code
+%CODE{"cpp"}%
+// put your code here for computing CollatzCount(%PHI%) using a list<int> to store digits
+
+#include "bigNumT.h"
+#include <list> 
+template <typename T>
+T CollatzCount(T nn) {
+        T ONE("1");   T TWO("2");   T THREE("3");
+        
+        T result("1");
+        for (;!(nn==ONE);result=result+ONE) {
+                if (TWO*(nn/TWO)==nn) // i.e. nn is even
+                nn = nn/TWO;
+                else                  // i.e. nn is odd
+                nn = THREE*nn+ONE;
+        }
+        return result;
+}
+
+main(){
+	
+bigNumT <list <int> > foo("88479526");
+bigNumT <list <int> > result;
+result=CollatzCount(foo);
+cout<< result.print();	
+	
+}
+%ENDCODE%
+
+---+++ ii. Order
+<pre>
+Put your answer here. You may use < to denote asymptotic less-than, and = to denote asymptotic equality. 
+For example, i < ii < iii
+</pre>
+
+(i) fastest to slowest: deque <int> < vector<int> <  list <int>
+
+Both vectors and deque allow efficient direct indexing however vectors use a single array that is reallocated for growth,where as the elements of a deque can be scattered in different chunks of storage, this makes them more efficient for long sequences of storage. Lists do not allow direct access so for the CollatzCount function this will be a draw back in terms of speed. 
+
+(ii) least to most memory: list <int> < deque <int> < vector <int>
+
+Although lists and deques keep information regarding it's elements deques are doubly ended so they have information about both ends where as a (singly linked) list will only have a pointer to the next index, so it will require less space. And vectors require the most space they allocate extra storage for possible growth and for large sequences this will take up more memory. 
+---+++ iii. Design
+<pre>
+Put your design  here
+</pre>
+
+I would use a vector with pointers and store two iterations and it would write over the first element on the third iteration and so on. 
+---+++ iv. Extra credit
+Please submit this online.
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+TWIKIFILEEND

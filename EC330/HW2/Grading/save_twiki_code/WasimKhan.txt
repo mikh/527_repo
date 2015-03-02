@@ -1,0 +1,241 @@
+---+EC330 - Spring 2013 - Homework 2  for WasimKhan
+%TOC%
+
+---++_Assigned:_  Wednesday, February 11, 2015
+---++_Due:_  Thursday, February 19, 2015 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(WasimKhan),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(10+$MOD(%PHI%,7))}%
+   * Set PHI2 = %CALCULATE{$EVAL(11+$MOD(%PHI%,11))}%
+   * Set PHI3 = %CALCULATE{$EVAL(12+$MOD(%PHI%,13))}%
+-->
+
+
+---+ Problem 1 *[Recurrences II, 40 points]*
+---++ a. T(n) = T(n-1) + n<sup> %PHI1% </sup>.
+---+++ !!Upper bound & Lower bound:
+<pre>
+T(n) is theda of n^13
+</pre>
+
+---+++ !!Explanation:
+<pre>
+The method I used for this was just iterating from T(1) to T(n). T(1) was T(0) + 1^12. T(2) was T(1) + 2^12, which equals T(0) + 1^12 + 2^12. T(3) was T(2) + 3^12, which equals T(0) + 1^12 + 2^12 + 3^12. The pattern is T(0) + sum from i=1 to i=n of i^12. This is a sum of powers with the biggest term being bounded by n^(12+1). As a result, all of the smaller terms are dominated by n^13, including the constant run time of T(0). Therefore, T(n) is theda of n^13
+</pre>
+
+---++ b. T(n) = 3 T(n/2) + n<sup>2</sup>.
+---+++ !!Upper bound & Lower bound:
+<pre>
+T(n) is theda of n^2
+</pre>
+
+---+++ !!Explanation:
+<pre>
+I got this answer by using the Master Method with a=3, b=2, and f(n)=n^2. n^2 is bigOmega of n^(log_2{3} + E) for E between 0 and .415. Also, af(n/b)=3(n^2)/4, which is less than or equal to cn^2 for c greater than or equal to 3/4, so c=2 for instance. As a result, because of the third part of the Master's Theorem, T(n) is theda of n^2.
+</pre>
+
+---++ c. T(n) = %PHI2% T(n/3) + n<sup>2</sup>.
+---+++ !!Upper bound & Lower bound:
+<pre>
+T(n) is n^(log_3(11))
+This means n to the log base 3 of 11, just not to cause any misinterpretation. I used this in the previous answer.
+</pre>
+
+---+++ !!Explanation:
+<pre>
+I used Master Method with a=11, b=3, and f(n)=n^2. n^2 is bigOh of n^(log_3(11) - E) for E between 0 and .182. As a result, T(n) is theda of n^(log_3(11))
+</pre>
+
+---++ d. T(n) = %CALCULATE{$EVAL(%PHI1% + 1)}% T(n/ %PHI1%) + n log n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+T(n) is theda of n^(log_2(13))
+</pre>
+
+---+++ !!Explanation:
+<pre>
+I used the master method here with a=13, b=2, f(n)=nlog(n). nlog(n) is bigOh of n^(log_2(13) - E) for E between 0 and 2.7. So take E=2 for example and it works, where nlog(n) is bigOh of n^(log_2(13) - 2). As a result, T(n) is theda of n^(log_2(13))
+</pre>
+
+---++ e. T(n) = 4 T(n/2) +  n <sup>2</sup>  &#8730;n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+T(n) is theda of n^(5/2)
+</pre>
+
+---+++ !!Explanation:
+<pre>
+I used the Master Method with a=4, b=2, and f(n)=nsqrt(n)=n^(5/2). n^(5/2) is bigOmega of n^(2 + E) for E between 0 and .5 so like E = .25. Also, a(fn/b)=4(n/2)^(5/2) is less than or equal to cn^(5/2) for c>(1/sqrt(2)), so take c = 5 and it works. As a result, T(n) is theda of n^(5/2)
+</pre>
+
+---++ f. T(n) = n(T(n/2) <sup>2</sup>).
+---+++ !!Upper bound & Lower bound:
+<pre>
+T(n) is bigOh of n^(log(n))
+T(n) is bigOmega of nlog(n)
+</pre>
+
+---+++ !!Explanation:
+<pre>
+First of all, I don't like to work with powers so I took log of both sides to get log(T(n)) = log(n) + nlog(T(n/2)). But, instead of solving T(n) directly, I solved S1(n), an upper bound, and S2(n), a lower bound because I know the function is increasing. I set logS1(n) = log(n) + S1(n/2), because I know S1(n/2) is asymptotically greater than c*log(S1(n/2)). I solved this using iteration, and the sum was for log(n(1/2)^i) from i=1 to n. I evaluated this sum and it was theda of log(n)^2. But, that was for logS1(n), so S1(n) is theda of n^log(n). On the other hand to solve, S2(n), I set logS2(n) = log(n) + log(S2(n/2)). I solved this using domain/range transformation with n=2^i. My result was log(S2(n)) is theda of lg(nln(n)). So S2(n) is theda of nln(n) using log properties to simplify, which was the lower bound for T(n)
+</pre>
+
+---++ g. T(n) = T(n-1) + %PHI2% lg n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+T(n) is theda of nlog(n)
+</pre>
+
+---+++ !!Explanation:
+<pre>
+I just iterated through by starting a T(1) and finding a pattern until T(n). T(1) = T(0) + 11lg(1). T(2) = T(1) + 11lg(2), which equals T(0) + 11lg(1) + 11lg(2). T(3) = T(2) + 11lg(3), which equals T(0) + 11lg(1) + 11lg(2) + 11lg(3). The pattern for T(n) is T(0) + sum from i=1 to i=n of 11lg(i). We can write that sum as 11lg(n!) because of the properties of logs, since adding logs means multiplying the numbers within the log. We can rewrite that as ln(n!)/ln(2). Using Sterling's Approximation, we know that ln(n!) is theda of nln(n). So basically, T(n) is theda of 1 for T(0) + a constant times theda of nln(n). As a result, T(n) is theda of nln(n)
+</pre>
+
+---++ h. T(n) = T(n-1) + log<sup>2</sup>(n).
+---+++ !!Upper bound & Lower bound:
+<pre>
+T(n) is bigOh of n^2
+T(n) is bigOmega of nlog(n)
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Instead of solving T(n) directly, I solved S1(n), an upper bound, and S2(n), a lower bound because I know it the function is increasing. I set S1(n) = T(n-1) + n because I know that n^k is littleOh of (log(n))^b for any k and b > 1. I solved that using iteration by starting from S1(1). The sum was from i=1 to n of i, which is i(i+1)/2, so the running time was theda of n^2. On the other hand, I set S2(n) = T(n-1) + log(n), which I solved by iteration also, but this time I used Sterling's Approximation for the sum from i=1 to n of log(i), which is theda of nlog(n), which was the lower bound for T(n).
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2 *[Applied recurrences, 15 points]*
+---++ 2a.
+---+++ !!Recurrence
+<pre>
+T(n) = (Sum from i=0 to i=n of i) + 1.
+</pre>
+
+---+++ !!Running Time
+<pre>
+T(n) is theda of n^2
+</pre>
+
+---+++ !!Explanation
+<pre>
+The sum part comes from running the code within the two for loops, since each time n is decreased by 1 because jj goes from ii to nn. This sum is n(n+1)/2. As a result, the running time is theda of n^2
+</pre>
+
+---++ 2b.
+---+++ !!Recurrence
+<pre>
+T(n) = T(n/19) + theda of 1.
+</pre>
+
+---+++ !!Running Time
+<pre>
+T(n) is theda of log(n)
+</pre>
+
+---+++ !!Explanation
+<pre>
+That is indeed the recurrence equation after every time it goes through the code, where n is divided by 19, until it becomes 0 since ints are casted down. To the solve the recurrence, I used the method of domain/range transformation. I let n = 19^i, so T(19^i) became T(19^(i-1)) + theda of 1. Then I converted T(19^i) to S(i), whcih equals S(i-1) + theda of 1. This, I then solved using iteration, where basically theda of 1 was repeated i times so S(i) is i + theda of 1. Then I converted back to T(19^i), which still equalled theda of 1. Then to T(n), and since n=19^i, i = log_19(n). So T(n) is theda of log(n).
+</pre>
+
+---++ 2c.
+---+++ !!Recurrence
+<pre>
+T(n) = T(n/2) + T(n/4) + n -11
+</pre>
+
+---+++ !!Running Time
+<pre>
+T(n) is bigOh of nlog(n)
+T(n) is bigOmega of n
+</pre>
+
+---+++ !!Explanation
+<pre>
+I got the recurrence formula by just going block by block in the code. The first while loop is done n-11 times. I added that to the recursions that occur in the return statement, which were T(n/2) and T(n/4). To solve this, I checked the upper and lower bounds. For the upper bound, I used T(n) = 2T(n/2) + n - 11. This I solved using the Master Method, with a=2, b=2, and f(n)=n-11. In this case n-11 is theda of n^(log_2(2))=n, which means that T(n) is theda of nlog(n). For the lower bound, I used T(n) = 2T(n/4) + n - 11. To solve this, I used the Master Method with a=2, b=4, and f(n)=n-11. n-11 is bigOmega of n^(log_4(2) + E) for E between 0 and .5. So pick E = .25 and that works. Also, 2f(n/4) = 2(n/4-11), which is less than or equal to cn - 11c for a c like 100 and large n. Therefore, T(n) is bounded above by n and below by nlog(n).
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+Problem 3 *[Collatz, 45 points]*
+---++ 3a.  Subtraction [10 points]
+Attach your solution as =3a.h=.
+
+---++ 3b.  Running time [20 points]
+---+++ i. Vector
+----++++ !!Running time:
+<pre>
+T(n) is theda of n
+</pre>
+
+----++++ !!Explanation:
+<pre>
+I went through the addition code and I saw that in the worst case, only the first for loop will run. All of the statements in the for loop were done in constant time so T(n) = cn + theda of 1. Therefore, the running time is theda of n, so basically linear time
+</pre>
+
+---+++ ii. List
+----++++ !!Running time:
+<pre>
+T(n) is theda of n
+</pre>
+
+----++++ !!Explanation:
+<pre>
+For list, the only difference from vector in this case when looking at the addition operator, was that getting the size of digits took linear time. So since that was done twice and the for loop stays the same as before, the equation is T(n) = (c+2)n + theda of 1. In this case, the running time is also theda of n, just like vector
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---++ 3c. Collatz [15 points]
+---+++ i. Code
+%CODE{"cpp"}%
+// put your code here for computing CollatzCount(%PHI%) using a list<int> to store digits
+
+#include "bigNumT.h"
+#include "collatz.h"
+#include <vector>
+
+int main()
+{
+	bigNumT<vector<int> > myFirstCollatzBigNum = bigNumT<>("3");		
+
+	bigNumT<vector<int> > collatzResult = CollatzCount(myFirstCollatzBigNum);
+	cout << collatzResult.print() << endl;
+
+	return 0;
+}
+%ENDCODE%
+---+++ ii. Order
+<pre>
+Left to right Fastest to Slowest
+Vector>Deque>List
+Vector is the fastest to iterate through and change each element because it is contiguous so all the elements are right next to each other. On the other hand, deques and lists are not contiguous and their elements are scattered around so it takes time to iterate through and change each element. A deque is faster though because it has blocks of arrays that it keeps track of using pointers, so it's easier to iterate and change the values of the elements because a lot of the elements are still right next to each other. On the other hand, every single element in a list is scattered, so going through and changing them all takes a lot longer.
+
+Left to right is Least to Most Memory
+Vector<Deque<List
+Vector uses the least amount of memory in terms of CollatzCount because it is very efficient at dynamically changing the size of its array. All we are doing is iterating through, replacing the existing elements, and adding more elements to the end. At most, the size of the vector will be twice as big as the number of elements in it and that is the worst case. When CollatzCount reduces the number n by a half or increases it by 3 times + 1, the vector class increases or decreases the size of the array to accommodate for the change in size, thus using memory very efficiently. On the other hand, a list uses the most memory because its main purpose is to allow insertion into the middle, which is why it stores the value of the element and a pointer to the next element, thus using unneeded memory in the CollatzCount case since we do not need to insert into the middle. It thus always uses about twice as much memory as an array. A deque is a combination of a vector and a list. It is not contiguous, unlike vectors, but it's elements are stored in arrays, which is why it allows for easy insertion in the beginning or end of the container. So, instead of a pointer to each element, it keeps track of pointers to each blocks of smaller array, which is why it uses more memory than vectors, but not as much as lists.
+</pre>
+---+++ iii. Design
+<pre>
+Here is my Design of how to decrease the memory size:
+Instead of using 4 bytes to store 1 digit, which is what bugNumT does, it is better to store blocks of 9 digits in each vector element. 9 digits ensures that multiplying by 2 or 3 will not allow the number to exceed 32 bits, which is how much an int can hold. After the 29-bit numbers are stored in the vector, we can do calculations on them separately and then combine them in the end to to form the final value that can then be printed in the correct order. Adding one is just increasing the most significant digit by 1. Dividing by 2 can be done by going from left to right and taking the floor of the each (digit / 2) and if the digit is odd, then to add 5 to the next most significant digit. Keep doing that until you reach the end. Multiplying by 3 can be done by the numbers to itself 3 times, which you would do to each digit separately starting from the least significant digit and then carrying over to the next least significant digit. Lastly multiplying by 2 is done in the same way as by 3 but instead, you can add the number to itself twice. The order in which the elements are accessed is easy because we can get forward and reverse iterators to go through the vector.
+</pre>
+
+---+++ iv. Extra credit
+Please submit this online.
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+TWIKIFILEEND

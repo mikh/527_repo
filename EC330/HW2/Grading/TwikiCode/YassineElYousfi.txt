@@ -1,0 +1,235 @@
+---+EC330 - Spring 2013 - Homework 2  for YassineElYousfi
+%TOC%
+
+---++_Assigned:_  Wednesday, February 11, 2015
+---++_Due:_  Thursday, February 19, 2015 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(YassineElYousfi),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(10+$MOD(%PHI%,7))}%
+   * Set PHI2 = %CALCULATE{$EVAL(11+$MOD(%PHI%,11))}%
+   * Set PHI3 = %CALCULATE{$EVAL(12+$MOD(%PHI%,13))}%
+-->
+
+
+---+ Problem 1 *[Recurrences II, 40 points]*
+---++ a. T(n) = T(n-1) + n<sup> %PHI1% </sup>.
+
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+
+Theta(n^15)
+
+</pre>
+
+---+++ !!Explanation:
+<pre>
+I used iteration and noticed the pattern of increasing bases to the power of 14.
+</pre>
+
+---++ b. T(n) = 3 T(n/2) + n<sup>2</sup>.
+
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+
+Theta(n^1.58)
+
+</pre>
+
+---+++ !!Explanation:
+<pre>
+I used the master method and used case 3.
+</pre>
+
+---++ c. T(n) = %PHI2% T(n/3) + n<sup>2</sup>.
+
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+
+Theta(n^(log3(14))
+
+</pre>
+
+---+++ !!Explanation:
+<pre>
+I used the master method again with case 1.
+</pre>
+
+---++ d. T(n) = %CALCULATE{$EVAL(%PHI1% + 1)}% T(n/ %PHI1%) + n log n.
+
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+
+Theta(log14(15))
+
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+
+Master Method Case 1
+
+</pre>
+
+---++ e. T(n) = 4 T(n/2) +  n <sup>2</sup>  &#8730;n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+
+Theta(n^2 * sqrt(n))
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Master Method Case 3
+</pre>
+
+---++ f. T(n) = n(T(n/2) <sup>2</sup>).
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+
+Theta(nlogn)
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Domain Range Transformation and stirling approximation helped me arrive to the answer</pre>
+
+---++ g. T(n) = T(n-1) + %PHI2% lg n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+Theta(nlgn)
+
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Using iteration and Stirling approximation for lgn! I came to the answer</pre>
+
+---++ h. T(n) = T(n-1) + log<sup>2</sup>(n).
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+
+Theta(n^2)
+</pre>
+
+---+++ !!Explanation:
+<pre>
+I used iteration to get Theta(n^2 * logn) but n^2 dominates so theta is just n^2</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2 *[Applied recurrences, 15 points]*
+---++ 2a.
+---+++ !!Recurrence
+<pre>
+Put the recurrence here
+</pre>
+
+---+++ !!Running Time
+<pre>
+Theta(n^2)</pre>
+
+---+++ !!Explanation
+<pre>
+The amount of iterations in the loops increase proportionally to nn so it is n*n</pre>
+
+---++ 2b.
+---+++ !!Recurrence
+<pre>
+FB(nn/19) + 2</pre>
+
+---+++ !!Running Time
+<pre>
+Theta(logn)</pre>
+
+---+++ !!Explanation
+<pre>
+Used the Master method case 2</pre>
+
+---++ 2c.
+---+++ !!Recurrence
+<pre>
+FC(nn/2)+FC(nn/4)</pre>
+
+---+++ !!Running Time
+<pre>
+Theta(n^log_4(3/4)</pre>
+
+---+++ !!Explanation
+<pre>
+Used Recursion Tree</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+Problem 3 *[Collatz, 45 points]*
+---++ 3a.  Subtraction [10 points]
+Attach your solution as =3a.h=.
+   * [[%ATTACHURLPATH%/3a.h][3a.h]]: 3a. subtraction
+
+---++ 3b.  Running time [20 points]
+i. Worst case scenario for list is O(n)
+---+++ i. Vector
+----++++ !!Running time:
+<pre>
+i. Worst case scenario for vector is O(n)
+</pre>
+
+----++++ !!Explanation:
+<pre>
+To add an element to the beginning every element after must be shifted</pre>
+
+---+++ ii. List
+----++++ !!Running time:
+<pre>
+i. Worst case scenario for list is O(n)
+</pre>
+
+----++++ !!Explanation:
+<pre>
+To add an element to the end you must navigate through the entire list in order to append an element.</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---++ 3c. Collatz [15 points]
+---+++ i. Code
+%CODE{"cpp"}%
+// put your code here for computing CollatzCount(%PHI%) using a list<int> to store digits
+
+%ENDCODE%
+---+++ ii. Order
+<pre>
+Put your answer here. You may use < to denote asymptotic less-than, and = to denote asymptotic equality. 
+For example, i < ii < iii
+</pre>
+---+++ iii. Design
+<pre>
+Put your design  here
+</pre>
+
+---+++ iv. Extra credit
+Please submit this online.
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+
+TWIKIFILEEND

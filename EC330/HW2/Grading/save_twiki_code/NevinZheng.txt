@@ -1,0 +1,436 @@
+---+EC330 - Spring 2013 - Homework 2  for NevinZheng
+%TOC%
+
+---++_Assigned:_  Wednesday, February 11, 2015
+---++_Due:_  Thursday, February 19, 2015 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(NevinZheng),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(10+$MOD(%PHI%,7))}%
+   * Set PHI2 = %CALCULATE{$EVAL(11+$MOD(%PHI%,11))}%
+   * Set PHI3 = %CALCULATE{$EVAL(12+$MOD(%PHI%,13))}%
+-->
+
+
+---+ Problem 1 *[Recurrences II, 40 points]*
+---++ a. T(n) = T(n-1) + n<sup> %PHI1% </sup>.
+
+<latex>T(n) = T(0) + (n)(n^{14})\\</latex>
+
+<latex>T(n)\in\Theta(n^{15})</latex>
+
+
+Through the iterative method:
+we see that:
+
+<latex>
+T(1) = T(0) + n^{14}
+\\ T(2) = T(1) + n^{14} = T(0) + n^{14} + n^{14} = T(0) + 2(n^{14})
+\\ T(3) = T(0) + 3(n^{14})
+\\T(n) = T(0) + n(n^{14}) = T(0) + n^{15}
+\\T(n) \in \Theta(n^{15})
+\\
+</latex>
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ b. T(n) = 3 T(n/2) + n<sup>2</sup>.
+We can see that this recurrence is solvable by case 3 of the master theorem:
+
+<latex>
+\\ \text{Let a=3, b =2}
+\\ log_b{a} = log_2{3} \approx 1.6
+\\ f(n) \in \Omega(n^{1.6}) \text{ and } 3(\frac{n}{2})^{2} \le k(n^{2})
+\\\text{The above is true if: } k= \frac{3}{4}
+\\ \text{Therefore, case 3 applies and: }
+\\ T(n) \in \Theta(n^{2})
+\\
+</latex>
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ c. T(n) = %PHI2% T(n/3) + n<sup>2</sup>.
+Apply case 1 of the master theorem
+
+<latex>
+\text{Let a=11 and b =3}
+\\ log_3{11} \approx 2.18
+\\ n^{2} \in O(n^{2.18})
+\\ \text{therefore: } T(n) \in \Theta(n^{2.18})
+\\ \text{Alternatively speaking: }
+\\ T(n) \in \Theta(n^{log_3{11}})
+\\
+</latex>
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ d. T(n) = %CALCULATE{$EVAL(%PHI1% + 1)}% T(n/ %PHI1%) + n log n.
+Apply case 3 of the master theorem:
+a = 15, b = 14
+
+<latex>
+log_{14}{15} \approx 1.026
+\\nlog(n) \in \Omega(n^{1.026})
+\\ 15(\frac{n}{14})(log(\frac{n}{14}) \le (k)(\frac{n}{14})log(\frac{n}{14})
+\\ \text{true if k =15}
+\\\text{Therefore: }
+\\ T(n) \in \Theta(nlog(n))
+\\
+
+</latex>
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ e. T(n) = 4 T(n/2) +  n <sup>2</sup>  &#8730;n.
+Apply case 3 of master theorem:
+
+<latex>
+\text{Let a = 4, b = 2}
+\\ log_2 {4} = 2
+\\ \frac{f(n)}{n^{log_2{4}}} = n^{.5} / 1\: \text{to infinity}
+\\CASE 3
+\\T(n) = \Theta(f(n))
+\\ T(n) \in n^{2.5}
+\\
+</latex>
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ f. T(n) = n(T(n/2) <sup>2</sup>).
+<latex>
+log(T(n)) = log(n) + 2log(T(n/2))
+\\n= 2^m
+\\log(T(2^m)) = mlog(2) + 2log(T(2^{m-1}))
+\\T(n) \in \Theta(n^{3}) 
+\\???
+\\
+</latex>
+
+Lower Bound W(n) = n
+Upper Bound O(n) = n^3
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ g. T(n) = T(n-1) + %PHI2% lg n.
+Apply the iterative method to get an answer:
+
+<latex>
+\\T(0)= \text{base}
+\\T(1) = T(0) + 11log(1)
+\\T(2) = T(1) + 11log(2) = T(0) +(11)log(1) + 11log(2)
+\\T(n) = T(0) + 11log(n!)
+\\T(n) \in \Theta(log(n!))
+\\
+</latex>
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ h. T(n) = T(n-1) + log<sup>2</sup>(n).
+Apply the iterative method to find the correct relationship:
+
+<latex>
+T(0) = \text{Base}
+\\T(1) = T(0) + log^2(1)
+\\T(2) = T(0) + log^2(1) + log^2(2)
+\\T(3) = T(0) + log^2(1) + log^2(2) + log^2(3)
+\\T(n) = T(0) + \sum\limits_{k=0}^{n} log^2(k)
+\\T(n) \in \Theta(log^2(n))
+\\
+</latex>
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2 *[Applied recurrences, 15 points]*
+---++ 2a.
+This function has
+
+
+The first loop for ii = 0 and jj==0 takes nn operations
+the second loop for ii== 1 and jj=1 takes nn-1 operations
+the third loop for ii==2 and jj==2 takes nn -2 operations
+therefore the overall "recurrence" there isn't really a recursion here but...
+overall:
+
+<latex>
+T(n) = nn + (nn-1) + (nn-2) + (nn-3)+...(1)
+\\T(n) = \sum\limits_{k=1}^{nn} k
+\\\text{Apply formula: }
+\\T(n) = \frac{(nn)(nn+1)}{2}
+\\T(n) = \frac{(nn)^{2} + nn}{2}
+\\
+\\
+\\T(nn) \in \Theta((nn)^2)
+\\
+</latex>
+
+Because for every run of the outer for loop from 0 to n, the inner loop iterates from i to nn. Although the inner loop runs less as the outer for loop progresses, the overall running time is related best to   <latex>n^2</latex>
+---+++ !!Recurrence
+<pre>
+Put the recurrence here
+</pre>
+
+---+++ !!Running Time
+<pre>
+Put the running time here
+</pre>
+
+---+++ !!Explanation
+<pre>
+Put your explanation here
+</pre>
+
+---++ 2b.
+This is a classic example of divide and conquer. At every function call, the input is divided by 18. this results in a log(n) bound.
+
+Expressed as a recurrence relation:
+
+<latex>
+T(n) = T(\frac{n}{18})
+T(n) = log(n)
+\\\text{Solved as an example of case 2 of the master theorem: } 
+\\T(n)  \in \Theta(log(n))
+\\
+</latex>
+
+---+++ !!Recurrence
+<pre>
+Put the recurrence here
+</pre>
+
+---+++ !!Running Time
+<pre>
+Put the running time here
+</pre>
+
+---+++ !!Explanation
+<pre>
+Put your explanation here
+</pre>
+
+---++ 2c.
+This function has three significant parts in it:
+There is:
+a) A linear counting of values greater then 11
+b) Two log-ish call at the "end"
+
+Analyzing this we can write:
+<latex>
+T(n) = (n-11) + T(\frac{n}{2}) + T(\frac{n}{4})
+\\T(n) = (n-11) + log(n)
+\\\text{The amount of time taken is just a sum of all of its individual parts. so we can break down the time taken and get a bound on the complexity: }
+\\ (n-11) \text{ is linear complexity}
+\\ T(\frac{n}{2}) \text{ and } T(\frac{n}{4}) \text{ are log complexity}
+\\ \text{ therefore, over all, this function is linear}
+\\ T(n) \in \Theta(n)
+\\
+</latex>
+---+++ !!Recurrence
+<pre>
+Put the recurrence here
+</pre>
+
+---+++ !!Running Time
+<pre>
+Put the running time here
+</pre>
+
+---+++ !!Explanation
+<pre>
+Put your explanation here
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+Problem 3 *[Collatz, 45 points]*
+---++ 3a.  Subtraction [10 points]
+Attach your solution as =3a.h=.
+
+---++ 3b.  Running time [20 points]
+Assuming enough allocated memory, addition with vector occurs in linear time.
+Each array access is in constant time and there are n = length retrievals. So overall its \Theta(n)
+
+
+For list, its also linear.
+although access is not RAM, the operation and access happen at the same time, so overall the addition is linear in \Theta(n)
+---+++ i. Vector
+----++++ !!Running time:
+<pre>
+Put the running time here
+</pre>
+
+----++++ !!Explanation:
+<pre>
+Put your explanation here if necessary
+</pre>
+
+---+++ ii. List
+----++++ !!Running time:
+<pre>
+Put the running time here
+</pre>
+
+----++++ !!Explanation:
+<pre>
+Put your explanation at here if necessary
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---++ 3c. Collatz [15 points]
+---+++ i. Code
+%CODE{"cpp"}%
+// put your code here for computing CollatzCount(%PHI%) using a list<int> to store digits
+#include <iostream>
+#include "bigNumT.h"
+#include <vector>
+#include <list>
+
+#define TYPE list<int> 
+
+//  vector<int>
+//  list<int> 
+
+/**
+* @requires  >= 1
+* @param nn The starting parameter.
+* @return The number of Collatz calls needed to reach 1 from the parameter .
+*         This implementation is iterative to avoid stack overflows
+*/
+
+template <typename T >
+T CollatzCount(T nn) {
+        T ONE("1");   T TWO("2");   T THREE("3");
+        
+        T result("1");
+        for (;!(nn==ONE);result=result+ONE) {
+                if (TWO*(nn/TWO)==nn) // i.e. nn is even
+                nn = nn/TWO;
+                else                  // i.e. nn is odd
+                nn = THREE*nn+ONE;
+        }
+        return result;
+}
+
+
+int main(){
+
+	//instantiate values
+	bigNumT< TYPE > top = bigNumT< TYPE >("82204518");
+
+	//286 iterations
+
+	//perform collatz
+	bigNumT< TYPE > bot = CollatzCount<bigNumT< TYPE > >(top);
+
+	std::cout << bot.print() << std::endl;
+
+	return 0;
+}
+%ENDCODE%
+---+++ ii. Order
+<pre>
+Put your answer here. You may use < to denote asymptotic less-than, and = to denote asymptotic equality. 
+For example, i < ii < iii
+</pre>
+FAST
+deque >constant assignment time, memory search, but never linear copying. fastest for bigNum because of popOn and PopOff
+list  constant assignment time, memory search, but never linear copying
+>
+vector. RAM, constant assignment time, but dynamic allocation, make it slow
+
+
+SLOW
+________
+
+MOST MEM
+vector a 'link' consists of just the element, amortized memory allocation kills it though.
+>
+list, a link consists of pointers and the element 
+>
+deque, stores less pointers then link
+
+
+LOW MEM
+---+++ iii. Design
+<pre>
+Put your design  here
+</pre>
+
+In order to minimize the memory used, I will use char to represent digits due to their smaller memory size. and as container i will use a list for efficient storage, that dynamically sizes in memory in a consistent manner that doesn't require copying once in a while.
+implementation delayed due to time constraints and signals
+---+++ iv. Extra credit
+Please submit this online.
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+   * [[%ATTACHURLPATH%/bigNumTwithMinus.h][bigNumTwithMinus.h]]: subtraction implementation
+

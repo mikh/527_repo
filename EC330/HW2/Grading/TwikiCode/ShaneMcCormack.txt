@@ -1,0 +1,221 @@
+---+EC330 - Spring 2013 - Homework 2  for ShaneMcCormack
+%TOC%
+
+---++_Assigned:_  Wednesday, February 11, 2015
+---++_Due:_  Thursday, February 19, 2015 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(ShaneMcCormack),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(10+$MOD(%PHI%,7))}%
+   * Set PHI2 = %CALCULATE{$EVAL(11+$MOD(%PHI%,11))}%
+   * Set PHI3 = %CALCULATE{$EVAL(12+$MOD(%PHI%,13))}%
+-->
+
+
+---+ Problem 1 *[Recurrences II, 40 points]*
+---++ a. T(n) = T(n-1) + n<sup> %PHI1% </sup>.
+---+++ !!Upper bound & Lower bound:
+<pre>
+n^17
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Used iterative method to simplify recurrence to T(0) [a constant] + the sum n^16 from 1 to n; the constant T(0) isn't significant, and that sum simplifies to n^17
+</pre>
+
+---++ b. T(n) = 3 T(n/2) + n<sup>2</sup>.
+---+++ !!Upper bound & Lower bound:
+<pre>
+n^2
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Used Master Theorem case 3
+</pre>
+
+---++ c. T(n) = %PHI2% T(n/3) + n<sup>2</sup>.
+---+++ !!Upper bound & Lower bound:
+<pre>
+n^(log_3(11))
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Used Master Theorem case 1
+</pre>
+
+---++ d. T(n) = %CALCULATE{$EVAL(%PHI1% + 1)}% T(n/ %PHI1%) + n log n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+n^(log_16(17))
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Used Master Theorem case 1
+</pre>
+
+---++ e. T(n) = 4 T(n/2) +  n <sup>2</sup>  &#8730;n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+n^2.5
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Used Master Theorem case 3
+</pre>
+
+---++ f. T(n) = n(T(n/2) <sup>2</sup>).
+---+++ !!Upper bound & Lower bound:
+<pre>
+(lg(i))^3
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Used Domain/Range transformation. First set n = 2^i, then took lg of both sides S(i) is theta of i^3, and so is T(2^i), and T(n) is (lg(i))^3
+</pre>
+
+---++ g. T(n) = T(n-1) + %PHI2% lg n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+11*n*lg(n)
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Used iterative method to simplify recurrance to T(0) + 11*sum of lg(n) from 1 to n. T(0) is a constant, and the sum simplifies to n*lg(n).
+</pre>
+
+---++ h. T(n) = T(n-1) + log<sup>2</sup>(n).
+---+++ !!Upper bound & Lower bound:
+<pre>
+n*log^2(n)
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Recurrence simplifies to T(0)+ sum of log^2(n) from 1 to n. The sum simplifies to n*log^2(n), and the constant doesnt factor in
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2 *[Applied recurrences, 15 points]*
+---++ 2a.
+---+++ !!Recurrence
+<pre>
+n*T(n-1)
+</pre>
+
+---+++ !!Running Time
+<pre>
+n^2
+</pre>
+
+---+++ !!Explanation
+<pre>
+I plugged in a few answers and found the pattern was the n times the sum of 1 from 1 to n, this simplifies to n^2
+</pre>
+
+---++ 2b.
+---+++ !!Recurrence
+<pre>
+T(n/16)+k, where k is a constant.
+</pre>
+
+---+++ !!Running Time
+<pre>
+log(n)
+</pre>
+
+---+++ !!Explanation
+<pre>
+The loop will run until n <= 1, and by definition that is log_16(n) times. The recurrence is a case 2 master method that gets the same result.
+</pre>
+
+---++ 2c.
+---+++ !!Recurrence
+<pre>
+(n-11)(log_2(n)+log_4(n))
+</pre>
+
+---+++ !!Running Time
+<pre>
+nlog(n)
+</pre>
+
+---+++ !!Explanation
+<pre>
+Every run, the code goes n-11 times, and calls itself with it's input divided by 2, and again divided by 2. The n*log_2 is the only piece of the formula that matters, as its the largest part.
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+Problem 3 *[Collatz, 45 points]*
+---++ 3a.  Subtraction [10 points]
+Attach your solution as =3a.h=.
+I had a Systems Phys midterm the day this was due, so I focused on that more and did not do the coding portions of this assignment.
+
+---++ 3b.  Running time [20 points]
+---+++ i. Vector
+----++++ !!Running time:
+<pre>
+n^2
+</pre>
+
+----++++ !!Explanation:
+<pre>
+total run time assuming both numbers have the same number of n digits: n^2 (from push_back in the for loop) + n (from using .end in the for loop) + 2*k (for 2 .sizes) + 2*c (for 2 .begins)
+ Used cpluspluis for runtimes
+</pre>
+
+---+++ ii. List
+----++++ !!Running time:
+<pre>
+n
+</pre>
+
+----++++ !!Explanation:
+<pre>
+total run time: n (from push_back in for loop) + n (from .end in the for loop) + 2n (from using .size twice) + 2*c (for 2 .begins)
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---++ 3c. Collatz [15 points]
+---+++ i. Code
+%CODE{"cpp"}%
+// put your code here for computing CollatzCount(%PHI%) using a list<int> to store digits
+//I had a Systems Phys midterm the day this was due, so I focused on that more and did not do the coding portions of this assignment.
+%ENDCODE%
+---+++ ii. Order
+<pre>
+i.) Speed: List < Dequeue < Vector (Vector is Fastest)
+ii.) Memory Usage: List < Dequeue < Vector (Vector takes most memory) 
+For example, i < ii < iii
+</pre>
+---+++ iii. Design
+<pre>
+Put your design  here
+</pre>
+I had a Systems Phys midterm the day this was due, so I focused on that more and did not do the coding portions of this assignment.
+---+++ iv. Extra credit
+Please submit this online.
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+TWIKIFILEEND

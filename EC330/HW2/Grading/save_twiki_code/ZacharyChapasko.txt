@@ -1,0 +1,275 @@
+
+TWiki> EC330 Web>HomeworkTwoZacharyChapasko (2015-02-18, ZacharyChapasko) EditAttach
+EC330 - Spring 2013 - Homework 2 for ZacharyChapasko
+
+    EC330 - Spring 2013 - Homework 2 for ZacharyChapasko
+        Assigned: Wednesday, February 11, 2015
+        Due: Thursday, February 19, 2015 at the beginning of class. 
+    Problem 1 [Recurrences II, 40 points]
+        a. T(n) = T(n-1) + n 13 .
+        b. T(n) = 3 T(n/2) + n2.
+        c. T(n) = 11 T(n/3) + n2.
+        d. T(n) = 14 T(n/ 13) + n log n.
+        e. T(n) = 4 T(n/2) + n 2 ?n.
+        f. T(n) = n(T(n/2) 2).
+        g. T(n) = T(n-1) + 11 lg n.
+        h. T(n) = T(n-1) + log2(n).
+    Problem 2 [Applied recurrences, 15 points]
+        2a.
+        2b.
+        2c.
+    Problem 3 [Collatz, 45 points]
+        3a. Subtraction [10 points]
+        3b. Running time [20 points]
+            i. Vector
+            ii. List
+        3c. Collatz [15 points]
+            i. Code
+            ii. Order
+            iii. Design
+            iv. Extra credit 
+
+Assigned: Wednesday, February 11, 2015
+Due: Thursday, February 19, 2015 at the beginning of class.
+
+Problem 1 [Recurrences II, 40 points]
+a. T(n) = T(n-1) + n 13 .
+Upper bound & Lower bound:
+
+Put one answer if upper and lower bound is same. Otherwise, specify both
+
+Explanation:
+
+Put your explanation here
+
+Using the master method's third case the recurrence part is n and the f(n) part is n13, therefore this is big theta of n13
+
+b. T(n) = 3 T(n/2) + n2.
+Upper bound & Lower bound:
+
+Put one answer if upper and lower bound is same. Otherwise, specify both
+
+Explanation:
+
+Put your explanation here
+
+Using the master method's third case the recurrence part is nlog23 and the f(n) part is n2, therefore this is big theta of n2
+
+c. T(n) = 11 T(n/3) + n2.
+Upper bound & Lower bound:
+
+Put one answer if upper and lower bound is same. Otherwise, specify both
+
+Explanation:
+
+Put your explanation here
+
+Using the master method's first case the recurrence part is nlog311 and the f(n) part is n2, therefore this is big theta of nlog311
+
+d. T(n) = 14 T(n/ 13) + n log n.
+Upper bound & Lower bound:
+
+Put one answer if upper and lower bound is same. Otherwise, specify both
+
+Explanation:
+
+Put your explanation here
+
+Using the master method's first case the recurrence part is nlog1314 and the f(n) part is n*log(n), therefore this is big theta of nlog1314
+
+e. T(n) = 4 T(n/2) + n 2 ?n.
+Upper bound & Lower bound:
+
+Put one answer if upper and lower bound is same. Otherwise, specify both
+
+Explanation:
+
+Put your explanation here
+
+Using the master method's third case the recurrence part is nlog24, or n2, and the f(n) part is n2.5, therefore this is big theta of n2.5
+
+f. T(n) = n(T(n/2) 2).
+Upper bound & Lower bound:
+
+Put one answer if upper and lower bound is same. Otherwise, specify both
+
+Explanation:
+
+Put your explanation here
+
+g. T(n) = T(n-1) + 11 lg n.
+Upper bound & Lower bound:
+
+Put one answer if upper and lower bound is same. Otherwise, specify both
+
+Explanation:
+
+Put your explanation here
+
+Using the master method's first case the recurrence part is n and the f(n) part is 11*lg(n), therefore this is big theta of n
+
+h. T(n) = T(n-1) + log2(n).
+Upper bound & Lower bound:
+
+Put one answer if upper and lower bound is same. Otherwise, specify both
+
+Explanation:
+
+Put your explanation here
+
+Using the master method's first case the recurrence part is n and the f(n) part is log(n)*log(n), therefore this is big theta of n
+
+Grader comments
+
+Reserved for the grader
+
+Problem 2 [Applied recurrences, 15 points]
+2a.
+Recurrence
+
+Put the recurrence here
+
+T(nn) = nn2
+
+Running Time
+
+Put the running time here
+
+Explanation
+
+Put your explanation here
+
+The recurrence is nn2 because there is no recursive part and the actual function operates in nn2 time.
+We know that the function operates in nn2 time as the sum of the terms is (nn-1) + (nn - 2) + ... + 1, which simplifies to nn2
+
+2b.
+Recurrence
+
+Put the recurrence here
+
+T(nn) = T(nn/13) + 1
+
+Running Time
+
+Put the running time here
+
+Explanation
+
+Put your explanation here
+
+The recursive part of the recurrence repeats with 1/13 of the input. The f(nn) part is 1 because of the return statement. From the master method second case we know that the running time is log(nn)
+
+2c.
+Recurrence
+
+Put the recurrence here
+
+T(nn) = T(nn/2) + T(nn/4) + nn
+
+Running Time
+
+Put the running time here
+
+Explanation
+
+Put your explanation here
+
+In the recursive parts of the recurrence we know that the first two terms are log2nn and log4nn. The f(nn) part is nn, though, which dominates, so the running time is f(nn)
+
+Grader comments
+
+Reserved for the grader
+
+Problem 3 [Collatz, 45 points]
+3a. Subtraction [10 points]
+Attach your solution as 3a.h.
+
+3b. Running time [20 points]
+i. Vector
+Running time:
+
+Put the running time here
+
+Explanation:
+
+Put your explanation here if necessary
+
+ii. List
+Running time:
+
+Put the running time here
+
+Explanation:
+
+Put your explanation at here if necessary
+
+Grader comments
+
+Reserved for the grader
+
+3c. Collatz [15 points]
+i. Code
+
+// put your code here for computing CollatzCount(94770742) using a list<int> to store digits
+
+ii. Order
+
+Put your answer here. You may use < to denote asymptotic less-than, and = to denote asymptotic equality. 
+For example, i < ii < iii
+
+iii. Design
+
+Put your design  here
+
+iv. Extra credit
+Please submit this online.
+
+Grader comments
+
+Reserved for the grader
+
+Edit | Attach | Watch | Print version | History: r3 < r2 < r1 | Backlinks | Raw View | More topic actions
+Topic revision: r3 - 2015-02-18 - ZacharyChapasko
+
+    Web background EC330 
+
+Hello Mikhail Andreev
+
+    Log Out
+
+    Create personal sidebar
+
+Course Info
+
+    Home Main page
+    New topic Homeworks 
+
+    Speech bubble Discussions
+    Red star, highlight Tutorials
+    Person Lectures
+    Request for comments In Class
+    Edit topic Exams 
+
+    Folder Handouts 
+
+    Changes Extra Credit 
+
+    Webs
+     EC330
+     EC521
+     SectionA1
+     SectionA2
+     EK13x
+     Main
+     Main_old
+     SOS
+     Sandbox
+     TWiki 
+
+ 
+Home - this site is powered by TWiki(R) 	
+
+This site is powered by the TWiki collaboration platform Powered by PerlCopyright © 2008-2015 by the contributing authors. All material on this collaboration platform is the property of the contributing authors.
+Ideas, requests, problems regarding TWiki? Send feedback
+
+TWIKIFILEEND

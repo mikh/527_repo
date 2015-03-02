@@ -1,0 +1,355 @@
+---+EC330 - Spring 2013 - Homework 2  for WonjaeKim
+%TOC%
+
+---++_Assigned:_  Wednesday, February 11, 2015
+---++_Due:_  Thursday, February 19, 2015 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(WonjaeKim),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(10+$MOD(%PHI%,7))}%
+   * Set PHI2 = %CALCULATE{$EVAL(11+$MOD(%PHI%,11))}%
+   * Set PHI3 = %CALCULATE{$EVAL(12+$MOD(%PHI%,13))}%
+-->
+
+
+---+ Problem 1 *[Recurrences II, 40 points]*
+---++ a. T(n) = T(n-1) + n<sup> %PHI1% </sup>.
+
+
+
+
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+
+<latex> T(n) = \Theta(n^{17}) </latex>
+
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+
+By iteration, 
+
+<latex>T(n) = T(n-1)+n^{16}\\
+T(n) = T(n-2)+(n-1)^{16}+n^{16}\\
+...\\
+T(n) = T(0)+(n-(n-1))^{16}+(n-(n-2))^{16}+...+n^{16}\\
+</latex>
+
+There will be n terms of <latex>(n-i)^{16}</latex> for i = 0 to n-1, and these terms are Big Theta of <latex>n^{17}</latex>.
+
+---++ b. T(n) = 3 T(n/2) + n<sup>2</sup>.
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+<latex>T(n) = \Theta(n^2)</latex>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+By the Master Method,
+
+<latex>n^2</latex> gives <latex>c=2 > \log_{2}{3}</latex>, and case 3 applies here. 
+
+Regularity: <latex>af(\frac{n}{b}) \leq kf(n) \\ \frac{3}{4}n^2 \leq kn^2</latex>
+
+Both conditions apply, therefore T(n) is Big Theta of <latex>n^2</latex>
+
+---++ c. T(n) = %PHI2% T(n/3) + n<sup>2</sup>.
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+<latex>T(n) = \Theta(n^{log_{3}{20}})</latex>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+<latex>c=2 < log_{3}{20}</latex>, so case 1 applies here.
+Therefore, <latex>T(n) = \Theta(n^{log_{3}{20}})</latex>
+
+---++ d. T(n) = %CALCULATE{$EVAL(%PHI1% + 1)}% T(n/ %PHI1%) + n log n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+<latex>T(n) = \Theta(n^{\log_{16}{17}})</latex>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+By the Master Method, a valid value of c was chosen satisfying the below inequality.
+
+<latex> \log_{16}{17} > c > 1</latex>
+
+c must be greater than 1 to satisfy <latex>f(n) = O(n^c)</latex>
+We can see that using L'Hopital's Rule, and choosing "a" as some positive constant,
+<latex>\frac{nlogn}{n^{1+a}} = \frac{logn}{n^a} \Rightarrow \frac{1}{an^a} \equiv 0</latex>
+therefore both conditions are satisfied.
+
+
+---++ e. T(n) = 4 T(n/2) +  n <sup>2</sup>  &#8730;n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+<latex>T(n) = \Theta(n^{2.5})</latex>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+By the Master Method, case 3 applies. 
+
+<latex>n^c = O(f(n))</latex>
+c between 2 and 2.5 is valid. 
+
+Regularity:
+
+<latex> 4(\frac{n}{2})^{2.5} \leq kn^{2.5} </latex> is true, therefore all conditions are satisfied and <latex>T(n) = \Theta(n^{2.5})</latex>
+
+---++ f. T(n) = n(T(n/2) <sup>2</sup>).
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+<latex>T(n) = \Theta(n^{2n-2} T(1)^n)</latex>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+By iteration,
+
+<latex>
+T(n) = nT(\frac{n}{2})^2 \\
+T(n) = n(nT(\frac{n}{4})^2)^2 \\
+T(n) = nn^2T(\frac{n}{4})^4 \\
+T(n) = nn^2n^4T(\frac{n}{8})^8 \\
+</latex>
+
+After <latex>\lg{n}</latex> iterations, and applying the known formula for 2^i summation,
+
+<latex>
+T(n) = n^{\sum\limits_{i=1}^{\lg{n}} 2^i} T(\frac{n}{n})^{2^{\lg{n}}} \\
+T(n) = n^{2n-2} T(1)^n \\
+</latex>
+
+---++ g. T(n) = T(n-1) + %PHI2% lg n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+<latex>T(n) = \Theta(\lg{n!})</latex>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+By iteration,
+
+<latex>
+T(n) = 20\lg{n}+T(n-1) \\
+T(n) = 20\lg{n}+20\lg{n-1}+T(n-2) \\
+... \\
+T(n) = 20\lg{(n)(n-1)(n-2)...(n-(n-1))} + T(n-n) \\
+T(n) = 20\lg{n!} + T(0) \\
+T(n) = \Theta(\lg{n!}) \\
+</latex>
+
+
+---++ h. T(n) = T(n-1) + log<sup>2</sup>(n).
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+<latex>T(n) = \Theta(n\log^2{n})</latex>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+By iteration/substitution, 
+
+<latex>
+T(n) = \log^2{n} +T(n-1) \\
+T(n) = \log^2{n}+\log^2{n-1}+T(n-2) \\
+T(n) = \log^2{n}+\log^2{n-1}+\log^2{n-2}+...+\log^2{n-(n-1)}+T(0) \\
+</latex>
+
+There are n terms of log squared, therefore by substitution...
+
+<latex>T(n) = \Theta(n\log^2{n})</latex>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2 *[Applied recurrences, 15 points]*
+---++ 2a.
+---+++ !!Recurrence
+<pre>
+Put the recurrence here
+</pre>
+
+<latex>T(n) = T(n-1)+n</latex>
+
+---+++ !!Running Time
+<pre>
+Put the running time here
+</pre>
+
+<latex>T(n) = O(n^2)</latex>
+
+---+++ !!Explanation
+<pre>
+Put your explanation here
+</pre>
+
+The runtime for an input of size nn is given by nn+the runtime for an input of size nn-1, and takes constant time at nn = 0 - ie, the total runtime has an order of nn^2. Also by iteration, we see that this code is big O of <latex>n^2</latex>.
+
+---++ 2b.
+---+++ !!Recurrence
+<pre>
+Put the recurrence here
+</pre>
+
+<latex>T(n) = T(\frac{n}{20})</latex>
+
+---+++ !!Running Time
+<pre>
+Put the running time here
+</pre>
+
+<latex>T(n) = O(\log_{20}{n})</latex>
+
+---+++ !!Explanation
+<pre>
+Put your explanation here
+</pre>
+
+nn==nn/2 is equivalent to nn==0, the runtime is dependent on how many times you can divide the int nn by 20 to reach a value less than 1, at which point it rounds to 0 and the recursive loop ends. It is evident by substitution that this gives a runtime of <latex>\log_{20}{n}</latex>
+
+---++ 2c.
+---+++ !!Recurrence
+<pre>
+Put the recurrence here
+</pre>
+
+<latex>T(n) = T(n-1) +1 </latex>
+
+---+++ !!Running Time
+<pre>
+Put the running time here
+</pre>
+
+<latex>T(n) = O(n)</latex>
+
+---+++ !!Explanation
+<pre>
+Put your explanation here
+</pre>
+
+As n gets large, the runtime of the function is linear, because if nn is greater than 20 its value is decremented by a constant value each time until it reaches 20, after which it performs a constant number of recursive function calls.
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+Problem 3 *[Collatz, 45 points]*
+---++ 3a.  Subtraction [10 points]
+Attach your solution as =3a.h=.
+
+---++ 3b.  Running time [20 points]
+---+++ i. Vector
+----++++ !!Running time:
+<pre>
+Put the running time here
+</pre>
+
+T(n) = O(nlogn)
+
+----++++ !!Explanation:
+<pre>
+Put your explanation here if necessary
+</pre>
+
+Iterates through n digits. 
+
+---+++ ii. List
+----++++ !!Running time:
+<pre>
+Put the running time here
+</pre>
+
+T(n) = O(n)
+
+----++++ !!Explanation:
+<pre>
+Put your explanation at here if necessary
+</pre>
+
+List has a O(1) guarantee for push_back, unlike vector.
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---++ 3c. Collatz [15 points]
+---+++ i. Code
+%CODE{"cpp"}%
+// put your code here for computing CollatzCount(%PHI%) using a list<int> to store digits
+
+%ENDCODE%
+---+++ ii. Order
+<pre>
+Put your answer here. You may use < to denote asymptotic less-than, and = to denote asymptotic equality. 
+For example, i < ii < iii
+</pre>
+
+Fastest to slowest: ii = iii > i
+Deque and list are front/back sequence which gives them a O(1) guarantee for push_back which is used in the bigNum multiplication.
+
+Least to most memory: i > ii > iii 
+Vectors use contiguous memory, so there are no pointers to use up memory. Lists are doubly linked.
+
+---+++ iii. Design
+<pre>
+Put your design  here
+</pre>
+
+---+++ iv. Extra credit
+Please submit this online.
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+   * [[%ATTACHURLPATH%/3a.h][3a.h]]: 3a.h
+
+TWIKIFILEEND

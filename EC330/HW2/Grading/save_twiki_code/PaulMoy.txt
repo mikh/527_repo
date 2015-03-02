@@ -1,0 +1,244 @@
+---+EC330 - Spring 2013 - Homework 2  for PaulMoy
+%TOC%
+
+---++_Assigned:_  Wednesday, February 11, 2015
+---++_Due:_  Thursday, February 19, 2015 _at the beginning of class._
+
+I collaborated with Peter Goulakos for ideas on the coding, and I also extensively used http://www.cplusplus.com/reference/ for running times of various methods, as well as
+functions like calloc and free.
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(PaulMoy),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(10+$MOD(%PHI%,7))}%
+   * Set PHI2 = %CALCULATE{$EVAL(11+$MOD(%PHI%,11))}%
+   * Set PHI3 = %CALCULATE{$EVAL(12+$MOD(%PHI%,13))}%
+-->
+
+
+---+ Problem 1 *[Recurrences II, 40 points]*
+---++ a. T(n) = T(n-1) + n<sup> %PHI1% </sup>.
+---+++ !!Upper bound & Lower bound:
+<pre>
+<latex> n^{17} </latex>
+</pre>
+
+---+++ !!Explanation:
+<pre>
+I built a recurrence tree, where <latex> T(n) = T(n-1) + n^{16} = T(n-2) + (n-1)^{16} + n^{16} = T(0) + 1^{16} + ... + (n-1)^{16} + n^{16} = \Theta(1) + \sum_{i=0}^{n}{i^{16}} </latex> According to WolframAlpha, that sum is a polynomial in n of degree 17. Taking the limit of the polynomial over n^17 as n goes to infinity yields a nonzero constant, thus we have proved the answer above.
+</pre>
+
+---++ b. T(n) = 3 T(n/2) + n<sup>2</sup>.
+---+++ !!Upper bound & Lower bound:
+<pre>
+<latex> n^2 </latex>
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Master method: consider <latex> \epsilon = 2 - \log_{2}{3} </latex> Then <latex> f(n) = n^2 </latex> is <latex> \Omega(n^{\log_{b}{a}+\epsilon}) = \Omega(n^2) </latex> Also, consider <latex> 3(n/2)^2 <= cn^2 </latex> for all <latex> n > 1, c = 2 </latex> 
+Thus we are in case three of the master method, and the answer follows directly.
+</pre>
+
+---++ c. T(n) = %PHI2% T(n/3) + n<sup>2</sup>.
+---+++ !!Upper bound & Lower bound:
+<pre>
+<latex> n^{\log_{3}{14}} </latex>
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Master method: consider <latex> \epsilon = \log_{3}{14}-2 </latex> Then <latex> f(n) = n^2 </latex> is <latex> O(n^{\log_{3}{14}-\epsilon}) = O(n^2) </latex> Thus we are in case one of the master method, and the answer follows directly.
+</pre>
+
+---++ d. T(n) = %CALCULATE{$EVAL(%PHI1% + 1)}% T(n/ %PHI1%) + n log n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+<latex> n^{\log_{16}{17}} </latex>
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Master method: consider <latex> \epsilon = 0.00001 </latex> then <latex> f(n) = nlog(n) </latex> is <latex> O(n^{\log_{16}{17}-\epsilon}) </latex> Consider <latex> n^{1.02} < n^{\log_{16}{17}-\epsilon}. \frac{nlog(n)}{n^{1.02}} = \frac{log(n)}{n^{0.02}} </latex> Taking the limit as n approaches infinity and using L'Hopital's rule, we get <latex> \frac{50}{n^{0.02}} </latex> which clearly approaches zero, thus <latex> nlog(n) </latex> is <latex> O(n^{1.02}) </latex> and also <latex> O(n^{\log{16}{17}-\epsilon}) </latex> Thus we are in case one of the master method and the answer follows directly.
+</pre>
+
+---++ e. T(n) = 4 T(n/2) +  n <sup>2</sup>  &#8730;n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+<latex> n^2\sqrt{n} </latex>
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Master method: consider <latex> \epsilon = .02 </latex> Then <latex> f(n) = n^2\sqrt{n} = n^{2.5} </latex> is <latex> \Omega(n^{\log_{b}{a}+\epsilon}) = \Omega(n^{2.02}) </latex> Also, consider <latex> 4(n/2)^2\sqrt{n/2} <= cn^2\sqrt{n} </latex> for all <latex> n > 1, c = 2 </latex> 
+Thus we are in case three of the master method, and the answer follows directly.
+</pre>
+
+---++ f. T(n) = n(T(n/2) <sup>2</sup>).
+---+++ !!Upper bound & Lower bound:
+<pre>
+<latex> a^n </latex> where a could be any constant > 0.
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Take the log of both sides: <latex> log(T(n)) = 2*log(T(n/2)) + log(n) </latex>. Then let x(n) = log(T(n)). We can solve for x(n) using the master method: <BR>
+Taking <latex> \epsilon = 0.1 </latex> we have <latex> n^{\log_{2}{2}-\epsilon} = n^{0.9} </latex> <BR> Then, log(n) is clearly O(n^0.9) which we can see by taking the limit.
+<BR> Thus we are in case 1 of the master method, and so x(n) is theta of n, and so T(n) is theta of a^n. Unfortunately we do not know a, since <BR> we cannot get it
+directly from applying an exponent to the logarithm.
+</pre>
+
+---++ g. T(n) = T(n-1) + %PHI2% lg n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+<latex> n\log(n) </latex>
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Expand T(n) = T(n-1) + 14\log(n) = T(n-2) + 14\log(n) + 14\log(n-1) = T(n-3) + 14\log(n) + 14\log(n-1) + 14\log(n-2) ... = 14(log(n) + log(n-1) + ... + log(1)) = 14(log(n!)) <BR> By Stirling's Approximation, this is <latex> \Theta(n\log(n)) </latex>
+</pre>
+
+---++ h. T(n) = T(n-1) + log<sup>2</sup>(n).
+---+++ !!Upper bound & Lower bound:
+<pre>
+<latex> n(\log(n))^2 </latex>
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Via http://www.google.com/url?q=http://www.cs.unc.edu/~plaisted/comp550/02-asymp.ppt&sa=U&ei=_k_lVLDGLcKqggSFmICICg&ved=0CDIQFjAF&sig2=9zla1TnLDFUgahEH9tiXDA&usg=AFQjCNHSC7Sq9H24Lg3qzS54aCtYhbfQDg <BR>
+We have the following: the integral from 0 to infinity of (log(n))^2 is less than or equal to the sum from 1 to infinity of (log(n))^2. <BR>
+Expanding the recurrence with a recurrence tree, we obtain the above sum. <BR>
+This integral evaluates to nn(log(n))^2 - 2xlog(n) + 2x, which we can see is theta of n(log(n))^2 by taking the limit of one over the other, <BR>
+which evaluates to 1. Then, we notice that the upper bound is clearly n(log(n))^2, because each term in the summation is less than <BR>
+or equal to n(log(n))^2. Since the upper and lower limits are the same, we can claim that <BR>
+our answer is theta of n(log(n))^2.
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2 *[Applied recurrences, 15 points]*
+---++ 2a.
+---+++ !!Recurrence
+<pre>
+T(n) = T(n-1) + n
+</pre>
+
+---+++ !!Running Time
+<pre>
+<latex> \Theta(n^2) </latex>
+</pre>
+
+---+++ !!Explanation
+<pre>
+To get the recurrence, I noticed that the outer loop runs n times. The inner loop does n computations, then n-1 computations, then n-2 computations, all the way to 1 time. <BR> So when we add one to n, we run the outer loop one more time, which adds n+1 computations from one extra time through the inner loop. Thus T(n) = T(n-1) + n. <BR> This is easily solved by noting T(n) = T(n-1) + n = T(n-2) + (n-1) + n = 1 + ... + (n-1) + n = n(n+1)/2 which is clearly theta of n^2.
+</pre>
+
+---++ 2b.
+---+++ !!Recurrence
+<pre>
+T(n) = T(n/16) + Theta(1)
+</pre>
+
+---+++ !!Running Time
+<pre>
+<latex> \Theta(\log(n)) </latex>
+</pre>
+
+---+++ !!Explanation
+<pre>
+I obtained the recurrence by noticing that we have to compute T(n/16), so T(n) must depend on that. <BR> We only compute that once, so there's a factor of 1. We also do some amount of constant work, <BR> like checking the if clause, dividing and multiplying. That is all Theta(1). I solved the recurrence by drawing out a recursion tree, noting that <BR>
+<latex> T(n) = \Theta(1)*\log_{16}{n} </latex> Taking the limit with log(n), we arrive at the answer.
+</pre>
+
+---++ 2c.
+---+++ !!Recurrence
+<pre>
+T(n) = T(n/2) + T(n/4) + n
+</pre>
+
+---+++ !!Running Time
+<pre>
+<latex> \Theta(n) </latex>
+</pre>
+
+---+++ !!Explanation
+<pre>
+I obtained the recurrence by noticing that, for T(n), we had to compute both T(n/2) and T(n/4). We also have a while loop that iterates and does <BR>
+n-14 computations, which is theta(n). Now, note that T(n) < 2T(n/2) + n. Consider the master method, with <latex> n^{\log_{2}{2}} = n </latex> and n. <BR> Clearly these functions are asymptotically equal, so the upper bound is <latex> \Theta(n) </latex> <BR> Now, note T(n) > 2T(n/4) + n. Master method: <latex> n^{\log_{4}{2}} </latex> and <n>. We can choose any epsilon less than 1/2 and <BR> easily show that the lower bound is <latex> \Theta(n) </latex>. With the same upper and lower bound, we have a tight bound.
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+Problem 3 *[Collatz, 45 points]*
+---++ 3a.  Subtraction [10 points]
+Attach your solution as =3a.h=.
+
+---++ 3b.  Running time [20 points]
+---+++ i. Vector
+----++++ !!Running time:
+<pre>
+<latex> \Theta(n) </latex> where n is the number of digits in the larger number being added (number with more digits).
+</pre>
+
+----++++ !!Explanation:
+<pre>
+Note that, assuming vector doesn't need to allocate more size, each of its operations runs in constant time. So we only need to look at the for loops. The first loop runs k times, where k is the number of digits in the smaller number. The second loop runs (g-k) times, where g is the number of digits in the larger number. Thus, the number of computations we do is (g-k) + k = g computations. 
+</pre>
+
+---+++ ii. List
+----++++ !!Running time:
+<pre>
+<latex> \Theta(n) </latex> where n is the number of digits in the larger number being added (number with more digits).
+</pre>
+
+----++++ !!Explanation:
+<pre>
+This is for the most part the same as the explanation for vectors, due to almost all of list's functions running in constant time. The only function that doesn't is list.size(), which is linear. We use list.size() in an if statement at the beginning. Again, take g = number of digits in the larger number, k = number of digits in the smaller number. With list.size() ran on each, we're doing g + k computations. With another g computations through the two for loops, we do 2g+k computations, which is less than 3g computations, so it's theta of g. 
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---++ 3c. Collatz [15 points]
+---+++ i. Code
+%CODE{"cpp"}%
+// CollatzCount of 84285270 using a list<int>
+bigNumT<list<int> > test_num("84285270"); // Initialize input to CollatzCount function
+    
+bigNumT<list<int> > result; // Initialize bigNumT to hold answer
+    
+result = CollatzCount(test_num); // Calculate number of Collatz Counts 
+    
+cout << result.print() << endl; // Displays the end result (answer)
+
+%ENDCODE%
+---+++ ii. Order
+<pre>
+Running Time: i = ii = iii <BR>
+I looked at the functions used in CollatzCount, namely division, multiplication and addition. These used the following methods from the storage container: <BR>
+push_back, begin, end, insert and pop_back. The time complexity for each method in each container was the same, or off by a constant. <BR> Thus they are asymptotically equivalent. <BR>
+Memory Usage: i < iii < ii <BR>
+Vectors use the least amount of memory. Even without considering vectors without the need to reallocate, we can see that they will be the most efficient. Lists have the same amount of elements, plus a pointer for each element that takes up more memory. Deques consist of two overlapping arrays, both of which need to be allocated, so they take the most memory. The overlapping elements are in both arrays, resulting in wasted duplicate memory.
+</pre>
+---+++ iii. Design
+<pre>
+My design was rather long, so I will provide an explanation here and the code I have attached below as student.h. My basic strategy was this: back my student class with an array, because they take the least amount of memory. Every time I needed to add or remove elements from the array, I actually created a new array of the correct size, copied over the contents of the old array and deleted the old array. While it was not efficient in terms of speed, it was very efficient in terms of memory used.
+</pre>
+
+---+++ iv. Extra credit
+Please submit this online.
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+TWIKIFILEEND

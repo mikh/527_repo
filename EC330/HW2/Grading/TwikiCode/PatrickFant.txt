@@ -1,0 +1,265 @@
+---+EC330 - Spring 2013 - Homework 2  for PatrickFant
+%TOC%
+
+---++_Assigned:_  Wednesday, February 11, 2015
+---++_Due:_  Thursday, February 19, 2015 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(PatrickFant),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(10+$MOD(%PHI%,7))}%
+   * Set PHI2 = %CALCULATE{$EVAL(11+$MOD(%PHI%,11))}%
+   * Set PHI3 = %CALCULATE{$EVAL(12+$MOD(%PHI%,13))}%
+-->
+
+
+---+ Problem 1 *[Recurrences II, 40 points]*
+---++ a. T(n) = T(n-1) + n<sup> %PHI1% </sup>.
+---+++ !!Upper bound & Lower bound:
+<pre>
+&#1256;(n^16)
+</pre>
+
+---+++ !!Explanation:
+<pre>
+From discrete math, the sum from i=1 to n of i^k will equal a polynomial with degree k+1.
+</pre>
+
+---++ b. T(n) = 3 T(n/2) + n<sup>2</sup>.
+---+++ !!Upper bound & Lower bound:
+<pre>
+&#1256;(n^2)
+</pre>
+
+---+++ !!Explanation:
+<pre>
+From master method (a=3,b=2,f(n)=n^2).  log(2,3) is smaller than 2, so this is case 3.
+</pre>
+
+---++ c. T(n) = %PHI2% T(n/3) + n<sup>2</sup>.
+---+++ !!Upper bound & Lower bound:
+<pre>
+&#1256;(n^log(3,21))
+</pre>
+
+---+++ !!Explanation:
+<pre>
+From master method (a=21,b=3,f(n)=n^2).  log(3,21) is larger than 2, so this is case 1.
+</pre>
+
+---++ d. T(n) = %CALCULATE{$EVAL(%PHI1% + 1)}% T(n/ %PHI1%) + n log n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+&#1256;(nlog(n))
+</pre>
+
+---+++ !!Explanation:
+<pre>
+From master method (a=16,b=15,f(n)=nlog(n)).  n^log(15,16) is somewhere around n^0.01 (just a ballpark figure), which increases more slowly than nlog(n).  This is case 3.
+</pre>
+
+---++ e. T(n) = 4 T(n/2) +  n <sup>2</sup>  &#8730;n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+&#1256;(n^(5/2))
+</pre>
+
+---+++ !!Explanation:
+<pre>
+From master method (a=4,b=2,f(n)=n^(5/2)).  log(2,4) is less than 5/2, so this is case 3.
+</pre>
+
+---++ f. T(n) = n(T(n/2) <sup>2</sup>).
+---+++ !!Upper bound & Lower bound:
+<pre>
+&#1256;((2^n)(log(2,n)))
+</pre>
+
+---+++ !!Explanation:
+<pre>
+After changing base the equation becomes S(i) = i(S(i-1)^2).  Expanding this out for some i gives an expression c(n-0)^1(n-1)^2(n-2)^4...etc.  This is a polynomial whose degree is 2^i - 1, so S(i) is &#1256;(i^(2^i - 1)), and T(n) is big theta((2^n)(log(2,n))).
+</pre>
+
+---++ g. T(n) = T(n-1) + %PHI2% lg n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+&#1256;(lg(n!))
+</pre>
+
+---+++ !!Explanation:
+<pre>
+21[lg 1 + lg 2 + ... + lg n] = 21[lg(1*2*...*n)] = 21[lg n!].  
+</pre>
+
+---++ h. T(n) = T(n-1) + log<sup>2</sup>(n).
+---+++ !!Upper bound & Lower bound:
+<pre>
+&#1256;(log^3 n)
+</pre>
+
+---+++ !!Explanation:
+<pre>
+(log^2 1 + log^2 2 + ... + log^2 n) = (1/6)(log n)( log n + 1)(2log n + 1) = (1/3)log^3 n + (1/2)log^2 n + (1/6)log n
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2 *[Applied recurrences, 15 points]*
+---++ 2a.
+---+++ !!Recurrence
+<pre>
+T(nn) = T(nn-1) + nn
+</pre>
+
+---+++ !!Running Time
+<pre>
+&#1256;(nn^2)
+</pre>
+
+---+++ !!Explanation
+<pre>
+The outer for loop runs nn times, and the amount of times the inner loop runs is equal to one more than the outer loop index.  This is modeled by the above recurrence.  
+</pre>
+
+---++ 2b.
+---+++ !!Recurrence
+<pre>
+T(n) = T(nn/14) + 1
+</pre>
+
+---+++ !!Running Time
+<pre>
+&#1256;(log(14,nn))
+</pre>
+
+---+++ !!Explanation
+<pre>
+Since FB is only called once inside FB, the running time can be modeled by the recurrence above.  Every time FB(nn/14) is called, the recurrence increments by 1.  The program can only run log(14,nn) times before it calls FB(0) and ends.
+</pre>
+
+---++ 2c.
+---+++ !!Recurrence
+<pre>
+T(nn) = { T(nn/2) + 1 for 0 < nn <= 21; nn + 4 for nn > 21 }
+</pre>
+
+---+++ !!Running Time
+<pre>
+&#1256;(nn)
+</pre>
+
+---+++ !!Explanation
+<pre>
+When nn is between 0 and 22, the while loop doesn't run and only FC(nn/2) is returned, giving a recurrence similar to the one in 2b.  When nn >= 22, the return statement always calls exactly 25 instances of FC (the while loop always reduces nn to 21).  The while loop runs n-21 times, so the sum of these two blocks gives n + 4 and a linear complexity.
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+Problem 3 *[Collatz, 45 points]*
+---++ 3a.  Subtraction [10 points]
+Attach your solution as =3a.h=.
+
+---++ 3b.  Running time [20 points]
+---+++ i. Vector
+----++++ !!Running time:
+<pre>
+&#1256;(n)
+</pre>
+
+----++++ !!Explanation:
+<pre>
+The only linear elements are the assignments inside the if/else statement and the first for loop iterating through n digits.  The second for loop doesn't apply in this case since both numbers have the same amount of digits.
+</pre>
+
+---+++ ii. List
+----++++ !!Running time:
+<pre>
+&#1256;(n)
+</pre>
+
+----++++ !!Explanation:
+<pre>
+The only linear elements are the assignments inside the if/else block, size() inside the if statement, and the first for loop iterating through n digits.  The second for loop doesn't apply in this case since both numbers have the same amount of digits.
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---++ 3c. Collatz [15 points]
+---+++ i. Code
+%CODE{"cpp"}%
+
+#include <iostream>
+#include <list>
+#include <string>
+#include "bignumT.h"
+
+using namespace std;
+
+/**
+* @requires  >= 1
+* @param nn The starting parameter.
+* @return The number of Collatz calls needed to reach 1 from the parameter .
+*         This implementation is iterative to avoid stack overflows
+*/
+template <typename T>
+T CollatzCount(T nn)
+{
+	T ONE("1");   T TWO("2");   T THREE("3");
+
+	T result("1");
+	for (; !(nn == ONE); result = result + ONE) {
+		if (TWO*(nn / TWO) == nn) // i.e. nn is even
+			nn = nn / TWO;
+		else                  // i.e. nn is odd
+			nn = THREE*nn + ONE;
+	}
+	return result;
+}
+
+/* find the result of CollatzCount for bigNumT 84285255
+   (using list<int> to store digits)                    */
+int main()
+{
+	// declare variables to store CollatzCount's input and return value, respectively
+	bigNumT<list<int>> nn("84285255");
+	bigNumT<list<int>> result;
+
+	// store function's return value in result
+	result = CollatzCount<bigNumT<list<int>>>(nn);
+
+	// print result
+	cout << result.print() << endl;
+
+	// exit
+	return 0;
+}
+
+%ENDCODE%
+---+++ ii. Order
+<pre>
+(i) fastest to slowest: i < iii < ii
+// deques come in last since they're by far the most complex in terms of accessing elements.  vectors and lists are much closer in terms of speed, but vectors are more efficient for adding/removing elements at their ends.
+(ii) least memory to most memory: ii < iii < i
+// vectors take up a large amount of memory because they allocate extra space.  List elements store a link to the previous element and the next element.  Deques expand and contract for memory efficiency.
+</pre>
+---+++ iii. Design
+<pre>
+Put your design  here
+</pre>
+
+---+++ iv. Extra credit
+Please submit this online.
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+TWIKIFILEEND

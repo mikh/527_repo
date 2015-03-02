@@ -1,0 +1,214 @@
+---+EC330 - Spring 2013 - Homework 2  for PeterGoulakos
+%TOC%
+
+---++_Assigned:_  Wednesday, February 11, 2015
+---++_Due:_  Thursday, February 19, 2015 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(PeterGoulakos),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(10+$MOD(%PHI%,7))}%
+   * Set PHI2 = %CALCULATE{$EVAL(11+$MOD(%PHI%,11))}%
+   * Set PHI3 = %CALCULATE{$EVAL(12+$MOD(%PHI%,13))}%
+-->
+<br>
+---+++*I collaborated with Paul Moy for programming ideas (part 3a and 3c(iii))*
+<br><br>
+---+ Problem 1 *[Recurrences II, 40 points]*
+---++ a. T(n) = T(n-1) + n<sup> %PHI1% </sup>.
+---+++ !!Upper bound & Lower bound:
+<pre>
+T(n) = &Theta;(n^12)
+</pre>
+
+---+++ !!Explanation:
+<pre>
+T(n) = T(n-1) + n^11 = T(n-2) + n^11 + n^11 = ... = T(0) + n*n^11 = T(0) + n^12
+</pre>
+
+---++ b. T(n) = 3 T(n/2) + n<sup>2</sup>.
+---+++ !!Upper bound & Lower bound:
+<pre>
+T(n) = &Theta;(n^2)
+</pre>
+
+---+++ !!Explanation:
+Master method, case 3<br>
+<pre>(3/4)n^2 <= cn^2 for some c, all large n</pre>
+
+---++ c. T(n) = %PHI2% T(n/3) + n<sup>2</sup>.
+---+++ !!Upper bound & Lower bound:
+<pre>
+T(n) = &Theta;(nlog(n))
+</pre>
+
+---+++ !!Explanation:
+Master method case 1<pre>n^2 is O(n^(2.5-epsilon)) for an epsilon > 0</pre>
+
+---++ d. T(n) = %CALCULATE{$EVAL(%PHI1% + 1)}% T(n/ %PHI1%) + n log n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+T(n) = <latex>\Theta(n^{\log_{11}{12}}\log{n})</latex>
+</pre>
+
+---+++ !!Explanation:
+Master method case 2 
+<pre>n^(log12/log11) is O(nlog(n)), and nlog(n) is O(n^(log12/log11))
+</pre>
+
+---++ e. T(n) = 4 T(n/2) +  n <sup>2</sup>  &#8730;n.
+---+++ !!Upper bound & Lower bound:
+<pre>T(n) = &Theta;(n^(5/2))</pre>
+
+---+++ !!Explanation:
+Master method case 3
+<pre>
+f(n) = n^2.5, so 16sqrt(2)*n^2.5 <= cn^2.5 for some c and all large n is true.
+</pre>
+
+---++ f. T(n) = n(T(n/2) <sup>2</sup>).
+---+++ !!Upper bound & Lower bound:
+<pre>T(n) = &Theta;(c^n) for some c > 1</pre>
+
+---+++ !!Explanation:
+Inputting any number for =n=, you can see that T(n) = (some constant) * T(0)^(2^(lg(n))) = c * T(0)^n. I found this by trying n = 8:<br>
+<pre>T(8) = 8T(4)^2 = 8*16^2T(0)^8</pre>
+<pre>T(4) = 4T(2)^2 = 4*4T(0)^4</pre>
+<pre>T(2) = 2T(1)^2 = 2T(0)^2</pre>
+<pre>T(1) = 1T(0)^2</pre>
+The problem is that T(0) is not known...
+---++ g. T(n) = T(n-1) + %PHI2% lg n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+T(n) = &Theta;(nlog(n))
+</pre>
+
+---+++ !!Explanation:
+First, do induction:
+<pre>T(1) = T(0) + 14lg(1)</pre>
+<pre>T(2) = T(0) + 14lg(1) + lg(2)</pre>
+<pre>...</pre>
+<latex>T(n) = T(0) + \sum_{k=1}^{n}{\log_{2}{k}} = T(0) + 14\log_{2}{n!}</latex> The base 2 is just a constant away from base 10 so it's negligible.<br>
+Then we use the Stirling approximation (log(n!) = nlog(n) - n + 1), and the fact that n is O(nlog(n)), so nlog(n) becomes dominant as n increases.
+
+---++ h. T(n) = T(n-1) + log<sup>2</sup>(n).
+---+++ !!Upper bound & Lower bound:
+<pre>
+T(n) = &Theta;(nlog^2(n))
+</pre>
+
+---+++ !!Explanation:
+Use induction first
+<pre>T(1) = T(0) + log(1)^2</pre>
+<pre>T(2) = T(0) + log(1)^2 + log(2)^2</pre>
+<pre>...</pre>
+<latex>T(n) = \sum_{k=1}^{n}{\log^{2}{k}}</latex><br>
+Sums can be estimated using integrals, so let's use the indefinite integral <latex>\int{\log^{2}{(n)}dn}</latex>. This evaluates to nlog^2(n) - nlog(n) + 2n; nlog^2(n) is the most dominant term as n increases.
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2 *[Applied recurrences, 15 points]*
+---++ 2a.
+---+++ !!Recurrence
+<pre>T(n) = T(n-1) + n</pre>
+
+---+++ !!Running Time
+<pre>T(n) = &Theta;(n^2)</pre> ( theta(n^2) )
+
+---+++ !!Explanation
+Say you run the code with an input of n. The number of iterations it takes to compute the result is <latex>\sum_{k=1}^{n}{k} = 0.5n(n-1)</latex><br>
+Now add one to n. The sum changes to <latex>\sum_{k=1}^{n+1}{k} = 0.5(n+1)n</latex><br>
+Subtract the second sum from the first sum and notice how the new sum is =n= larger than the previous, just by increasing the input by 1. So, time(n) = time(n-1) + n.<br><br>
+With induction, we know:<br>
+T(1) = T(0) + 1<br>
+T(2) = T(1) + 2 = T(0) + 1 + 2<br>
+... etc ...<br>
+<latex>T(n) = T(0) + \sum_{k=1}^{n}{k} = T(0) + 0.5n(n-1)</latex><br><br>
+Which is theta(n^2).
+---++ 2b.
+---+++ !!Recurrence
+<pre>T(n) = T(n/17)</pre>
+
+---+++ !!Running Time
+<pre>T(n) = &Theta;(log(n))</pre>theta(log(n))
+
+---+++ !!Explanation
+This function (FB) has no inner iteration so all of the work it does is spawning off more functions. The number of functions spawned is <latex>\log_{17}{n}</latex>; each time, it calls a new FB(n) with =n= being the original/previous =n= divided by 17. Once =n= reaches a number below 17, it satisfies the = if(nn==nn/2) = condition and stops. Therefore, for any =n=, the recurrence will occur <latex>\log_{17}{n}</latex> times. The base 17 is negligible because <latex>\log_{17}{n} = \frac{\log_{10}{n}}{\log_{10}{17}}</latex> and the denominator is a constant.
+---++ 2c.
+---+++ !!Recurrence
+<pre>T(n) = T(n-1) + 1</pre>
+
+---+++ !!Running Time
+<pre>T(n) = &Theta;(n)</pre>( theta(n) )
+
+---+++ !!Explanation
+For any number =n= greater than 14, the function performs =n - 14= iterations within its while() loop, bringing =n= down to 14 in the process. It then calls FC(n/2) and FC(n/4), which each perform zero while() loop cycles and end up calling FC() in the order of ~20 times (all of which do not iterate the while() loop).<br><br>
+Adding one to the input =n= adds one iteration to the while() loop, and this holds for any =n= as =n= grows. Thus, the running time changes linearly with =n=.<br><br>
+For inputs lesser than 14, the function simply calls itself as above for a limited number of times with no loop iterations.
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+Problem 3 *[Collatz, 45 points]*
+---++ 3a.  Subtraction [10 points]
+See =3a.h= attached below.
+
+---++ 3b.  Running time [20 points]
+---+++ i. Vector
+----++++ !!Running time:
+Time is =theta(n)=
+
+----++++ !!Explanation:
+I made a record of all of =digit= 's function calls within =operator+= (these are all members of =vector=). There was only one that has a non-constant running time, operator=. It takes linear time (=n=), depending on how many elements there are in the left-hand and right-hand =vector= of the assignment operator. In addition, the two =for()= loops each take =n= iterations. However, all of these operations occur in sequence, so the run time is still linear, or theta(n).
+
+The functions I recorded are: push_back(), size(), begin(), end(), and operator=()
+---+++ ii. List
+----++++ !!Running time:
+Time is =theta(n)=
+
+----++++ !!Explanation:
+I made a record of all of =digit= 's function calls within =operator+= (these are all members of =list=). In this case there were two that have a non-constant running time, operator=() and size(). Both take linear time (=n=), depending on how many elements there are in the list(s). In addition, the two =for()= loops each take =n= iterations, as before. Again, all of these operations occur in sequence. size() is called twice, and operator= is called once. Therefore, the run time is linear, or theta(n).
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---++ 3c. Collatz [15 points]
+---+++ i. Code
+%CODE{"cpp"}%
+int main()
+{
+  // Create a bigNumT using list<int> for storage, initialize it to 84301638
+  bigNumT<list<int> > parameter("84301638");
+  
+  // Run the CollatzCount() function and output the result into a new bigNumT
+  bigNumT<list<int> > collatz = CollatzCount(parameter);
+
+  // Print out the result
+  cout << "Number of calls: " << collatz.print() << endl;
+
+  return 0;
+}
+
+%ENDCODE%
+---+++ ii. Order
+*In terms of memory:* <br>
+<pre>I < III < II</pre>or, vector < list < deque <br><br>
+*In terms of time:* <br>
+<pre>I = II = III</pre> or, vector = deque = list <br><br><br>
+I used =getrusage= for time (averaged over many trials) and =valgrind= for memory usage. The results fit with the notion that =vector&lt;int&gt;= is memory-efficient and has many (if not all) constant-time functions (i.e. size(), insert(), push_back(), etc.). As the Collatz count parameter becomes large, the extra overhead that =list= and =deque= require (as a result of spreading their data over non-contiguous memory) becomes apparent. Deque is the more complicated of the three with its easier access/insertions at the front back. List is less complicated, but it still requires many pointers to point back and forth between the elements of the list. Vector is the simplest--just a block of memory.
+
+In terms of time, the three are all linear; so they end up being asymptotically equivalent.
+---+++ iii. Design
+Attached below.
+
+---+++ iv. Extra credit
+Please submit this online.
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+TWIKIFILEEND

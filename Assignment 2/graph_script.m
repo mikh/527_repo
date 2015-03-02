@@ -283,3 +283,20 @@ ylabel('cycles');
 title('random values');
 legend('branch1', 'branch2');
 hold off
+
+%% q4
+
+filename = 'q4_data.txt';
+delimiterIn = ',';
+q4_data = importdata(filename, delimiterIn);
+
+
+figure(13);
+hold on
+scatter(q4_data(:,1), q4_data(:,2)./q4_data(:,1), 5, 'b');
+scatter(q4_data(:,1), q4_data(:,3)./q4_data(:,1), 5, 'r');
+xlabel('data elements');
+ylabel('cycles');
+title('Polynomial');
+legend('poly base', 'poly1');
+hold off

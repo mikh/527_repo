@@ -1,0 +1,272 @@
+---+EC330 - Spring 2013 - Homework 2  for ThomasBurke
+%TOC%
+
+---++_Assigned:_  Wednesday, February 11, 2015
+---++_Due:_  Thursday, February 19, 2015 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(ThomasBurke),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(10+$MOD(%PHI%,7))}%
+   * Set PHI2 = %CALCULATE{$EVAL(11+$MOD(%PHI%,11))}%
+   * Set PHI3 = %CALCULATE{$EVAL(12+$MOD(%PHI%,13))}%
+-->
+
+
+---+ Problem 1 *[Recurrences II, 40 points]*
+---++ a. T(n) = T(n-1) + n<sup> %PHI1% </sup>.
+T(n)= <latex> \theta (n^{14}) </latex>
+
+plugging in shows us a pattern that gives <latex>  (n^{13}) </latex> *<latex> \sum_{i=1}^{n} 1 </latex> 
+the geometric series is equal to n, thus n*<latex> (n^{13}) </latex>=<latex> (n^{14}) </latex>
+this yields our tightest asymptotic bounds
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ b. T(n) = 3 T(n/2) + n<sup>2</sup>.
+<latex>T(n)= \theta (n^{2}) </latex>
+
+this is proved through the master method case #3
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ c. T(n) = %PHI2% T(n/3) + n<sup>2</sup>.
+<latex>T(n)= \theta (n^{log_{3}16}) </latex>
+
+this was found by applying master method case#1
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ d. T(n) = %CALCULATE{$EVAL(%PHI1% + 1)}% T(n/ %PHI1%) + n log n.
+<latex>T(n)= \theta (n^{log_{13}14}) </latex>
+
+determined through master method case #1
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ e. T(n) = 4 T(n/2) +  n <sup>2</sup>  &#8730;n.
+<latex>T(n)= \theta (n^{2.5}) </latex>
+
+this was determined through master method case#3 because <latex> log_{2}4=2 and n^{2}*n^{.5}=2.5</latex> 
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ f. T(n) = n(T(n/2) <sup>2</sup>).
+assuming C to be a constant
+<latex>T(n)= \theta C^{ (n)} </latex>
+
+The idea behind this one was to use log to manipulate the recursion
+
+S(n)=<latex> log_{C}(T(n)) </latex>
+
+S(n) = <latex> log_{C}(n) </latex> + 2S(n/2)
+
+now we can apply master method #1 to get <latex>S(n)= \theta (n) </latex>
+
+now we simply get rid of the log and swing the base
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ g. T(n) = T(n-1) + %PHI2% lg n.
+upper bound:<latex>T(n)=\theta (log(n!)) </latex>
+lower bound:<latex> T(n)=\theta (nlog(n)) </latex>
+
+T(n)= 16(logn+log(n-1)+log(n-2)....)<=16(logn+log(n-1)+log(n-2)+log(n-3)+log(n-4)....) thus we can say T(n)=O(log(n!))
+now if T(n)=Omega(log(n!)) then T(n) is <latex> \theta </latex> log(n!)
+
+T(n)=logn+logn+log(n-1)+log(n-1)... >= logn +log(n-1) + log(n-2) +log(n-3)... so our test passes!
+ to find the lower bound i simply plugged in n's saw a pattern and pulled out 17log(n) which gave me my lower asymptotic bound
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ h. T(n) = T(n-1) + log<sup>2</sup>(n).
+lower bound: <latex>T(n)= \theta (nloglog(n)) </latex>
+
+solved by plugging in values for n noticing a pattern and factoring out a loglog(n)
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2 *[Applied recurrences, 15 points]*
+---++ 2a.
+Recurrence: T(n)=<latex> \sum_{i=0}^{n}i + \sum_{i=0}^{n}1 </latex>
+Worst case running time is <latex> \theta (n^{2}) </latex>
+i simply analyzed the for loops and noticed that they were equivalent to the followed geometric sum and the other sum
+---+++ !!Recurrence
+<pre>
+Put the recurrence here
+</pre>
+
+---+++ !!Running Time
+<pre>
+Put the running time here
+</pre>
+
+---+++ !!Explanation
+<pre>
+Put your explanation here
+</pre>
+
+---++ 2b.
+T(n)= 17T(n/17) +n
+running time is <latex> \theta (logn) </latex>
+we can think of this as the recurrence tree problems we did in class. where we count the levels as we divide by our constant value, so the levels of this recurrence=<latex> log_{15}n </latex>
+---+++ !!Recurrence
+<pre>
+Put the recurrence here
+</pre>
+
+---+++ !!Running Time
+<pre>
+Put the running time here
+</pre>
+
+---+++ !!Explanation
+<pre>
+Put your explanation here
+</pre>
+
+---++ 2c.
+T(n)=T(n/2)+T(n/4)+Cn
+running time:<latex> \theta (nlogn) </latex>
+due to integer division and iteration
+
+---+++ !!Recurrence
+<pre>
+Put the recurrence here
+</pre>
+
+---+++ !!Running Time
+<pre>
+Put the running time here
+</pre>
+
+---+++ !!Explanation
+<pre>
+Put your explanation here
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+Problem 3 *[Collatz, 45 points]*
+---++ 3a.  Subtraction [10 points]
+Attach your solution as =3a.h=.
+
+---++ 3b.  Running time [20 points]
+
+---+++ i. Vector
+running time for vector is linear as we are iterating through a loop of length n. also vectors allow for random access, but that shouldn't matter. <latex> \theta (n) </latex>
+----++++ !!Running time:
+<pre>
+Put the running time here
+</pre>
+
+----++++ !!Explanation:
+<pre>
+Put your explanation here if necessary
+</pre>
+
+---+++ ii. List
+I would argue that runtime is constant because even though list doesn't allow for random access, that won't matter because we are just iterating through the loop in the operator+ portion, thus <latex> \theta (n) </latex>
+----++++ !!Running time:
+<pre>
+Put the running time here
+</pre>
+
+----++++ !!Explanation:
+<pre>
+Put your explanation at here if necessary
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---++ 3c. Collatz [15 points]
+---+++ i. Code
+%CODE{"cpp"}%
+// put your code here for computing CollatzCount(%PHI%) using a list<int> to store digits
+bigNumT<list<int>>n1("88508150");
+cout<<(CollatzCount(n1)).print()<<endl;
+%ENDCODE%
+---+++ ii. Order
+<pre>
+for speed: ii<iii<i
+for memory: i<iii<ii
+</pre>
+---+++ iii. Design
+<pre>
+Put your design  here
+</pre>
+
+---+++ iv. Extra credit
+Please submit this online.
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+TWIKIFILEEND

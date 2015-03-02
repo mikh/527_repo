@@ -1,0 +1,200 @@
+---+EC330 - Spring 2013 - Homework 2  for NicholasBoukis
+%TOC%
+
+---++_Assigned:_  Wednesday, February 11, 2015
+---++_Due:_  Thursday, February 19, 2015 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(NicholasBoukis),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(10+$MOD(%PHI%,7))}%
+   * Set PHI2 = %CALCULATE{$EVAL(11+$MOD(%PHI%,11))}%
+   * Set PHI3 = %CALCULATE{$EVAL(12+$MOD(%PHI%,13))}%
+-->
+
+
+---+ Problem 1 *[Recurrences II, 40 points]*
+---++ a. T(n) = T(n-1) + n<sup> %PHI1% </sup>.
+---+++ !!Upper bound & Lower bound:
+theta(n<sup>16</sup>)
+
+---+++ !!Explanation:
+T(n) simplifies to where the function essentially becomes the sum of k<sup>15</sup> from 1 to n. Expanding this summation we find the leading term is n<sup>16</sup> so T(n) is theta(n<sup>16</sup>).
+
+---++ b. T(n) = 3 T(n/2) + n<sup>2</sup>.
+---+++ !!Upper bound & Lower bound:
+theta(n<sup>2</sup>)
+
+---+++ !!Explanation:
+Case 3 of the Master Theorem
+
+---++ c. T(n) = %PHI2% T(n/3) + n<sup>2</sup>.
+---+++ !!Upper bound & Lower bound:
+theta(n<sup>log_3 20</sup>)
+
+---+++ !!Explanation:
+Case 1 of the Master Theorem
+
+---++ d. T(n) = %CALCULATE{$EVAL(%PHI1% + 1)}% T(n/ %PHI1%) + n log n.
+---+++ !!Upper bound & Lower bound:
+theta(n<sup>log_15 16</sup>)
+
+---+++ !!Explanation:
+Case 1 of the Master Theorem
+
+---++ e. T(n) = 4 T(n/2) +  n <sup>2</sup>  &#8730;n.
+---+++ !!Upper bound & Lower bound:
+theta(n<sup>2.5</sup>)
+
+---+++ !!Explanation:
+Case 3 of the Master Theorem
+
+---++ f. T(n) = n(T(n/2) <sup>2</sup>).
+---+++ !!Upper bound & Lower bound:
+theta(n log n)
+
+---+++ !!Explanation:
+Using stirling's approximation 
+
+---++ g. T(n) = T(n-1) + %PHI2% lg n.
+---+++ !!Upper bound & Lower bound:
+theta(n log n)
+
+---+++ !!Explanation:
+T(n) simplifies to where the function essentially becomes the sum of log k from 1 to n. This summation evaluates to log(n!) which is equivalent to theta(nlog n).
+
+---++ h. T(n) = T(n-1) + log<sup>2</sup>(n).
+---+++ !!Upper bound & Lower bound:
+theta(n log<sup>2</sup>(n))
+
+---+++ !!Explanation:
+The dominant term is log<sup>2</sup>(n) and after evaluating the summation you get a running time of n log<sup>2</sup>(n).
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2 *[Applied recurrences, 15 points]*
+---++ 2a.
+---+++ !!Recurrence
+T(n) = n(n+1)/2
+
+---+++ !!Running Time
+theta(n^2)
+
+---+++ !!Explanation
+It's a nested loop that acts as triangle sequence. This gives you a running time of n^2.
+
+---++ 2b.
+---+++ !!Recurrence
+T(n) = T(n/17) + theta(1)
+
+---+++ !!Running Time
+theta(log n)
+
+---+++ !!Explanation
+Applying the Master Theorem
+
+---++ 2c.
+---+++ !!Recurrence
+T(n) = T(n/2) + T(n/4) + (n-20)
+
+---+++ !!Running Time
+theta(n)
+
+---+++ !!Explanation
+T(n) simplfies to roughly 4n which is equivalent to a running time of n
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+Problem 3 *[Collatz, 45 points]*
+---++ 3a.  Subtraction [10 points]
+See attached.
+---++ 3b.  Running time [20 points]
+---+++ i. Vector
+----++++ !!Running time:
+theta(n) where n is the size of the second bigNum, which is defined as always having at least as many digits as the other bigNum
+
+----++++ !!Explanation:
+The only functions we're dealing with are size() and push_back(). For a vector, both of these are constant, so you're looking at a linear running time as it goes through each digit of the largest number.
+
+---+++ ii. List
+----++++ !!Running time:
+theta(3n) where n is the size of the second bigNum, which is defined as always having at least as many digits as the other bigNum
+
+----++++ !!Explanation:
+ For a list, only push_back() is constant while size() is linear. This means that when you're checking the size of each bigNum, worst case where they are very large and the same size, that's already an 2n running time. Push_back is constant so it goes through each digit again giving it a running time of 3n.
+
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---++ 3c. Collatz [15 points]
+---+++ i. Code
+%CODE{"cpp"}%
+// put your code here for computing CollatzCount(%PHI%) using a list<int> to store digits
+#include "bigNumT.h"
+#include <list>
+
+/**
+* @requires  >= 1
+* @param nn The starting parameter.
+* @return The number of Collatz calls needed to reach 1 from the parameter .
+*         This implementation is iterative to avoid stack overflows
+*/
+template <typename T>
+T CollatzCount(T nn) {
+        T ONE("1");   T TWO("2");   T THREE("3");
+        
+        T result("1");
+        for (;!(nn==ONE);result=result+ONE) {
+                if (TWO*(nn/TWO)==nn) // i.e. nn is even
+                nn = nn/TWO;
+                else                  // i.e. nn is odd
+                nn = THREE*nn+ONE;
+        }
+        return result;
+}
+
+
+int main()
+{
+	bigNumT< list<int> > test("82220598");
+	bigNumT< list<int> > answer = CollatzCount(test);
+	cout << "Result: " << answer.print() << endl;
+	
+	return 0;
+}
+%ENDCODE%
+---+++ ii. Order
+<pre>
+Running Time: i < iii < ii
+
+After multiple trials, I calculated the average runtime for each data structure:
+Vector: 118.223 milliseconds
+Deque: 229.895 milliseconds
+List: 163.843 milliseconds
+
+
+Memory Storage: i = ii < iii
+
+Vectors and deques are very similar in their memory structure, despite deques not guaranteeing contiguous storage. Lists, however, must also store two pointers for each element.
+
+</pre>
+---+++ iii. Design
+<pre>
+Put your design  here
+</pre>
+
+---+++ iv. Extra credit
+Please submit this online.
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+

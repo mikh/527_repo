@@ -1,0 +1,241 @@
+---+EC330 - Spring 2013 - Homework 2  for YiannisKaravas
+%TOC%
+
+---++_Assigned:_  Wednesday, February 11, 2015
+---++_Due:_  Thursday, February 19, 2015 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(YiannisKaravas),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(10+$MOD(%PHI%,7))}%
+   * Set PHI2 = %CALCULATE{$EVAL(11+$MOD(%PHI%,11))}%
+   * Set PHI3 = %CALCULATE{$EVAL(12+$MOD(%PHI%,13))}%
+-->
+
+
+---+ Problem 1 *[Recurrences II, 40 points]*
+---++ a. T(n) = T(n-1) + n<sup> %PHI1% </sup>. 
+
+---+++ !!Upper bound & Lower bound:
+<pre>
+T(n) is Theta of n^14
+</pre>
+
+---+++ !!Explanation:
+<pre>
+If one were to write out the first few recursions of this equation as n goes to infinity a pattern would emerge which results in the sum from i=1 to n of i^13. For a polynomial such as this, the dominant factor in the closed form of the summation is always n to the power of the exponent in the summation plus 1: 13+1=14. 
+</pre>
+
+---++ b. T(n) = 3 T(n/2) + n<sup>2</sup>.T
+
+
+---+++ !!Upper bound & Lower bound:
+<pre>
+T(n) is Theta of n^2
+</pre>
+
+---+++ !!Explanation:
+<pre>
+For this question I used Master Method.  n^log base b of (a) in this case is equal to n^.63093. The dominant factor here is clearly n^2. This is case 3.
+</pre>
+
+---++ c. T(n) = %PHI2% T(n/3) + n<sup>2</sup>. 
+
+
+---+++ !!Upper bound & Lower bound:
+<pre>
+T(n) is Theta of n^2.77124
+</pre>
+
+---+++ !!Explanation:
+<pre>
+For this question I used Master Method. n^log base b of (a) in this case is equal to n^2.77124. The dominant factor here is clearly n^2.77124. This is case 1.
+</pre>
+
+---++ d. T(n) = %CALCULATE{$EVAL(%PHI1% + 1)}% T(n/ %PHI1%) + n log n. 
+
+
+---+++ !!Upper bound & Lower bound:
+<pre>
+T(n) is Theta of n^1.028893
+</pre>
+
+---+++ !!Explanation:
+<pre>
+For this question I used Master Method. n^log base b of (a) in this case is equal to n^1.028893. Although the exponent here is very small, this is still considered to be in the n^x family which grows more quickly and surpasses, at some point, the nlogn family. This is case 1.
+</pre>
+
+---++ e. T(n) = 4 T(n/2) +  n <sup>2</sup>  &#8730;n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+T(n) is Theta of n^2.5
+</pre>
+
+---+++ !!Explanation:
+<pre>
+For this question I used Master Method. n^log base b of (a) in this case is equal to n^2. The dominant factor here is clearly n^2.5. This is case 3.
+</pre>
+
+---++ f. T(n) = n(T(n/2) <sup>2</sup>).
+---+++ !!Upper bound & Lower bound:
+<pre>
+T(n) is Theta of (4^(n-1))/n
+</pre>
+
+---+++ !!Explanation:
+<pre>
+If one iterates a few times a pattern can be found from which one can write a product that eventually simplifies to the above expression.
+</pre>
+
+---++ g. T(n) = T(n-1) + %PHI2% lg n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+T(n) is Theta of lg(n!) or Theta of n*ln(n) (by Sterling Approximation)
+</pre>
+
+---+++ !!Explanation:
+<pre>
+If one were to write out the first few recursions of this equation as n goes to infinity a pattern would emerge which results in the form 21*(lg1 +lg2+ lg3 ... +lgn). Summation of these lg's is equal to lg(1*2*3*4...*n) which is equal to lg(n!). By sterling approximation this is equal to n*ln(n).
+</pre>
+
+---++ h. T(n) = T(n-1) + log<sup>2</sup>(n).
+---+++ !!Upper bound & Lower bound:
+<pre>
+T(n) has an upper bound of n*(log(n))^2 and a lower bound of (log(n))^2
+</pre>
+
+---+++ !!Explanation:
+<pre>
+I found that T(n) had a Theta of Sum from i=1 to n of (log(i))^2 but could not find a closed form for this sum so i simply found an upper and lower bound using the summation as a template. These upper and lower bounds may not be the tightest possible however.
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2 *[Applied recurrences, 15 points]*
+---++ 2a.
+---+++ !!Recurrence
+<pre>
+This function has no recurrence but if one were to run the function several times the recurrence would be T(n)=T(n-1) + n. The "recurrence" equation for the function itself would be (n^2 - n)/2.
+</pre>
+
+---+++ !!Running Time
+<pre>
+This function has big O(n^2)
+</pre>
+
+---+++ !!Explanation
+<pre>
+The inner For loop runs n times the first time, n-1 times the second time, n-2 time the third time etc... So the summation is Sum of i=0 to (n-1) of (n-i) which is equivalent to Sum of i=1 to n of (n-i). The summation itself represents the outer for loop while what is inside the summation represents the inner for loop. 
+</pre>
+
+---++ 2b.
+---+++ !!Recurrence
+<pre>
+T(n) = T(n/19) + 1
+</pre>
+
+---+++ !!Running Time
+<pre>
+This recursive function has big O(log base(19) of n)
+</pre>
+
+---+++ !!Explanation
+<pre>
+Every time, n gets divided by 19. Since the function runs in constant time, we would end up with a summation running from i=1 until log base(19) of n. This would yield a constant times log base(19) of n.
+</pre>
+
+---++ 2c.
+---+++ !!Recurrence
+<pre>
+T(n) = T(n/2) + T(n/4) + (n-21)
+</pre>
+
+---+++ !!Running Time
+<pre>
+This recursive function has big O(n)
+</pre>
+
+---+++ !!Explanation
+<pre>
+The first two terms in the recurrence equation comes from the fact that the function returns FC(n/2) and FC(n/4). The last term, n-21, comes from the fact that the while loop runs while n decrements until 21. The run time is simply n since the (n-21) term dominates the recurrence equation. Note: The recursive part of this equation will always start to run when n<21. Therefore I suppose that the T(n/2)+T(n/4) may be treated as a constant in this case therefore transforming the equation to T(n)=T(21/2)+T(21/4)+(n-21) for n>17.
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+Problem 3 *[Collatz, 45 points]*
+---++ 3a.  Subtraction [10 points]
+Attach your solution as =3a.h=.
+
+---++ 3b.  Running time [20 points]
+---+++ i. Vector
+----++++ !!Running time:
+<pre>
+3n+c
+</pre>
+
+----++++ !!Explanation:
+<pre>
+All operations are constant aside from assignment which is linear since it occurs twice. This yields 2n + C plus another n from iterating through the for loops. The asymptotic running time is therefore 3n + C
+</pre>
+
+---+++ ii. List
+----++++ !!Running time:
+<pre>
+C++98: 5n+C
+
+C++11: 3n+C
+</pre>
+
+----++++ !!Explanation:
+<pre>
+For C++98 operations are constant aside from assignment and getting sizes of numbers which yields original 3n plus another 2n with all other things constant; thus for C++98 it is 5n + c. For C++11 getting the size is a constant so the equations reverts back to 3n + C.
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---++ 3c. Collatz [15 points]
+---+++ i. Code
+%CODE{"cpp"}%
+// put your code here for computing CollatzCount(%PHI%) using a list<int> to store digits
+
+int main()
+{ 
+bigNumT<list <int>> foo("93754902");
+bigNumT<list <int>> result = CollatzCount<>(foo);
+cout<<result.print()<<endl;
+
+return 0;
+
+}
+
+
+%ENDCODE%
+---+++ ii. Order
+<pre>
+Put your answer here. You may use < to denote asymptotic less-than, and = to denote asymptotic equality. 
+For example, i < ii < iii
+
+ii < i < iii
+
+</pre>
+---+++ iii. Design
+<pre>
+Put your design  here
+</pre>
+
+---+++ iv. Extra credit
+Please submit this online.
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+TWIKIFILEEND

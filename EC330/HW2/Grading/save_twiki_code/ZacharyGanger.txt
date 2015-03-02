@@ -1,0 +1,361 @@
+
+TWiki> EC330 Web>HomeworkTwoZacharyGanger (2015-02-19, ZacharyGanger) EditAttach
+EC330 - Spring 2013 - Homework 2 for ZacharyGanger
+
+    EC330 - Spring 2013 - Homework 2 for ZacharyGanger
+        Assigned: Wednesday, February 11, 2015
+        Due: Thursday, February 19, 2015 at the beginning of class. 
+    Problem 1 [Recurrences II, 40 points]
+        a. T(n) = T(n-1) + n 13 .
+        b. T(n) = 3 T(n/2) + n2.
+        c. T(n) = 11 T(n/3) + n2.
+        d. T(n) = 14 T(n/ 13) + n log n.
+        e. T(n) = 4 T(n/2) + n 2 ?n.
+        f. T(n) = n(T(n/2) 2).
+        g. T(n) = T(n-1) + 11 lg n.
+        h. T(n) = T(n-1) + log2(n).
+    Problem 2 [Applied recurrences, 15 points]
+        2a.
+        2b.
+        2c.
+    Problem 3 [Collatz, 45 points]
+        3a. Subtraction [10 points]
+        3b. Running time [20 points]
+            i. Vector
+            ii. List
+        3c. Collatz [15 points]
+            i. Code
+            ii. Order
+            iii. Design
+            iv. Extra credit 
+
+Assigned: Wednesday, February 11, 2015
+Due: Thursday, February 19, 2015 at the beginning of class.
+
+Problem 1 [Recurrences II, 40 points]
+a. T(n) = T(n-1) + n 13 .
+
+Upper bound & Lower bound:
+
+T(n) is theta n
+
+Explanation:
+
+T(1) = T(0) + 1^13
+
+T(2) = T(1) + 2^13 = T(0) + 1^13 + 2^13
+
+T(n) = T(0) + (sum from i = 1 to n of i^13)
+
+b. T(n) = 3 T(n/2) + n2.
+
+Upper bound & Lower bound:
+
+T(n) is theta of n^2
+
+Explanation:
+
+a = 3, b = 2, f(n) = n^2
+
+compare n^(log base 2 of 3) to n^2  --> case 3
+
+n^2 is omega of n^1.58
+
+c. T(n) = 11 T(n/3) + n2.
+
+Upper bound & Lower bound:
+
+T(n) is theta of n^2.183
+
+Explanation:
+
+a = 11, b = 3, f(n) = n^2
+
+compare n^2 with n^(log base 3 of 11)
+
+n^2 is O of n^2.183
+
+d. T(n) = 14 T(n/ 13) + n log n.
+
+Upper bound & Lower bound:
+
+T(n) is theta (nlog(n))
+
+Explanation:
+
+a = 14, b = 13, f(n) = nlog(n)
+
+compare nlog(n) to n^(log base 13 of 14)
+
+nlog(n) is O n^(log base 13 of 14)
+
+e. T(n) = 4 T(n/2) + n 2 ?n.
+
+Upper bound & Lower bound:
+
+T(n) is theta (n^2)
+
+Explanation:
+
+a = 4, b = 2, f(n) = n^3/2
+
+compare n^(log base 2 of 4) = n^2 to n^(3/2)
+
+n^2 is omega n^3/2
+
+f. T(n) = n(T(n/2) 2).
+Upper bound & Lower bound:
+
+Put one answer if upper and lower bound is same. Otherwise, specify both
+
+Explanation:
+
+Put your explanation here
+
+g. T(n) = T(n-1) + 11 lg n.
+
+Upper bound & Lower bound:
+
+T(n) is theta n
+
+Explanation:
+
+T(1) = T(0) + 11lg1
+
+T(2) = T(1) + 11lg2 --> T(0) + 11lg1 + 11lg2
+
+T(n) = T(0) + 11(sum from i=1 to n of lg(i))
+
+T(n) = T(0) + 11lg(n!) because of log rules, adding logs multiplies the interiors of the logs.
+
+h. T(n) = T(n-1) + log2(n).
+
+Upper bound & Lower bound:
+
+T(n) is theta n
+
+Explanation:
+
+T(1) = T(0) + log^2(1) = T(0)
+
+T(2) = T(1) + log^2(2) = T(0) + log^2(2)
+
+T(3) = T(2) + log^2(3) = T(0) + log^2(2) + log^2(3)
+
+T(n) = T(0) + (sum from i = 2 to n of log^2(i))
+
+Grader comments
+
+Reserved for the grader
+
+Problem 2 [Applied recurrences, 15 points]
+2a.
+
+Recurrence
+
+T(n) = t(n-1) + C
+
+Running Time
+
+T(n) is theta n^2
+
+Explanation
+
+In the worst case it has to run through the second loop fully for each iteration of the first loop, which runs fully also. since both are of length n, they would run n^2 times.
+
+2b.
+Recurrence
+
+T(n) = T(N/13) + C
+
+Running Time
+
+T(n) is theta log(n)
+
+Explanation
+
+Master Method.
+a = 1; log base anything of 1 is 0.
+Compare f(n) = c to n^0 = 1.
+Case 2, and since (n^log base b of a) is 0, T(n) is theta log(n).
+
+2c.
+Recurrence
+
+T(n) = T(n/2) + T(n/4) + Cn
+
+Running Time
+
+T(n) is theta n^2
+
+Explanation
+
+T(n) = T(n/2) + T(n/2) + C = 2T(n/2) + C
+T(n) = T(n/4) + T(n/4) + C = 2T(n/4) + C
+
+log base 4 of 2 = ½
+log base 2 of 2 = 1
+
+>average these, (3/2)/2 = .75
+
+Cn is omega .75 so case 3
+
+Grader comments
+
+Reserved for the grader
+
+Problem 3 [Collatz, 45 points]
+3a. Subtraction [10 points]
+Attach your solution as 3a.h.
+
+3b. Running time [20 points]
+i. Vector
+Running time:
+
+T(n) is theta n
+
+Explanation:
+
+Each of the functions used in bigNumT's + operator (begin, end, push_back, and size) are all constant for vectors, as long as enough space is 
+
+given initially that reallocation is unnecessary. The only one that gets iterated is push_back in the first loop, since the second loop doesn't run 
+
+because the numbers are both of n digits. Therefore, as the loop iterates n times, once for each digit, the runtime is linear with the number of digits.
+
+ii. List
+Running time:
+
+T(n) is theta n
+
+Explanation:
+
+Just like vectors, each of the functions used in bigNumT's + operator (begin, end, push_back, and size) are all constant for lists. The only one that gets iterated is 
+
+push_back in the first loop, since the second loop doesn't run because the numbers are both of n digits. Therefore, as the loop iterates n times, once for each digit, 
+
+the runtime is linear with the number of digits.
+
+Grader comments
+
+Reserved for the grader
+
+3c. Collatz [15 points]
+i. Code
+
+// put your code here for computing CollatzCount(94770742) using a list<int> to store digits
+
+#include "bigNumT.h"
+
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+        
+        bigNumT<> test("94770742");
+        
+        cout << CollatzCount(test).print() << endl;
+        
+        return 0;
+        
+}
+
+
+//Also, copy and paste the CollatzCount function into bigNumT.h and change the include statements and template of bigNumT.h such that:
+
+#ifndef BIGNUMT_H
+
+#define	BIGNUMT_H
+
+#include <list>
+
+#include <iostream>
+
+#include <vector>
+
+#include <string>
+
+#include <iterator>
+
+using namespace std;
+
+template <typename STORAGE = list<int> > // STORAGE is the class that is used to store digits
+
+class bigNumT {
+        // a class to represent arbitrarily large positive numbers
+        
+        public:
+
+ii. Order
+
+In terms of speed, i = ii = iii assuming no reallocation for vectors, else we would have iii = ii < i. All the member functions called are linear for each list, deque, 
+
+and vector assuming no reallocation, and since they are all running the same functions in bigNumT, this gives an equal result. If the vector has to reallocate, 
+
+push_back becomes linear for the vector, making it the slowest.
+
+
+In terms of memory, i < ii < iii because the vector is contiguous in memory, so it requires less memory allocation. A list is the highest because each element requires 
+
+pointers to and from the elements on either side.
+
+iii. Design
+
+Put your design  here
+
+iv. Extra credit
+Please submit this online.
+
+Grader comments
+
+Reserved for the grader
+
+Attachments
+I 	Attachment 	History 	Action 	Size 	Date 	Who 	Comment
+Header file 	3a.h 	r1 	manage 	3.3 K 	2015-02-19 - 11:43 	ZacharyGanger 	3.a.h for problem 3a, co-authored with Daniel Kim
+Edit | Attach | Watch | Print version | History: r3 < r2 < r1 | Backlinks | Raw View | More topic actions
+Topic revision: r3 - 2015-02-19 - ZacharyGanger
+
+    Web background EC330 
+
+Hello Mikhail Andreev
+
+    Log Out
+
+    Create personal sidebar
+
+Course Info
+
+    Home Main page
+    New topic Homeworks 
+
+    Speech bubble Discussions
+    Red star, highlight Tutorials
+    Person Lectures
+    Request for comments In Class
+    Edit topic Exams 
+
+    Folder Handouts 
+
+    Changes Extra Credit 
+
+    Webs
+     EC330
+     EC521
+     SectionA1
+     SectionA2
+     EK13x
+     Main
+     Main_old
+     SOS
+     Sandbox
+     TWiki 
+
+ 
+Home - this site is powered by TWiki(R) 	
+
+This site is powered by the TWiki collaboration platform Powered by PerlCopyright © 2008-2015 by the contributing authors. All material on this collaboration platform is the property of the contributing authors.
+Ideas, requests, problems regarding TWiki? Send feedback
+
+TWIKIFILEEND

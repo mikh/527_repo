@@ -1,0 +1,379 @@
+---+EC330 - Spring 2013 - Homework 2  for SamuelBeaulieu
+%TOC%
+
+---++_Assigned:_  Wednesday, February 11, 2015
+---++_Due:_  Thursday, February 19, 2015 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(SamuelBeaulieu),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(10+$MOD(%PHI%,7))}%
+   * Set PHI2 = %CALCULATE{$EVAL(11+$MOD(%PHI%,11))}%
+   * Set PHI3 = %CALCULATE{$EVAL(12+$MOD(%PHI%,13))}%
+-->
+
+
+---+ Problem 1 *[Recurrences II, 40 points]*
+---++ a. T(n) = T(n-1) + n<sup> %PHI1% </sup>.
+
+---+++ !!Upper bound & Lower bound:
+<pre>
+<latex>\Theta(n^{14})</latex></pre>
+
+---+++ !!Explanation:
+<pre>
+<latex>T(n) = T(n-1) + n^{13} </latex>
+
+<latex>T(n) = T(n-2) + (n-1)^{13} + n^{13} </latex>
+
+<latex>T(n) = 1^{13} + 2^{13} +...+ (n-1)^{13} + n^{13} </latex>
+
+Which is equal to:
+
+<latex> \sum_{i=1}^{n} i^{13} </latex>
+
+Approximating this summation by integrals:
+
+<latex>\int_{0}^{n}i^{13}di \le \sum_{i=1}^{n} i^{13} \le \int_{1}^{n+1}i^{13}di</latex>
+
+<latex>\frac{1}{14}(n^{14}-0^{14}) \le \sum_{i=1}^{n} i^{13} \le \frac{1}{14}((n+1)^{14}-1^{14}) </latex>
+
+The largest term is the one that determines the asymptotic nature of the recursion and because both the lower and upper and bounds are along the lines of n<sup>14</sup>, the recursion is theta of n<sup>14</sup>.
+</pre>
+
+---++ b. T(n) = 3 T(n/2) + n<sup>2</sup>.
+
+---+++ !!Upper bound & Lower bound:
+<pre>
+<latex>\Theta(n^2)</latex>
+</pre>
+
+---+++ !!Explanation:
+<pre>
+<latex>n^{\log_{b}{a}-\varepsilon} = n^{\log_{2}{3}-\varepsilon}</latex>
+
+For the exponent to be the same as that in the recursion (n<sup>2</sup>), <latex>\varepsilon</latex> would have to be less than 0 which is the third case of the master method. Further, <latex> 3f(\frac{n}{2}) \le cf(n) </latex> for c=4 and large values of n. Therefore T(n) is theta of f(n).
+
+</pre>
+
+---++ c. T(n) = %PHI2% T(n/3) + n<sup>2</sup>
+
+---+++ !!Upper bound & Lower bound:
+<pre>
+<latex>\Theta(n^{log_{3}{11}})</latex>
+</pre>
+
+---+++ !!Explanation:
+<pre>
+<latex>n^{\log_{b}{a}-\varepsilon} = n^{\log_{2}{3}-\varepsilon}</latex>
+
+For the exponent to be the same as that in the recursion (n<sup>2</sup>), <latex>\varepsilon</latex> would have to be greater than 0 which is the first case of the master method. Therefore T(n) is theta of <latex>n^{log_{3}{11}}</latex>.
+
+</pre>
+
+---++ d. T(n) = %CALCULATE{$EVAL(%PHI1% + 1)}% T(n/ %PHI1%) + n log n.
+
+---+++ !!Upper bound & Lower bound:
+<pre>
+<latex>\Theta(n^{\log_{13}{14}})</latex></pre>
+
+---+++ !!Explanation:
+<pre>
+<latex>n^{\log_{b}{a}-\varepsilon} = n^{\log_{13}{14}-\varepsilon}</latex>
+
+Because <latex>n^{\log_{13}{14}} </latex> is an exponential with the exponent greater than 0, according to the master method, it will be big O of n log n so T(n) is theta of <latex>n^{\log_{13}{14}} </latex>
+</pre>
+
+---++ e. T(n) = 4 T(n/2) +  n <sup>2</sup>  &#8730;n.
+
+---+++ !!Upper bound & Lower bound:
+<pre>
+<latex>\Theta(n^2\sqrt{n})</latex></pre>
+
+---+++ !!Explanation:
+<pre>
+<latex>n^{\frac{5}{2}}</latex> is <latex>\Omega(n^{\log_{2}{4}+\varepsilon}) for \varepsilon = 0.25 </latex> 
+so this is the third case of the master method. Further, because <latex>4f(\frac{n}{2}) \le cf(n) for c=5</latex>, T(n) is theta of f(n).
+</pre>
+
+---++ f. T(n) = n(T(n/2) <sup>2</sup>).
+
+---+++ !!Upper bound & Lower bound:
+<pre>
+<latex>\Theta(\log(\frac{n^{2^{n}}}{2^{n*2^n}}))</latex>
+</pre>
+
+---+++ !!Explanation:
+<pre>
+<latex>T(n)=n(\frac{n^2}{2^2})T(\frac{n}{4})^2 </latex>
+<latex>T(n)=n(\frac{n^2}{2^2})(\frac{n^4}{2^8})T(\frac{n}{8})^2 </latex>
+<latex>T(n)=n(\frac{n^2}{2^2})(\frac{n^4}{2^8})(\frac{n^8}{2^24})T(\frac{n}{16})^2 </latex>
+<latex>\prod_{k=0}^{n}\frac{n^{2^k}}{2^{k*2^k}}</latex>
+<latex>\sum_{k=0}^{n}\log{\frac{n^{2^k}}{2^{k*2^k}}}</latex>
+
+This sum will be asymptotic to the largest value of the summation which will be <latex>\log(\frac{n^{2^{n}}}{2^{n*2^n}})</latex>
+
+
+</pre>
+
+---++ g. T(n) = T(n-1) + %PHI2% lg n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+<latex>\Theta(n\log(n))</latex></pre>
+
+---+++ !!Explanation:
+<pre>
+T(n)=T(n-1)+11log(n)
+
+T(n)=T(n-2)+11 log(n-1)+11log(n)
+
+T(n)=T(n-3)+11log(n-2)+11 log(n-1)+11log(n)
+
+.
+.
+.
+
+T(n)=11(log(1)+log(2)+log(3)+...+log(n-1)+log(n)
+
+This equates to:
+
+<latex>11\sum_{i=1}^{n}{\log{i}}</latex>
+
+Which is bounded like so:
+
+<latex>11\int_{0}^{n}{\log{i}di}  \le 11\sum_{i=1}^{n}{\log{i}} \le 11\int_{1}^{n+1}{\log{i}di} </latex>
+
+<latex>11[(n)(\log(n)-\log(e))]-11[(0)(\log(0)-\log(e))]  \le 11\sum_{i=1}^{n}{\log{i}} \le 11[(n+1)(\log(n+1)-\log(e))]-11[(1)(\log(1)-\log(e))]</latex>
+
+<latex>11[n\log(n) - n\log(e)]  \le 11\sum_{i=1}^{n}{\log{i}} \le 11[n\log(n+1)+\log(n+1)-n\log(e)-\log(1)]</latex>
+
+For large n, the largest terms are the ones that determine the asymptotic behavior so:
+
+<latex>11[n\log(n) - n\log(e)]  => n\log(n) </latex>
+
+<latex>11[n\log(n+1)+\log(n+1)-n\log(e)-\log(1)] => n\log(n+1) </latex></pre>
+
+---++ h. T(n) = T(n-1) + log<sup>2</sup>(n).
+
+---+++ !!Upper bound & Lower bound:
+<pre>
+<latex>\Theta(n\log^2(n))</latex></pre>
+
+---+++ !!Explanation:
+<pre>
+T(n)=T(n-1)+log<sup>2</sup>(n)
+
+T(n)=T(n-2)+log<sup>2</sup>(n-1)+log<sup>2</sup>(n)
+
+T(n)=T(n-3)+log<sup>2</sup>(n-2)+log<sup>2</sup>(n-1)+log<sup>2</sup>(n)
+
+.
+.
+.
+
+T(n)=log<sup>2</sup>(1)+log<sup>2</sup>(2)+log<sup>2</sup>(3)+...+log<sup>2</sup>(n-1)+log<sup>2</sup>(n)
+
+<latex>\sum_{i=1}^{n}{\log^2{i}}</latex>
+
+<latex>\int_{0}^{n}{\log^2{i}di} \le \sum_{i=1}^{n}{\log^2{i}} \le \int_{1}^{n+1}{\log{i}di}</latex>
+
+<latex>(n)\log^2(n)-2(n)\log(n)+2(n)-(0)\log^2(0)+2(0)\log(0)-2(0)  \le \sum_{i=1}^{n}{\log^2{i}} \le (n+1)\log^2(n+1)-2(n+1)\log(n+1)+2(n+1)-\log^2(1)+2\log(1)-2</latex>
+
+The largest terms in the bounds are the ones that matter so:
+
+<latex>(n)\log^2(n)-2(n)\log(n)+2(n)-(0)\log^2(0)+2(0)\log(0)-2(0)  => n\log^2(n) </latex>
+
+<latex>(n+1)\log^2(n+1)-2(n+1)\log(n+1)+2(n+1)-\log^2(1)+2\log(1)-2 => (n+1)\log^2(n+1) </latex></pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2 *[Applied recurrences, 15 points]*
+---++ 2a.
+
+---+++ !!Recurrence
+<pre>
+<latex>T(n) = T(n-1)+n+\Theta(1)</latex></pre>
+
+---+++ !!Running Time
+<pre>
+<latex>\Theta(n^2)</latex>
+</pre>
+
+---+++ !!Explanation
+<pre>
+T(n) = T(n-1)+n
+
+T(n) = T(n-2)+(n-1)+n
+
+T(n) = T(n-3)+(n-2)+(n-1)+n
+
+<latex>\sum_{i=1}^{n}{i}=\frac{1}{2}{n(n+1)}</latex>
+
+</pre>
+
+---++ 2b.
+
+---+++ !!Recurrence
+<pre>
+<latex>T(n)=T(\frac{n}{20})+\Theta(1) </latex>
+</pre>
+
+---+++ !!Running Time
+<pre>
+<latex>\Theta(\log(n)</latex>
+</pre>
+
+---+++ !!Explanation
+<pre>
+f(n) is <latex>\Theta(n^{\log_{20}{1}}) </latex> .
+T(n) is <latex>\Theta(n^{\log_{20}{1}}\log(n) </latex>
+T(n) is <latex>\Theta(\log(n) </latex>
+</pre>
+
+---++ 2c.
+
+---+++ !!Recurrence
+<pre>
+<latex>T(n) = T(\frac{n}{2}) + T(\frac{n}{4}) + (n-11) </latex>
+</pre>
+
+---+++ !!Running Time
+<pre>
+<latex>\Theta(n)</latex>
+</pre>
+
+---+++ !!Explanation
+<pre>
+I solved this first by using the domain/range transformation method to get S(i)=S(i-1)+S(i-2)+i. Then I made a recursion tree and saw that S(i) was <latex>\Theta(2^i)</latex> (the tree expanded with constants i, i-1 & i-2, i-2 & i-3 & i-3 & i-4, etc which is approximately 2<sup>i</sup>). From there I transformed back to the T(n) domain and got <latex>T(n) = \Theta(2^{log_{2}{n}})=\Theta(n)</latex>. 
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+Problem 3 *[Collatz, 45 points]*
+---++ 3a.  Subtraction [10 points]
+Attach your solution as =3a.h=.
+
+%ATTACHURL%/3a.h
+---++ 3b.  Running time [20 points]
+---+++ i. Vector
+
+----++++ !!Running time:
+<pre>
+<latex>\Theta(n)</latex>
+Linear</pre>
+
+----++++ !!Explanation:
+<pre>
+2*size() -> 2n
+
+Iterate through both numbers at the same time -> n
+
+pushback, iterator declarations, etc is constant
+
+3n+c -> n</pre>
+
+---+++ ii. List
+
+----++++ !!Running time:
+<pre>
+<latex>\Theta(n)</latex>
+Linear</pre>
+
+----++++ !!Explanation:
+<pre>
+2*size() -> constant
+
+Iterators declarations -> constant
+
+pushback -> constant
+
+iterate through both numbers -> n
+
+n+c</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---++ 3c. Collatz [15 points]
+---+++ i. Code
+%CODE{"cpp"}%
+// put your code here for computing CollatzCount(%PHI%) using a list<int> to store digits
+#include "bigNumT.h"
+#include <list>
+
+using namespace std;
+
+/**
+ * @requires >=1
+ * @param nn The starting parameter
+ * @return The number of Collatz calls needed to reach 1 from the parameter.
+ *      This implementation is iterative to avoid stack overflows
+ */
+template <typename T>
+T CollatzCount(T nn) {
+        T ONE("1");     T TWO("2");     T THREE("3");
+
+        T result("1");
+        for(;!(nn==ONE);result=result+ONE) {
+                if (TWO*(nn/TWO)==nn) //i.e. nn is even
+                        nn = nn/TWO;
+                else
+                        nn = THREE*nn+ONE;
+        }
+        return result;
+}
+
+int main()
+{
+        bigNumT<list<int> > input("87430871");
+        bigNumT<list<int> > answer = CollatzCount(input);
+        cout << answer.print() <<endl;
+}
+
+%ENDCODE%
+---+++ ii. Order
+<pre>
+i). Speed (from fastest to slowest)
+
+vector > deque > list
+
+A vector's data is all right next to each other so its faster to go through a large array than a deque who's data is in clumps.
+A deque is faster than a list because the list's data is completely random while the deque's is not.
+
+
+ii). Memory (from least to greatest)
+
+list < deque < vector
+
+A vector will allocate huge amounts of memory all at once so it is likely that for large bigNums it will take up more memory than a deque which allocates memory in small amounts many times. 
+Both of these take up more memory than a list however because a list will allocate memory on a per item basis and so it will only use the memory it has to.
+
+(Each storage type would have <int> after it but this has been removed for clarity.)
+</pre>
+---+++ iii. Design
+<pre>
+Create a data structure that stores the bigNum as a string. Not only does this give the benefits of the string class but also stores the digits of the bigNum as char which is about half the size of an int.
+
+Push back is already defined.
+Pop back would use the erase method and the back method to delete the last character.
+insert would use the insert method
+size is defined
+iterator elements are defined
+
+</pre>
+
+---+++ iv. Extra credit
+Please submit this online.
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+TWIKIFILEEND

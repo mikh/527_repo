@@ -1,0 +1,376 @@
+---+EC330 - Spring 2013 - Homework 2  for NicholasMemme
+%TOC%
+
+---++_Assigned:_  Wednesday, February 11, 2015
+---++_Due:_  Thursday, February 19, 2015 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(NicholasMemme),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(10+$MOD(%PHI%,7))}%
+   * Set PHI2 = %CALCULATE{$EVAL(11+$MOD(%PHI%,11))}%
+   * Set PHI3 = %CALCULATE{$EVAL(12+$MOD(%PHI%,13))}%
+-->
+
+
+---+ Problem 1 *[Recurrences II, 40 points]*
+---++ a. T(n) = T(n-1) + n<sup> %PHI1% </sup>.
+
+---+++ !!Upper bound & Lower bound:
+<pre>
+
+lower bound = <latex> \Omega (n^{14}) </latex> 
+
+upper bound = <latex> o(n^{16}) </latex>
+
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Using iteration it is only possible to get a lower bound equal to n-1 and upper bound equal to n+1
+</pre>
+
+---++ b. T(n) = 3 T(n/2) + n<sup>2</sup>.
+
+---+++ !!Upper bound & Lower bound:
+<pre>
+<latex> \Theta (n^{2}) </latex>
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Using the Master method, you find that f(n) is \Omega (n^{log_{b}a+\Epsilon})  for  \Epsilon > 0.
+ 
+</pre>
+
+---++ c. T(n) = %PHI2% T(n/3) + n<sup>2</sup>.
+ 
+---+++ !!Upper bound & Lower bound:
+<pre>
+\Omega (n^{log_{3} 20}) 
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Using the Master Method, you find that f(n) is O(n^{log_{b} a - \Epsilon} for \Epsilon > 0.
+</pre>
+
+---++ d. T(n) = %CALCULATE{$EVAL(%PHI1% + 1)}% T(n/ %PHI1%) + n log n.
+
+---+++ !!Upper bound & Lower bound:
+<pre>
+\Theta (n(log(n)) 
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Using the Master Method, you find that f(n) is \Omega(n^{log_{b} a+\Epsilon}) for \Epsilon > 0.
+</pre>
+
+---++ e. T(n) = 4 T(n/2) +  n <sup>2</sup>  &#8730;n.
+
+---+++ !!Upper bound & Lower bound:
+<pre>
+ \Theta (n^{2} \sqrt{n})
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Using the Master Method, you find that f(n) is \Omega(n^{log_{b} a+\Epsilon})  for \Epsilon  > 0.
+</pre>
+
+---++ f. T(n) = n(T(n/2) <sup>2</sup>).
+---+++ !!Upper bound & Lower bound:
+<pre>
+\Theta (log(n))
+</pre>
+
+---+++ !!Explanation:
+<pre>
+After taking log_2 of the recurrence you get log_2 (n) and T(n/2) which after using the Master Method shows that that f(n) is \Omega(n^{log_b a + \Episilon}) for \Epsilon > 0.  
+</pre>
+
+---++ g. T(n) = T(n-1) + %PHI2% lg n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+O(nlg(n))
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Using iteration you find that for each instance of the recurrence you must add an additional 20lg(n) thus when you get to the base case you end up with n of them.
+</pre>
+
+---++ h. T(n) = T(n-1) + log<sup>2</sup>(n).
+---+++ !!Upper bound & Lower bound:
+<pre>
+O(nlog^2(n))
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Using iteration you find that for each instance of the recurrence you must add an additional log^2(n) thus when you reach the base case you have n of them.
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2 *[Applied recurrences, 15 points]*
+---++ 2a.
+
+
+
+
+
+
+
+---+++ !!Recurrence
+<pre>
+T(n)=1/2*n^2
+</pre>
+
+---+++ !!Running Time
+<pre>
+O(1)
+</pre>
+
+---+++ !!Explanation
+<pre>
+Since the inner loop goes from ii to n and the outer loop goes from 0 to n, it only runs through half as many as it would if the ending condition was the same.
+</pre>
+
+---++ 2b.
+---+++ !!Recurrence
+<pre>
+T(n) =17*T(n/17) + 1
+</pre>
+
+---+++ !!Running Time
+<pre>
+<latex> \Theta(nlog(n)) </latex>
+</pre>
+
+---+++ !!Explanation
+<pre>
+Using the Master method, you find the the recurrence reduces to <latex> n^{log_{17} 17} </latex> which reduces to n and since the none recurrent part is 1 f(n) is <latex> \Omega(n^{log_{b} a}) </latex> therefore the running time is <latex> \Omega(nlog(n)) </latex> </pre>
+
+---++ 2c.
+---+++ !!Recurrence
+<pre>
+T(n)= T(n/2) + 20T(n/4)
+</pre>
+
+---+++ !!Running Time
+<pre>
+O(n^{log_{4} 20})
+</pre>
+
+---+++ !!Explanation
+<pre>
+To calculate runtime you must find the worst case run time for each recurrent part using the Master Method and select the one that produces the worse run time as the big-Oh runtime.
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+Problem 3 *[Collatz, 45 points]*
+---++ 3a.  Subtraction [10 points]
+Attach your solution as =3a.h=.
+
+---++ 3b.  Running time [20 points]
+---+++ i. Vector
+----++++ !!Running time:
+<pre>
+O(n)
+</pre>
+
+----++++ !!Explanation:
+<pre>
+All operations for Vector used are either linear or constant therefore worst case scenario is O(n).
+</pre>
+
+---+++ ii. List
+----++++ !!Running time:
+<pre>
+O(n)
+</pre>
+
+----++++ !!Explanation:
+<pre>
+All operations for List used are either linear or constant therefor worst case scenario is O(n).
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---++ 3c. Collatz [15 points]
+---+++ i. Code
+%CODE{"cpp"}%
+// put your code here for computing CollatzCount(%PHI%) using a list<int> to store digits
+
+#include<iostream>
+#include<list>
+#include "bigNumT.h"
+
+using namespace std;
+
+template<typename T>
+T CollatzCount(T nn);
+
+int main()
+{
+	bigNumT<list<int> > num("82220598");
+	bigNumT<list<int> > ans;
+	
+	ans = CollatzCount(num);
+	
+	cout<< ans.print() <<endl;
+	
+	return 0;
+}
+
+/**
+* @requires  >= 1
+* @param nn The starting parameter.
+* @return The number of Collatz calls needed to reach 1 from the parameter .
+*         This implementation is iterative to avoid stack overflows
+*/
+template <typename T>
+T CollatzCount(T nn) 
+{
+        T ONE("1");   T TWO("2");   T THREE("3");
+        
+        T result("1");
+        for (;!(nn==ONE);result=result+ONE) {
+                if (TWO*(nn/TWO)==nn) // i.e. nn is even
+                nn = nn/TWO;
+                else                  // i.e. nn is odd
+                nn = THREE*nn+ONE;
+        }
+        return result;
+}
+%ENDCODE%
+---+++ ii. Order
+
+<pre>
+
+Timing:
+
+i < ii < iii
+
+Memory Usage:
+
+ ii = iii < i 
+
+</pre>
+
+---+++ iii. Design
+%CODE{"cpp"}%
+#ifndef STUDENT_H
+#define STUDENT_H
+#include<iostream>
+using namespace std;
+
+template <typename T>
+class student
+{
+	private:
+		T data[10000];
+		int length;
+		T* bptr;
+		T* eptr;
+	public:
+		student();
+		void push_back(T);
+		T pop_back();
+		void insert(int,T);
+		int size();
+		typedef T * iterator;
+		typedef const T * const_iterator;
+		iterator begin() {return bptr;}
+		iterator end() {return eptr;}
+		
+	
+};
+template <typename T>
+student<T>::student()
+{
+	length = 0;
+	bptr = data;
+	eptr = data;
+}
+
+template <typename T>
+void student<T>::push_back(T n) //adds element to data structure and increments size and end pointer
+{
+	*eptr = n;
+	eptr++;
+	length++;
+
+}
+template <typename T>
+T student<T>::pop_back()//returns end element in data structure and decrements size and end pointer
+{
+	T value = *eptr;
+	eptr--;
+	length--;
+	return value;
+}
+template <typename T>
+void student<T>::insert(int loc,T dat)//inserts a new element into a specificed location 
+{
+	T* start = bptr;
+	T ins;
+	T next;
+	if(loc < length)
+	{
+		for(int counter = 0;start != eptr+2; start++, counter++)
+		{
+			if(counter == loc)
+			{
+				ins=*start;
+				*start=dat;
+				start++;
+				next=*start;
+				*start=ins;				
+				
+			}
+			if(counter > loc)
+			{				
+					ins=*start;
+					*start=next;
+					next=ins;
+				
+			}			
+		}
+		
+		eptr++;
+		length++;
+		
+	}	
+	else
+	{
+		cout<<"Invalid Location"<<endl;
+	}
+}
+template <typename T>
+int student<T>::size() //returns size of data structure
+{
+	return length;
+}
+#endif
+
+%ENDCODE%
+---+++ iv. Extra credit
+Please submit this online.
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+TWIKIFILEEND

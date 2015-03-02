@@ -1,0 +1,419 @@
+---+EC330 - Spring 2013 - Homework 2  for SparshKumar
+%TOC%
+
+---++_Assigned:_  Wednesday, February 11, 2015
+---++_Due:_  Thursday, February 19, 2015 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(SparshKumar),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(10+$MOD(%PHI%,7))}%
+   * Set PHI2 = %CALCULATE{$EVAL(11+$MOD(%PHI%,11))}%
+   * Set PHI3 = %CALCULATE{$EVAL(12+$MOD(%PHI%,13))}%
+-->
+
+
+---+ Problem 1 *[Recurrences II, 40 points]*
+---++ a. T(n) = T(n-1) + n<sup> %PHI1% </sup>.
+---+++ !!Upper bound & Lower bound:
+<pre>
+<latex> T(n) = \Theta (n^{12}) </latex>
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Expand the formula. You get <latex> T(n) = T(0) + n(n + 1)^{12} / 2 </latex>. It's then <latex> T(n) = \Theta (n^{12}) </latex>
+</pre>
+
+---++ b. T(n) = 3 T(n/2) + n<sup>2</sup>.
+---+++ !!Upper bound & Lower bound:
+<pre>
+<latex> T(n) = \Theta (n^2) </latex>
+</pre>
+
+---+++ !!Explanation:
+<pre>
+<latex> Master Method </latex>
+<latex> a = 3, b = 2  n ^ {log_2 3}; f(n) = n^2 </latex>
+<latex> Case 3: f(n) = \Omega (n ^ {log_2 3}),  f(n) =  \Omega (n^2) </latex>
+</pre>
+
+---++ c. T(n) = %PHI2% T(n/3) + n<sup>2</sup>.
+---+++ !!Upper bound & Lower bound:
+<pre>
+<latex> T(n) = \Theta (n^{log_3 11}) </latex>
+</pre>
+
+---+++ !!Explanation:
+<pre>
+<latex> Master Method </latex>
+<latex> a = 11, b = 2  n ^ {log_3 11}; f(n) = n^2 </latex>
+<latex> Case 1: f(n) = \Theta (n ^ {(log_3 11) - e}), for e =  {log_3 11} - 2 </latex>
+</pre>
+
+---++ d. T(n) = %CALCULATE{$EVAL(%PHI1% + 1)}% T(n/ %PHI1%) + n log n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+<latex> T(n) = \Theta (n^{log_{11} 12}) </latex>
+</pre>
+
+---+++ !!Explanation:
+<pre>
+<latex> Master Method </latex>
+<latex> a = 12, b = 11  n ^ {log_{11} 12}; f(n) = n*logn </latex>
+<latex> Case 1: nlogn = O (n ^ {(log_{11} 12)}) </latex>
+</pre>
+
+---++ e. T(n) = 4 T(n/2) +  n <sup>2</sup>  &#8730;n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+<latex> T(n) = \Theta (n^{2.5}) </latex>
+</pre>
+
+---+++ !!Explanation:
+<pre>
+<latex> Master Method </latex>
+<latex> a = 4, b = 2  ===> n ^ {log_2 4} = n^2 ; f(n) = (n^2)*(n^{0.5}) = n^{2.5} </latex>
+<latex> Case 3: f(n) = \Omega (n ^{2}) </latex>
+</pre>
+
+---++ f. T(n) = n(T(n/2) <sup>2</sup>).
+---+++ !!Upper bound & Lower bound:
+<pre>
+<latex> T(n) = 10^{\Theta (n)} </latex>
+</pre>
+
+---+++ !!Explanation:
+<pre>
+<latex> S(n) = logT(n) </latex>
+<latex> S(n) = logn + 2S(n/2) </latex>
+<latex> a = 2, b = 2 ==> n ^ {log_2 2}. f(n) = logn </latex>
+<latex> Case 1: S(n) = \Theta (n) </latex>
+<latex> \Theta (n) = logT(n) </latex>
+</pre>
+
+---++ g. T(n) = T(n-1) + %PHI2% lg n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+<latex> T(n) = \Theta (11*log(n!)) </latex>
+</pre>
+
+---+++ !!Explanation:
+<pre>
+<latex> 11logn = T(n) - T(n - 1) </latex>
+<latex> 11log(n - 1) = T(n - 1) - T(n - 2) </latex>
+<latex> T(1) - T(0) = 11*log(1) </latex>
+<latex> T(n) = T(0) + 11*log(n!) </latex>
+</pre>
+
+---++ h. T(n) = T(n-1) + log<sup>2</sup>(n).
+---+++ !!Upper bound & Lower bound:
+<pre>
+<latex> logn <= T(n) <= nlogn^2 </latex>
+</pre>
+
+---+++ !!Explanation:
+<pre>
+You get the summation of (logn)^2 for the lower bound, and the n*(logn)^2 is there because the logs will not go beyond the polynomials
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2 *[Applied recurrences, 15 points]*
+---++ 2a.
+---+++ !!Recurrence
+<pre>
+<latex> T(n) = n^2 </latex>
+</pre>
+
+---+++ !!Running Time
+<pre>
+<latex> T(n) = \Theta (n^2) </latex>
+</pre>
+
+---+++ !!Explanation
+<pre>
+Two for loops are involved, so it will grow by the square by each increase in integer.
+</pre>
+
+---++ 2b.
+---+++ !!Recurrence
+<pre>
+<latex> T(n) = T(n/12) + c </latex>
+</pre>
+
+---+++ !!Running Time
+<pre>
+<latex> T(n) = \Theta (logn) </latex>
+</pre>
+
+---+++ !!Explanation
+<pre>
+Use master theorem
+<latex> a = 1, b = 12, f(n) = c </latex>
+Case 2: both go to a constant in the long term  
+</pre>
+
+---++ 2c.
+---+++ !!Recurrence
+<pre>
+<latex> T(n) = n + T(n/2) + T(n/4) </latex>
+</pre>
+
+---+++ !!Running Time
+<pre>
+<latex> T(n) = \Theta (n) </latex>
+</pre>
+
+---+++ !!Explanation
+<pre>
+The while loop is linear, which is dominant than the recursion (log).
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+Problem 3 *[Collatz, 45 points]*
+---++ 3a.  Subtraction [10 points]
+Attach your solution as =3a.h=.
+
+---++ 3b.  Running time [20 points]
+---+++ i. Vector
+----++++ !!Running time:
+<pre>
+Linear T(n) = n
+</pre>
+
+----++++ !!Explanation:
+<pre>
+Most stl functions are constant, but 2 for loops imply linear.
+http://www.cs.northwestern.edu/~riesbeck/programming/c++/stl-summary.html#vector
+</pre>
+
+---+++ ii. List
+----++++ !!Running time:
+<pre>
+Linear T(n) = n
+</pre>
+
+----++++ !!Explanation:
+<pre>
+Most stl functions are constant, but 2 for loops imply linear.
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---++ 3c. Collatz [15 points]
+---+++ i. Code
+%CODE{"cpp"}%
+#include <iostream>
+#include <list>
+#include "bigNumT.h"
+
+using namespace std;
+
+template <typename T>
+T CollatzCount(T nn) {
+        T ONE("1");   T TWO("2");   T THREE("3");
+        
+        T result("1");
+        for (;!(nn==ONE);result=result+ONE) {
+                if (TWO * (nn / TWO) == nn) // i.e. nn is even
+                nn = nn/TWO;
+                else                  // i.e. nn is odd
+                nn = THREE*nn + ONE;
+        }
+        return result;
+}
+
+int main()
+{
+	bigNumT<list<int>> foo("87492119");
+	cout << (CollatzCount(foo)).print() << endl;
+}
+%ENDCODE%
+---+++ ii. Order
+<pre>
+Put your answer here. You may use < to denote asymptotic less-than, and = to denote asymptotic equality. 
+For example, i < ii < iii
+
+Speed:
+
+deque < vector < list
+deque is fastest and list is the slowest
+See speed.c. I tested the run-time of each stl container.
+
+Memory:
+list <= vector < deque
+list being the least, and deque being the most.
+It does depend on the operating system.
+http://info.prelert.com/blog/stl-container-memory-usage
+
+</pre>
+---+++ iii. Design
+<pre>
+
+%CODE{"cpp"}%
+#include <iostream>
+#include <vector>
+#include <string>
+#include <iterator>
+#include <sstream>
+#include <stdlib.h>
+
+using namespace std;
+
+template <typename STORAGE = vector<int> > // STORAGE is the class that is used to store digits
+class student {
+
+public:
+
+
+	student(string num = "");
+	student& operator=(const student<STORAGE>& otherNum);
+	student& operator+(student<STORAGE>& addend);
+	student& operator*(student<STORAGE>& multiplicand);
+	student& operator/(student<STORAGE>& divisor);
+	bool operator==(student<STORAGE>& otherNum);
+	string print();
+	STORAGE digits;
+
+};
+
+// IMPLEMENTATION of student.h
+
+template <typename T>
+student<T>::student(string num) {
+	bool leading = true; // used to ignore leading zeroes
+	for (int ii = 0; ii < num.length(); ii++)
+		if (leading && num[ii] == '0')
+			continue;
+		else {
+			leading = false;
+			digits.insert(digits.begin(), num[ii] - '0');
+		}
+}
+
+template <typename T>
+student<T>& student<T>::operator=(const student<T>& otherNum) {
+	digits = otherNum.digits; // simply copy the storage
+	return *this;
+}
+
+template <typename T>
+student<T>& student<T>::operator+(student<T>& addend) {
+
+	string first = this->print();
+	string second = addend.print();
+
+	unsigned long value_one = atoi(first.c_str());
+	unsigned long value_two = atoi(second.c_str());
+
+	unsigned long final = value_one + value_two;
+
+	stringstream ss;
+	ss << final;
+	string str = ss.str();
+
+	student<T> *result = new student<T>(str);
+
+	return *result;
+}
+
+
+template <typename T>
+student<T> &student<T>::operator*(student<T>& multiplicand) {
+	string first = this->print();
+	string second = multiplicand.print();
+
+	unsigned long value_one = atoi(first.c_str());
+	unsigned long value_two = atoi(second.c_str());
+
+	unsigned long final = value_one * value_two;
+
+	stringstream ss;
+	ss << final;
+	string str = ss.str();
+
+	student<T> *result = new student<T>(str);
+
+	return *result;
+}
+
+template <typename T>
+student<T> &student<T>::operator/(student<T>& divisor) {
+	string first = this->print();
+	string second = divisor.print();
+
+	unsigned long value_one = atoi(first.c_str());
+	unsigned long value_two = atoi(second.c_str());
+
+	unsigned long final = value_one / value_two;
+
+	stringstream ss;
+	ss << final;
+	string str = ss.str();
+
+	student<T> *result = new student<T>(str);
+
+	return *result;
+}
+
+
+
+template <typename T>
+bool student<T>::operator==(student<T>& otherNum) {
+	string first = this->print();
+	string second = otherNum.print();
+
+	unsigned long value_one = atoi(first.c_str());
+	unsigned long value_two = atoi(second.c_str());
+
+	if (value_one == value_two)
+		return true;
+	else
+		return false;
+}
+
+template <typename T>
+string student<T>::print() {
+	string tmp = "";
+	if (digits.size() == 0) return "[0]";
+	typename T::reverse_iterator ii = digits.rbegin();
+	for (; ii != digits.rend(); ii++)
+		tmp += '0' + *ii;
+	return tmp;
+}
+
+template <typename T>
+T CollatzCount(T nn) {
+	T ONE("1");   T TWO("2");   T THREE("3");
+
+	T result("1");
+	for (; !(nn == ONE); result = result + ONE) {
+		if (TWO*(nn / TWO) == nn) // i.e. nn is even
+			nn = nn / TWO;
+		else                  // i.e. nn is odd
+			nn = THREE*nn + ONE;
+	}
+	return result;
+}
+
+%ENDCODE%
+</pre>
+
+---+++ iv. Extra credit
+Please submit this online.
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+TWIKIFILEEND

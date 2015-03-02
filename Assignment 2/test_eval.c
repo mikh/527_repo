@@ -10,6 +10,7 @@ main(int argc, char *argv[]){
 	struct timespec diff(struct timespec start, struct timespec end);
 	struct timespec time1, time2;
 	struct timespec time_stamp[OPTIONS][ITERS+1];
+	
 }
 
 double poly(double a[], double x, int degree){

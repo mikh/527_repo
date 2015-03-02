@@ -1,0 +1,352 @@
+---+EC330 - Spring 2013 - Homework 2  for PhilipZhang
+%TOC%
+
+---++_Assigned:_  Wednesday, February 11, 2015
+---++_Due:_  Thursday, February 19, 2015 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(PhilipZhang),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(10+$MOD(%PHI%,7))}%
+   * Set PHI2 = %CALCULATE{$EVAL(11+$MOD(%PHI%,11))}%
+   * Set PHI3 = %CALCULATE{$EVAL(12+$MOD(%PHI%,13))}%
+-->
+
+
+---+ Problem 1 *[Recurrences II, 40 points]*
+
+---++ a. T(n) = T(n-1) + n<sup> %PHI1% </sup>.
+theta(n^14)
+
+I used a recurrence tree. The recurring cost is just n and the largest term for the non-recurring cost is n^14. n^14 is a greater term than n so the recursive function is theta(n^14).
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ b. T(n) = 3 T(n/2) + n<sup>2</sup>.
+theta(n^2)
+
+I used the method of the master. I compared the recurring cost to the non recurring cost and the non recurring cost is a larger term.
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ c. T(n) = %PHI2% T(n/3) + n<sup>2</sup>.
+theta(n^(log_3 15))
+
+I used the method of the master. The recurring cost is a larger term than the non recurring cost.
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ d. T(n) = %CALCULATE{$EVAL(%PHI1% + 1)}% T(n/ %PHI1%) + n log n.
+theta(nlog^2 n)
+
+I used domain range substitution
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ e. T(n) = 4 T(n/2) +  n <sup>2</sup>  &#8730;n.
+theta(n^(5/2))
+
+I used the master method and the non recurring cost (n^(5/2)) is larger than (n^2).
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ f. T(n) = n(T(n/2) <sup>2</sup>).
+theta(n^2)
+
+I used domain range substitution where n = log x.
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ g. T(n) = T(n-1) + %PHI2% lg n.
+theta(nlog n)
+
+I used a recursion tree and the recurring cost (n) is smaller than the non recurring cost (nlog n)
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ h. T(n) = T(n-1) + log<sup>2</sup>(n).
+theta(nlog^2 n)
+
+I used a recursion tree and the recurring cost of n is smaller than that of the non recurring cost nlog^2 n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2 *[Applied recurrences, 15 points]*
+---++ 2a.
+T(n) = nT(n - 1) + n
+
+theta(n^3)
+
+two nested for loops. the deepest for loop sums 1 to n. This is on a scale of n^2. the outer for loop will do the inner for loop n times. so it will be on the scale of n^3
+---+++ !!Recurrence
+<pre>
+Put the recurrence here
+</pre>
+
+---+++ !!Running Time
+<pre>
+Put the running time here
+</pre>
+
+---+++ !!Explanation
+<pre>
+Put your explanation here
+</pre>
+
+---++ 2b.
+T(n) = 13T(n / 13)
+
+theta(n)
+
+use master method
+---+++ !!Recurrence
+<pre>
+Put the recurrence here
+</pre>
+
+---+++ !!Running Time
+<pre>
+Put the running time here
+</pre>
+
+---+++ !!Explanation
+<pre>
+Put your explanation here
+</pre>
+
+---++ 2c.
+T(n) = T(n / 2) + T(n / 4) + n
+
+theta(nlog n)
+
+use a recurrence tree and the T(n / 2) and the T(n / 4) will be one the scale of log n. The non recurring cost will lead to a cost of nlog n which is larger than just n.
+---+++ !!Recurrence
+<pre>
+Put the recurrence here
+</pre>
+
+---+++ !!Running Time
+<pre>
+Put the running time here
+</pre>
+
+---+++ !!Explanation
+<pre>
+Put your explanation here
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+Problem 3 *[Collatz, 45 points]*
+---++ 3a.  Subtraction [10 points]
+Attach your solution as =3a.h=.
+
+---++ 3b.  Running time [20 points]
+---+++ i. Vector
+The vector stl is very efficient for the + operation of bigNumT if there is sufficient consecutive memory space. This is because accessing a memory space in the vector is constant time and you will only dynamically create memory for the result (at most) n + 1 times where n is the digit size of the larger number in the sum. However, dynamically creating memory for a vector is on a scale of log n. However, since you will have to iterate through each digit of the adder and compute computations for each, the function will be on a scale of n. One of the less efficient aspects of the vector stl is its difficulty in inserting and erasing elements. However, since our function does not need these functions, the vector is a very efficient stl for our function. 
+----++++ !!Running time:
+<pre>
+Put the running time here
+</pre>
+
+----++++ !!Explanation:
+<pre>
+Put your explanation here if necessary
+</pre>
+
+---+++ ii. List
+The list stl is also a quite efficient stl to use for our function. A great thing about the stl is that it is very good at inserting and erasing elements. This will always take a constant value for this to occur. However, the list stl lacks efficiency (compared to the vector stl) when iterating through the list. Since you must iterate from the end or beginning of the list, accessing an element of the list is on a running time of scale n. However, since we iterate through each list once, our function is on the scale of n if it uses the list stl. Considering the allocation of the memory when calculating the result will not overwhelm the running time of n since allocation of memory for lists is at a constant running time.
+----++++ !!Running time:
+<pre>
+Put the running time here
+</pre>
+
+----++++ !!Explanation:
+<pre>
+Put your explanation at here if necessary
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---++ 3c. Collatz [15 points]
+---+++ i. Code
+%CODE{"cpp"}%
+// put your code here for computing CollatzCount(%PHI%) using a list<int> to store digits
+#include <iostream>
+#include <list>
+#include "bigNumT.h"
+using namespace std;
+
+template <typename T = list<int> >
+T CollatzCount(T nn) {
+    T ONE("1");   T TWO("2");   T THREE("3");
+    
+    T result("1");
+    for (;!(nn==ONE);result=result+ONE) {
+        if (TWO*(nn/TWO)==nn) // i.e. nn is even
+            nn = nn/TWO;
+        else                  // i.e. nn is odd
+            nn = THREE*nn+ONE;
+    }
+    return result;
+}
+
+int main()
+{
+    bigNumT<> blah ("84313750");
+    bigNumT<> answer = CollatzCount(blah);
+    cout << answer.print() << endl;
+    return 0;
+}
+%ENDCODE%
+---+++ ii. Order
+<pre>
+Put your answer here. You may use < to denote asymptotic less-than, and = to denote asymptotic equality. 
+For example, i < ii < iii
+</pre>
+fastest/most memory < vector < deques < list < slowest/least memory
+---+++ iii. Design
+<pre>
+Put your design  here
+</pre>
+/* 
+You would allocate enough space for each digit of both bigNumT's that will be used in the adding process. You will save these values into the type int. After doing each computation, you will dynamically allocate new int for the digits of the result. After you finish adding all the digits you will obtain the result as one number by summing the products of the digits with their appropriate place in the result (base ^ (appropriate place)). Next, you will turn this number into a string and allocate memory for a new bigNumT.
+*/
+
+#ifndef STUDENT_H
+#define STUDENT_H
+#include <iostream>
+#include <cmath>
+#include <string>
+#include <iterator>
+#include <stdlib.h>
+using namespace std;
+
+class Student
+{
+public:
+    Student();
+    Student(string number);
+    void push_back(int digit);
+    void push_back(char digit);
+    void pop_back();
+    int size();
+private:
+    int* number;
+    int length;
+};
+
+// IMPLEMENTATION
+
+Student::Student()
+{
+    length = 0;
+}
+
+Student::Student(string num)
+{
+    length = num.length();
+    for(int ii = 0; ii < length; ii++)
+    {
+        number[ii] = num[ii] - '0';
+    }
+}
+
+void Student::push_back(int digit)
+{
+    length++;
+    number[length - 1] = digit;
+}
+
+void Student::push_back(char digit)
+{
+    length++;
+    number[length - 1] = digit - '0';
+}
+
+void Student::pop_back()
+{
+    length--;
+    number[length] = NULL;
+}
+
+int Student::size()
+{
+    return length;
+}
+
+#endif
+---+++ iv. Extra credit
+Please submit this online.
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+TWIKIFILEEND

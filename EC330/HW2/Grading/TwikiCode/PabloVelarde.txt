@@ -1,0 +1,298 @@
+---+EC330 - Spring 2013 - Homework 2  for PabloVelarde
+%TOC%
+
+---++_Assigned:_  Wednesday, February 11, 2015
+---++_Due:_  Thursday, February 19, 2015 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(PabloVelarde),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(10+$MOD(%PHI%,7))}%
+   * Set PHI2 = %CALCULATE{$EVAL(11+$MOD(%PHI%,11))}%
+   * Set PHI3 = %CALCULATE{$EVAL(12+$MOD(%PHI%,13))}%
+-->
+
+
+---+ Problem 1 *[Recurrences II, 40 points]*
+---++ a. T(n) = T(n-1) + n<sup> %PHI1% </sup>.
+
+---
+<pre>
+ <latex> T(n) = \Theta n^ {n+1} </latex>
+</pre>
+
+---
+<pre>
+When we expand this recurrence we get n T(0) (a constant) + the sum from 1 to n of n to the 13.
+ The closed form of this summation is <latex> {n^{n+1}-1}/{n-1} </latex> which gives us a polynomial n^(n+1)
+</pre>
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ b. T(n) = 3 T(n/2) + n<sup>2</sup>.
+
+<pre>
+<latex> T(n) = \Theta(n^2) </latex> 
+</pre>
+<pre>
+By using the master method case three works because n^2 is big omega of n^(log2(3))
+</pre>
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ c. T(n) = %PHI2% T(n/3) + n<sup>2</sup>.
+<pre>
+<latex> T(n) = \Theta(n^{\log_3 %PHI2%}) </latex>
+</pre>
+
+<pre>
+This function fulfills the master method case 1 where n^2 is big O of <latex> (n^{\log_3 %PHI2%}) </latex>
+</pre>
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ d. T(n) = %CALCULATE{$EVAL(%PHI1% + 1)}% T(n/ %PHI1%) + n log n.
+<pre>
+<latex> T(n) =  \Theta(n^ { \log_{%PHI1%} %CALCULATE{$EVAL(%PHI1% + 1)}%}) </latex>
+</pre>
+<pre>
+With the master method case 1 we get that nlogn is big  O of <latex> n^ { \log_{%PHI1%} %CALCULATE{$EVAL(%PHI1% + 1)}%}</latex>
+</pre>
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ e. T(n) = 4 T(n/2) +  n <sup>2</sup>  &#8730;n.
+
+<pre>
+<latex> T(n) = \Theta(n^{2.5})</latex>
+</pre>
+<pre>
+Because n^2.5 is big omega of n <sup>2</sup>
+</pre>
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ f. T(n) = n(T(n/2) <sup>2</sup>).
+
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ g. T(n) = T(n-1) + %PHI2% lg n.
+<pre>
+<latex> T(n) = \Theta(lg(n!)</latex>
+</pre>
+<pre>
+When we iterate this recursion we find that the log of 2 is adding each iteration and multiplying by 18.
+</pre>
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ h. T(n) = T(n-1) + log<sup>2</sup>(n).
+
+<pre>
+<latex> T(n) = \Theta(log(n!)^2</latex>
+</pre>
+
+<pre>
+With each iteration we add log(n)^2. By log properties we have log(1*2*3*4*5*...*n)^2
+</pre>
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2 *[Applied recurrences, 15 points]*
+---++ 2a.
+
+<pre>
+The recurrence is n + T(n-1)
+</pre>
+
+<pre>
+The running time is T(n) is big O(n^2)
+</pre>
+
+<pre>
+The way I figured this out was I analyzed how many times the inner loop performed the sum and noticed that
+ the sum is performed n times on the first iteration. Then it is performed n-1 times then n-2 and so on. The closed
+ form is (n(n-1))/2 which gives us a leading coefficient of n^2.
+</pre>
+---+++ !!Recurrence
+<pre>
+Put the recurrence here
+</pre>
+
+---+++ !!Running Time
+<pre>
+Put the running time here
+</pre>
+
+---+++ !!Explanation
+<pre>
+Put your explanation here
+</pre>
+
+---++ 2b.
+---+++ !!Recurrence
+<pre>
+Put the recurrence here
+</pre>
+
+---+++ !!Running Time
+<pre>
+Put the running time here
+</pre>
+
+---+++ !!Explanation
+<pre>
+Put your explanation here
+</pre>
+
+---++ 2c.
+---+++ !!Recurrence
+<pre>
+Put the recurrence here
+</pre>
+
+---+++ !!Running Time
+<pre>
+Put the running time here
+</pre>
+
+---+++ !!Explanation
+<pre>
+Put your explanation here
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+Problem 3 *[Collatz, 45 points]*
+---++ 3a.  Subtraction [10 points]
+Attach your solution as =3a.h=.
+
+---++ 3b.  Running time [20 points]
+---+++ i. Vector
+
+---+++ Explanation:
+
+It takes linear time to access iterate through the members of a vector
+---+++Running time:
+n
+----++++ !!Running time:
+<pre>
+Put the running time here
+</pre>
+
+----++++ !!Explanation:
+<pre>
+Put your explanation here if necessary
+</pre>
+
+---+++ ii. List
+
+---+++ Running time:
+n
+
+---+++ Explanation:
+
+It also takes linear time to iterate through the members of a list
+----++++ !!Running time:
+<pre>
+Put the running time here
+</pre>
+
+----++++ !!Explanation:
+<pre>
+Put your explanation at here if necessary
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---++ 3c. Collatz [15 points]
+---+++ i. Code
+%CODE{"cpp"}%
+// put your code here for computing CollatzCount(%PHI%) using a list<int> to store digits
+
+%ENDCODE%
+---+++ ii. Order
+<pre>
+Put your answer here. You may use < to denote asymptotic less-than, and = to denote asymptotic equality. 
+For example, i < ii < iii
+</pre>
+---+++ iii. Design
+<pre>
+Put your design  here
+</pre>
+
+---+++ iv. Extra credit
+Please submit this online.
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+TWIKIFILEEND

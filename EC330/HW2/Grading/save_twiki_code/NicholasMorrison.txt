@@ -1,0 +1,246 @@
+---+EC330 - Spring 2013 - Homework 2  for NicholasMorrison
+%TOC%
+
+---++_Assigned:_  Wednesday, February 11, 2015
+---++_Due:_  Thursday, February 19, 2015 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(NicholasMorrison),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(10+$MOD(%PHI%,7))}%
+   * Set PHI2 = %CALCULATE{$EVAL(11+$MOD(%PHI%,11))}%
+   * Set PHI3 = %CALCULATE{$EVAL(12+$MOD(%PHI%,13))}%
+-->
+
+
+---+ Problem 1 *[Recurrences II, 40 points]*
+---++ a. T(n) = T(n-1) + n<sup> %PHI1% </sup>.
+
+---+++ !!Upper bound & Lower bound:
+<pre>
+<latex> T(n) = \Theta (n^{16})   </latex>
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Using the substitution method, you will find the recurrence eq. T(0) + sum(1 to n)(n^15). While the summation cannot be explicitly simplified, using n^2 leads to a function bounded by n^(2+1). Extrapolating this to n^15 implies the recurrence will be bounded by n^16.
+</pre>
+
+---++ b. T(n) = 3 T(n/2) + n<sup>2</sup>.
+---+++ !!Upper bound & Lower bound:
+<pre>
+<latex> T(n) = \Theta (n^{2})   </latex>
+</pre>
+
+---+++ !!Explanation:
+<pre>
+
+Master method: <latex> n^{2} =  \Omega (n^{log_{2}{3 + \epsilon}} </latex> for <latex> \epsilon = 1 </latex> and <latex>  \frac{3}{4} n^2 \leq cn^2     </latex>
+
+Master method: n^2 = Omega(n^{log_2(3 + epsilon)}) for epsilon = 1 and 3/4*n^2 <= c*n^2 for c < 1
+</pre>
+
+---++ c. T(n) = %PHI2% T(n/3) + n<sup>2</sup>.
+---+++ !!Upper bound & Lower bound:
+<pre>
+<latex> T(n) = \Theta (n^{ \log_{3}(20) }) </latex>
+
+T(n) = Theta(n^{log_3(20)})
+</pre>
+
+---+++ !!Explanation:
+<pre>
+<latex> Master method: n^2 = O (n^{\log_{2}(3 - \epsilon })  for \epsilon = 1  </latex>
+
+Master method: n^2 = O(n^{log_2(2 - epsilon)}) for epsilon = 1
+</pre>
+
+---++ d. T(n) = %CALCULATE{$EVAL(%PHI1% + 1)}% T(n/ %PHI1%) + n log n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+<latex> T(n) = \Theta (n\log(n)) </latex>
+
+T(n) = Theta(nlog(n))
+</pre>
+
+---+++ !!Explanation:
+<pre>
+<latex> Master method: nlog(n) = \Omega (n^{\log_{15}(16 + \epsilon )} for \epsilon = 1 and \frac{16n}{15}[\log(n) - \log(15)] \leq cn\log(n) for some c \lt 1</latex>
+
+Master method: nlog(n) = Omega(n^{log_15(16 + epsilon)}) for epsilon = 1 and (16n/15)[log(n) - log(15)] <= c*nlog(n) for some c < 1
+</pre>
+
+---++ e. T(n) = 4 T(n/2) +  n <sup>2</sup>  &#8730;n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+<latex> T(n) = \Theta (n^{\frac{5}{2}}) </latex>
+
+T(n) = Theta(n^{5/2})
+</pre>
+
+---+++ !!Explanation:
+<pre>
+<latex> Master method: n^{ \frac{5}{2} } = \Omega (n^{log_{2}(4+ \epsilon )}) for \epsilon = 1 and \frac{1}{\sqrt{2}} n^{\frac{5}{2}} \leq cn^{\frac{5}{2}} for c < \frac{1}{\sqrt{2}} </latex>
+
+Master method: n^{5/2} = Omega(n^{log_2(4 + epsilon)}) for epsilon = 1 and (1/sqrt(2))n^{5/2} <= c*n^{5/2} for c < 1/sqrt(2)
+</pre>
+
+---++ f. T(n) = n(T(n/2) <sup>2</sup>).
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ g. T(n) = T(n-1) + %PHI2% lg n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+<latex> T(n) = \Theta (log(n!)) </latex>
+T(n) = Theta (log(n!))
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Using the substitution method one will find the recurrence equation T(n) = T(0) + 20[sum{1->n} of log(n)]. The summation does not converge, however, we can see the highest term would be log(n!) by utilizing the addition property of logarithms.
+</pre>
+
+---++ h. T(n) = T(n-1) + log<sup>2</sup>(n).
+---+++ !!Upper bound & Lower bound:
+<pre>
+<latex> T(n) = \Theta (log(n)^3) </latex>
+
+  T(n) = Theta(log^3(n))
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Utilize substitution method to achieve recurrence equation => T(n) = T(0) + sum{1 to n}(log^2(k)). Use geometric series formula to find highest order of summation to be log^3(n), thus T(n) is bounded by this.
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2 *[Applied recurrences, 15 points]*
+---++ 2a.
+---+++ !!Recurrence
+<pre>
+T(n) = T(n-1) + n
+</pre>
+
+---+++ !!Running Time
+<pre>
+T(n) = Theta (n^2)
+</pre>
+
+---+++ !!Explanation
+<pre>
+The recurrence can be solved using the substitution method and solving for the converging arithmetic series (sum{1:n} of k). The highest order of the solution, n^2, is the worst case running time for the function.
+</pre>
+
+---++ 2b.
+---+++ !!Recurrence
+<pre>
+T(n) = T(n/17) + 1
+</pre>
+
+---+++ !!Running Time
+<pre>
+T(n) = Theta (log_{17}(n))
+</pre>
+
+---+++ !!Explanation
+<pre>
+The only number for which nn == nn/2 is 0. However, since it is integer division, this will be fulfilled when nn < 17. T(n/17) is the time complexity for the recursive call which continues until nn/17 = 0, and the 1 is added to account for each iteration. The running time is found by solving for the recurrence equation using the change of base method, substituting 17^i for n.
+
+</pre>
+
+---++ 2c.
+---+++ !!Recurrence
+<pre>
+T(n) = n + 4         for n > 20
+T(n) = T(n/2) + 1  for 0 <= n <= 20
+</pre>
+
+---+++ !!Running Time
+<pre>
+T(n) = Theta(n)                for n > 20
+T(n) = Theta(log_2(n))     for 0 <= n <= 20
+</pre>
+
+---+++ !!Explanation
+<pre>
+When nn < 20, the while loop does not run and sum = 0 so the only recursion affecting the time complexity is calling Fc(nn/2) with the addition of 1 as the function iterates once for each nn. When nn > 20, the while loop will run nn-20 times while the return statement will run the function 25 times regardless of how much bigger than 20 nn is because return statement will only be run when nn < 20. Adding the affect of the while loop and the return statement (with sum>0) gives the recurrence equation. The runtime for nn > 20 is straightforward while the runtime for 0 <= n <= 20 requires the change of base method.
+
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+Problem 3 *[Collatz, 45 points]*
+---++ 3a.  Subtraction [10 points]
+Attach your solution as =3a.h=.
+
+---++ 3b.  Running time [20 points]
+---+++ i. Vector
+----++++ !!Running time:
+<pre>
+T(n) = Theta(n)
+
+</pre>
+
+----++++ !!Explanation:
+<pre>
+The highest order method used (assignment) is linear and is not used within either for loop. All the other methods used complete in constant time, therefore, the worst case running time is linear.
+</pre>
+
+---+++ ii. List
+----++++ !!Running time:
+<pre>
+T(n) = Theta(n)
+
+</pre>
+
+----++++ !!Explanation:
+<pre>
+Multiple linear runtime methods are used (size and assignment) however, neither would be used within the loop. The only methods used in either for loop are constant, therefore, the worst case running time is linear.
+
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---++ 3c. Collatz [15 points]
+---+++ i. Code
+%CODE{"cpp"}%
+// put your code here for computing CollatzCount(%PHI%) using a list<int> to store digits
+
+%ENDCODE%
+---+++ ii. Order
+<pre>
+Put your answer here. You may use < to denote asymptotic less-than, and = to denote asymptotic equality. 
+For example, i < ii < iii
+</pre>
+---+++ iii. Design
+<pre>
+Put your design  here
+</pre>
+
+---+++ iv. Extra credit
+Please submit this online.
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+   * [[%ATTACHURLPATH%/3a.h][3a.h]]: 3a.h
+
+TWIKIFILEEND

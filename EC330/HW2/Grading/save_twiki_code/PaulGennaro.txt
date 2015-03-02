@@ -1,0 +1,261 @@
+---+EC330 - Spring 2013 - Homework 2  for PaulGennaro
+%TOC%
+
+---++_Assigned:_  Wednesday, February 11, 2015
+---++_Due:_  Thursday, February 19, 2015 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(PaulGennaro),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(10+$MOD(%PHI%,7))}%
+   * Set PHI2 = %CALCULATE{$EVAL(11+$MOD(%PHI%,11))}%
+   * Set PHI3 = %CALCULATE{$EVAL(12+$MOD(%PHI%,13))}%
+-->
+
+
+---+ Problem 1 *[Recurrences II, 40 points]*
+---++ a. T(n) = T(n-1) + n<sup> </sup>.
+
+This upper bound is <latex> O(n^{17}) </latex> and the lower bound is <latex> \Omega (n^{16}) </latex>.  This is because the summation of the recurrence becomes <latex> \sum_{i = 0}^{n} (n-i)^{16} </latex>, the summation will never reach <latex> n^{17}</latex> because there are <latex> n </latex> number of slightly decreasing components, but the  summation will always be larger than <latex> cn^{16}</latex> because there is no constant <latex> c </latex> that will keep <latex> cn^{16} </latex> larger than <latex> n^{16} </latex> plus all the following terms for all <latex> n </latex> as <latex> n </latex> approaches infinity. 
+
+
+
+
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ b. T(n) = 3 T(n/2) + n<sup>2</sup>.
+
+<latex> T(n) = \Theta (n^{2}) </latex> because this falls under the second case of the Master Method so <latex> T(n) = \Theta (f(n)) </latex> which in this case <latex> f(n) = n^2 </latex>
+
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ c. T(n) = %PHI2% T(n/3) + n<sup>2</sup>.
+
+<latex> T(n) = \Theta (n^{log_{3}{14}}) </latex> because this recusrsion function falls under the first case of the master method because <latex> f(n) = O(n^{log_{b}{a} - \epsilon}) </latex>
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ d. T(n) = %CALCULATE{$EVAL(%PHI1% + 1)}% T(n/ %PHI1%) + n log n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ e. T(n) = 4 T(n/2) +  n <sup>2</sup>  &#8730;n.
+
+<latex> T(n) = \Theta (n^2\sqrt{n}) </latex>  because of the third case of the Master Method
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ f. T(n) = n(T(n/2) <sup>2</sup>).
+
+<latex> T(n) =  n^{2^{lgn+1}-1} </latex> because <latex> T(n) </latex> can be written as the multiplication <latex> n*(\frac{n}{2})^2*(\frac{n}{4})^4*(\frac{n}{8})^8... </latex> which asymptotically becomes <latex> n^{\sum_{i = 0}^{lgn} 2^i} </latex>.  Using the geometric series summation, the answer can be written.
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ g. T(n) = T(n-1) + %PHI2% lg n.
+
+<latex> T(n) = \Theta (nlgn) </latex> because the T(n) can be rewritten recursively as <latex> 14 \sum_{i = 0}^{n} lg(n-i) </latex>.  Thus, the largest term will be some multiple of <latex> nlgn </latex>.
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ h. T(n) = T(n-1) + log<sup>2</sup>(n).
+
+<latex> T(n) = \Theta (nlogn) </latex>.  This is essentially the same problem as above thanks to the laws of logarithms.  T(n) can be rewritten recursively as <latex> 2\sum_{i = 0}^{n} log(n-i) </latex>.  Thus, the largest term will be some multiple of <latex> nlogn </latex>.
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2 *[Applied recurrences, 15 points]*
+---++ 2a.
+
+Recurrence: <latex> T(n) = \sum_{i = 0}^{n} \sum_{i = 0}^{n} 1 = n^2 </latex>
+
+Worst Case Run Time = <latex> O(n^2) </latex>
+
+I solved the recurrence by writing the recursion as a summation and seeing the run time.
+---+++ !!Recurrence
+<pre>
+Put the recurrence here
+</pre>
+
+---+++ !!Running Time
+<pre>
+Put the running time here
+</pre>
+
+---+++ !!Explanation
+<pre>
+Put your explanation here
+</pre>
+
+---++ 2b.
+
+Recurrence: <latex> T(n) = log_{16} n </latex>
+
+Worst Case Run Time = <latex> O(log_{16} n) </latex>
+
+I solved the recurrence by writing a tree.  Each run of the code takes constant time, so the total run time is just how many times the code gets called.
+---+++ !!Recurrence
+<pre>
+Put the recurrence here
+</pre>
+
+---+++ !!Running Time
+<pre>
+Put the running time here
+</pre>
+
+---+++ !!Explanation
+<pre>
+Put your explanation here
+</pre>
+
+---++ 2c.
+
+Recurrence: <latex> T(n) = 14 + n - 14 = n </latex>
+
+Worst Case Run Time: <latex> O(n) </latex>
+
+This function was tricky because the function did not consistently call itself.  What I noticed is that it will always take n-14 runs of the code in the beginning to decrement nn to 14, then, no matter how large nn was to begin with, 7 and 3 will be passed to FC(nn).  By writting a tree, it can be shown that the function will run itself 14 times when 7 and 3 are passed to itself. This time the function will run in constant time because the condition to satisfy the while loop will never be true.
+---+++ !!Recurrence
+<pre>
+Put the recurrence here
+</pre>
+
+---+++ !!Running Time
+<pre>
+Put the running time here
+</pre>
+
+---+++ !!Explanation
+<pre>
+Put your explanation here
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+Problem 3 *[Collatz, 45 points]*
+---++ 3a.  Subtraction [10 points]
+Attach your solution as =3a.h=.
+
+---++ 3b.  Running time [20 points]
+
+There are two non nested loops in the operator+ code, then there are methods from the std library which take some time so the run time is T(n) = T(size) + T(begin) + T(end) + 2*n*T(pushback).  The T(method) can be determined for each container.
+---+++ i. Vector
+
+<latex> T(n) = O(2n) </latex>  This is because all the methods being used by <vector> run in constant time.
+----++++ !!Running time:
+<pre>
+Put the running time here
+</pre>
+
+----++++ !!Explanation:
+<pre>
+Put your explanation here if necessary
+</pre>
+
+---+++ ii. List
+
+<latex> T(n) = O(3n) </latex>  This is because all the methods run in constant time except for size, which runs in linear time.
+----++++ !!Running time:
+<pre>
+Put the running time here
+</pre>
+
+----++++ !!Explanation:
+<pre>
+Put your explanation at here if necessary
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---++ 3c. Collatz [15 points]
+---+++ i. Code
+%CODE{"cpp"}%
+// put your code here for computing CollatzCount(%PHI%) using a list<int> to store digits
+
+%ENDCODE%
+---+++ ii. Order
+<pre>
+Put your answer here. You may use < to denote asymptotic less-than, and = to denote asymptotic equality. 
+For example, i < ii < iii
+</pre>
+---+++ iii. Design
+<pre>
+Put your design  here
+</pre>
+
+---+++ iv. Extra credit
+Please submit this online.
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+TWIKIFILEEND

@@ -1,0 +1,361 @@
+---+EC330 - Spring 2013 - Homework 2  for WinstonChen
+%TOC%
+
+---++_Assigned:_  Wednesday, February 11, 2015
+---++_Due:_  Thursday, February 19, 2015 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(WinstonChen),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(10+$MOD(%PHI%,7))}%
+   * Set PHI2 = %CALCULATE{$EVAL(11+$MOD(%PHI%,11))}%
+   * Set PHI3 = %CALCULATE{$EVAL(12+$MOD(%PHI%,13))}%
+-->
+
+
+---+ Problem 1 *[Recurrences II, 40 points]*
+---++ a. T(n) = T(n-1) + n<sup> %PHI1% </sup>.
+
+Iteration method: 
+T(n) = T(n -1) + 1 ^11 ---> T(0) + 1
+T(n) = T(n -2) + 2 ^11 ---> T(1) + 2^11
+T(n) = T(n -3) + 3 ^11 ---> T(2) + 3^11
+
+after n times: T(n - n) + n^11 =  n + n^11 = n^12, T(n-n) executed n times
+answer ====> Theta(n^12)
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ b. T(n) = 3 T(n/2) + n<sup>2</sup>.
+
+Masters Method applies here:
+
+a = 3
+b = 2
+f(n) = n^2
+
+log_2{3} < 3
+----> case 3
+-----------> theta(n^2)
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ c. T(n) = %PHI2% T(n/3) + n<sup>2</sup>.
+
+Another Master's Method 
+
+a = 19
+b = 3
+f(n) = n^2
+
+-----> log_3{19} > 2 
+---------> case 1:
+--------> theta(n^(log_3{19})) 
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ d. T(n) = %CALCULATE{$EVAL(%PHI1% + 1)}% T(n/ %PHI1%) + n log n.
+
+
+Another Master's Method problem:
+
+a =12
+b = 11
+f(n) = n(log(n))
+
+log_11{12} < n log n
+-------> case 3
+------->theta(n(log(n)))
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ e. T(n) = 4 T(n/2) +  n <sup>2</sup>  &#8730;n.
+
+Another Masters Method
+
+a = 4
+b=2
+f(n) = n^2 + n^(1/2) = n^2.5
+
+--------> log_2{4} = 2 < 2.5
+--------> case 3
+--------> theta(n^2.5)
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ f. T(n) = n(T(n/2) <sup>2</sup>).
+
+best case: omega (n)
+worst case: O(n^3)
+
+
+I guessed.
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ g. T(n) = T(n-1) + %PHI2% lg n.
+
+Iteration method:
+
+T(n) = T(n - 1) + 19 log(n)
+T(1) = T(1- 1) + 19 log(1) 
+T(2) = T(2 - 1) + 19 log(2)
+T(3) = T(3 - 1) + 19 log(3)
+
+----> T(n) = T(n - 1) + 19 log( 1 * 2 * 3....*n) == T(n - 1) + 19 log(n!), where T(n-1) occurs n times
+-----> theta(n log (n!))
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ h. T(n) = T(n-1) + log<sup>2</sup>(n).
+
+
+T(n) = (1-1) + log^2 (1)
+T(n) = (2-1) + log^2 (2)
+T(n) = (3-1) + log^2 (3)
+----->T(n) = \sum_{i=0}^{n} log^2 (n)
+------> theta(log^2 (n))
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2 *[Applied recurrences, 15 points]*
+---++ 2a.
+
+There's no recurrence in this function.
+
+This function has a nested for loop, with i iterating to n and j also iterating to n. Each loop is executed n times, which creates and upper and lower limit of cn^2,  therefore the running time is:
+--------> theta(n^2)
+---+++ !!Recurrence
+<pre>
+Put the recurrence here
+</pre>
+
+---+++ !!Running Time
+<pre>
+Put the running time here
+</pre>
+
+---+++ !!Explanation
+<pre>
+Put your explanation here
+</pre>
+
+---++ 2b.
+
+The recurrence is 15* fb(nn/15)
+base case: if (nn==nn/2) return 0; === constant
+the recurrence becomes log(n), which is bigger than the base case
+------> theta(log(n))
+---+++ !!Recurrence
+<pre>
+Put the recurrence here
+</pre>
+
+---+++ !!Running Time
+<pre>
+Put the running time here
+</pre>
+
+---+++ !!Explanation
+<pre>
+Put your explanation here
+</pre>
+
+---++ 2c.
+
+recurrence function is: FC(nn/2)+sum*FC(nn/4)
+base case:  if (nn==0) return 1;
+
+while loop: while (nn > 19) { sum+=nn--; } executes n times
+the recurrence becomes log(n)
+-------> the while loop grows more quickly than the recurrence, so
+--------> O(n)
+---+++ !!Recurrence
+<pre>
+Put the recurrence here
+</pre>
+
+---+++ !!Running Time
+<pre>
+Put the running time here
+</pre>
+
+---+++ !!Explanation
+<pre>
+Put your explanation here
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+Problem 3 *[Collatz, 45 points]*
+---++ 3a.  Subtraction [10 points]
+Attach your solution as =3a.h=.
+
+---++ 3b.  Running time [20 points]
+---+++ i. Vector
+
+
+
+i. BigNumT accesses each vector n times. The total iterations of the vectors is 2n. Therefore, the worst case running time with bigNumT with a vector is theta(n). Each iteration is constant, which occurs n times. Also, the vector is being used as type of linked list, with the push_back, pop_back and insert - all constant time operations executed n times.
+----++++ !!Running time:
+<pre>
+Put the running time here
+</pre>
+
+----++++ !!Explanation:
+<pre>
+Put your explanation here if necessary
+</pre>
+
+---+++ ii. List
+
+ii. A list structure for BigNumT has no random access, so in order to iterate and find the value or general iteration through the linked list is O(n). Thus, worst case running theta(n)
+----++++ !!Running time:
+<pre>
+Put the running time here
+</pre>
+
+----++++ !!Explanation:
+<pre>
+Put your explanation at here if necessary
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---++ 3c. Collatz [15 points]
+---+++ i. Code
+%CODE{"cpp"}%
+// put your code here for computing CollatzCount(%PHI%) using a list<int> to store digits
+
+/**
+* @requires  >= 1
+* @param nn The starting parameter.
+* @return The number of Collatz calls needed to reach 1 from the parameter .
+*         This implementation is iterative to avoid stack overflows
+*/
+#include <iostream>
+#include <list>
+#include "bigNumT.h"
+
+// define to easily change the templates for whatever data structure
+#define data_structure list<int>
+
+//Collatz function
+template <typename T>
+T CollatzCount(T nn) {
+        T ONE("1");   T TWO("2");   T THREE("3");
+        
+        T result("1");
+        for (;!(nn==ONE);result=result+ONE) {
+                if (TWO*(nn/TWO)==nn) // i.e. nn is even
+                nn = nn/TWO;
+                else                  // i.e. nn is odd
+                nn = THREE*nn+ONE;
+        }
+        return result;
+}
+
+int main(){
+	//88438422
+	//create the bigNum object and store as the defined data_structure (list)
+	bigNumT<data_structure > num = bigNumT <data_structure > ("88438422"); 
+	// execute the collatz function with a templatized defined data_structure
+	bigNumT<data_structure > out = CollatzCount<bigNumT<data_structure > >(num);
+	std::cout << out.print() << std::endl;
+	return 0;
+}
+
+%ENDCODE%
+---+++ ii. Order
+<pre>
+Put your answer here. You may use < to denote asymptotic less-than, and = to denote asymptotic equality. 
+For example, i < ii < iii
+</pre>
+
+i. deque <  list < vector 
+------> Based on the functions that BigNumT calls such as push_back, pop_back, etc, everything is implemented as some kind of stack/queue. So in terms of running time performance, a vector would be the worse, because when it resizes as it pushes values in the vector, it copies everything and stores in a new array. A list and deque are similiar, but a list is slower, since it has to link to nodes before and after. A deque is really efficient for popping and pushing at the end and beginning, but not anywhere else.
+
+ii. deque <  list < vector
+------> Vector uses the most memory, because it doubles the size of the array whenever the number of elements in the array is 50% of the size of the vector and shrinks when 25% of the size of the vector is used.
+-A list the second worst, because it keeps track of the value it contains and two pointers to the nodes before and after it.
+-Deque is the most efficient, because they contain less pointers compared to a list, but at the cost of only becoming efficient in any operations occurring at the beginning of the deque or at the end of the deque.
+---+++ iii. Design
+<pre>
+Put your design  here
+</pre>
+
+I would create my own stack with a custom node class that stores one pointer (aim to implement as singly linked list and store as little references to other nodes) and holds a char value. Char is 1 byte, so its the smallest primitive data type to use to store a variable. For the functions of pop_back, push_back, etc, I would implement as if I was going through a singly linked list.
+---+++ iv. Extra credit
+Please submit this online.
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+TWIKIFILEEND

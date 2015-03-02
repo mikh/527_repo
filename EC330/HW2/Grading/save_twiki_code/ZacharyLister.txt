@@ -1,0 +1,189 @@
+---+EC330 - Spring 2013 - Homework 2  for ZacharyLister
+%TOC%
+
+---++_Assigned:_  Wednesday, February 11, 2015
+---++_Due:_  Thursday, February 19, 2015 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(ZacharyLister),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(10+$MOD(%PHI%,7))}%
+   * Set PHI2 = %CALCULATE{$EVAL(11+$MOD(%PHI%,11))}%
+   * Set PHI3 = %CALCULATE{$EVAL(12+$MOD(%PHI%,13))}%
+-->
+
+
+---+ Problem 1 *[Recurrences II, 40 points]*
+---++ a. T(n) = T(n-1) + n<sup> %PHI1% </sup>.
+---+++ !!Upper bound & Lower bound:
+<pre>
+<latex> T(n) = \Theta(n^{14}) </latex>
+</pre>
+
+---+++ !!Explanation:
+Iteration results in n terms of <latex>n^{13}</latex> so the final answer is <latex>\Theta(n^{14}) </latex>
+
+---++ b. T(n) = 3 T(n/2) + n<sup>2</sup>.
+---+++ !!Upper bound & Lower bound:
+<pre>
+<latex> T(n) = \Theta(n^2) </latex>
+</pre>
+
+---+++ !!Explanation:
+Master Method case 3
+
+---++ c. T(n) = %PHI2% T(n/3) + n<sup>2</sup>.
+---+++ !!Upper bound & Lower bound:
+<pre>
+<latex> T(n) = \Theta(n^{\log_3 %PHI2%}) </latex>
+</pre>
+
+---+++ !!Explanation:
+Master method case 1
+
+---++ d. T(n) = %CALCULATE{$EVAL(%PHI1% + 1)}% T(n/ %PHI1%) + n log n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+<latex> T(n) =  \Theta(n^ { \log_{%PHI1%} %CALCULATE{$EVAL(%PHI1% + 1)}%}) </latex>
+</pre>
+
+---+++ !!Explanation:
+Master method case 1
+
+---++ e. T(n) = 4 T(n/2) +  n <sup>2</sup>  &#8730;n.
+---+++ !!Upper bound & Lower bound:
+<latex> T(n) = \Theta(n^{2.5})</latex>
+
+---+++ !!Explanation:
+Master method case 3
+
+---++ f. T(n) = n(T(n/2) <sup>2</sup>).
+---+++ !!Upper bound & Lower bound:
+<latex> T(n) = \Theta(C^n) </latex>
+
+
+---+++ !!Explanation:
+The properties of logarithms were used to manipulate the equation. And then the master method case 1 was applied to arrive at the final answer.
+
+---++ g. T(n) = T(n-1) + %PHI2% lg n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+<latex> T(n) = \Theta(lg(n!))</latex>
+</pre>
+
+---+++ !!Explanation:
+Expanded by iteration then used property of logs to simplify down.
+
+---++ h. T(n) = T(n-1) + log<sup>2</sup>(n).
+---+++ !!Upper bound & Lower bound:
+<pre>
+<latex> T(n) = \Theta(nlog(log(n)))</latex>
+</pre>
+
+---+++ !!Explanation:
+This was achieved by iteration and induction.
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2 *[Applied recurrences, 15 points]*
+---++ 2a.
+---+++ !!Recurrence
+
+The recurrence is just two sums. It is not recursive but the bound comes up to <latex>\Theta(n^2)</latex>
+
+
+---+++ !!Running Time
+<pre>
+<latex>\Theta(n^2)</latex>
+</pre>
+
+---+++ !!Explanation
+
+This is a nested for loop and n^2 is was occurs with this kind of nested for loop
+
+
+---++ 2b.
+---+++ !!Recurrence
+<pre>
+<latex> T(n) = 13*T(n/13) </latex>
+</pre>
+
+---+++ !!Running Time
+<pre>
+<latex>\Theta(log(n))</latex>
+</pre>
+
+---+++ !!Explanation
+Since there is a division by 13 each iteration, this results in <latex>log_{13}(n)</latex> and this can be simplified to <latex>log(n)</latex>
+
+---++ 2c.
+---+++ !!Recurrence
+<latex>T(n) = T(n/2) + T(n/4) + c*n</latex>
+
+---+++ !!Running Time
+<latex>\Theta(n*log(n))</latex>
+
+---+++ !!Explanation
+Iteration results in <latex>log(n)</latex> for the T(n/2) + T(n/4). Then that is multiplied by n to get the final running time.
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+Problem 3 *[Collatz, 45 points]*
+---++ 3a.  Subtraction [10 points]
+Attach your solution as =3a.h=.
+
+---++ 3b.  Running time [20 points]
+---+++ i. Vector
+----++++ !!Running time:
+
+The run time is linear.
+
+
+----++++ !!Explanation:
+
+The access time of a vector is constant and you loop through all n of the elements in the vector
+
+
+---+++ ii. List
+----++++ !!Running time:
+
+The run time is linear
+
+----++++ !!Explanation:
+
+The access time of a list is linear but you loop through all of the elements with the iterator so it will be linear time. 
+
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---++ 3c. Collatz [15 points]
+---+++ i. Code
+%CODE{"cpp"}%
+// put your code here for computing CollatzCount(%PHI%) using a list<int> to store digits
+	bigNumT<list<int> > foo("94770742");
+	cout << (CollatzCount(foo)).print() << endl;
+%ENDCODE%
+---+++ ii. Order
+Memory used: i < iii < ii These results were obtained using getrusage. Vector was about 3x less than list and list was about 4x less than deque
+Time taken: i < iii < ii These results were obtained using getrusage. Vector was a few milliseconds faster than list and list was a few milliseconds faster than deque.
+---+++ iii. Design
+For my design, I would use a string class that would use up much less memory that storing just one char in a single spot into a slot in a vector (which was determined above to use the least amount of memory). The push and pop functions would append characters to a string. 
+The iterator would go over each character in the string and perform the necessary functions. Insert would use the iterator to find the necessary location to insert the character into the string. The size would be the length of the string, some of these time complexities may be a bit
+longer than the vector but we are concerned with the lowest amount of memory used. This is definitely much lower memory than having one character occupy an int sized slot in a vector. 
+
+---+++ iv. Extra credit
+Please submit this online.
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+TWIKIFILEEND

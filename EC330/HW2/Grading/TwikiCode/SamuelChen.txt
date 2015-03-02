@@ -1,0 +1,223 @@
+---+EC330 - Spring 2013 - Homework 2  for SamuelChen
+%TOC%
+
+---++_Assigned:_  Wednesday, February 11, 2015
+---++_Due:_  Thursday, February 19, 2015 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(SamuelChen),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(10+$MOD(%PHI%,7))}%
+   * Set PHI2 = %CALCULATE{$EVAL(11+$MOD(%PHI%,11))}%
+   * Set PHI3 = %CALCULATE{$EVAL(12+$MOD(%PHI%,13))}%
+-->
+
+
+---+ Problem 1 *[Recurrences II, 40 points]*
+---++ a. T(n) = T(n-1) + n<sup> %PHI1% </sup>.
+
+
+---+++ !!Upper bound & Lower bound:
+<pre>
+T(n) is &#920;(n<sup>12</sup>)  
+</pre> 
+
+---+++ !!Explanation:
+<pre>
+I plugged in n=1 to get T(1). Then I plugged in n=2 to get T(2) and substituted T(1) with what I got from n=1. I looked for a pattern and saw that for every value of n there would be a value of n<sup>12</sup>.
+</pre>
+
+---++ b. T(n) = 3 T(n/2) + n<sup>2</sup>.
+---+++ !!Upper bound & Lower bound:
+<pre>
+T(n) is &#920;(n<sup>2</sup>)
+</pre>
+
+---+++ !!Explanation:
+<pre>
+I used the master method and saw that it matched with case 3.
+</pre>
+
+---++ c. T(n) = %PHI2% T(n/3) + n<sup>2</sup>.
+---+++ !!Upper bound & Lower bound:
+<pre>
+T(n) is &#920;(n<sup>log(17)/log(3)</sup>)
+</pre>
+
+---+++ !!Explanation:
+<pre>
+I used the master method and saw that it matched with case 1
+</pre>
+
+---++ d. T(n) = %CALCULATE{$EVAL(%PHI1% + 1)}% T(n/ %PHI1%) + n log n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+T(n) is &#920;(n<sup>log(13)/log(12)</log>)
+</pre>
+
+---+++ !!Explanation:
+<pre>
+I used the master method and saw that it matched with case 1.
+</pre>
+
+---++ e. T(n) = 4 T(n/2) +  n <sup>2</sup>  &#8730;n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+T(n) is &#920;(n<sup>2</sup>log(n))
+</pre>
+
+---+++ !!Explanation:
+<pre>
+I used the master method and saw that this matched with case two,
+</pre>
+
+---++ f. T(n) = n(T(n/2) <sup>2</sup>).
+---+++ !!Upper bound & Lower bound:
+<pre>
+Put one answer if upper and lower bound is same. Otherwise, specify both
+</pre>
+
+---+++ !!Explanation:
+<pre>
+Put your explanation here
+</pre>
+
+---++ g. T(n) = T(n-1) + %PHI2% lg n.
+---+++ !!Upper bound & Lower bound:
+<pre>
+T(n) is &#920;(lg(n)
+</pre>
+
+---+++ !!Explanation:
+<pre>
+I noticed a pattern after plugging in values for n and noticed that for every value of n there would a lg of that value. If n goes to infinity or very large, lg(n) would be what determines the growth of T(n)
+</pre>
+
+---++ h. T(n) = T(n-1) + log<sup>2</sup>(n).
+---+++ !!Upper bound & Lower bound:
+<pre>
+T(n) is &#920;(log<sup>2</sup>(n))
+</pre>
+
+---+++ !!Explanation:
+<pre>
+I noticed a pattern when plugging in values of n that there would be a log<sup>2</sup>(n) for each value of n. So if n goes to infinity, log<sup>2</sup>(n) would determine the growth of T(n).
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2 *[Applied recurrences, 15 points]*
+---++ 2a.
+---+++ !!Recurrence
+<pre>
+
+</pre>
+
+---+++ !!Running Time
+<pre>
+T(n) is &#920;(n<sup>2</sup>)
+</pre>
+
+---+++ !!Explanation
+<pre>
+I said it was n<sup>2</sup> because in Fa there's a for loop nested inside a for loop. The outside for loop repeats n times and the inside for loop repeats n-1 times in the worst case..
+</pre>
+
+---++ 2b.
+---+++ !!Recurrence
+<pre>
+T(n) = 19T(n/19)
+</pre>
+
+---+++ !!Running Time
+<pre>
+T(n) is &#920;(n)
+</pre>
+
+---+++ !!Explanation
+<pre>
+Put your explanation here
+</pre>
+
+---++ 2c.
+---+++ !!Recurrence
+<pre>
+T(n) = T(n/2) + n<sup>2</sup>T(n/4)
+</pre>
+
+---+++ !!Running Time
+<pre>
+T(n) is &#920;(n<sup>log(n<sup>2</sup>)/log(4)</sup>)
+</pre>
+
+---+++ !!Explanation
+<pre>
+I tried to use the master method on this problem. I treated T(n/2) as a f(n) and had had used n<sup>2</sup> as the a value and 4 as the b value.I had gotten n<sup>2</sup>
+because of the for loop that is used for the sum.
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+Problem 3 *[Collatz, 45 points]*
+---++ 3a.  Subtraction [10 points]
+Attach your solution as =3a.h=.
+
+---++ 3b.  Running time [20 points]
+---+++ i. Vector
+----++++ !!Running time:
+<pre>
+T(n) is &#920;(n)
+</pre>
+
+----++++ !!Explanation:
+<pre>
+The highest complexity of a function of vector that is in "operator+" considering that it doesn't need reallocation is n and that belongs to its operator"=".
+ In "operator+" , vector's operator "=" is never used inside a for loop or any other way that would cause the runtime to go beyond n.
+</pre>
+
+---+++ ii. List
+----++++ !!Running time:
+<pre>
+T(n) is &#920;(n)
+</pre>
+
+----++++ !!Explanation:
+<pre>
+The highest complexity of a function of list that is in "operator+" is n and that belongs to its  operator"=" and "size".
+ In "operator+" , list's operator"=" and "size function is never used inside a for loop or any other way that would cause the runtime to go beyond n.
+</pre>
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---++ 3c. Collatz [15 points]
+---+++ i. Code
+%CODE{"cpp"}%
+// put your code here for computing CollatzCount(%PHI%) using a list<int> to store digits
+
+%ENDCODE%
+---+++ ii. Order
+<pre>
+Put your answer here. You may use < to denote asymptotic less-than, and = to denote asymptotic equality. 
+For example, i < ii < iii
+</pre>
+---+++ iii. Design
+<pre>
+Put your design  here
+</pre>
+
+---+++ iv. Extra credit
+Please submit this online.
+
+---++!! Grader comments
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+TWIKIFILEEND
