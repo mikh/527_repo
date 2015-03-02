@@ -12,7 +12,7 @@
 #define OPTIONS 2
 
 #define GIG 1000000000
-#define CPG 2.0                 // Cycles per GHz -- Adjust to your computer
+#define CPG 2.56                 // Cycles per GHz -- Adjust to your computer
 
 #define ARR_SIZE 8*1024*1024      // 1M -- this x8 = L3 cache size
 #define BOUNDARY_ALIGNMENT 64   // cache block size
