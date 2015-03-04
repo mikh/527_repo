@@ -1,0 +1,164 @@
+---+EC330 - Spring 2012 - Homework 3
+%TOC%
+
+---++_Assigned:_  Thursday, February 19
+---++_Due:_  Thursday, February 26 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(PatrickFant),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(4+$MOD(%PHI%,3))}%
+-->
+
+---
+---++ Problem 1 *[Strange Sorting, 25 points]*
+---+++ 1a
+---++++ !!Result
+<VERBATIM>
+[ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ]
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+No.
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+Say you have an array [ 8, 1, 7, 6, 5, 4, 3, 2, 9, 0 ].  8 will be swapped with 0, becoming the last number, and will only be compared with the other 4 values in the first half of the array which are all smaller.  Since 8 isn't the largest value in the array, this isn't correctly sorted.
+</VERBATIM>
+
+---+++ 1b
+---++++ !!Result
+<VERBATIM>
+[ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ]
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+Yes
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+This is essentially a sort that brute-force searches for a lowest value in the array, moves it out to the left, and repeats the process until everything is organized.  Its worst case running time would be THETA(n^2).
+</VERBATIM>
+
+---+++ 1c
+---++++ !!Result
+<VERBATIM>
+[ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ]
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+Yes
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>This sorts 4 consecutive elements, moves up one, and sorts 4 again, and continues this way until the end of the array is reached.  This alone wouldn't be enough, but the process is repeated as many times as there are elements.  The running time is THETA(n^2).
+</VERBATIM>
+
+---+++ Grader comments *[25/25]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 2 *[Special-case sorting, 20 points]*
+Provide _and analyze_ the most efficient algorithm you can for sorting an array of =n= items of the following type:
+---+++ a. Integers in the range -%PHI% to %PHI% (inclusive).
+---++++ !!Algorithm
+<VERBATIM>
+Radix sort as described in lecture.
+</VERBATIM>
+
+---++++ !!Analysis
+<VERBATIM>
+Normally, radix would be a bad idea, since it has a worst-case of THETA(k(n + d)).  However, since the maximum number of digits is constant, the complexity simplifies down to THETA(nk) with n numbers and k digits.
+</VERBATIM>
+
+---+++ b. Strings of n^{ %CALCULATE{$EVAL(1000 + $MOD(%PHI%,2000))}% } - 1</latex> characters.
+---++++ !!Algorithm
+<VERBATIM>
+Radix sort as described in lecture.
+</VERBATIM>
+
+---++++ !!Analysis
+<VERBATIM>
+Same reasoning as 2a.  We know the number of characters is constant, so the worst-case running time for radix becomes much less.
+</VERBATIM>
+
+---+++ Grader comments *[20/20]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 3 *[Constrained sorting, 25 points]*
+---+++ Pseudocode
+<VERBATIM>
+/* collaborated with frank savoca */
+
+result = 0
+arr[] = inputted array
+bucket[] = array of 11 arrays
+digits = ceiling(log(11,n))
+ind[arr.size] = [0, 1, 2, ... arr.size-1] // each element equals its index
+
+for (jj=0 to digits-1) {
+    if (arr.size <= 1) // if array is empty, we've found all of the digits of the missing number
+        return result
+    else {
+        for (ii=0 to arr.size-1) // sort elements into buckets that correspond with their lsd
+            bucket[fetch(ii,jj)].push_back(ii)
+        insertion_sort(bucket) // sort by size of elements
+        arr=bucket[0] // smallest subarray has 1 missing, so get rid of the rest
+        result+=fetch(bucket[0][0],jj)*pow(11,jj) // increment result accordingly
+</VERBATIM>
+
+---+++ Anaylsis
+<VERBATIM>
+N is just n rounded to nearest power of 11.  T(n) = T(n/11) + [n^2 + n/11 + 11^2 - 1] -> T(n) is THETA(log(n^3)).
+</VERBATIM>
+
+---+++ Grader comments  *[25/25]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 4 *[Big Sorting, 30 points]*
+%CODE{"cpp"}%
+
+// collaborated with Frank Savoca
+#include "bigIntSort.h"
+
+// insertion sort
+void bigIntSort::performSort() {
+
+	// iterate through data, skip first element
+	for (int ii = 1; ii < data.size(); ii++) {
+		
+		// declare x to hold element indexed by ii
+		bigInt *x = data[ii];
+
+		int jj = ii;
+
+		// swap data[ii] with the element before it until either
+		// data[ii - 1] is a smaller element or data[ii] is 1st.
+		while ((jj > 0) && (*x < *data[jj - 1])) {
+			data[jj] = data[jj - 1];
+			jj--;
+		}
+		data[jj] = x;
+	}
+	
+}
+
+%ENDCODE%
+
+---+++ Grader comments  *[30/30]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+---
+
+TWIKIFILEEND

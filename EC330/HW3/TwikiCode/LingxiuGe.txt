@@ -1,0 +1,215 @@
+---+EC330 - Spring 2012 - Homework 3
+%TOC%
+
+---++_Assigned:_  Thursday, February 19
+---++_Due:_  Thursday, February 26 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(LingxiuGe),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(4+$MOD(%PHI%,3))}%
+-->
+
+---
+---++ Problem 1 *[Strange Sorting, 25 points]*
+---+++ 1a
+---++++ !!Result
+<VERBATIM>
+The result when the algorithm is run on the given array
+</VERBATIM>
+
+[0,1,2,3,4,5,6,7,8,9]
+
+---++++ !!Correctly sort
+<VERBATIM>
+Yes or no
+</VERBATIM>
+
+No
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+
+When the array is in random order, it will not be sorted in correct order by oneA. The loop only goes though half of the array. The first half of the sorted array will be smaller than the second half. However, each half will not be sorted correctly. For counterexample, Array A= {111, 18, 13, 16, 14, 12, 1001}.
+
+---+++ 1b
+---++++ !!Result
+<VERBATIM>
+The result when the algorithm is run on the given array
+</VERBATIM>
+
+[0,1,2,3,4,5,6,7,8,9]
+
+---++++ !!Correctly sort
+<VERBATIM>
+Yes or no
+</VERBATIM>
+
+Yes.
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+
+T(n) = n^2
+
+---+++ 1c
+---++++ !!Result
+<VERBATIM>
+The result when the algorithm is run on the given array
+</VERBATIM>
+
+[0,1,2,3,4,5,6,7,8,9]
+
+---++++ !!Correctly sort
+<VERBATIM>
+Yes or no
+</VERBATIM>
+
+Yes
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+
+Worse case bubble sort: T(n)= n^2. There are also two loops in this piece of function. Therefore the overall worst case runtime is T(n) = n^4.
+
+---+++ Grader comments *[25/25]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 2 *[Special-case sorting, 20 points]*
+Provide _and analyze_ the most efficient algorithm you can for sorting an array of =n= items of the following type:
+---+++ a. Integers in the range -%PHI% to %PHI% (inclusive).
+---++++ !!Algorithm
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+
+Merge sort.
+
+---++++ !!Analysis
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+
+Large range of numbers.
+
+---+++ b. Strings of n^{ %CALCULATE{$EVAL(1000 + $MOD(%PHI%,2000))}% } - 1</latex> characters.
+---++++ !!Algorithm
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+
+Radix sort.
+
+---++++ !!Analysis
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+
+Strings of the same length. fits the requirement of radix.
+
+---+++ Grader comments *[20/20]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 3 *[Constrained sorting, 25 points]*
+---+++ Pseudocode
+<VERBATIM>
+Write your pseudocode here
+</VERBATIM>
+
+%CODE{"cpp"}%
+
+//get the value for n^ -1 = N
+N = 8^(ceil(logn/log8);
+
+//get the digits of N-1
+while (N-1)/8 != 0
+countdigits ++;  
+
+//original array ranges from 0 to N-1
+int fetchedArray[N];
+int tempNum;
+for i=0 from 0 to N-1, i++{
+    int countIndex == 0;
+    for j = 0 from 0 to countdigits, j++{
+         tempNum = fetch(i,j)* 8^(countIndex) + tempNum
+         countIndex++;
+    }
+    fetchedArray[i] = tempNum;
+    countIndex = 0;
+}
+
+int countArray[N];
+for i=0 from 0 to N-1, i++{
+   for j = 0 from 0 to N-1, j++{
+      if fetchedArray[j]==i{
+          countArray[i]=1;
+      }
+    }
+}
+
+int result;
+for i=0 from 0 to N-1, i++{
+    if countArray[i] != 1{
+        result = i;
+    }
+}
+
+return result
+
+
+
+%ENDCODE%
+
+
+---+++ Anaylsis
+<VERBATIM>
+Analysis of your own algorithm
+</VERBATIM>
+
+Since the array with random numbers does not have any repeated two number, using counting sort here will be convenient. All i have to do is to look for the number in the array with value 0. The index of that number is the result.
+
+---+++ Grader comments  *[25/25]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 4 *[Big Sorting, 30 points]*
+%CODE{"cpp"}%
+
+   #include "bigIntSort.h"
+
+void bigIntSort::performSort() {
+    for (int i = 0; i < data.size(); i++)
+    {
+        bigInt * tempint = data[i];
+        int index = i + 1;
+        while (index > 0 && (data[index] > tempint))
+        {
+            *data[index] = *data[index-1];
+            index --;
+        }
+        data[index]=tempint;
+    }
+    
+}
+
+
+%ENDCODE%
+
+---+++ Grader comments  *[30/30]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+---
+
+TWIKIFILEEND

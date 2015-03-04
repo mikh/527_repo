@@ -1,0 +1,199 @@
+---+EC330 - Spring 2012 - Homework 3
+%TOC%
+
+---++_Assigned:_  Thursday, February 19
+---++_Due:_  Thursday, February 26 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(JeffreyChen),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(4+$MOD(%PHI%,3))}%
+-->
+
+---
+---++ Problem 1 *[Strange Sorting, 25 points]*
+---+++ 1a
+
+(Collaborated with Austin Schiller)
+
+Result: Given array is correctly sorted [0 1 2 3 4 5 6 7 8 9 10]
+
+This algorithm does not sort all arrays of positive integers.
+
+Counterexample: [10 5 17 9] would yield [9 5 17 10]. Since the array is split in half, elements in the right array can never swap with other elements in the right array, and same for the left. 
+---++++ !!Result
+<VERBATIM>
+The result when the algorithm is run on the given array
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+Yes or no
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+
+---+++ 1b
+
+Result: This function correctly sorts the given array [0 1 2 3 4 5 6 7 8 9 10]
+
+This array does work for all arrays of positive integers.
+
+Works like selection sort - worst case running time would be &Theta; n<sup>2</sup>
+---++++ !!Result
+<VERBATIM>
+The result when the algorithm is run on the given array
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+Yes or no
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+
+---+++ 1c
+
+Result: This function correctly sorts the array [0 1 2 3 4 5 6 7 8 9 10]
+
+This function will work for arrays with at least 5 elements
+
+This function performs bubble sort a multitude of times, and bubble sort has a worst case runtime of &Theta; n<sup>2</sup>
+---++++ !!Result
+<VERBATIM>
+The result when the algorithm is run on the given array
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+Yes or no
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+
+---+++ Grader comments *[25/25]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 2 *[Special-case sorting, 20 points]*
+Provide _and analyze_ the most efficient algorithm you can for sorting an array of =n= items of the following type:
+
+Because you know the range of the entire array, you can just use counting sort. Counting sort is not a comparison sort, but it uses key values as indexes into an array and computes a histogram of the number of times each key appears in the input array. The restriction is that you must know the range of the numbers in the array in order to create the output array, and we do know the range of the array in this case.
+
+Counting sort is &Theta; (n+M), which in this case would be &Theta; (n + 156019916)
+---+++ a. Integers in the range -%PHI% to %PHI% (inclusive).
+---++++ !!Algorithm
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+
+---++++ !!Analysis
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+
+---+++ b. Strings of n^{ %CALCULATE{$EVAL(1000 + $MOD(%PHI%,2000))}% } - 1</latex> characters.
+
+Because you know all the strings have the same number of characters and you know the limits of each character, you can use radix sort. Radix sort will compare each digit within each string from least significant digit to most significant digit. The requirements of radix sort are that all the numbers in the array have the same number of digits, and we know the range of each digit. In this case, we know that each string will have a certain number of characters, and we know the range of the characters. Radix sort will provide the fastest sorting because it is not a comparison sort.
+
+Radix sort is &Theta; k(n+d), where k is the number of digits/characters, so this will be &Theta; 2958(n+d)
+---++++ !!Algorithm
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+
+---++++ !!Analysis
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+
+---+++ Grader comments *[20/20]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 3 *[Constrained sorting, 25 points]*
+
+<verbatim>
+
+//Compute n_hat
+sum = 0
+int power = log base 14 (n) 
+int n_hat = 14 ^ power
+
+//Loop through all numbers
+for ii to n_hat - 1
+     jj = 0
+     //Add up each digit of every number
+     while (fetch(ii,jj) =/= NULL)
+          sum = sum + [fetch(ii,jj) * 14^jj]
+          jj++
+
+//Compute sum of all numbers if there was no missing number
+realsum = ((n_hat) * (n_hat - 1)) / 2
+
+//Subtract sum numbers in array from sum of all numbers to get missing number
+return realsum - sum;
+
+</verbatim>
+
+This algorithm computes the sum of all the numbers in the array. The algorithm loops through each number in the array. For each number, the fetch function is called for every digit and adds the value of each digit to the total sum. After looping through each number in the array, the function calculates the actual sum for the numbers from 0 to n_hat if there was no missing number. 
+The function then subtracts the sum of the numbers in the array from the actual sum, and this is the missing number in the array.
+
+Runtime of this algorithm is n<sup>2</sup>logn
+---+++ Pseudocode
+<VERBATIM>
+Write your pseudocode here
+</VERBATIM>
+
+---+++ Anaylsis
+<VERBATIM>
+Analysis of your own algorithm
+</VERBATIM>
+
+---+++ Grader comments  *[25/25]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 4 *[Big Sorting, 30 points]*
+Collaborated with Austin Schiller
+%CODE{"cpp"}%
+#include "bigIntSort.h"
+
+void bigIntSort::performSort()
+{
+   int ii, jj;
+   for (ii = 1; ii <data.size(); ii++) // this is using the insertion sort method
+   { // referenced from geeksquiz.com
+       bigInt *temp = data[ii]; // create a temp bigInt for the current value of the array
+       jj = ii-1; // jj goes from 0 to data.size()-1
+       while (jj >= 0 && *temp < *data[jj])
+       {/* loop through data and move all elements of data that are greater than the temp
+	     to one position ahead of their current position*/
+           *data[jj+1] = *data[jj];
+           jj = jj-1;
+       }
+       *data[jj+1] = *temp; // data[jj+1] (data[ii]) becomes the temp value and is now in it's correct place
+   }
+}
+
+%ENDCODE%
+
+---+++ Grader comments  *[30/30]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+---
+
+TWIKIFILEEND

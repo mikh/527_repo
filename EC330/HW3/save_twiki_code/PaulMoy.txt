@@ -1,0 +1,311 @@
+---+EC330 - Spring 2012 - Homework 3
+%TOC%
+
+---++_Assigned:_  Thursday, February 19
+---++_Due:_  Thursday, February 26 _at the beginning of class._
+
+REFERENCES USED: Wikipedia for pseudocode for merge-sort (implemented myself)
+- textbook for counting-sort and radix-sort
+- each time a resource is used, I note it in the problem.
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(PaulMoy),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(4+$MOD(%PHI%,3))}%
+-->
+
+---
+---++ Problem 1 *[Strange Sorting, 25 points]*
+---+++ 1a
+---++++ !!Result
+<VERBATIM>
+A = [0,1,2,3,4,5,6,7,8,9]
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+No!
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+This algorithm only compares pairs of elements. More precisely, each element is only compared to one other element,
+and not to every other element in the array. This leads to plenty of counterexamples, but take the array as follows:
+A = [0,1,2,3,4,9,8,7,6,5]
+Since the element at position A[i] <= A[10-i], nothing in the array changes after being run through the function. 
+The function fails to modify (sort) the array at all.
+</VERBATIM>
+
+---+++ 1b
+---++++ !!Result
+<VERBATIM>
+A = [0,1,2,3,4,5,6,7,8,9]
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+Yes!
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+Every call of the function places the absolute smallest element of the array (or remainder of the array for subsequent calls)
+on the far left. Thus after the first iteration, the smallest number is in the correct place. Then after the second iteration,
+the two smallest numbers are in the right place, etc. Therefore the function will sort every array correctly, though it may be slow
+for some arrays.
+
+Running time: the function does some amount of constant work, then has a loop that iterates n times, doing constant work each iteration.
+It then calls itself on an array of size n-1. This leads to the following recurrence:
+
+T(n) = T(n-1) + n
+
+Which, when expanded, because n + (n-1) + (n-2) + ... + 1 = n(n+1)/2 from basic sums that we've seen millions of times. Therefore the running
+time is T(n) = (n^2 + n)/2, which we can see by the limit definition becomes:
+
+T(n) is Theta(n^2)
+</VERBATIM>
+
+---+++ 1c
+---++++ !!Result
+<VERBATIM>
+A = [0,1,2,3,4,5,6,7,8,9]
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+Yes!
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+Notice that each call to bubble-sort considers four consecutive elements of the array. After sorting those four, the function then calls
+bubble-sort on the last three elements previously considered and one new element on the right. In this way, an element can move a 
+maximum of three places in one iteration of the outer for loop. As such, we should only need to run the outer loop a number of times
+equal to the length of the array divided by three - this way each element still has enough time to get in its proper place without calling
+bubble-sort unnecessarily. However, the function clearly works - it sorts overlapping blocks of four elements over and over again.
+
+Running time: Notice here that bubble-sort is always called on four elements, regardless of the size of the input array, so bubble-sort
+is actually constant work. Then our outer loop runs n times, and the inner loop runs (n-3) times, so the total number of bubble-sorts
+(constant work) that we perform is n * (n-3), which means that T(n) = n * (n-3) * c, where c is a constant denoting the amount of time
+it takes to bubble-sort an array of four elements. Clearly here, from the limit definition, we have:
+
+T(n) = Theta(n^2)
+
+Notice in practice however, the constant c is important. In this case, I would expect that constant to be large, so the algorithm as a whole
+is very inefficient, even when compared to other algorithms that run in Theta(n^2) time.
+</VERBATIM>
+
+---+++ Grader comments *[25/25]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 2 *[Special-case sorting, 20 points]*
+Provide _and analyze_ the most efficient algorithm you can for sorting an array of =n= items of the following type:
+---+++ a. Integers in the range -%PHI% to %PHI% (inclusive).
+---++++ !!Algorithm
+%CODE{"cpp"}%
+// Pseudocode for modified counting-sort
+// Note here I am using the convention from the book where
+// A[1...n] and B[1...n] start at index 1. C[0...n] starts at index 0, 
+// also by the book's convention.
+let C[0...84285270*2] be a new array
+for i = 0 to 84285270*2 {
+    C[i] = 0;
+}
+// Use the following adjustment to make negative numbers work
+int offset = 84285270
+for j = 1 to A.length {
+    C[A[j]+offset] += 1;
+}
+for i = 1 to k {
+    C[i] += C[i-1];
+}
+for j = A.length downto 1 {
+    B[C[A[j]+offset]] = A[j];
+    C[A[j]+offset] -= 1;
+}
+%ENDCODE%
+
+---++++ !!Analysis
+<VERBATIM>
+This is an adaptation of counting-sort found on page 195 in the textbook. I offset each index into the array C by 84285270, so that
+the most negative number (-84285270) will map to C[0], and 84285270 will map to C[84285270*2]. That way we can do counting-sort
+even with negative numbers. Now, per the book's analysis, we have a complexity of Theta(k+n), where k = 2*84285270. Thus, our total
+complexity is Theta(n + 2*84285270), which by the limit definition we can show to be:
+
+T(n) = Theta(n)
+</VERBATIM>
+
+---+++ b. Strings of n^{ %CALCULATE{$EVAL(1000 + $MOD(%PHI%,2000))}% } - 1</latex> characters.
+---++++ !!Algorithm
+<VERBATIM>
+Use the radix-sort algorithm found on page 198 of the textbook, with counting-sort as its stable sort. Counting-sort
+can be found on page 195 of the textbook. In this example, using n,d,k as does the textbook:
+n = number of strings we're sorting
+d = 2270 (number of digits in each string)
+k = 256 (number of possible values for each digit)
+</VERBATIM>
+
+---++++ !!Analysis
+<VERBATIM>
+Here I used radix sort, with counting sort as the stable sort that radix sort needs. I found counting sort on page 195 of the textbook,
+and radix sort on page 198 of the textbook. I combined the two pseudocodes and modified them to fit my purposes. The analysis follows:
+
+From the textbook, we know that counting sort runs in Theta(k+n), where k is the number of values each element of the array can take, and
+n is the number of elements in the array. In our case, k = 256 (there are 256 values in the ASCII table) and n = number of strings we are sorting. 
+Radix sort then operates in Theta(d*(n+k)) (also from the textbook - page 198), where d = 2270 (the number of "digits" in each string). Thus, the entire
+sort runs in Theta(2270(n+256)), or:
+
+T(n) = Theta(n)
+</VERBATIM>
+
+---+++ Grader comments *[20/20]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 3 *[Constrained sorting, 25 points]*
+---+++ Pseudocode
+
+%CODE{"cpp"}%
+// Calculate n_hat = smallest power of base greater than n
+int n_hat = pow(base, (int)(log(n)/log(base))+1);
+
+// Create vector to hold counter variables
+// and int which will be our missing variable
+vector<int> counters;
+int missing = 0;
+
+// Initialize separate counters for each digit in the vector
+for (i = 0 to log(n_hat)/log(base)) {
+    counters.push_back(0);
+}
+
+// Loop through each element in the array. Retrieve each digit
+// and add it to the appropriate counter variable
+for (j = 0 to n_hat-1) {
+    for (k = 0 to log(n_hat)/log(base)) {
+        counters[k] += fetch(j, k);
+    }
+}
+
+// Calculate our missing variable from information!
+int offset = log(n_hat)/log(base);
+for (l = 0 to log(n_hat)/log(base)) {
+    missing += ((offset-i)*(base)*(base-1)/2 - counters[l]) * pow(base, l);
+}
+return missing;
+%ENDCODE%
+
+---+++ Anaylsis
+<VERBATIM>
+The functions log(), pow() and vector.push_back() all run in constant time, as do the various mathematical operations like divide, etc.
+Therefore calculating n_hat and initializing my variables takes constant time. Pushing back all of the zeros into vector<int> counters
+takes log(n_hat) time. (Doing constant work log(n_hat) times.) For the nested loops, the outer for loop has n_hat iterations, and the
+inner loop has log(n_hat) iterations. However, the fetch operation inside of the second loop runs in linear time, so the nested loop
+runs in (n_hat)^2log(n_hat) time. The last stand-alone for loop takes, again, log(n_hat) time. Therefore the entire algorithm runs in:
+
+T(n) = (n^2)log(n) + 2log(n) = Theta((n^2)log(n))
+
+Here I have used a simple approximation of n = n_hat. The actual running time depends on n_hat instead of n, since we do n_hat
+iterations instead of n. For the real running time, we can either replace n in the above formula with n_hat, or we can use the conversion
+that n_hat = (int)log(n)/log(base) + 1, solve for n_hat in terms of n and then replace n in the formula above with this, much messier, expression.
+</VERBATIM>
+
+---+++ Grader comments  *[25/25]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 4 *[Big Sorting, 30 points]*
+%CODE{"cpp"}%
+
+#include "bigIntSort.h"
+
+// Basic plan: implement mergesort from pseudocode found on
+// http://en.wikipedia.org/wiki/Merge_sort under the section
+// "Top-down implementation using lists". Both mergesort and
+// merge will be free-standing functions since I can't modify
+// the header file for the bigIntSort class, so I will then
+// have performSort call the mergesort function and then 
+// assign the returned value (sorted vector) to data.
+
+// Function declarations
+vector<bigInt*>* merge(vector<bigInt*>* left, vector<bigInt*>* right);
+vector<bigInt*>* my_merge_sort(vector<bigInt*>* m);
+
+// performSort only calls mergesort and then assigns the result to
+// data (the protected member of bigIntSort)
+void bigIntSort::performSort() {
+    
+    vector<bigInt*>* test;
+    test = &data;
+    test = my_merge_sort(test);
+    data = *test;
+}
+
+// merge function for use in mergesort
+vector<bigInt*>* merge(vector<bigInt*>* left, vector<bigInt*>* right) {
+    // Create new pointer to pass back
+    vector<bigInt*>* result = new vector<bigInt*>;
+    
+    // Counters for right and left arrays to be merged
+    int i = 0;
+    int j = 0;
+    while ((i < left->size()) and (j < right->size())) {
+        if ((*((*left)[i])) < (*((*right)[j]))) {
+            result->push_back((*left)[i]);
+            i++;
+        }
+        else {
+            result->push_back((*right)[j]);
+            j++;
+        }
+    }
+    // Finish adding any leftover elements after one
+    // array or the other has been depleted
+    while (i < left->size()) {
+        result->push_back((*left)[i]);
+        i++;
+    }
+    while (j < right->size()) {
+        result->push_back((*right)[j]);
+        j++;
+    }
+    return result;
+}
+
+vector<bigInt*>* my_merge_sort(vector<bigInt*>* m) {
+    // Base case to end the recursion
+    if (m->size() <= 1) {
+        return m;
+    }
+    
+    // Divide original list into two halves
+    vector<bigInt*>* left = new vector<bigInt*>;
+    vector<bigInt*>* right = new vector<bigInt*>;
+    int middle = m->size() / 2;
+    for (int i = 0; i < middle; i++) {
+        left->push_back((*m)[i]);
+    }
+    for (int j = middle; j < m->size(); j++) {
+        right->push_back((*m)[j]);
+    }
+    // Sort each half
+    left = my_merge_sort(left);
+    right = my_merge_sort(right);
+    
+    // Merge the two halves and return
+    return merge(left, right);
+}
+
+%ENDCODE%
+
+---+++ Grader comments  *[30/30]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+---
+
+TWIKIFILEEND

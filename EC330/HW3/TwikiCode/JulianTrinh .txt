@@ -1,0 +1,201 @@
+---+EC330 - Spring 2012 - Homework 3
+%TOC%
+
+---++_Assigned:_  Thursday, February 19
+---++_Due:_  Thursday, February 26 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(JoshJoseph),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(4+$MOD(%PHI%,3))}%
+-->
+
+---
+---++ Problem 1 *[Strange Sorting, 25 points]*
+---+++ 1a
+---++++ !!Result
+<VERBATIM>
+The result when the algorithm is run on the given array
+</VERBATIM>
+0 1 2 3 4 5 6 7 8 9
+---++++ !!Correctly sort
+<VERBATIM>
+No
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+9 8 7 6 5 4 3 2 12 11 <br>
+sorts to <br>
+2 3 4 5 7 6 8 9 12 11<br>
+as the second half is not compared internally.
+
+---+++ 1b
+---++++ !!Result
+<VERBATIM>
+The result when the algorithm is run on the given array
+</VERBATIM>
+0 1 2 3 4 5 6 7 8 9<br>
+
+---++++ !!Correctly sort
+<VERBATIM>
+Yes
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<latex>O(n^{2})</latex><br>
+This is essentially a recursive version of selection sort.<br>
+When begun, the sorted portion is essentially at 0 length (sorted). <br>
+When the loop is run, the smallest value is found and put at the front of the sub-array. <br>
+Extending the sorted portion to include the first element of the sub-array, it remains sorted. <br>
+As the last element of the sorted portion is always smaller than all remaining elements, each addition to the sorted portion is in order.
+The running time reflects running a loop of n elements n times (slightly fewer as every loop is n-1). <p>
+---+++ 1c
+---++++ !!Result
+<VERBATIM>
+The result when the algorithm is run on the given array
+</VERBATIM>
+0 1 2 3 4 5 6 7 8 9<br>
+---++++ !!Correctly sort
+<VERBATIM>
+Yes
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<latex>O(n^{2})</latex><br>
+This is essentially a less efficient bubblesort. <br>
+Even with the largest element in the first index, it will bubble up to the first sub-sub-array, and will keep getting carried up with each 4-item bubble sort.<br>
+Like normal bubble sort, this will keep bringing up the largest value because every iteration of ii means that you are doing this for the whole array. <br>
+Thankfully, each call to bubblesort is limited to 4 items, meaning that we can treat the individual bubblesorts as constant terms.<br>
+This then means that we have a n loop calling a function n-3 times, which we can treat as a constant times n^2 <p>
+
+---+++ Grader comments *[25/25]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 2 *[Special-case sorting, 20 points]*
+Provide _and analyze_ the most efficient algorithm you can for sorting an array of =n= items of the following type:
+---+++ a. Integers in the range -%PHI% to %PHI% (inclusive).
+
+---++++ !!Algorithm
+Radix sort<br>
+<br>
+Radix-Sort(int[] A, length)<br>
+   for i = length downto 1<br>
+      count-sort(A on int i)<br>
+<br>
+      count-sort(A[], B[], 10)<br>
+	for i = 1 to k do<br>
+	   C[i] = 0<br>
+	   <br>
+	for j = 1 to length(A) do<br>
+	   C[A[j]] = C[A[j]] + 1<br>
+	   <br>
+	for i = 0 to 9 do<br>
+	   C[i] = C[i] + C[i-1]<br>
+<br>
+	for j = 1 to length(A) do<br>
+	   B[C[A[j]]] = A[j]<br>
+	   C[A[j]] = C[A[j]] - 1<br>
+
+---++++ !!Analysis
+High level overview:<br>
+1. Copy the integers into 2 smaller arrays based on whether they are positive or negative (constant time) <br>
+2. Radix sort each array (constant time - specifically d(n+k), where d = digit length, k = 10) <br>
+3. Reverse the negative array (constant time) <br>
+4. Stick both arrays together, negative first (constant time) <br>
+Total will be <latex>\Theta(d(n+k)) ... \text{ assuming d is constant, k is O(n)} \rightarrow \Theta(n) </latex> time<p>
+
+---+++ b. Strings of n^{ %CALCULATE{$EVAL(1000 + $MOD(%PHI%,2000))}% } - 1</latex> characters.
+---++++ !!Algorithm
+Radix sort<br>
+Radix-Sort(String[] A, length)<br>
+   for i = length downto 1<br>
+      count-sort(A on char i)<br>
+<br>
+      count-sort(A[], B[], 26)<br>
+	for i = 1 to 26 do<br>
+	   C[i] = 0<br>
+	   <br>
+	for j = 1 to length(A) do<br>
+	   C[A[j]] = C[A[j]] + 1<br>
+	   <br>
+	for i = 1 to 26 do<br>
+	   C[i] = C[i] + C[i-1]<br>
+<br>
+	for j = 1 to length(A) do<br>
+	   B[C[A[j]]] = A[j]<br>
+	   C[A[j]] = C[A[j]] - 1<br>
+
+---++++ !!Analysis
+LSD radix sort will be<br>
+Total will be <latex>\Theta(d(n+k)) ... \text{ here d is 2126, k is O(n), specifically 26} \rightarrow \Theta(n) </latex> time<p>
+
+---+++ Grader comments *[20/20]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 3 *[Constrained sorting, 25 points]*
+---+++ Pseudocode
+arrayDigits = ceiling(log(A.length) / log(12)) // get the number of digits<br>
+sum = 0 <br>
+for i = 1 to A.length <br>
+&nbsp;&nbsp;&nbsp;&nbsp; for j = 0 to arrayDigits - 1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sum += (fetch(i, j) * 12^(j))<br>
+missingDigit = (A.length * (A.length +1))/2 - sum<br>
+---+++ Anaylsis
+arrayDigits = ceiling(log(A.length) / log(12)) // get the number of digits -- constant time operation provided that we have n or A.length<br>
+sum = 0  -- constant time <br>
+for i = 1 to A.length -- linear time <br>
+     for j = 0 to arrayDigits - 1 -- log linear time <br>
+         sum += (fetch(i, j) * 12^(j)) -- linear time as given by the specification <br>
+missingDigit = (A.length * (A.length +1))/2 - sum -- constant time <br>
+In sum, we run a linear time loop (n), and for each run, we access a linear time function - fetch (n) <br>
+we do this log(n) times for each entry due to the fact that we need to access fetch for each digit of each entry, log-base-12 (n) digits<br>
+so the total is<br>
+<latex> O(n^{2}log(n)) </latex>
+---+++ Grader comments  *[25/25]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 4 *[Big Sorting, 30 points]*
+%CODE{"cpp"}%
+#include "bigIntSort.h"
+void bigIntSort::performSort() {
+//An implementation of radix sort
+    vector<vector<bigInt *> >subvector(10); // you can has bucket
+   	int max = 0, radix = 0;
+    for (int ii=0; ii<data.size(); ii++){ // find the largest item in the array
+    	if (*data[max] < *data[ii])
+    		max = ii;
+    }
+    int numDigits = data[max]->digits.size();
+    for (int ii=0; ii<numDigits; ii++) { // main loop for radix sort
+    	for (int jj = 0; jj < data.size(); jj++){
+    		if ((data[jj]->digits.size() - 1) < ii)
+    			subvector[0].push_back(data[jj]);
+    		else{
+    			radix = data[jj]->digit(ii);
+    			subvector[radix].push_back(data[jj]);
+    		}
+    	}
+    	data.clear();
+    	for (int kk = 0; kk < 10; kk++){ // loop transfers back from buckets
+    		for (int mm = 0; mm < subvector[kk].size(); mm++)
+    			data.push_back(subvector[kk][mm]);
+    		subvector[kk].clear();
+    	}
+    }
+}
+
+%ENDCODE%
+
+---+++ Grader comments  *[30/30]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+---
+
+TWIKIFILEEND

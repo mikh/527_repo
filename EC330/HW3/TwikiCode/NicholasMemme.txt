@@ -1,0 +1,169 @@
+---+EC330 - Spring 2012 - Homework 3
+%TOC%
+
+---++_Assigned:_  Thursday, February 19
+---++_Due:_  Thursday, February 26 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(NicholasMemme),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(4+$MOD(%PHI%,3))}%
+-->
+
+---
+---++ Problem 1 *[Strange Sorting, 25 points]*
+---+++ 1a
+---++++ !!Result
+<VERBATIM>
+[0 1 2 3 4 5 6 7 8 9]
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+Yes
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+The sort for oneA is a simple bubble sort-like algorithm so it works because the large values are "bubbled" to the right. 
+Running Time: <latex> \Theta (n^{2}) </latex>
+</VERBATIM>
+
+---+++ 1b
+---++++ !!Result
+<VERBATIM>
+[1 2 3 -858993460 -1725026794 4 7 8 9 0]
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+No
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+For any array size the middle two elements get lost and replaced with large negative numbers due to the way to sorting loop is implemented.
+</VERBATIM>
+
+---+++ 1c
+---++++ !!Result
+<VERBATIM>
+[1 2 3 4 5 6 7 8 9 0]
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+No
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+For any array size greater than 10 the last element does not get swapped due to the parameters of the loops and the bubble sort function.
+</VERBATIM>
+
+---+++ Grader comments *[25/25]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 2 *[Special-case sorting, 20 points]*
+Provide _and analyze_ the most efficient algorithm you can for sorting an array of =n= items of the following type:
+---+++ a. Integers in the range -%PHI% to %PHI% (inclusive).
+---++++ !!Algorithm
+<VERBATIM>
+Heap sort 
+</VERBATIM>
+
+---++++ !!Analysis
+<VERBATIM>
+Heap sort would be the most efficient because worst case and average case for time is O(n log(n)) and the space complexity is O(1). With numbers as large as 82220598 it is better than other algorithms that have a best case of O(n) because the probability of getting the best case for a range that large is infinitesimally small, so O(n log (n)) for a worst case is not bad compared to O(n^2) for a worst or average case. 
+</VERBATIM>
+
+---+++ b. Strings of n^{ %CALCULATE{$EVAL(1000 + $MOD(%PHI%,2000))}% } - 1</latex> characters.
+---++++ !!Algorithm
+<VERBATIM>
+Radix sort
+</VERBATIM>
+
+---++++ !!Analysis
+<VERBATIM>
+Radix sort would be the most efficient because the length of the strings is constant. The running time is O(nk) which since k is known to be 1598 it only depends on how many strings there are, space complexity only depends on n as well because k is known so space complexity is O(n+k). It is also easier to sort strings with radix sort because you can just compare character by character (8 bits at a time) instead of comparing 12,784 bits at a  time.  
+</VERBATIM>
+
+---+++ Grader comments *[20/20]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 3 *[Constrained sorting, 25 points]*
+---+++ Pseudocode
+<VERBATIM>
+
+finalnum=[length(n_hat)]
+min=n_hat/14
+for digit=0 to length(n_hat)    
+    for jj=0 to 14
+         counter=0     
+         for ii=0 to n_hat-1
+             num=fetch(ii,digit)
+             if(num==jj)
+                counter++
+         if(counter<min)
+          min=jj
+          break   
+     finalnum[digit]=min    
+     
+     
+     
+            
+    
+</VERBATIM>
+
+---+++ Anaylsis
+<VERBATIM>
+O(n) as the inner loop was be executed worst case n times and the outer two loops are both executed at constant time O(1).
+</VERBATIM>
+
+---+++ Grader comments  *[25/25]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 4 *[Big Sorting, 30 points]*
+%CODE{"cpp"}%
+#include "bigIntSort.h"
+
+
+void bigIntSort::performSort()
+{
+	
+	for(int ii = 0; ii < data.size()-1; ii++)
+	{
+		int jj=ii;
+		while(jj>=0 && *data[jj+1] < *data[jj])
+		{
+			bigInt *temp = data[jj+1];
+            data[jj+1]=data[jj];
+            data[jj]=temp;
+			jj--;	
+		}
+	}
+
+	
+}
+
+
+
+
+
+
+
+%ENDCODE%
+
+---+++ Grader comments  *[30/30]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+---
+
+TWIKIFILEEND

@@ -1,0 +1,268 @@
+---+EC330 - Spring 2012 - Homework 3
+%TOC%
+
+---++_Assigned:_  Thursday, February 19
+---++_Due:_  Thursday, February 26 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(MinyingLu),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(4+$MOD(%PHI%,3))}%
+-->
+
+---
+---++ Problem 1 *[Strange Sorting, 25 points]*
+---+++ 1a
+<pre>
+Result:
+output [0, 1, 2, 3, 4, 5, ..... 11]
+
+Correctly Sort: No
+
+Explain: 
+If the array A is [11, 10, 9, 8, 2, 4, 3], the output will be [3, 4, 2, 8, 9, 10, 11], which is not sorted
+</pre>
+---++++ !!Result
+<VERBATIM>
+The result when the algorithm is run on the given array
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+Yes or no
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+
+---+++ 1b
+<pre>
+Result: output [0, 1, 2, 3, 4, 5, ..... 11]
+
+Correctness: Yes
+
+Explain and running time: 
+Because the algorithm goes through every elements in the array to find the smallest element, 
+and puts the smallest element in the beginning of the array (the beginning move to the right by one every time it calls itself.)   
+
+The range of the loop decreases every time the function recurrent, thus worst case T(n) = 2n + (n + (n-1) + (n-2) + ... + 1) = Theta(n^2)
+
+</pre>
+---++++ !!Result
+<VERBATIM>
+The result when the algorithm is run on the given array
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+Yes or no
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+
+---+++ 1c
+<pre>
+Result: output [0, 1, 2, 3, 4, 5, ..... 11]
+
+Correct sort: Yes
+
+Explain and running time: 
+Because the algorithm calls bubble-sort to sort a window of six elements in the array, and it increments the beginning of the window after it finish sorting one window. 
+It keeps repeating this until jj is at the (n-6)th element of the array.
+After it finishes this process once, it increments ii and repeat the process again, it repeats for n times for a n-element array. 
+In this algorithm, every circle where ii is incremented, the biggest of all the elements gets pushed to the end of the array. 
+
+The worse case running time is: bubble-sort only sorts 6 elements at a time so its a constant. The loop of jj runs n-5 times, and the loop of ii runs n times. 
+And the worst case of Bubble sort takes Theta(n^2)
+Therefore, T(n) = Theta(n^4). B
+</pre>
+---++++ !!Result
+<VERBATIM>
+The result when the algorithm is run on the given array
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+Yes or no
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+
+---+++ Grader comments *[25/25]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 2 *[Special-case sorting, 20 points]*
+Provide _and analyze_ the most efficient algorithm you can for sorting an array of =n= items of the following type:
+
+---+++ a. Integers in the range -%PHI% to %PHI% (inclusive).
+
+Algorithm: Use Counting sort
+%CODE{"cpp"}%
+set RANGE = 81172199 
+
+//say the given array is A of n elements
+allocate an array B with size of 2*RANGE+1, with all elements equals to 0
+// -81172199 is the 0th element of array B
+
+for (i = 0, i< n, i++)
+      B[RANGE + A[i]]++;    
+
+set output array C with n elements
+index = 0
+for (j = 0, j < (RANGE*2 + 1, j++)
+      if(B[j] != 0)
+            for (k = 0, k<B[j], k++)
+                  C[index] = j - RANGE;     //the 0th element in array B correspond to integer -81172199
+                  index++;
+
+return C
+%ENDCODE%
+
+
+<pre>
+Analysis:
+The algorithm will run through the n-element array, and increment the corresponding element in array B. takes running time n
+And then it runs through array B which has 2*81172199 elements, to directly write into n-element array C, takes constant running time 
+Therefore the running time of this algorithm will be T(n) = n + 2*81172199 is Thteat(n + 2*81172199)
+
+</pre>
+---++++ !!Algorithm
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+
+---++++ !!Analysis
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+
+---+++ b. Strings of n^{ %CALCULATE{$EVAL(1000 + $MOD(%PHI%,2000))}% } - 1</latex> characters.
+<pre>
+Algorithm: 
+Use Radix sort algorithm. We know that the length of each string is 1199(k) characters. for each character we can assign it a number depend on their value. 
+Assuming the range of characters is [0, d-1]. We know that the running time will be T(n) = Theta(k*(n+d))
+
+Analysis:
+Because it is non-comparison based sorting algorithm, it's running time will be linear, because k and d are both known variable. 
+And the "best case" running time of comparison based algorithm is Theta(nlogn)
+
+</pre>
+---++++ !!Algorithm
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+
+---++++ !!Analysis
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+
+---+++ Grader comments *[20/20]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 3 *[Constrained sorting, 25 points]*
+
+
+---+++ Pseudocode
+<VERBATIM>
+
+Write your pseudocode here
+
+//since n is given, calculte N first to determine what is the power to the base
+power = 1;
+while 15^power < n 
+	power++;
+N = 15^power;
+
+/*
+**make array counting_0th, 1th, 2th, ... each with 14 elements, depending on value of power
+**get the 0th digit for each element first and increment the corresponding index of array counting_0th 
+**do the same steps for counting_1th, 2th, ..... all the way to counting_powerth
+*/
+for i from 0 to power
+	allocate array counting_ith of 15 elements with all 0 valuse
+	for j from 0 to N-1
+		counting_ith[fetch(j, i)]++; 	//increment the value when seen the number
+	
+	
+/*
+**finding the missing number by going through all the counting arrays find out the indexes in each array with (power-1) value. 
+**because the given array contains all the value from 0 to 15^power -1
+**for every digit, the value (from 0 to 14) should be used power times
+**calculate the missing number depending on the indexes with missing number
+*/
+int 0th = 1th = ... = powerth = 0;  	//the digits value
+for ii from 0 to power	
+	for jj from 0 to 14
+		if counting_iith[jj] == power - 1
+			iith = jj;
+			break out of the jj for loop, to the next round of ii for loop
+
+
+</VERBATIM>
+
+---+++ Anaylsis
+<VERBATIM>
+Analysis of your own algorithm
+
+because the range of array is from [0, N-1]
+if power == 1, then the elements only have value (from 0 to 14) on the first digit
+if power == 2, then ..... ..........................................................................2nd digit
+....etc	
+
+I use counting sort
+say power is p, and given size of each counting array is 15
+the running time for fetch() is Theta(n), the running time for this algorithm will be p*Theta(n*(n+15))
+which is Theta(n^2)
+
+
+</VERBATIM>
+
+---+++ Grader comments  *[25/25]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 4 *[Big Sorting, 30 points]*
+%CODE{"cpp"}%
+
+   // Put your code here
+#include "bigIntSort.h"
+
+void bigIntSort::performSort() {
+    // An implementation of insertion sort
+	int jj;
+	bigInt *val;
+    for (int ii = 0; ii<data.size(); ii++){
+		val= data[ii];
+		jj = ii - 1;
+		while (jj >= 0 && (*val < *data[jj])){
+			*data[jj+1] = *data[jj];
+			jj--;
+		}
+		data[jj+1] = val;
+	}
+}
+
+
+%ENDCODE%
+
+---+++ Grader comments  *[30/30]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+---
+
+TWIKIFILEEND

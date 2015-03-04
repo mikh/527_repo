@@ -1,0 +1,261 @@
+---+EC330 - Spring 2012 - Homework 3
+%TOC%
+
+---++_Assigned:_  Thursday, February 19
+---++_Due:_  Thursday, February 26 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(NikolaosZapantis),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(4+$MOD(%PHI%,3))}%
+-->
+
+---
+---++ Problem 1 *[Strange Sorting, 25 points]*
+---+++ 1a
+---++++ !!Result
+<VERBATIM>
+0,1,2,3,4,5,6,7,8,9,10,11
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+yes
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+theta(n)
+</VERBATIM>
+
+---+++ 1b
+---++++ !!Result
+<VERBATIM>
+0,1,2,3,4,5,6,7,8,9,10,11
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+Yes
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+theta(n^2)
+</VERBATIM>
+
+---+++ 1c
+---++++ !!Result
+<VERBATIM>
+1 2 3 4 5 6 7 8 9 10 11 0
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+no
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+see part (a) of this one.
+</VERBATIM>
+
+---+++ Grader comments *[25/25]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 2 *[Special-case sorting, 20 points]*
+Provide _and analyze_ the most efficient algorithm you can for sorting an array of =n= items of the following type:
+---+++ a. Integers in the range -%PHI% to %PHI% (inclusive).
+---++++ !!Algorithm
+<VERBATIM>
+
+#include <iostream>
+
+using namespace std;
+
+void swap(int& A, int& B){
+	inttemp = A;
+	A = B;
+	B = temp;
+}
+
+int partition(bigInt *data, int left, int right){
+
+	int index = left;
+	int i;
+    int pivot = *(data+right);
+
+    for(i = left ; i < right ; i++){
+
+        if(*(data + i) < pivot){
+
+			swap(data[i], data[index]);
+			index++;
+        }
+    }
+ 
+    swap(data[index], data[right]);
+ 
+    return index;
+
+}
+
+void Quick_Sort(int *data, int left, int right){
+	
+	int pivot;
+	
+	if( left < right){
+	
+		pivot = partition(data, left, right);
+		Quick_Sort(data, left, pivot-1);
+		Quick_Sort(data, pivot+1, right);
+
+	}
+}
+
+
+
+</VERBATIM>
+
+---++++ !!Analysis
+<VERBATIM>
+worst case theta(n^2)
+best case (nlogn)
+</VERBATIM>
+
+---+++ b. Strings of n^{ %CALCULATE{$EVAL(1000 + $MOD(%PHI%,2000))}% } - 1</latex> characters.
+---++++ !!Algorithm
+<VERBATIM>
+#include <iostream>
+
+using namespace std;
+
+void swap(char& A, char& B){
+	inttemp = A;
+	A = B;
+	B = temp;
+}
+
+int partition(bigInt *data, int left, int right){
+
+	int index = left;
+	int i;
+    char pivot = *(data+right);
+
+    for(i = left ; i < right ; i++){
+
+        if(*(data + i) < pivot){
+
+			swap(data[i], data[index]);
+			index++;
+        }
+    }
+ 
+    swap(data[index], data[right]);
+ 
+    return index;
+
+}
+
+void Quick_Sort(char*data, int left, int right){
+	
+	int pivot;
+	
+	if( left < right){
+	
+		pivot = partition(data, left, right);
+		Quick_Sort(data, left, pivot-1);
+		Quick_Sort(data, pivot+1, right);
+
+	}
+}
+</VERBATIM>
+
+---++++ !!Analysis
+<VERBATIM>
+worst case theta(n^2)
+best case (nlogn)
+</VERBATIM>
+
+---+++ Grader comments *[20/20]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 3 *[Constrained sorting, 25 points]*
+---+++ Pseudocode
+<VERBATIM>
+
+ max_num = 12^ceil(n%12)
+ 
+ for i from 0 to max_num-1{
+	hold = 0;
+	j=0;
+	k = fetch[i,j]
+	while k != null{				//asked a TA about what happens if you exceed the digits he said he doesnt know so I assume it returns null
+		hold = k*base^j
+		j++
+		k = fetch[i,j]
+	}
+	sum += hold
+}
+target = max_num(max_num+1)/2
+	
+if sum == target 
+return 0
+else
+return target - sum
+</VERBATIM>
+
+---+++ Anaylsis
+<VERBATIM>
+theta(n+#digits)
+</VERBATIM>
+
+---+++ Grader comments  *[25/25]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 4 *[Big Sorting, 30 points]*
+%CODE{"cpp"}%
+
+  #include "bigIntSort.h"
+#include <vector>
+#include <iostream>
+
+using namespace std;
+
+void bigIntSort::performSort() {
+
+    int i,j;
+    for (i=1; i<data.size(); i++){
+		j = i;
+		cout << i << " ";
+        while (j>0 && *data[j] < *data[j-1]){
+            
+			bigInt *temp = data[j];
+			data[j]=data[j-1];
+			data[j-1]=temp;
+			j--;
+ 
+		}
+	}
+}
+
+
+
+
+
+
+%ENDCODE%
+
+---+++ Grader comments  *[30/30]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+---
+
+TWIKIFILEEND

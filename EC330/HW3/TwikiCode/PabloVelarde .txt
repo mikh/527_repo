@@ -1,0 +1,225 @@
+---+EC330 - Spring 2012 - Homework 3
+%TOC%
+
+---++_Assigned:_  Thursday, February 19
+---++_Due:_  Thursday, February 26 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(PabloVelarde),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(4+$MOD(%PHI%,3))}%
+-->
+
+---
+---++ Problem 1 *[Strange Sorting, 25 points]*
+---+++ 1a
+
+i. 
+0 1 2 3 4 5 6 7 8 9 10 11
+
+ii.
+No.
+
+iii. 
+This algorithm fails for the array {11,1,9,8,3,6,5,72,5,2,7,0}
+---++++ !!Result
+<VERBATIM>
+The result when the algorithm is run on the given array
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+Yes or no
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+
+---+++ 1b
+
+i.
+0 1 2 3 4 5 6 7 8 9 10 11
+
+ii.
+No
+
+iii.
+The algorithm fails for this array {11,1,9,8,3,6,5,72,5,2,7,0}
+---++++ !!Result
+<VERBATIM>
+The result when the algorithm is run on the given array
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+Yes or no
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+
+---+++ 1c
+
+i. 
+0 1 2 3 4 5 6 7 8 9 10 11
+
+ii.
+Yes
+
+iii.
+This algorithm does work but it is not very fast as it has an upper bound of n^2
+---++++ !!Result
+<VERBATIM>
+The result when the algorithm is run on the given array
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+Yes or no
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+
+---+++ Grader comments *[25/25]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 2 *[Special-case sorting, 20 points]*
+Provide _and analyze_ the most efficient algorithm you can for sorting an array of =n= items of the following type:
+---+++ a. Integers in the range -%PHI% to %PHI% (inclusive).
+
+<VERBATIM>
+//radix sort
+void radix(int* nums, int length, int max) {
+	list<int> bucket[BASE];
+	int i;
+ 
+	// iterate through each radix until n>max
+	for (int n=1; max >= n; n *= BASE) {
+		// sort list of numbers into buckets
+		for (i=0; i<length; i++)
+			bucket[(nums[i]/n)%BASE].push_back(nums[i]);
+ 
+		// merge buckets back to list
+		for (int k=i=0; i<BASE; bucket[i++].clear())
+			for (list<int>::iterator j = bucket[i].begin(); j != bucket[i].end(); nums[k++] = *(j++));
+	}
+}
+            
+</VERBATIM>
+
+
+The range of numbers can be represented by 28 bits. By using radix sort we can compare n numbers by putting the numbers in buckets starting with the smallest bit to the largest. Thus the upper bound to this algorithm is 28n.
+
+
+---++++ !!Algorithm
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+
+---++++ !!Analysis
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+
+---+++ b. Strings of n^{ %CALCULATE{$EVAL(1000 + $MOD(%PHI%,2000))}% } - 1</latex> characters.
+
+<VERBATIM>
+void radix(int* nums, int length, int max) {
+	list<int> bucket[BASE];
+	int i;
+ 
+	// iterate through each radix until n>max
+	for (int n=1; max >= n; n *= BASE) {
+		// sort list of numbers into buckets
+		for (i=0; i<length; i++)
+			bucket[(nums[i]/n)%BASE].push_back(nums[i]);
+ 
+		// merge buckets back to list
+		for (int k=i=0; i<BASE; bucket[i++].clear())
+			for (list<int>::iterator j = bucket[i].begin(); j != bucket[i].end(); nums[k++] = *(j++));
+	}
+}
+</VERBATIM>
+
+We can use radix sort to arrange these strings since every string has 1966 characters each character can be compared with each other. The upper bound to this algorithm would be n*1966.
+---++++ !!Algorithm
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+
+---++++ !!Analysis
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+
+---+++ Grader comments *[20/20]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 3 *[Constrained sorting, 25 points]*
+---+++ Pseudocode
+<VERBATIM>
+sum = 0
+n                  // given power of 12
+nHat = 12 ^ n
+totalSum = (nHat - 1) * nHat * .5           // total in base 12
+for ii from 0 to nHat-1 increase ii
+      for jj from 1 to n  increase jj            //store the whole number in base 12
+           int x = fetch(ii,jj)
+           num = x * 12 ^ (jj - 1)       
+     sum = sum + num         // add all numbers in array
+diff = totalSum - Sum                          //missing number in base 12
+return diff
+</VERBATIM>
+
+
+---+++ Anaylsis
+<VERBATIM>
+Analysis of your own algorithm
+This algorithm works by adding all the numbers in the array and then subtracting from the total sum nHat 
+integers. The difference between nHat and the array sum will give us the value of the missing element in
+ the array. Since this algorithm only runs through the array once it is bounded by linear time. n will dictate
+ the size of the array (12^n). This code will run on linear time because the loops will only repeat n * nHat 
+times. When n is 1 the array size will be 12 and thus the inner loop will run once and the time will be 12 * 1. 
+When n is 2 the size will be 144 and the inner loop will repeat 2 times making the whole loop run 144 * 2 times.
+</VERBATIM>
+---+++ Grader comments  *[25/25]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 4 *[Big Sorting, 30 points]*
+%CODE{"cpp"}%
+// insert sort
+void bigIntSort::performSort(){
+    for (int ii = 1; ii < data.size(); ii++) {
+        bigInt * temp = data[ii];
+        int jj = ii;
+        while(jj > 0 && *temp < *data[jj-1]){
+            data[jj] = data[jj-1];
+            jj--;
+            data[jj] = temp;
+        }
+    }
+    
+}
+
+%ENDCODE%
+
+---+++ Grader comments  *[30/30]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+---
+
+TWIKIFILEEND

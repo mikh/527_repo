@@ -1,0 +1,255 @@
+---+EC330 - Spring 2012 - Homework 3
+%TOC%
+
+---++_Assigned:_  Thursday, February 19
+---++_Due:_  Thursday, February 26 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(NevinZheng),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(4+$MOD(%PHI%,3))}%
+-->
+
+---
+---++ Problem 1 *[Strange Sorting, 25 points]*
+---+++ 1a
+---++++ !!Result
+<VERBATIM>
+The result when the algorithm is run on the given array
+</VERBATIM>
+[0,1,2,3,4,5,6,7,8,9]
+
+---++++ !!Correctly sort
+<VERBATIM>
+Yes or no
+</VERBATIM>
+NO. It does not correctly sort all arrays
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+[10,18,17,16,15,19,13,12,11] -> [10,11,12,13,15,19,16,17,18]
+
+
+---+++ 1b
+---++++ !!Result
+<VERBATIM>
+The result when the algorithm is run on the given array
+</VERBATIM>
+[0,1,2,3,4,5,6,7,8,9]
+---++++ !!Correctly sort
+<VERBATIM>
+Yes or no
+</VERBATIM>
+YES
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+This example i searches the array for the minimal value on each loop and places it at the beginning of the array in its correct position and then advance to the second index and finds the correct minimum value for that index, etc. Ih the end, its correctly sorted.
+
+---+++ 1c
+---++++ !!Result
+<VERBATIM>
+The result when the algorithm is run on the given array
+</VERBATIM>
+[0,1,2,3,4,5,6,7,8,9]
+
+---++++ !!Correctly sort
+<VERBATIM>
+Yes or no
+</VERBATIM>
+YES
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+Assuming, that Bubble-Sort is an actual working version of bubble sort, this method will correctly sort all arrays. All it does is correctly sort the array on the very first iteration and then on future iterations, attempt to sort the array, that has already been sorted.
+
+---+++ Grader comments *[25/25]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 2 *[Special-case sorting, 20 points]*
+Provide _and analyze_ the most efficient algorithm you can for sorting an array of =n= items of the following type:
+---+++ a. Integers in the range -%PHI% to %PHI% (inclusive).
+---++++ !!Algorithm
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+# Radix Sort:
+
+radix( Array, length, max): 
+
+find the positive and negative numbers and divide the arrays into positive and negative arrays. take the magnitude of the negative array, keeping in mind that the numbers are negative
+apply radix sort to both arrays
+merge the arrays together but remember to reverse the negative array and make sure that the negatives are negative again.
+
+Code for Radix Sort off wikipedia:
+
+Base = some base
+
+max is the number of digits in our max number of the array.
+
+void radix(int* nums, int length, int max) {
+	list<int> bucket[BASE];
+	int i;
+ 
+	// iterate through each radix until n>max
+	for (int n=1; max >= n; n *= BASE) {
+		// sort list of numbers into buckets
+		for (i=0; i<length; i++)
+			bucket[(nums[i]/n)%BASE].push_back(nums[i]);
+ 
+		// merge buckets back to list
+		for (int k=i=0; i<BASE; bucket[i++].clear())
+			for (list<int>::iterator j = bucket[i].begin(); j != bucket[i].end(); nums[k++] = *(j++));
+	}
+}
+
+---++++ !!Analysis
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+
+The most efficient algorithm for sorting the array of numbers is radix sort. The idea is to sort the numbers by their individual digits. In base 10 there are 10 digits, 0-9, therefore we need 10 buckets per pass. Each pass is linear.
+to sort the whole array we need #of digits in max passes or 8 passes. Assuming we use a counting sort for each pass, that gives us linear time per pass. We take 8 passes, so in total we took 8n time. Therefore we have an O(n) sorting overall.
+
+---+++ b. Strings of n^{ %CALCULATE{$EVAL(1000 + $MOD(%PHI%,2000))}% } - 1</latex> characters.
+---++++ !!Algorithm
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+Still radix sort
+
+---++++ !!Analysis
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+
+The best algorithm is still radix sort, as above, only difference is you need to map the characters to values designating their relative values.
+ex: a>b
+if only letters, you'll need 26 buckets
+you have 1518 characters, so you'll need 1518 counting or bucket sort passes which are all linear
+there fore overall you have 1518n time
+so overall:
+it will take O(n) time.
+---+++ Grader comments *[20/20]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 3 *[Constrained sorting, 25 points]*
+---+++ Pseudocode
+<VERBATIM>
+Write your pseudocode here
+</VERBATIM>
+
+In pseudo code:
+<VERBATIM>
+#define N = n_caret-1
+maxSum = (N)(N-1)/2 #but like in base 14
+maxPower=len(N) #This can be a constant time operation
+
+for i=0 to maxPower-1
+    for j in array_elements:
+        maxSum -= (fetch(i,j))*(pow(14,i) #14 because base 14 and we'll reconstitute the sum in base 14
+
+//
+missingNum = maxSum// in base 14, can choose to convert to base 10
+return
+</VERBATIM>
+
+---+++ Anaylsis
+<VERBATIM>
+Analysis of your own algorithm
+</VERBATIM>
+If we had RAM we could do it in O(n) time. Best case would be to calculate the sum of all integers from 0 to n_caret. This takes constant time because of the summation formula.
+Then we just subtract the array elements from that sum which takes linear time. Bam O(n) time. lets see if we can do something similar for this case. Spoiler: we can
+We know the max number so we just calculate the sum in constant time. maxSum = (N)(N-1)/2 where N= N_caret - 1
+next is to find the sum of the array. This is linear in RAM, but we have an O(n) cost per access. Fortunately we have an upper bound on the number of accesses we need. To get all the info from the array we need we need to capture the largest value's largest digit in our sweep. IE we need N's largest digit, so we need to do len(N)=k sweeps through the array for each of N's digits. So for this addition operation we have T(n) = k*N*N time. but k is not a constant, its actually log(n) so T(n) = N^2 log(n)
+Then as a last step we just subtract the two numbers. maxSum - ArraySum = missing number. T(n) = T(1) + T(N^2log(n)) -> O(N^2 log(n)). Plus is super memory efficient because you only really need one value holder for the running total
+Q: can sorting improve our answer?
+In the RAM case, no because array access is speedy.
+For sorting, all comparison based sorting is out because its too expensive. You'd basically need to reconstruct the array, which would take N memory, and like a lot of time iterating through the digits which is O(N^2log(n) after which you throw in a best case nlog(n) sorting, and then another linear sweep through the reconstructed and sorted array. For an overall T(n) = n^2log(n) + nlog(n)best case (worst n^2(depending on method used) + n. This is a hideous solution.
+Better would be to do radix sort and then a linear sweep for the number which follows similar logic as the subtract way. that would be: T(n) = n^2log(n) + n = O(n^2log(N)).
+I feel that the subtract method is the best way. It is more time efficient then even the radix sort due the the lack of need for a linear sweep. Plus its really memory efficient needing only one variable. 
+the fact that the array is in base 14 doesn't really matter, it might help sorting, but subtraction is unaffected. Does not help subtraction, does not help comparison, kinda helps radix sort by minimzing run time by picking base = n
+Because we know more about the bounds for n_caret we can impose stricter bounds on our previous estimates. n_caret = the smallest power of 14 greater than n
+Therefore:
+log_14(14^n) = n.
+Subtract:T(n) = n^3 -> O(n^3), \Theta(1) memory : )
+Comparison Sort: T(n) = n^3 + n^2 + n -> O(n^3)
+Radix Sort and compare: O(n^3)
+
+log_14(n) could be less then n, so we could scale back our estimates to be lower.
+lowest power of 14 greater then n, worst case is if thats alot greater then n, so like 14^n-n has to be minimal... uhhh well it could be bad, but the import thing to know is that the problem grows with respect to n, specifically due to: the length of the list,
+
+
+
+---+++ Grader comments  *[25/25]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 4 *[Big Sorting, 30 points]*
+%CODE{"cpp"}%
+
+   // Put your code here
+#include "bigIntSort.h"
+#include <list>
+
+#include <stdlib.h>    
+
+void bigIntSort::performSort() {
+
+    // an implementation of radix sort
+
+    list<bigInt*> bucket[10];
+
+    bigInt maxVal(0);
+    int i;
+
+    //calculate max value of the list
+    for(i = 0 ; i<data.size(); i++){
+        if( maxVal < *data[i] ){
+            maxVal = *data[i];
+        }
+    }
+
+    int maxPower = maxVal.digits.size();
+    //pad numbers with zeros to avoid segfault
+
+    //radix sort it all
+    for(int n=0; n<maxPower;n++){
+        for(i=0; i<data.size(); i++){
+
+            if((*data[i]).digits.size() < maxPower){
+                while( (*data[i]).digits.size() < maxPower){
+                    (*data[i]).digits.push_back(0);
+                }
+            }
+
+            int digit = (*data[i]).digits[n];
+            bucket[digit].push_back(data[i]);
+        }
+
+        for(int k=i=0; i<10 ; bucket[i++].clear() ){
+            for(list<bigInt * >::iterator j = bucket[i].begin(); j!=bucket[i].end(); data[k++] = *(j++));
+        }
+    }
+
+
+}
+%ENDCODE%
+
+---+++ Grader comments  *[30/30]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+---
+
+TWIKIFILEEND

@@ -1,0 +1,139 @@
+---+EC330 - Spring 2012 - Homework 3
+%TOC%
+
+---++_Assigned:_  Thursday, February 19
+---++_Due:_  Thursday, February 26 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(NadyaRojasQuiroz),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(4+$MOD(%PHI%,3))}%
+-->
+
+---
+---++ Problem 1 *[Strange Sorting, 25 points]*
+---+++ 1a
+---++++ !!Result
+<VERBATIM>
+9,8,7,6,5,4,3,2,1,0
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+No
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+If you have the array [9, ... , 1, 0] when ii = 9 and jj = 0 in the second for loop you would order the numbers correctly but then since it's inside the first for loop you swap the order again which causes it to go back to the original order.
+
+</VERBATIM>
+
+---+++ 1b
+---++++ !!Result
+<VERBATIM>
+0,1,2,3,4,5,6,7,8,9
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+Yes
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+In the for loop you find what the smallest number in the array is. Then you swap that number with the first element. Then you call the function again while moving the starting point one element over and swapping recursively until the array is ordered.
+
+ &Theta; (nlog(n))
+</VERBATIM>
+
+---+++ 1c
+---++++ !!Result
+<VERBATIM>
+It crashed
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+No
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+
+---+++ Grader comments *[25/25]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 2 *[Special-case sorting, 20 points]*
+Provide _and analyze_ the most efficient algorithm you can for sorting an array of =n= items of the following type:
+---+++ a. Integers in the range -%PHI% to %PHI% (inclusive).
+---++++ !!Algorithm
+<VERBATIM>
+quicksort(A, p, r)
+{
+    if( p < r)
+      {
+         q = partition (A, p, r);
+         quicksort(A, p, q-1);
+         quicksort(A, q + 1,r);
+      }
+}
+
+From the book, Introduction to Algorithms page 171
+</VERBATIM>
+
+---++++ !!Analysis
+<VERBATIM>
+Theta (n lg (n)) Quiksort would be best to organize that array because it works for all real numbers and it requires less memory space.
+</VERBATIM>
+
+---+++ b. Strings of n^{ %CALCULATE{$EVAL(1000 + $MOD(%PHI%,2000))}% } - 1</latex> characters.
+---++++ !!Algorithm
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+
+---++++ !!Analysis
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+
+---+++ Grader comments *[20/20]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 3 *[Constrained sorting, 25 points]*
+---+++ Pseudocode
+<VERBATIM>
+Write your pseudocode here
+</VERBATIM>
+
+---+++ Anaylsis
+<VERBATIM>
+Analysis of your own algorithm
+</VERBATIM>
+
+---+++ Grader comments  *[25/25]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 4 *[Big Sorting, 30 points]*
+%CODE{"cpp"}%
+
+   // Put your code here
+
+%ENDCODE%
+
+---+++ Grader comments  *[30/30]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+---
+
+TWIKIFILEEND

@@ -1,0 +1,141 @@
+---+EC330 - Spring 2012 - Homework 3
+%TOC%
+
+---++_Assigned:_  Thursday, February 19
+---++_Due:_  Thursday, February 26 _at the beginning of class._
+COLLABORATED WITH RYAN O'FLAHERTY
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(JosephTierney),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(4+$MOD(%PHI%,3))}%
+-->
+
+---
+---++ Problem 1 *[Strange Sorting, 25 points]*
+---+++ 1a
+---++++ !!Result
+<VERBATIM>
+{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+No, this will not correctly sort all arrays.
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+A counter example would be {9, 80, 7, 5, 6, -2, -35, 25, 1, 0} which will sort incorrectly.
+</VERBATIM>
+
+---+++ 1b
+---++++ !!Result
+<VERBATIM>
+{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+This will sort every array properly.
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+This would work because after each loop the next smallest value is in its place. However, this method has a long running time of n^2.
+</VERBATIM>
+
+---+++ 1c
+---++++ !!Result
+<VERBATIM>
+{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+This method of sorting will sort each array properly.
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+For each loop of through of the outer for loop the next largest four elements of the array are found. It work by iterating through the array and implementing bubble sort on n to the n=3 rd element in the array at one time. After it does bubble sort on the n+2 to n+4 elements and then ultimately repeats this process again.Worst case scenario for bubble sort alone is n^2 run time. This paired with the two other for loops means that the worst case scenario for this sorting method is n^4.
+</VERBATIM>
+
+---+++ Grader comments *[25/25]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 2 *[Special-case sorting, 20 points]*
+Provide _and analyze_ the most efficient algorithm you can for sorting an array of =n= items of the following type:
+---+++ a. Integers in the range -%PHI% to %PHI% (inclusive).
+---++++ !!Algorithm
+<VERBATIM>
+Radix Sort 
+</VERBATIM>
+
+---++++ !!Analysis
+<VERBATIM>
+Radix Sort would be the best option to sort this range of numbers. Radix Sort works best comparitively with very large numbers and works by sorting each number by sorting them based on the n^th digit and then the nTh-1 digit and so on. The run time of this operation is K(n+d).
+</VERBATIM>
+
+---+++ b. Strings of n^{ %CALCULATE{$EVAL(1000 + $MOD(%PHI%,2000))}% } - 1</latex> characters.
+---++++ !!Algorithm
+<VERBATIM>
+Bucket Sort
+</VERBATIM>
+
+---++++ !!Analysis
+<VERBATIM>
+Buck Sort is the best option for this type of sort because the exact number of ascii values is known meaning that you can establish clear bounds for this method or sorting. The best case scenario for bucket for is order n.
+</VERBATIM>
+
+---+++ Grader comments *[20/20]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 3 *[Constrained sorting, 25 points]*
+---+++ Pseudocode
+<VERBATIM>
+int b[log base 12 of n hat][n hat - 1]
+min = b[0][0]
+index = 0
+
+for jj to log base 12 of n hat
+     for ii to n hat - 1
+          b[jj][fetch(ii,jj)]
+
+for jj = 0 to log base 12 of n hat
+     for ii = 0 to n hat 
+          if b[jj][ii] < min
+               min = b[jj][ii]
+               index = ii
+
+     missing = missing + index(12^jj)
+
+</VERBATIM>
+
+---+++ Anaylsis
+<VERBATIM>
+This algorithm implements a type of bucket sorting. First a matrix was created that is log base 12 of  n hat by n hat -1 and represented the "buckets". Then two for loops were used to get each bit from the elements of the orginal bit. Every time a specific number showed up for a certain bit the place in the matrix was incremented by one. Then i looked at the matrix and found the index in each array contained in the matrix to find the missing value.
+</VERBATIM>
+
+---+++ Grader comments  *[25/25]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 4 *[Big Sorting, 30 points]*
+%CODE{"cpp"}%
+
+   // Put your code here
+
+%ENDCODE%
+
+---+++ Grader comments  *[30/30]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+---
+
+TWIKIFILEEND

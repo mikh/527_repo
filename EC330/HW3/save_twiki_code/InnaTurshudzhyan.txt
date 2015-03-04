@@ -1,0 +1,212 @@
+---+EC330 - Spring 2012 - Homework 3
+%TOC%
+
+---++_Assigned:_  Thursday, February 19
+---++_Due:_  Thursday, February 26 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(InnaTurshudzhyan),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(4+$MOD(%PHI%,3))}%
+-->
+
+---
+---++ Problem 1 *[Strange Sorting, 25 points]*
+---+++ 1a
+---++++ !!Result
+<VERBATIM>
+[0,1,2,3,4,5,6,7,8,9,10,11]
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+No
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+[1,10,4,5,2,9,4,7,2,3]. n = 10, n/2 in this case is 9. When ii is 4 and jj is 4, it will swap these 2 numbers, without even comparing it to 5. ([1,2,3,( 4 ),2,5,( 4 ),7,9,10])
+</VERBATIM>
+
+---+++ 1b
+---++++ !!Result
+<VERBATIM>
+[0,1,2,3,4,5,6,7,8,9,10,11]
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+Yes
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+O(n^2), using integral approximation
+</VERBATIM>
+
+---+++ 1c
+---++++ !!Result
+<VERBATIM>
+[0,1,2,3,4,5,6,7,8,9,10,11]
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+Yes
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+The bubble sort will always sort only 6 elements => O(36), which is a constant time. So we only have 2 for loops to affect the runtime => O(n^2).
+</VERBATIM>
+
+---+++ Grader comments *[25/25]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 2 *[Special-case sorting, 20 points]*
+Provide _and analyze_ the most efficient algorithm you can for sorting an array of =n= items of the following type:
+---+++ a. Integers in the range -%PHI% to %PHI% (inclusive).
+---++++ !!Algorithm
+<VERBATIM>
+Counting Sort
+</VERBATIM>
+
+---++++ !!Analysis
+<VERBATIM>
+We should use the counting sort, because it will only take a linear time, but split it into 2 different cases for positive and negative numbers.(same procedure but with negative numbers).
+</VERBATIM>
+
+---+++ b. Strings of n^{ %CALCULATE{$EVAL(1000 + $MOD(%PHI%,2000))}% } - 1</latex> characters.
+---++++ !!Algorithm
+<VERBATIM>
+Radix Sort
+</VERBATIM>
+
+---++++ !!Analysis
+<VERBATIM>
+Because the string is so huge, the best way to sort it would be Radix sort.
+</VERBATIM>
+
+---+++ Grader comments *[20/20]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 3 *[Constrained sorting, 25 points]*
+---+++ Pseudocode
+<VERBATIM>
+//NOTE: According to one of the TF's fetch(i,0) will return the left most number. Ex: A[2] = {10,293}, fetch(1,0) = 2. 
+//So I based my solution on this assumption.
+
+
+int n; //the base of 10 - n^
+
+///FINDING THE POWER OF 10
+//////////checking where the bounds of the array are to find n
+for (int i = 1; fetch(i-1,0) == null; i = i*base) 
+{
+	n = i;
+}
+//////////end
+
+int digit = 0;//starts with 0th element
+int base = 10; //it's 10 in my case
+int temp; //temporary variable for a missing number
+int n = 100;//just an example - Assuming it's given
+int missing[log_base_n];//the array that represents a missing element
+bool check = false;//check if the digit is incremented
+int newArray[base];//array that stores elements (similar to counting sort)
+int power;
+
+for (i = 1; i<n; i = i*10)//if it's a power 2 of 10 will loop twice
+{
+	power = n;
+	if (check == false) //starting here
+	{
+		for (j = 0; j<n; j++)
+		{
+			newArray[fetch(j,digit)]++; //store the digits in an array
+		}
+	}
+	else if (check == true) //if the digit is 1, comes here
+	{
+		for (j = 0; j<n; j++)
+		{
+			if (fetch(j,digit - 1) == temp) //checking if one element is missing
+			{
+				newArray[fetch(j,digit)]++; //creating a new newArray
+			}
+		}
+
+	}
+	for (k = 0; k < base; k++)
+	{
+		if (newArray[k] == ((power - 1)/(base - 1) - 1)) //checking if one of the elements is missing
+		{
+			temp = k;
+			missing[digit] = k;
+			check = true;
+		}
+	}
+
+	digit++;
+	empty newArray;
+	power = power/base;
+}
+
+return missing;
+
+
+</VERBATIM>
+
+---+++ Anaylsis
+<VERBATIM>
+The way my solution works is: Ex: if n ^ is 100, the numbers are from 0 to 99 with one missing, 
+so I'm checking if the number of 1's, 2's ...9's is equal to (n^ - 1)/(base - 1), which in this case is 11. 
+In case the number is 10 => that one is missing. Now I take that missing number as a first digit and
+ loop through the next digits of, say, 9. I also store the numbers I get into an array (missing). 
+This will work for any bases and any n^s. 
+
+The running time would be O(nlog_(base)_(n) ) ) => O(nlogn), I'm not considering 
+the base for loop because that's constant time.
+</VERBATIM>
+
+---+++ Grader comments  *[25/25]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 4 *[Big Sorting, 30 points]*
+%CODE{"cpp"}%
+#include "bigIntSort.h"
+
+void bigIntSort::performSort() {
+
+//Implementation of the Insertion Sort    
+    int jj; 
+    bigInt* temp;
+
+    for (int ii = 1; ii < data.size(); ii++)
+    {
+        jj = ii; //start as the same numbers
+        //Looping through the array to sort it
+        while ((jj > 0) && (*data[jj] < *data[jj - 1])) 
+        {
+            temp = data[jj];
+            data[jj] = data[jj - 1];
+            data[jj - 1] = temp;
+            jj--;  
+        }  
+    }
+}
+
+%ENDCODE%
+
+---+++ Grader comments  *[30/30]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+---
+

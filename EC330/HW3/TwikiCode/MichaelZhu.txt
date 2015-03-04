@@ -1,0 +1,204 @@
+---+EC330 - Spring 2012 - Homework 3
+%TOC%
+
+---++_Assigned:_  Thursday, February 19
+---++_Due:_  Thursday, February 26 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(MichaelZhu),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(4+$MOD(%PHI%,3))}%
+-->
+
+---
+---++ Problem 1 *[Strange Sorting, 25 points]*
+---+++ 1a
+---++++ !!Result
+<VERBATIM>
+A[ ]= {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+No
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+The array doesn't work for an array not specifically in descending order. For example, given A[ ] = {4, 7, 6, 3, 0, 1, 2, 8, 9, 5, 10, 11], the final result is A[ ] = {2, 5, 6, 3, 0, 1, 4, 8, 7, 10, 11}. 
+This problem is about understanding the relationship between bounding and bound for-loops. The outer ii for-loop iterates through the last half of the array, but will switch with the first number in the first half of the array greater than it. 
+
+In this example, when ii== 11 and ii==10, nothing in the first half is greater. But when ii==9, and A[9]=5, when jj==1 and A[1]=7, there will be a swap. However, A[8]=9 and A[7]=8 don't swap, and the ii for-loop doesn't retrace, meaning that the final result for A[7] through A[11] is {... 8, 9, 7, 10, 11}. This is out of order and thus the code fails. 
+
+</VERBATIM>
+
+---+++ 1b
+---++++ !!Result
+<VERBATIM>
+A[ ]= {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+Yes
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+This is essentially selectionSort. In the body of the function itself, the single for-loop operation is runtime N. However, the for-loop is recursively called as ii increments until it reaches the end of the array and ii=jj. If we take jj to be the input size, then there are N calls of oneB() until the recursion ends. This in effect leads to a worst-case runtime of O(N^2). 
+</VERBATIM>
+
+---+++ 1c
+---++++ !!Result
+<VERBATIM>
+A[ ]= {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+Yes.
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+This problem is about understanding the way the for-loops work and how they interact with the bubbleSort calls. bubbleSort works by first moving the largest element to the most significant place in the array, then moving the second largest element to the second most significant place in the array, etc. The reason this overall code works is that the outer for-loop iterating ii ensures that bubbleSort is called enough times in order to cover all 12 elements in the array, and thus, fully sorts it. 
+
+The runtime would be N*N/2*C. The outer for-loop is N, then the inner for-loop is (N-6) since the termination condition is half that of the outer loop. Then we multiply this by the runtime of the operation within the nested for-loop. While the worst-case of the bubbleSort is N^2, in this case the input size is so small that we consider the runtime to be constant C. 
+
+Therefore, the worst-case is O(N^2). 
+
+</VERBATIM>
+
+---+++ Grader comments *[25/25]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 2 *[Special-case sorting, 20 points]*
+Provide _and analyze_ the most efficient algorithm you can for sorting an array of =n= items of the following type:
+---+++ a. Integers in the range -%PHI% to %PHI% (inclusive).
+---++++ !!Algorithm
+<VERBATIM>
+CountSort or MergeSort
+</VERBATIM>
+
+---++++ !!Analysis
+<VERBATIM>
+CountSort is the absolute fastest algorithm unless memory is a consideration, in which case MergeSort has a runtime of n*log(n). 
+</VERBATIM>
+
+---+++ b. Strings of n^{ %CALCULATE{$EVAL(1000 + $MOD(%PHI%,2000))}% } - 1</latex> characters.
+---++++ !!Algorithm
+<VERBATIM>
+RadixSort
+</VERBATIM>
+
+---++++ !!Analysis
+<VERBATIM>
+RadixSort is by far the best algorithm for sorting strings. The algorithm for RadixSort, key-indexed sorting, is divided into counting frequencies, computing cumulates, moving records, and copying back are individual, non-nested for-loops unlike the majority of the other examples. Therefore the runtime is O(k*N). 
+</VERBATIM>
+
+---+++ Grader comments *[20/20]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 3 *[Constrained sorting, 25 points]*
+---+++ Pseudocode
+<VERBATIM>
+// Author: Michael Zhu
+// Collaborator: Aidar Aidymbekov
+
+#include <iostream>
+#include <math.h>
+using namespace std;
+
+int main()
+{
+	int n = givenToUs; // We are given this from the TWiki. 
+	int base = 8; // Also given. 
+
+	int power = 1; // This is set up the while loop, since it needs to be 1 in order for the while condition to process. 
+	while (n / base != 0) // First of all we want to find nhat, for which we need to find how many times 8 fits into n.  
+	{
+		n = n / base;
+		power++;
+	}
+
+	int nhat = pow(base, power); // We raise the base to the power determined in the while loop in order to get nhat. 
+
+	int missingNumber[nhat]; // Initialize an array that will hold the missing Number, which will be returned at the end. 
+	int counters[8] = { 0 }; // The idea is that we know that there will be an equal number of occurences for the possible range of 
+			         // values. For example, for three digits in base 12, there are 12^3 = 1728 numbers. There will be 
+				 // 1728/12 = 144 occurences of 0's, 1's, ... 11's. 
+				 // Therefore, counters[0] will hold the number of occurences of 0 for a given digit. 
+				 // And counters[5] will hold the number of occurences of 5, etc. 
+
+	for (int jj = power-1; jj >=0; jj--) // The jj for-loop processes each of the digits, starting from the most significant digit. 
+	{
+		for (int ii = 0; ii < n_hat-1; ii++) // This goes through each
+		{
+			int num=fetch(ii, jj);
+			counters[num]++; // counters increments the index of the returned number
+			// at the end of this for loop, all indices in checkarray will be equal except one which will be
+			// 1 smaller than the rest. This smallest index is the digit which is missing in that place (one's place ten's place etc...)
+		}
+
+		// By the end of this for-loop block for a given value of jj, counters has been fully populated with the occurences of each number between 0-9 
+		// for the jj-th digit of the missing number. 
+
+		int min = counters[0]; // Now we need to find the value that occurred the least for the jj-th digit. 
+		int indexOfMin = 0;  
+
+		// This is a standard search-for-min/max for-loop that goes through the array of counters to find which value between 0 and 7 occurs least. That 
+		// gives us the value for the jj-th digit of the missing number. 
+		for (int h = 1; h < base; h++) 
+		{
+			if (counters[h] < min) 
+			{
+				indexOfMin = h;
+			}
+		}
+		counters[indexOfMin]++; 
+		missingNumber[jj] = indexOfMin; // assign the missing digit to it proper place in the missing number
+	}
+ 
+             // Now the nested for-loop is done and the missingNumber is determined. All that remains is to print it out using cout. 
+		cout << "The missing number in our base is: "; 
+
+		for (int k= jj; k>=0; k--)
+		{
+		cout << missingNumber[k]; 
+		}
+
+		cout << "."; 
+		return 0; 
+}
+
+
+</VERBATIM>
+
+---+++ Anaylsis
+<VERBATIM>
+Analysis of your own algorithm
+</VERBATIM>
+
+---+++ Grader comments  *[25/25]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 4 *[Big Sorting, 30 points]*
+%CODE{"cpp"}%
+
+   // Put your code here
+
+%ENDCODE%
+
+---+++ Grader comments  *[30/30]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+---
+
+TWIKIFILEEND

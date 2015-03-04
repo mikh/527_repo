@@ -1,0 +1,172 @@
+---+EC330 - Spring 2012 - Homework 3
+%TOC%
+
+---++_Assigned:_  Thursday, February 19
+---++_Due:_  Thursday, February 26 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(JackDolan),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(4+$MOD(%PHI%,3))}%
+-->
+
+---
+---++ Problem 1 *[Strange Sorting, 25 points]*
+---+++ 1a
+---++++ !!Result
+<VERBATIM>
+[0,1,2,3,4,5,6,7,8,9]
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+No
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+Counterexample: [1,3,7,8,1,4,0,6,9,4,2,0]
+</VERBATIM>
+
+---+++ 1b
+---++++ !!Result
+<VERBATIM>
+[0,1,2,3,4,5,6,7,8,9]
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+Yes
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+It works for all cases because in any size array, it moves the smallest element all the way to the left, then starts with the array except that lowest value.
+
+The running time is theta(n^2)
+</VERBATIM>
+
+---+++ 1c
+---++++ !!Result
+<VERBATIM>
+[0,1,2,3,4,5,6,7,8,9]
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+Yes
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+Works in all cases. This is because the algorithm takes every possible group of 4 consecutive elements and performs bubble sort on them n times. Because the groups of 4 all overlap with each other, by the end of the n'th bubble sort, the array would be completely sorted.
+</VERBATIM>
+
+---+++ Grader comments *[25/25]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 2 *[Special-case sorting, 20 points]*
+Provide _and analyze_ the most efficient algorithm you can for sorting an array of =n= items of the following type:
+---+++ a. Integers in the range -%PHI% to %PHI% (inclusive).
+---++++ !!Algorithm
+<VERBATIM>
+The algorithm here would be an altered radix sort. Radix sort is ideal here because you know the range of values that the elements can take, and n can be very large. The only item that needs to be altered is the negative component of the elements of the array. 
+
+First you would see how many negative and how many positive ints were in the array - (theta(n)). Then you would distribute all the negative ints into one array and all the positive ints into another - (theta(n)). Then you would perform radix sort on both arrays - ( 2*(8(n+10)) => theta(n) ) And finally you would combine the arrays into one full array by iterating over the negative array backwards, and then the positive one - (theta(n)).
+</VERBATIM>
+
+---++++ !!Analysis
+<VERBATIM>
+T(n) = theta(n)
+</VERBATIM>
+
+---+++ b. Strings of n^{ %CALCULATE{$EVAL(1000 + $MOD(%PHI%,2000))}% } - 1</latex> characters.
+---++++ !!Algorithm
+<VERBATIM>
+Radix sort from page 197 in Into to Algorithms, 3rd Edition (class textbook).
+</VERBATIM>
+
+---++++ !!Analysis
+<VERBATIM>
+Theta(n)
+</VERBATIM>
+
+---+++ Grader comments *[20/20]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 3 *[Constrained sorting, 25 points]*
+---+++ Pseudocode
+<VERBATIM>
+//we are given n
+//find #of digits in n
+
+int cnt1=0;
+int cnt2 = 0;
+while (n != 0)
+       cnt1++;
+       n = n/12;
+
+//computes n^ 
+int n_hat,temp = 12^cnt1;
+
+//finds # digits in n^
+while(temp != 0)
+      cnt2++;
+      temp = temp/12;
+
+//gets sum of ints from 0 to n^
+int sum = n_hat * (n_hat-1)*0.5;
+int sub_sum = 0;
+
+//gets sum of all integers in array
+for (i=0 to i=n_hat)
+    for (j=0 to j=cnt2)
+         sub_sum = sub_sum + ( (12^j) * (fetch(i,j)) );
+
+//answer will be the number that is missing from the array
+return sum-run_sum;
+</VERBATIM>
+
+---+++ Anaylsis
+<VERBATIM>
+Theta(n log n)
+</VERBATIM>
+
+---+++ Grader comments  *[25/25]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 4 *[Big Sorting, 30 points]*
+%CODE{"cpp"}%
+
+#include "bigIntSort.h"
+void bigIntSort::performSort() {
+	//Selection sort instead of bubble
+	for (int ii = 0; ii<data.size() - 1; ii++){
+		int minimum = ii;
+		for (int jj = ii + 1; jj < data.size(); jj++){
+			if (*data[jj] < *data[minimum]){
+				minimum = jj;
+			}
+		}
+		bigInt *temp = data[ii];
+		data[ii] = data[minimum];
+		data[minimum] = temp;
+
+	}
+}
+
+%ENDCODE%
+
+---+++ Grader comments  *[30/30]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+---
+
+TWIKIFILEEND

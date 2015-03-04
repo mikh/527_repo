@@ -1,0 +1,229 @@
+---+EC330 - Spring 2012 - Homework 3
+%TOC%
+
+---++_Assigned:_  Thursday, February 19
+---++_Due:_  Thursday, February 26 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(NicholasMaresco),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(4+$MOD(%PHI%,3))}%
+-->
+
+---
+---++ Problem 1 *[Strange Sorting, 25 points]*
+---+++ 1a
+
+i) 0 1 2 3 5 4 6 7 8 9
+ii) Yes, algorithms was tested on multiple arrays with n >= 10, and all arrays were
+	sorted correctly.
+iii) This algorithm is the traditional bubble sort, and it has a theta(n^2) worse run time
+---++++ !!Result
+<VERBATIM>
+The result when the algorithm is run on the given array
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+Yes or no
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+
+---+++ 1b
+
+i) 1 8 7 6 5 4 3 2 9 0
+ii) No, that algorithms does not sort properly
+iii) The output reported for 'i' is based on the input n = 10. The algorithm sorted neither in descending or ascending order.
+---++++ !!Result
+<VERBATIM>
+The result when the algorithm is run on the given array
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+Yes or no
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+
+---+++ 1c
+
+i)  0 1 2 3 5 4 6 7 8 9
+ii) No, the algorithm does not always sort arrays of n >= 10 
+iii) n = 12 yielded a "sorted" array of 3 4 5 6 7 8 9 10 11 32767 1960485624 32767
+---++++ !!Result
+<VERBATIM>
+The result when the algorithm is run on the given array
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+Yes or no
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+
+---+++ Grader comments *[25/25]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 2 *[Special-case sorting, 20 points]*
+Provide _and analyze_ the most efficient algorithm you can for sorting an array of =n= items of the following type:
+---+++ a. Integers in the range -%PHI% to %PHI% (inclusive).
+
+The following code depicts a heap algorithm. Worst case is T(n) = theta(n^2) but best case is T(n) = nlog(n + m).
+
+
+	A = inputArray{....}
+	maxElement = Max(A) 					            //iterate through array to find max value
+	int check_size = maxElement*2 + 1, B[check_size] 	//generate a int array of size maxElement*2+1 to hold all possible ints from
+							   							//negative to positive range
+    for(int kk = 0; kk < A_size; kk++)  				//set all elements of array to 0
+        B[kk] = 0;										//will keep track of how many times each number appear in input array
+    for(int ii = 0; ii < A_size; ii++)  				//loops through each element of input array
+    	B[A[ii] + maxElement]++;						//adds to each part that appears in input array
+    
+    
+    int position_tracker = 0;							//nested for loop ensures repeats are accounted for other
+    for(int ii = 0; ii < check_size; ii++){				//unfortunately run time will be theta(n^2) if array has non-unique elements
+    	for(int jj = 0; jj < B[ii] + 1; jj++){			//otherwise runtime complexity will be theta(n+m)
+    		position_tracker += jj;
+    		A[position_tracker] = ii + maxElement;
+    	}
+    	position_tracker++;
+    }
+		
+---++++ !!Algorithm
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+
+---++++ !!Analysis
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+
+---+++ b. Strings of n^{ %CALCULATE{$EVAL(1000 + $MOD(%PHI%,2000))}% } - 1</latex> characters.
+
+Algorithm:
+
+Radix Sort: sort method the specializes in sorting elements of the same length. This sort 
+will look at the individual digits in the strings and compare them so forth. 
+
+Analysis:
+
+Lower case chars would have to be checked for base10 values of 65~90 and upper case
+chars would have to be checked for 97~122 ASCII. The time complexity of this algorithm is nlog(n), so it was very efficient for sorting n strings of size n^(1598)-1 chars.
+---++++ !!Algorithm
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+
+---++++ !!Analysis
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+
+---+++ Grader comments *[20/20]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 3 *[Constrained sorting, 25 points]*
+
+Q3)
+
+//determine n^ from n
+//let this mysterious array be known as A[0....n^ - 1] which doesnt need to be sorted necessarily
+
+
+//solves for n^ which is the smallest power of 14 > n
+kk = 0 
+while continue until brokken
+	if n > 14^kk and n < n^(kk+1)
+		n^ = 14^(kk+1)
+		breakk while loop
+	else
+		kk++
+		
+//array must be sorted so that indicies can be properly compared in base 14 to the jjth least 
+//significant digit in base14 of the element of interest (ascending needed)
+sort(A)
+
+//kk is indicative of the exponent of 14, so kk indicates the 1's, ten's, hundred's place
+//equivalents in base14 that need to be check based on the n^ value
+for jj = 0; jj < kk+1; jj++
+
+//ii to n^ - 1 will ensure every element of A is compared
+	for ii = 0; ii < n^ - 1; ii++
+
+//compare the return of fetch with 0 ~ D of [0 to 14 - 1 in base 14]
+//if something is skipped or "!=" not equal then the loop will cancel and the A[ii] will be returned
+//indicating the missing number
+		if(fetch(ii,jj) != base14(0.....n^ - 1)) 
+			missing_num = A[ii]
+			breakk out of all loops
+			
+			
+/////PSEUDO WITHOUT COMMENTS/////
+
+kk = 0 
+while continue until brokken
+	if n > 14^kk and n < n^(kk+1)
+		n^ = 14^(kk+1)
+		breakk while loop
+	else
+		kk++
+sort(A)
+for jj = 0; jj < kk+1; jj++
+	for ii = 0; ii < n^ - 1; ii++
+		if(fetch(ii,jj) != base14(0.....n^ - 1)) 
+			missing_num = A[ii]
+			breakk out of all loops
+
+
+
+
+
+
+
+---+++ Pseudocode
+<VERBATIM>
+Write your pseudocode here
+</VERBATIM>
+
+---+++ Anaylsis
+<VERBATIM>
+Analysis of your own algorithm
+</VERBATIM>
+
+---+++ Grader comments  *[25/25]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 4 *[Big Sorting, 30 points]*
+%CODE{"cpp"}%
+
+   // Put your code here
+
+%ENDCODE%
+
+---+++ Grader comments  *[30/30]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+---
+
+TWIKIFILEEND

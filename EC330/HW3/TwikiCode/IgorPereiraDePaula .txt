@@ -1,0 +1,567 @@
+---+EC330 - Spring 2012 - Homework 3
+%TOC%
+
+---++_Assigned:_  Thursday, February 19
+---++_Due:_  Thursday, February 26 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(IgorPereiraDePaula),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(4+$MOD(%PHI%,3))}%
+-->
+
+---
+---++ Problem 1 *[Strange Sorting, 25 points]*
+---+++ 1a
+---++++ !!Result
+%CODE{"cpp"}%
+#include <iostream>
+
+using namespace std;
+
+// prototypes:
+void oneA(int* A,int n);
+
+template <class T> 
+void swap_temp(T& a, T& b);
+
+// main:
+int main(){
+	
+	int size = 10;
+	int arr[] = {9,8,7,6,5,4,3,2,1,0};
+	
+	cout << "before: ";//before
+	cout << "[ ";
+	for (int ii = 0; ii < size;ii++) {
+		cout << arr[ii] << " ";
+	}
+	cout << "]" << endl;
+
+	oneA(arr,size);//call function
+
+	cout << "after: ";//after
+	cout << "[ ";
+	for (int ii = 0; ii < size;ii++) {
+		cout << arr[ii] << " ";
+	}
+	cout << "]" << endl;
+
+	return 0;
+}
+
+void oneA(int* A,int n){
+	
+	for (int ii = n-1; ii > n/2; ii--) {
+		for (int jj = 0; jj < n/2; jj++) {
+			if(A[ii] <= A[jj])
+				swap_temp(A[ii],A[jj]);
+		}
+	}
+	
+}
+
+template <class T> 
+void swap_temp(T& a, T& b){
+	
+	/***_SWAP pieces_****/
+	T c(a);		a = b;			b = c;
+	/********************/
+	
+}
+
+
+////////////////////////////
+//
+// Questions:
+// 
+// (I) from output:
+// before: [ 9 8 7 6 5 4 3 2 1 0 ]
+// after: [ 0 1 2 3 5 4 6 7 8 9 ]
+// 
+// (II) 
+// it will. It must follow the given parameters:
+// 1. there are 10 or more "n" elements
+// 2. The array to be sorted has already been arraged in decreasing order
+// 
+// (III)
+// worst case for this algorithm is linear 
+// the first for loop T(n/2), the second, T(n/2)
+// comes down to T(n)
+//
+////////////////////////////
+%ENDCODE%
+
+---+++ 1b
+---++++ !!Result
+%CODE{"cpp"}%
+#include <iostream>
+
+using namespace std;
+
+// prototypes:
+void oneB(int* A,int n);
+
+template <class T> 
+void swap_temp(T& a, T& b);
+
+// main:
+int main(){
+	
+	int size = 10;
+	int arr[] = {9,8,7,6,5,4,3,2,1,0};
+	
+	cout << "before: ";//before
+	cout << "[ ";
+	for (int ii = 0; ii < size;ii++) {
+		cout << arr[ii] << " ";
+	}
+	cout << "]" << endl;
+
+	oneB(arr,size);//call function
+
+	cout << "after: ";//after
+	cout << "[ ";
+	for (int ii = 0; ii < size;ii++) {
+		cout << arr[ii] << " ";
+	}
+	cout << "]" << endl;
+
+	return 0;
+}
+
+void oneB(int* A,int n){
+	
+	
+	int smallest;
+	
+	if(n == 1){
+		return;
+	}else {
+		smallest = 0;
+		for (int loop = 0;  loop < n; loop++) {
+			if (A[loop] < A[smallest]){ smallest = loop; }
+		}
+		swap_temp(A[0],A[smallest]);
+		
+		int newVec[n-1];
+		for (int i; i < n-1;i++) {
+			newVec[i] = A[i+1];
+		}
+		
+		oneB(newVec,n-1); 
+	
+		
+	}
+	
+}
+
+template <class T> 
+void swap_temp(T& a, T& b){
+	
+	/***_SWAP pieces_****/
+	T c(a);		a = b;			b = c;
+	/********************/
+	
+}
+
+
+////////////////////////////
+//
+// Questions:
+// 
+// (I) from output:
+// before: [ 9 8 7 6 5 4 3 2 1 0 ]
+// after: [ 0 8 7 6 5 4 3 2 1 9 ]
+// 
+// (II) 
+// This algorithm won't correctly sort the whole array.
+// As we can see, as long as the first and last elements 
+// are flipped after "oneB" runs and corrrctly sorts everything else.
+// As we can see from the output, for any given size, the first and 
+// last elements will be in switched positions 
+// 
+// (III)
+// The worst case for this algorithm is linear.
+// theta(n). Looking at the recursiion we can see that 
+// the function will call itself until you reach the last element. When that happens,
+// the stacks start popping back up and by then all the elements on the array 
+// have already been sorted(besides first and last)  
+// The recurssion looks like this:
+//     T(n) = T(n-1) + 1;
+//
+////////////////////////////
+%ENDCODE%
+
+---+++ 1c
+---++++ !!Result
+%CODE{"cpp"}%
+#include <iostream>
+#include <iomanip>
+#include <vector>
+
+using namespace std;
+
+void BubbleSort(int* num, int numLength);
+	
+void oneC(int* A, int size);	
+	
+int main(){
+		
+		int size = 10;
+		int arr[] = {9,8,7,6,5,4,3,2,1,0};
+		
+		cout << "before: ";//before
+		cout << "[ ";
+		for (int ii = 0; ii < size;ii++) {
+			cout << arr[ii] << " ";
+		}
+		cout << "]" << endl;
+
+		oneC(arr,size);//call function
+
+		cout << "after: ";//after
+		cout << "[ ";
+		for (int ii = 0; ii < size;ii++) {
+			cout << arr[ii] << " ";
+		}
+		cout << "]" << endl;
+
+		return 0;
+	}
+
+
+void oneC(int* A, int size){
+	
+	static int c = 0;
+	
+	for (int ii = 0; ii < size-1; ii++) {
+		for (int jj = 0; jj < size-4;jj++) {
+			BubbleSort(A+jj,4);
+			cout << c++ << " ";
+		}
+		cout << endl;
+	}
+	
+}
+
+//this works! cool, alright, cool cool, alright
+void BubbleSort(int* num, int numLength)
+{
+	//from: http://mathbits.com/MathBits/CompSci/Arrays/Bubble.htm
+
+      int i, j, flag = 1;    // set flag to 1 to start first pass
+      int temp;             // holding variable
+      for(i = 1; (i <= numLength) && flag; i++)
+     {
+          flag = 0;
+          for (j=0; j < (numLength); j++)
+         {
+               if (num[j+1] < num[j]){
+                    temp = num[j];             // swap elements
+                    num[j] = num[j+1];
+                    num[j+1] = temp;
+                    flag = 1;               // indicates that a swap occurred.
+               }
+          }
+     }
+     return;   //arrays are passed to functions by address; nothing is returned
+}
+
+
+////////////////////////////
+//
+// Questions:
+// 
+// (I) from output:
+// before: [ 9 8 7 6 5 4 3 2 1 0 ]
+// after: [ 0 1 2 3 4 5 6 7 8 9 ]
+// 
+// (II) 
+// This algorithm correctly sorts teh array. 
+// The bubble sort algorithm is very stable for shorter sizes. 
+// If you run through the small 4-elements pieces, you'll see that 
+// the array will come out sorted and that process just happens over 
+// and over until all elements are sorted 
+// 
+// (III)
+// You have the outter loop contributing with:
+// 0 -> n == T(n)
+// and the inner loop always loops n-4 times.
+//
+// In this example, you can see that n was 10 and bubble sort was 
+// called (n-1)*(n-4) times == 9*6 == 54 times
+//
+// In addition to that, 
+//
+////////////////////////////
+%ENDCODE%
+
+---+++ Grader comments *[25/25]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 2 *[Special-case sorting, 20 points]*
+Provide _and analyze_ the most efficient algorithm you can for sorting an array of =n= items of the following type:
+---+++ a. Integers in the range -%PHI% to %PHI% (inclusive).
+%CODE{"cpp"}%
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int min(int* vec,int n){
+	int ret = vec[0];
+	for (int i = 0; i < n; i++) {
+		if(ret > vec[i]){
+			ret = vec[i];
+		}
+	}
+	return ret;
+}
+
+int max(int* vec, int n){
+int ret = vec[0];
+for (int i = 0; i < n; i++) {
+	if(ret < vec[i]){
+		ret = vec[i];
+	}
+}
+return ret;
+}
+
+
+void bucketSort(int arr[], int n)
+{
+	
+	//create empty bucket:
+	int n_min = min(arr,n); //cout << "min: " << n_min << endl;
+	int n_max = max(arr,n); ///cout << "max: " << n_max << endl;
+	int range = n_max - (n_min - 1);
+   	int* buckets = new int[range];
+	for (int i = 0; i < range;i++) {
+		buckets[i] = 0;
+	}
+
+
+	//store values in buckets:
+	int indx;
+	for (int i = 0; i < n; i++) {
+		indx = arr[i]; //cout << indx << "*";
+		buckets[indx-n_min]++;
+		//cout << buckets[indx-n_min] << " ";
+	}
+	
+	//recreate array:
+	int c = 0;
+	for (int i = 0; i < range; i++) {
+		if(buckets[i] != 0){
+			for (int j = 0; j < buckets[i]; j++) {
+				arr[c++] = i + n_min;
+			}
+		}
+	}
+  	
+}
+
+
+int main(){
+	
+	int  arr[] = {2,-3,4,-19,8,7,6,1,1,5,1,4,3,2};
+	    int n = sizeof(arr)/sizeof(arr[0]);
+		
+	    bucketSort(arr, n);
+	 
+	    cout << "Sorted array is \n";
+	    for (int i=0; i<n; i++)
+	       cout << arr[i] << " ";
+	    return 0;
+
+	return 0;
+}
+
+//////////////////////
+// Regarding the time complexity of this algorithm:
+//
+// the section that starts on line 30, creates the array. 
+// That's n time. For a given n being the size of the bucket list.
+//
+// the following section(starts on line 40) updates the bucket.
+// Time is m, the size of the array
+//
+// to finish it, you have the third section(starting at line 48)
+// taking n time to checkc all the values in the buckets.
+//
+// adding everything up, you get 2n+m, that turns out to be linear time 
+// theta(n) 
+//
+//////////////////////
+%ENDCODE%
+
+---+++ b. Strings of n^{ %CALCULATE{$EVAL(1000 + $MOD(%PHI%,2000))}% } - 1</latex> characters.
+---++++ !!Algorithm
+%CODE{"cpp"}%
+#include <iostream>
+#include <list>
+#include <string>
+#define size 5
+using namespace std;
+
+void MergeSortA(int low , int high);
+void MergeA(int low ,int mid ,int high);
+
+string currentArray[5];
+
+int main(){
+
+    for(int i = 0; i < 5; i++)
+        cin >> currentArray[i];
+
+    
+    MergeSortA(0,size-1); //pass indexes 
+    cout << "***"<< endl;1
+
+    for(int i = 0; i < 5; i++)
+        cout << currentArray[i] <<endl;
+
+    return 0;
+}
+
+void MergeSortA(int low , int high)
+{
+    int mid = 0;
+    if(low < high)
+    {
+        mid = ((low+high)/2);
+        MergeSortA(low , mid);
+        MergeSortA(mid+1,high);
+        MergeA(low,mid,high);
+    }
+}
+void MergeA(int low ,int mid , int high)
+{
+    int i = low, j = mid+1 , k = low;
+    string Temp[5];
+
+    while(i <= mid && j <= high)
+    {
+        if( currentArray[i] < currentArray[j] )
+        {
+            Temp[k].assign(currentArray[i]);
+            i++;
+        }
+        else
+        {
+            Temp[k].assign(currentArray[j]);
+            j++;
+        }
+        k++;
+    }
+    if(i > mid )
+    {
+        for(int h = j ;h <= high ; h++ )
+        {
+            Temp[k].assign(currentArray[h]);
+            k++;
+        }
+    }
+    else
+        for(int h = i; h<= mid ; h++ )
+        {
+            Temp[k].assign(currentArray[h]);
+            k++;
+        }
+   for(int i = low; i <= high ; i++) //copy from low to high
+   {
+       currentArray[i].assign(Temp[i]);
+   }
+
+//reference from: http://stackoverflow.com/questions/13535358/merge-sort-on-array-of-strings
+}
+
+////////////////////////
+//
+// This algorithm implements merge sort and the comparison is based on the alphabetical order.
+// Hence, in this case, you find this algorithm has time complexity theta(n*log(n));
+//
+////////////////////////////////////////////////////
+%ENDCODE%
+
+---+++ Grader comments *[20/20]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 3 *[Constrained sorting, 25 points]*
+---+++ Pseudocode
+%CODE{"python"}%
+base = 8;
+pos = ceil(log(n)/log(base)); 
+nhat = pow(base,pos);
+
+upperLimit = nhat-1;
+
+counts[base]= all zeros;
+for ii from 0 to length(array)
+    num = fetch(ii,0);
+    counts[num]++;
+
+missing = min(counts); 
+
+indices[length(array)/base];
+jj=0;
+for ii from 0 to length(array)
+    if fetch(ii,0) == missing
+        indices[jj] = ii; //stores the indices where the missing occurs
+	jj++;
+
+for ii from 0 to length(indices) // 1/base
+    for j from 0 to base-1
+	fetch(i,j)
+
+%ENDCODE%
+---+++ Anaylsis
+<VERBATIM>
+This algorithm will run on n^2
+</VERBATIM>
+
+---+++ Grader comments  *[25/25]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 4 *[Big Sorting, 30 points]*
+%CODE{"cpp"}%
+#include "bigIntSort.h"
+#include <algorithm>
+
+void bigIntSort::performSort() {
+    
+	//quickSort(data,0,(int)data.size()-1);
+
+   
+   for (int ii=0; ii<data.size(); ii++)
+       for (int jj=ii+1; jj<data.size(); jj++)
+           
+           // compare items at index ii and jj and swap if needed
+           if (*data[jj] < *data[ii]) {
+               // swap the two locations
+               bigInt *temp = data[ii];
+               data[ii]=data[jj];
+               data[jj]=temp;
+           }
+
+
+
+
+}
+%ENDCODE%
+
+---+++ Grader comments  *[30/30]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+---
+
+TWIKIFILEEND

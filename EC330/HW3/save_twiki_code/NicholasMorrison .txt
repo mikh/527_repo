@@ -1,0 +1,146 @@
+---+EC330 - Spring 2012 - Homework 3
+%TOC%
+
+---++_Assigned:_  Thursday, February 19
+---++_Due:_  Thursday, February 26 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(NicholasMorrison),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(4+$MOD(%PHI%,3))}%
+-->
+
+---
+---++ Problem 1 *[Strange Sorting, 25 points]*
+---+++ 1a
+---++++ !!Result
+
+[0,1,2,3,4,5,6,7,8,9]
+
+
+---++++ !!Correctly sort
+
+No
+
+
+---++++ !!Explanation & running time OR counterexample
+
+n=11 A=[10,9,8,7,6,0,1,2,3,4,5] does not correctly sort middle element
+
+
+---+++ 1b
+---++++ !!Result
+
+[0,1,2,3,4,5,6,7,8,9]
+
+
+---++++ !!Correctly sort
+
+Yes
+
+
+---++++ !!Explanation & running time OR counterexample
+
+oneB is a recursive implementation of selection sort so it will correctly sort all arrays with running time: <latex> \Theta (n^2) </latex>
+
+---+++ 1c
+---++++ !!Result
+
+[0,1,2,3,4,5,6,7,8,9]
+
+---++++ !!Correctly sort
+
+Yes
+
+---++++ !!Explanation & running time OR counterexample
+
+oneC employs bubblesort on 4 element blocks of an array, shifting the 4 elements each iteration. Therefore it will sort all arrays with running time: <latex> \Theta (n^2) </latex>
+
+---+++ Grader comments *[25/25]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 2 *[Special-case sorting, 20 points]*
+Provide _and analyze_ the most efficient algorithm you can for sorting an array of =n= items of the following type:
+---+++ a. Integers in the range -%PHI% to %PHI% (inclusive).
+---++++ !!Algorithm
+
+Bucket Sort - pg.201 
+
+---++++ !!Analysis
+
+The most efficient algorithm for sorting this array would be bucket sort. Immediately it seems ideal as it bases off the assumption that all elements will fall within a given range, which is provided. Its <latex> \Theta (n+k) </latex> average runtime beats all comparison sorts (<latex> \Theta (n log(n)) </latex>) as k (number of digits) is finite and equal to 8. Although asymptotically equivalent to radix sort, n+8 < 8n so it would be faster than radix sort for this case.
+
+---+++ b. Strings of n^{ %CALCULATE{$EVAL(1000 + $MOD(%PHI%,2000))}% } - 1</latex> characters.
+---++++ !!Algorithm
+
+Radix Sort - pg. 197-199
+
+---++++ !!Analysis
+
+The most efficient algorithm for sorting this array would be radix sort. Radix sort's average case runtime is <latex> \Theta (nk) </latex> where k is the number of digits. For this array, the maximum digits is known to be 1598. Therefore one can calculate the runtime is <latex> \Theta (1598n) </latex>. Asymptotically this is equal to (<latex> \Theta (n) </latex>). Bucket sort is also asymptotically linear, however, it is designed for sorting integer values and would be slowed by the necessary ASCII conversions while radix sort does not implicitly expect integer values.
+
+
+---+++ Grader comments *[20/20]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 3 *[Constrained sorting, 25 points]*
+---+++ Pseudocode
+%CODE{"cpp"}%
+
+int count = 0;
+while (n >= 14^count)
+    count++;
+
+int newA[A.size()]{};
+for i=0 to A.size()
+    for j=0 to count
+        newA[i] = newA[i] + (fetch(i,j))*14^j;
+
+insertionsort(newA);
+
+int missingnum;
+for i = 1 to A.size()
+    if newA[i] != newA[i-1] + 1  && newA[i] != newA[i-1] || newA[i] != newA[i+1]
+        missingnum = newA[i] - 1;
+    else if newA[i] != newA[i+1] - 1 && newA[i] != newA[i-1] || newA[i] != newA[i+1]
+        missingnum = newA[i] + 1;
+
+%ENDCODE%
+---+++ Anaylsis
+
+First the algorithm finds the number of possible digits for each element of A in base 14. Then it loops through A, fetching each digit for each number and converting them to base 10. Then the array is sorted by an insertion sort. The sorted array is then iterated through, looking for a number which is not preceded, or postceded by the expected number and accounting for possible repeats. This would imply there being a number missing.
+
+---+++ Grader comments  *[25/25]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 4 *[Big Sorting, 30 points]*
+%CODE{"cpp"}%
+
+void bigIntSort::performSort(){
+//Selection sort over data array
+    for (int i = 0; i < (data.size() - 1); i++){
+        int min = i;
+        for (int j = i+1; j < (data.size()); j++){
+            if (*data[j] < *data[min]){
+                min = j;
+            }
+        }
+        swap(data[i],data[min]);
+    }
+}
+
+%ENDCODE%
+
+---+++ Grader comments  *[30/30]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+---
+
+TWIKIFILEEND

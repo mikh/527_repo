@@ -1,0 +1,209 @@
+---+EC330 - Spring 2012 - Homework 3
+%TOC%
+
+---++_Assigned:_  Thursday, February 19
+---++_Due:_  Thursday, February 26 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(MaxLi),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(4+$MOD(%PHI%,3))}%
+-->
+
+---
+---++ Problem 1 *[Strange Sorting, 25 points]*
+---+++ 1a
+---++++ !!Result
+<VERBATIM>
+0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+No
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+If you put random numbers into the array, it does not sort it correctly. Also, it never actually looks at the last element. 
+</VERBATIM>
+
+---+++ 1b
+---++++ !!Result
+<VERBATIM>
+0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+Yes
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+n^2. The for loop takes n time. The recurrence call takes n-1 time. Therefore it is T(n-1) + T(n), which is theta (n^2). 
+</VERBATIM>
+
+---+++ 1c
+---++++ !!Result
+<VERBATIM>
+0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+Yes
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+n^2. The outside for loop takes n time. The inside for loop takes n time. The bubble sort call only sorts 4 elements, therefore making it constant time, so the whole thing takes n^2 time.
+</VERBATIM>
+
+---+++ Grader comments *[25/25]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 2 *[Special-case sorting, 20 points]*
+Provide _and analyze_ the most efficient algorithm you can for sorting an array of =n= items of the following type:
+---+++ a. Integers in the range -%PHI% to %PHI% (inclusive).
+---++++ !!Algorithm
+<VERBATIM>
+Radix Sort. 
+</VERBATIM>
+
+---++++ !!Analysis
+<VERBATIM>
+Radix Sort.  There are only 8 places, and as for the negative integers, the array can be broken into the positive integers and the negative integers. Then, both can be sorted with radix, and the negative can be inverted. 
+</VERBATIM>
+
+---+++ b. Strings of n^{ %CALCULATE{$EVAL(1000 + $MOD(%PHI%,2000))}% } - 1</latex> characters.
+---++++ !!Algorithm
+<VERBATIM>
+Radix Sort
+</VERBATIM>
+
+---++++ !!Analysis
+<VERBATIM>
+Radix sort can be used to sort characters, because they can be converted to ASCII and then converted. 
+</VERBATIM>
+
+---+++ Grader comments *[20/20]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 3 *[Constrained sorting, 25 points]*
+---+++ Pseudocode
+<VERBATIM>
+int problem3(int n){
+	int nHat = 14;
+	while (n > nHat){
+		nHat *= nHat;
+	}
+
+	//get all the elements
+	int a[nHat];
+	int temp;
+	for (int i = 0; i < nHat; i++){
+		for (int j = largest digits place of nHat; j > 0; j--){
+			temp = fetch(i, digits place of nHat);
+			temp *= 10;
+		}
+		a[i] = temp;
+	}
+
+	//convert the elements from base 14 to base 10
+	for (int i = 0; i < nHat; i++){
+		a[i] = logbase14(a[i]);
+	}
+
+	//now we add all the elements up, and compare it to what we know the sum to be, since we are given, n, we know what the sum SHOULD be if all the elements are present in the array
+	int total;
+	int realTotal;
+	int b[nHat];
+	for (int i = 0; i < nHat; i++){
+		b[i] = i
+		realTotal += b[i];
+	}
+
+	for (int i = 0; i < nHat; i++){
+		total += a[i]
+	}
+
+	return realTotal - total;
+
+}
+</VERBATIM>
+
+---+++ Anaylsis
+n^2 time, because there is a nested for loop in order to find the entire number of the element of the array. everything else takes n time, which becomes negligible, because of the nested for loop required to grab all elements of the array.
+</VERBATIM>
+
+---+++ Grader comments  *[25/25]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 4 *[Big Sorting, 30 points]*
+%CODE{"cpp"}%
+
+#include "bigIntSort.h"
+
+void bigIntSort::performSort() {
+    int length = data.size();
+    bigInt maxNumber = *data[0];
+    for (int i = 0; i < length; i++){
+        if (maxNumber < *data[i]){
+            maxNumber= *data[i];
+        }
+    }
+
+    int whileLoopDigit = 0;
+    int maxNumberSize = maxNumber.digits.size();
+    bigInt tempArr[length];
+    while (whileLoopDigit < maxNumberSize){
+
+        int decimalBucket[10] = {0};
+        for (int i = 0; i < length; i++){
+            if (data[i]->digits.size() > whileLoopDigit){
+                decimalBucket[data[i]->digit(whileLoopDigit)]++;
+            }
+            else{
+                decimalBucket[0]++;
+            }  
+        }
+
+        for (int i = 0; i < 10; i++){
+            decimalBucket[i] += decimalBucket[i-1];
+        }
+
+        for (int i = length - 1; i >= 0; i--){
+            if (data[i]->digits.size() > whileLoopDigit){
+                tempArr[--decimalBucket[data[i]->digit(whileLoopDigit)]] = *data[i];
+            }
+            else{
+                tempArr[--decimalBucket[0]] = *data[i];
+            }
+        }
+        for (int i = 0; i < length; i++){
+            *data[i] = tempArr[i];
+        }
+
+        whileLoopDigit++;
+
+    }
+}
+
+
+
+%ENDCODE%
+
+---+++ Grader comments  *[30/30]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+---
+
+TWIKIFILEEND

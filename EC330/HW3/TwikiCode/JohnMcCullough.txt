@@ -1,0 +1,313 @@
+---+EC330 - Spring 2012 - Homework 3
+%TOC%
+
+---++_Assigned:_  Thursday, February 19
+---++_Due:_  Thursday, February 26 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(JohnCareaga),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(4+$MOD(%PHI%,3))}%
+-->
+
+---
+---++ Problem 1 *[Strange Sorting, 25 points]*
+---+++ 1a
+---++++ !!Result
+<VERBATIM>
+A = 0 1 2 3 4 5 6 7 8 9 10
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+No
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+Counter example:
+input: A = 0 1 2 3 4 5 9 8 7 6
+output: A = 0 1 2 3 4 5 9 8 7 6
+</VERBATIM>
+
+---+++ 1b
+---++++ !!Result
+<VERBATIM>
+A = 0 1 2 3 4 5 6 7 8 9 10
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+Yes
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+Explanation:
+This algorithm is similar to selection sort in that after each function call, the lowest integer is placed to the leftmost of the array. 
+Each time the function is re-called, the "left-end" of the array is shifted to the right one place. 
+This process continues until the "left-end" equals the "right-end" at which point we are done.
+
+Running Time:
+The first call results in iterating through all the elements of the array. The second call results in iterating through n-1 elements. The third time, n-2... and so on.
+Thus we have, (n)+(n-1)+(n-2)+(n-3)+...+1 = n(n+1)/2, which is O(n^2) 
+</VERBATIM>
+
+---+++ 1c
+---++++ !!Result
+<VERBATIM>
+A = 0 1 2 3 4 5 6 7 8 9 10
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+Yes
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+Explanation:
+The bubble sort function is called with an input size of 5. The function pushes the largest number from this subset to the "right-end" of the subset in the process of sorting the subarray.
+When the bubble sort function is called again, the subset is shifted over to the right by one, and the largest number is again pushed to the right edge.
+After the bubble sort function is called 0 to n-5 (AKA n-4)  times, the largest unsorted integer is moved to its correct location with respect to the original input array.
+After the above process is done n times (the outer loop), all the elements are sorted correctly.
+
+Running Time:
+The bubble sort worst case running time is O(n^2) but in this sorting algorithm, bubble sort always has an input of 5 elements, so we can consider it constant time.
+The inner most loop calls the bubble sort function n-4 times. --> (n-4) is O(n)
+The outer loop repeats the process n times. --> (n)n is O(n^2)
+Therefore, the worst case running time is O(n^2)
+ 
+</VERBATIM>
+
+---+++ Grader comments *[25/25]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 2 *[Special-case sorting, 20 points]*
+Provide _and analyze_ the most efficient algorithm you can for sorting an array of =n= items of the following type:
+---+++ a. Integers in the range -%PHI% to %PHI% (inclusive).
+---++++ !!Algorithm
+<VERBATIM>
+Merge sort (if memory is a concern) From the book
+Counting sort (if memory is not a concern) From the book
+</VERBATIM>
+
+---++++ !!Analysis
+<VERBATIM>
+Mergesort case:
+No matter what the input size or input permutation, the merge sort algorithm has a running time of T(n) = T(n/2) + T(n/2) + n
+The 2T(n/2) comes from the fact that the merge sort recursively calls itself twice with half the number of elements. 
+The n comes from merge operation, which combines two sorted lists to produce a new sorted list.
+Solving this recurrence using the master method (case two) yields:
+T(n) is O(nlgn)
+
+This algorithm was chosen because it guarantees a worst-case nlogn time complexity regardless of the permutation of the input.
+Quick sort is another candidate, but the worst-case running time is O(n^2). Since we are not considering memory usage, merge sort is advantageous.
+Heapsort is also a viable candidate, but this algorithm is more complicated.
+Bubble sort, insertion sort, and selection sort all have worst-case running time of O(n^2) 
+
+//////////////////
+
+Counting sort case:
+We are given the range of possible values in the array, which suggests we can use a non-comparative based algorithm to reduce the running time to O(n).
+Specifically we can use counting sort to sort the array.
+Since memory usage is not being considered, we can choose this algorithm over a compare-based nlogn algorithm.
+First, we must initialize an array B (with size equal to the total range) to zero. 
+In this case, the size of the array would be 2*78050950 + 1.
+The zeroth/first element of the would correspond to the number of times -78050950 appears in the array, and the last element would correspond to
+the number of times 78050950 appears in the array.
+To update the count of a number in the appropriate index, 
+We go through the entire input array element by element, updating array B each time.
+For each element we add 78050950 to obtain the appropriate index of B and then increment the value stored at that index.
+For example, if we find -78050950, the index 0 will be used and we will do: B[0] = B[0] + 1
+Once we have gone through all the elements of the input array, we can go through the elements of B from "left to right" to obtain the sorted list.
+When we encounter elements greater than 0, we can subtract 78050950 from the corresponding index and put the resulting number to the end of the sorted array.
+For example, if B[0] is 2, we would begin the sorted array with: {-78050950, -78050950, ...}
+
+Since we have to go through all elements of the input array of size n and then go through all elements of array B of size m,
+the running time is O(n+m). In this case, If n is much larger than 2*78050950 + 1, then it'd simply be O(n). 
+</VERBATIM>
+
+---+++ b. Strings of n^{ %CALCULATE{$EVAL(1000 + $MOD(%PHI%,2000))}% } - 1</latex> characters.
+---++++ !!Algorithm
+<VERBATIM>
+Radix sort (from the book)
+</VERBATIM>
+
+---++++ !!Analysis
+<VERBATIM>
+Radix sort is a non-comparative sorting algorithm so we can achieve big O of less than nlogn.
+Radix sort is useful since we know each string has a specific number of characters (digits).
+We can make buckets for each valid character and group the strings in these buckets according to the radix.
+We start with the least significant digit (the right-most character of the string) and place the all strings into the corresponding bucket.
+Starting from the lowest bucket (ie 'a') we re-order the the list of strings. 
+We repeat this process for the next adjacent character and so on until we have done it for all 1950 "digits."
+
+T(n) is thus O(d(n+k) where d = 1950 and k corresponds to the possible char values (for example in ASCII, k=255)
+...so for n >> d, k.... T(n) is O(n)
+
+This is a running-time-efficient algorithm since it is linear (which is better than the nlogn comparative alternatives). 
+Of course, we have to make buckets for each valid character which requires memory, but this is not considered.
+</VERBATIM>
+
+---+++ Grader comments *[20/20]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 3 *[Constrained sorting, 25 points]*
+---+++ Pseudocode
+<VERBATIM>
+// N corresponds to n_hat
+// Array A has N-1 elements, but values can range from 0 to N-1
+int missing_num(Array input[N-1], int n, int base)
+	
+	// 1. determine max number of digits
+	digits = 1
+	while(n/6 != 0)
+		n = n/6
+		digits++
+	
+	correct_count = base^(digits-1)		// number of times a digit should appear at a sig fig
+	Array inventory[0...base-1]			 // keeps track of number of times a digit appears
+	Array missing[digits]				    // missing number = concatenation of the elements in reverse order
+	
+	// 2. for each sig fig
+	for ii = 0 to digits-1
+		// reset digit counter for each sig fig
+		inventory[0...base-1] =  0	
+		
+		// 3. go through elements of input array, looking at a specific sig fig
+		// update number of times a digit appears
+		for jj = 0 to N-2
+			value = fetch(jj, ii)
+			inventory[value] = inventory[value] + 1
+
+		// 4. find missing digit for specific sig fig
+		// store digit in "missing" array 
+		for kk = 0 to base-1
+			if inventory[kk] < correct_count
+				missing[ii] = kk
+
+	// 5. convert array of digits to a number representing the missing number in the original base
+	output = 0
+	for ll = 0 to digits-1
+		output = output + missing[ll]*(10^ll)	// base 10 in order to represent as an int
+
+	return output
+</VERBATIM>
+
+---+++ Anaylsis
+<VERBATIM>
+// remember, N corresponds to n_hat
+// the numbered list refers to portions of the code above
+
+1.  The time required to obtain the maximum number of possible digits is log(N-1). 
+2.  The time required for the outer for loop is log(N-1). 
+    3.  The time required for this nested for loop is (N-1). 
+    4.  The time required to go through this for loop is (base). 
+5.  The time required to go through this for loop is log(N-1). 
+
+Thus T(n) = log(N-1) + log(N-1)*[(N-1) + base] + log(N-1) 
+
+-> The second term in the above equation is the dominating term.
+-> log(N-1) is O(log(N))
+-> Assuming base is a constant, then (N-1 + base) is O(N)
+
+-> Therefore, using the property below, T(n) is O(NlogN)
+
+property: f(n) * g(n) is O( O(f(n)) * O(g(n)) )
+
+</VERBATIM>
+
+---+++ Grader comments  *[25/25]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 4 *[Big Sorting, 30 points]*
+%CODE{"cpp"}%
+#include "bigIntSort.h"
+
+// basic insertion sort
+void bigIntSort::performSort(){
+
+    // used for swapping
+    bigInt temp;
+
+    // insert starting with the second element and ending in the last
+    // elements to the left of ii are sorted afer each loop
+    for(int ii = 1; ii < data.size(); ii++){
+        // save the bigInt we are inserting
+        temp = *data[ii];
+        // make jj be the index to the left of the element we are inserting
+        jj = ii - 1;
+        // shift sorted portion right, while finding where to insert the element
+        while ((int jj >= 0) && (temp < *data[jj])){
+            *data[jj+1] = *data[jj];
+            jj--;
+        }
+        // place the inserted element into the correct place.
+        *data[jj+1] = temp;
+    }
+}
+
+/*******************************************************************/
+// Quicksort version that works if you edit bigIntSort.h such that it has quickSort and partition functions
+
+/*
+#include "bigIntSort.h"
+#include <iterator>
+
+void bigIntSort::performSort(){
+    vector<bigInt *>:: iterator start = data.begin();
+    vector<bigInt *>:: iterator end = data.end()-1;
+    quickSort(start, end);
+}
+
+void bigIntSort::quickSort(vector<bigInt *>::iterator left, vector<bigInt *>::iterator right){
+    if (left < right){
+        vector<bigInt *>:: iterator pivot = partition(left, right);
+        bquickSort(left, pivot-1);
+        quickSort(pivot+1, right);
+    }
+}
+
+vector<bigInt *>:: iterator bigIntSort::partition(vector<bigInt *>::iterator left, vector<bigInt *>::iterator right){
+    vector<bigInt *>::iterator index = left;
+    vector<bigInt *>::iterator ii = left;
+    for (; ii != right; ii++){
+        if (*(*ii) < *(*right)){
+            bigInt temp = *(*ii);
+            *(*ii) = *(*index);
+            *(*index) = temp;
+            index++;
+        }
+    }
+    bigInt temp2 =  *(*right);
+    *(*right) = *(*index);
+    *(*index) = temp2;
+
+    return index;
+}
+*/
+%ENDCODE%
+
+<VERBATIM>
+EDIT: Thurday Feb. 26. 8:24pm
+In the insertion sort algorithm:
+variable 'jj' was declared outside the for loop when i submitted the code on to the upload page, and passed the tests.
+Afterwards, without thinking carefully, I moved the declaration into the while loop. As a result the above code won't compile, but what I submitted to the upload page is correct.
+In other words, when looking at the above code, refer to my previously submitted version where the jj is declared before the for loop.
+END_EDIT
+</VERBATIM>
+
+---+++ Grader comments  *[30/30]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+---
+
+TWIKIFILEEND

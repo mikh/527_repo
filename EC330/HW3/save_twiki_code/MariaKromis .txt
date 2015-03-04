@@ -1,0 +1,315 @@
+---+EC330 - Spring 2012 - Homework 3
+%TOC%
+
+---++_Assigned:_  Thursday, February 19
+---++_Due:_  Thursday, February 26 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(MariaKromis),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(4+$MOD(%PHI%,3))}%
+-->
+
+---
+---++ Problem 1 *[Strange Sorting, 25 points]*
+---+++ 1a
+i) RESULTS:
+
+returns the correctly sorted array when given the array [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
+
+
+i.e outputs: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+__________________________________________
+
+ii) CORRECTLY SORTED:
+
+No. This algorithm will not correctly sort any array passed to it.
+
+__________________________________________
+
+III) EXPLANATION & RUN TIME OR COUNTER EXAMPLE:
+
+This function will sort the elements onto the correct half of the array, but once it compares an element to one half of an array it will never compare it to the other half. 
+
+counter example:
+
+ when supplied input array [0, 4, 2, 1, 3, 7, 5, 9, 8, 6]
+
+the function will output the same array [0, 4, 2, 1, 3, 7, 5, 9, 8, 6]
+
+
+
+
+
+---++++ !!Result
+<VERBATIM>
+The result when the algorithm is run on the given array
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+Yes or no
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+
+---+++ 1b
+i) RESULTS:
+
+returns the correctly sorted array when given the array [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
+
+
+i.e outputs: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+__________________________________________
+
+ii) CORRECTLY SORTED:
+
+Yes. This algorithm will correctly sort any array passed to it.
+
+__________________________________________
+
+III) EXPLANATION & RUN TIME OR COUNTER EXAMPLE:
+
+This function finds the smallest element by tracking a "smallest" variable and comparing it to each element in the array. Once it is compared to every element in the array it is placed in the from of the array. Then this function recursively calls itself, but it chops off the smallest element that it emplaced in the front of the array.
+
+
+RUNTIME:
+This function will track the smallest element by comparing it to each number. i.e looking at every element, meaning "n" time. And it will do this recursively "n" times. meaning the function is THETA(n^2)
+---++++ !!Result
+<VERBATIM>
+The result when the algorithm is run on the given array
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+Yes or no
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+
+---+++ 1c
+i) RESULTS:
+
+returns the correctly sorted array when given the array [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
+
+
+i.e outputs: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+__________________________________________
+
+ii) CORRECTLY SORTED:
+
+Yes. This algorithm will correctly sort any array passed to it.
+
+__________________________________________
+
+III) EXPLANATION & RUN TIME OR COUNTER EXAMPLE:
+
+This function uses two for loops. The inner repeatedly calls bubblesort and passes it 3 elements at a time and iterates through the length of the array. This will essentially "bubble" up the two biggest elements to the back of the array. The outer for loop will repeat this process n times, i.e until the array is sorted. 
+
+RUNTIME:
+The inner for loop runs n-3 times and each time it runs it runs a function that will perform 4 comparisons (constant time). the outer for loop will run n times. This means that the entire function will have a run time THETA(n^2) 
+---++++ !!Result
+<VERBATIM>
+The result when the algorithm is run on the given array
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+Yes or no
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+
+---+++ Grader comments *[25/25]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 2 *[Special-case sorting, 20 points]*
+Provide _and analyze_ the most efficient algorithm you can for sorting an array of =n= items of the following type:
+---+++ a. Integers in the range -%PHI% to %PHI% (inclusive).
+
+ALGORITHM:
+
+Radix sort will have the fastest run time. Because it is a non-comparative sort and the range of possible integers is large (so it beats out counting sort)
+
+The reason either of these sorting algorithms are faster than any other method is because they are not comparison based sorting methods so they do not have the nlog(n) cap.
+
+_____________________________________________________
+
+
+ANALYSIS:
+
+Radix has a run time of THETA(d*(n+b)) where d are the number of digits in each number and b is the base. since they are both constants Radix with run in THETA(n) 
+---++++ !!Algorithm
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+
+---++++ !!Analysis
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+
+---+++ b. Strings of n^{ %CALCULATE{$EVAL(1000 + $MOD(%PHI%,2000))}% } - 1</latex> characters.
+
+
+ALGORITHM:
+Radix sort will have the fastest run time. Because it is a non-comparative sort and the range of possible integers is large (so it beats out counting sort)
+The reason either of these sorting algorithms are faster than any other method is because they are not comparison based sorting methods so they do not have the nlog(n) cap.
+
+_________________________________________________
+
+ANALYSIS:
+
+Radix has a run time of THETA(d*(n+b)) where d are the number of digits in each number and b is the base. since they are both constants Radix with run in THETA(n)
+---++++ !!Algorithm
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+
+---++++ !!Analysis
+<VERBATIM>
+Put your answer here
+</VERBATIM>
+
+---+++ Grader comments *[20/20]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 3 *[Constrained sorting, 25 points]*
+
+PSEUDOCODE:
+
+
+int findNum(A[], sizeA) {
+
+     n = sizeA+1;   
+
+     digits = log(n);
+
+     trueSum = 10^(digits-1)*45
+
+     runningSum = 0;
+
+     int missingNum[digits];     
+ 
+     for (ii = 0; ii<sizeA; ii++) {
+            
+            for( jj = 0; jj<digits << jj++) {
+                   
+                  runningSum = runningSum + fetch(ii,jj);
+             
+             }
+
+             missingNum[digits-1-ii] = trueSum - runningSum; 
+      
+     }
+
+     cout << "The missing number is: ";
+
+     for (kk = 0; kk < digits; kk++) {
+
+           cout << missingNum[kk];
+     }
+
+________________________________________________________________
+
+
+ANALYSIS:
+
+my function uses two for loops. The inner for loop runs log n times  and each time it calls a function that takes THETA(n). The outer for loop runs n times. So over all the function has a run time of THETA(n^2log(n)).
+
+---+++ Pseudocode
+<VERBATIM>
+Write your pseudocode here
+</VERBATIM>
+
+---+++ Anaylsis
+<VERBATIM>
+Analysis of your own algorithm
+</VERBATIM>
+
+---+++ Grader comments  *[25/25]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 4 *[Big Sorting, 30 points]*
+%CODE{"cpp"}%
+
+#include "bigIntSort.h"
+#include <math.h>
+
+void bigIntSort::performSort() {
+//An implementation of Merge Sort
+  if (data.size() <= 1) {
+    return;        //if empty or 1 element return array as is
+  }
+  else {
+    bigIntSort left;          //create two new bigIntSort instances to seperate the vector in half
+    bigIntSort right;
+    int middle = ceil((data.size())/2);       //find the middle of the current vector
+    for (int ii = 0; ii < middle; ii++) {
+      left.insert(data[ii]);                            //put first half of vector into the "left" bigIntSort class
+    }
+    for (int jj = middle;jj < data.size(); jj++) {
+      right.insert(data[jj]);                         //put second half of vector into the "right" bigIntSort class
+    }   
+
+
+    left.performSort();                             //recursively call performSort for each instance to cut in half repeatedly until they contain only one element
+    right.performSort();
+
+    data.clear();                                           //clear the data from the current array
+  
+    int mm = 0;                                                    //create an iterator to point to an element in the right and left class
+    int nn = 0;
+    while((mm < left.numItems()) && (nn < right.numItems())) {      //while there are elements left in each class
+      if(*(left.returnKth(mm)) < *(right.returnKth(nn))) {                   //choose the left element if it is smaller.
+        data.push_back(left.returnKth(mm));                                   //place this element on the back of the data vector
+        mm++;
+      }
+      else if (*(right.returnKth(nn)) < *(left.returnKth(mm))) {       //place the right element on the back of vector if it is smaller
+        data.push_back(right.returnKth(nn));
+        nn++;
+      }
+      else {
+        data.push_back(left.returnKth(mm));                                   //if they are equal choose left (it doesnt matter if you choose left or right)
+        mm++;
+      }
+    }
+    while(mm < left.numItems()) {                                                  //if extra elements left in left class put them on the back of the data vector
+      data.push_back(left.returnKth(mm));
+      mm++;
+    }
+    while(nn < right.numItems()) {
+      data.push_back(right.returnKth(nn));                               //if extra elements left in right class put them on the back of the data vector
+      nn++;
+    }
+    return;
+  }
+}
+
+%ENDCODE%
+
+---+++ Grader comments  *[30/30]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+---
+
+TWIKIFILEEND

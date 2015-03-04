@@ -1,0 +1,228 @@
+---+EC330 - Spring 2012 - Homework 3
+%TOC%
+
+---++_Assigned:_  Thursday, February 19
+---++_Due:_  Thursday, February 26 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(JesseBelanger),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(4+$MOD(%PHI%,3))}%
+-->
+
+---
+---++ Problem 1 *[Strange Sorting, 25 points]*
+
+---+++ 1a
+---++++ !!Result
+<VERBATIM>
+[0,1,2,3,4,5,6,7,8,9]
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+No
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+For example, the array [4,3,2,1,0,9,8,7,6,5] gets sorted to be [4,3,2,1,0,5,8,7,6,9]. 
+On the first scan, when ii=5, jj iterates from 4 to 9 (10/2 = 5, so it reads indexes 0 through 5). 
+5 and 9 get swapped. For the rest of the iterations, however, each of the iis are always greater
+ than all of the jjs. The upper and lower half each are never sorted relative to themselves, only to each other. 
+</VERBATIM>
+
+---+++ 1b
+---++++ !!Result
+<VERBATIM>
+[0,1,2,3,4,5,6,7,8,9]
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+Yes.
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+This algorithm should work for any array, since it will always find the smallest element in a partition 
+and move that to the front, then re-partition the rest and repeat. This has the effect of searching out
+the first smallest, then second smallest and so on.
+
+Worst case running time is O(n^2). T(n) = n + T(n-1) where n is from the for loop, and T(n-1) from the recursion.
+</VERBATIM>
+
+---+++ 1c
+---++++ !!Result
+<VERBATIM>
+[0,1,2,3,4,5,6,7,8,9]
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+Yes.
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+This algorithm should work for any array by bubbling the numbers into order by the
+three biggest at a time. After one iteration from j=0 to n-4, the three largest numbers
+ are sorted into place, the next iteration places the next three largest, and so on. 
+Though the intermediate sorts sometimes shuffle numbers out of order, the elements
+ are traversed enough times (due to the outer for) that everything gets shuffled into place.
+
+The worst case running time is O(n^2), resulting from the nested for loop structure. 
+While BubbleSort has a worst case running time proportional to n^2, it only factors 
+into this algorithm as a constant, since it is always being run on four elements. 
+</VERBATIM>
+
+---+++ Grader comments *[25/25]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 2 *[Special-case sorting, 20 points]*
+Provide _and analyze_ the most efficient algorithm you can for sorting an array of =n= items of the following type:
+---+++ a. Integers in the range -%PHI% to %PHI% (inclusive).
+---++++ !!Algorithm
+<VERBATIM>
+In terms of running time alone, doing a modified counting sort would provide the fastest result,
+ since counting sort is linear. The algorithm I propose would first scan over the array to shift all 
+negative values - in no particular order - to the left of the leftmost positive value (keeping the 
+index of that value so that the array can be partitioned). Then a greatest to least counting sort 
+would be done on the absolute values of the negative partition, and a least to greatest counting
+ sort would be done on the positive partition. These two partitions could then be joined back together 
+without comparison, since they were each previously partitioned based on relationship to 0. There are
+ some severe memory drawbacks to this, though, which would make this less efficient overall than a 
+function which took longer time, but had n < 2*78010167. 
+
+If memory is a consideration, then doing mergeSort on the array would probably be the best of both worlds,
+since mergeSort has one of the fastest average times of all of the comparison based sorts, and has a better
+worst time than quickSort. It also would take much less space than doing a counting sort. Even though the range
+of potential values is very large, a standard mergeSort would work here:
+
+mergeSort(int inArray[ ], int n)
+     left[ ] = inArray[0...n/2]
+     right[ ] = inArray[n/2+1...n-1]
+
+     left = mergeSort(left, n/2)
+     right = mergeSort(right, n/2)
+
+     merge(left,right)
+
+</VERBATIM>
+
+---++++ !!Analysis
+<VERBATIM>
+Each of the components of the modified counting sort method described would take
+ time proportional to n (scanning n items in an array, joining two arrays with n total elements).
+ Counting sort itself is known to take Theta(n+m) time, where m = 78010167 in this case.
+ So overall the time is proportional to n. However, the space would be proportional to m,
+ and we'd need to have two arrays of 78010167 elements each. That would be a lot 
+
+MergeSort is known to take Theta(nlogn) time at best, worst, and average. This doesn't
+ beat the time of counting sort, but the space requirement would be approximately O(n), 
+which would be better than that of counting sort as long as n was less than 2*78010167. 
+If n was much larger, than counting sort would be the much better choice.
+</VERBATIM>
+
+---+++ b. Strings of n^{ %CALCULATE{$EVAL(1000 + $MOD(%PHI%,2000))}% } - 1</latex> characters.
+---++++ !!Algorithm
+<VERBATIM>
+Radix sort would be the most effective algorithm here, since (non-extended) ASCII 
+strings are analogous to numbers in base 128. Radix sort lends itself especially well
+to the sorting of large numbers with an equal amount of digits in each, so the algorithm 
+would behave optimally for this application. In this case, we have n strings of 1167 characters,
+each with 128 possible values. In light pseudocode:
+
+radixSort(string arrayA[ ], int n)
+     for i = 0 to 1167-1     // iterate through each char of the string, assuming char 0 is rightmost
+          countingSort arrayA elements[0...n-1] on char i
+
+Using a stable sort on the digits is important to correctly sorting the entire array overall. Stable sorting
+preserves the work done to sort previous digits. Such a stable sort would require a little bit of memory
+so that it could remember the original order of strings with the same char value in the same column
+(a linked list could be used).
+</VERBATIM>
+
+---++++ !!Analysis
+<VERBATIM>
+Radix sort is known to take Theta(k(n+d) time when the underlying stable sort
+ takes Theta(n+k) times (as counting sort does), so this would take
+Theta(1167(n+128)) time, i.e. Theta(n).
+</VERBATIM>
+
+---+++ Grader comments *[20/20]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 3 *[Constrained sorting, 25 points]*
+---+++ Pseudocode
+<VERBATIM>
+nHat = 13^(ceiling[log base 13 of n])
+numDigits = floor[log base 13 of nHat] + 1
+
+count[nHat] = {0,...,0}     //Array where each index corresponds to a potential digit in base 13
+missing[numDigits]
+
+for(place = 0 to numDigits)
+     for (aElement = 0  to nHat-1)
+          fetched = fetch(aElement, place)     // Returns a value between 0 and nHat-1
+          count[fetched] += 1     // tally number of each digit found
+     kk = 0
+     for (ii = 0 to 12)
+          if count[ii] < nHat/13     // nHat/13 is the expected number of each digit
+               missingNum[kk] = ii     // Store digit in an array, where the missing number is built digit by digit
+     reset all indices of count to 0
+
+// Converts elements of array back into the number they represent
+for hh = 0 to numDigits
+     number  += missingNum[hh]*13^hh
+
+return number
+</VERBATIM>
+
+---+++ Anaylsis
+<VERBATIM>
+This algorithm is Theta(nlogn). The outermost loop runs logn times. nHat is 13^logbase_13 of n = n, so 
+numDigits is logbase_13 n. Then the first inner loop runs nHat times, which we just determined is basically
+n. The second for loop runs a constant amount of times. So in total the nested for loop structure takes nlogn.
+The second main-level for loop runs n times, but nlogn is still the dominant term.
+</VERBATIM>
+
+---+++ Grader comments  *[25/25]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 4 *[Big Sorting, 30 points]*
+%CODE{"cpp"}%
+void bigIntSort::performSort() {
+
+    int gap,jj,kk;
+    int gaps[8] = {701,301,132,57,23,10,4,1};   // Ciura Gap Sequence for Shell Sort
+
+    for (int ii = 0; ii < 8; ii++) {    // Use each of the gaps in the sequence
+        gap = gaps[ii];
+
+        for (jj = gap; jj < data.size(); jj++) {
+            bigInt temp = *data[jj];
+            
+            for (kk = jj; kk >= gap && temp < *data[kk - gap]; kk -= gap) { 
+                *data[kk] = *data[kk - gap];    // If two elements are out of order, swap them across the gap
+            }
+            *data[kk] = temp;   // Either put the temp value back where you got it from, or complete the swap
+        }
+    }
+}
+
+%ENDCODE%
+
+---+++ Grader comments  *[30/30]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+---
+
+TWIKIFILEEND

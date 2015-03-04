@@ -1,0 +1,212 @@
+---+EC330 - Spring 2012 - Homework 3
+%TOC%
+
+---++_Assigned:_  Thursday, February 19
+---++_Due:_  Thursday, February 26 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(NicholasBoukis),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(4+$MOD(%PHI%,3))}%
+-->
+
+---
+---++ Problem 1 *[Strange Sorting, 25 points]*
+---+++ 1a
+---++++ !!Result
+[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+---++++ !!Correctly sort
+Yes.
+
+---++++ !!Explanation & running time OR counterexample
+It's a simple sorting algorithm that compares the latter half of the array to the first half. Every element is compared. Has a running time of Theta(n<sup>2</sup>).
+
+---+++ 1b
+---++++ !!Result
+[9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
+
+---++++ !!Correctly sort
+Yes, but in descending order.
+
+---++++ !!Explanation & running time OR counterexample
+This algorithm essentially finds the largest element and swaps it with the first element in the current recursive iteration. It then runs again but with (n-1) elements starting from the second index and so on until it only has the last element to deal with (ii == jj). Worst case it has a running time of n(n+1)/2 which is Theta(n<sup>2</sup>).
+
+---+++ 1c
+---++++ !!Result
+[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+---++++ !!Correctly sort
+Yes.
+
+---++++ !!Explanation & running time OR counterexample
+Although quite inefficient, this sorting algorithm gets the job done by iteratively bubble sorting 4 numbers at a time, n times. Has a running time of Theta(n<sup>2</sup>) as well.
+
+---+++ Grader comments *[25/25]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 2 *[Special-case sorting, 20 points]*
+Provide _and analyze_ the most efficient algorithm you can for sorting an array of =n= items of the following type:
+---+++ a. Integers in the range -%PHI% to %PHI% (inclusive).
+---++++ !!Algorithm
+Counting Sort
+
+---++++ !!Analysis
+Has a time complexity of Theta(n + 2M) where M is the maximum range of (-M + 1) -> (M - 1). In this case M = 82220599, giving a running time of Theta(n + 164441198).
+
+
+---+++ b. Strings of n^{ %CALCULATE{$EVAL(1000 + $MOD(%PHI%,2000))}% } - 1</latex> characters.
+---++++ !!Algorithm
+Radix Sort
+
+---++++ !!Analysis
+Has a time complexity of Theta(k(n+d)) where is the amount of "digits" and d is the range. In this case, assuming regular ASCII characters, k=1598 and d=92 giving a running time of Theta(1598n + 147016)
+
+---+++ Grader comments *[20/20]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 3 *[Constrained sorting, 25 points]*
+---+++ Pseudocode
+%CODE{"cpp"}%
+int findMissingNum(int A[0...n-1])
+{
+int size = (size of A) + 1;
+
+//Calculate the power of 14
+int power = size^(1/14);
+
+//Summation of x from x=1 to 14^n
+int actualSum = 2^(power-1) * ( 7^power + 98^power);
+
+//Sum to compare with the actual sum of 1 to 14^n
+int calculatedSum = 0;
+
+//Iterate through the array
+for(ii = 0 -> (size - 2))
+{
+//For each index of the array, convert to decimal
+for(jj = (power - 1) -> 0)
+{
+//Assuming fetch() returns 10-13 for A-D
+calculatedSum += fetch(ii, jj) * 14^jj;
+}
+}
+
+//Return difference
+return actualSum - calculatedSum;
+}
+
+%ENDCODE%
+
+---+++ Anaylsis
+My algorithm runs in Theta(kn) time, where k = the amount of digits of each number in base 14 ("power" in the pseudocode). The algorithm simply iterates through the array to calculate the sum, which is in linear time. Finding the size of the array should be in constant time if you do sizeof(A)/sizeof(*A).
+
+---+++ Grader comments  *[25/25]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 4 *[Big Sorting, 30 points]*
+%CODE{"cpp"}%
+#include "bigIntSort.h"
+#include <math.h>
+#include <cstdlib>
+
+void countingSort(vector<bigInt *> &data, long long max, long long min)
+{
+	//Size of the data set
+	int size = data.size();
+
+	//Contains the number of instances of each bigInt in the data set in the range min -> max
+	vector<long long> numInstances((max + 1) - min);
+    
+    //Go through the array and increment the index of the current value
+    for (int ii = 0; ii < size; ii++)
+    {
+    	//Current value
+    	long long value = atoll((*data[ii]).print().c_str());
+       
+       	//Convert index
+     	long long actualIndex = value - min;
+        numInstances[actualIndex]++;
+    }
+
+    //Iterate through numInstances and look at indexes that are greater than zero
+    int currIndex = 0;
+    for (int ii = 0; ii <= (max - min); ii++)
+    {
+    	if(numInstances[ii] >= 1)
+    	{
+	    	for(int jj = 0; jj < numInstances[ii]; jj++)
+	    	{
+	    		//Reset the values in the data set
+	    		data[currIndex] = new bigInt(ii + min);
+	    		currIndex++;
+	    	}
+   		}
+    }
+} 
+
+void bubbleSort(vector<bigInt *> &data)
+{
+    for (int ii = 0; ii< data.size(); ii++)
+    {
+        for (int jj = ii + 1; jj < data.size(); jj++)
+        { 
+            //Check if value at index jj is smaller than value at index ii
+            if (*data[jj] < *data[ii])
+            {
+                //If it is, swap the two values
+                bigInt *temp = data[ii];
+                data[ii] = data[jj];
+                data[jj] = temp;
+            }
+        }
+    }
+}
+
+void bigIntSort::performSort() {
+	
+	//Find the maximum and the minimum numbers in the data set
+	long long maxValue = atoll((*data[0]).print().c_str());
+    long long minValue = maxValue;
+    for (int ii = 1; ii < data.size(); ii++)
+    {
+    	long long value = atoll((*data[ii]).print().c_str());
+
+    	if (value > maxValue)
+    	{
+            maxValue = value;
+    	}
+
+    	else if (value < minValue)
+    	{
+            minValue = value;
+    	}
+    }
+
+    //If the data set is a reasonable size, just use bubbleSort
+    if(data.size() < 300)
+    {
+    	bubbleSort(data);
+    }
+
+    //If the data set is bigger, use countingSort
+    else
+    {
+    	countingSort(data, maxValue, minValue);
+	}
+}
+%ENDCODE%
+
+---+++ Grader comments  *[30/30]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+---
+
+TWIKIFILEEND

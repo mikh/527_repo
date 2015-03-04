@@ -1,0 +1,238 @@
+---+EC330 - Spring 2012 - Homework 3
+%TOC%
+
+---++_Assigned:_  Thursday, February 19
+---++_Due:_  Thursday, February 26 _at the beginning of class._
+
+<!--
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(JiehongBrandonChung),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(4+$MOD(%PHI%,3))}%
+-->
+
+---
+---++ Problem 1 *[Strange Sorting, 25 points]*
+---+++ 1a
+---++++ !!Result
+<VERBATIM>
+[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+No
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+The array [11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0] becomes [0, 1, 2, 3, 4, 6, 5, 7, 8, 9, 10, 11] (the 5 and 6 are not sorted correctly).
+</VERBATIM>
+
+---+++ 1b
+---++++ !!Result
+<VERBATIM>
+[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+Yes
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+This algorithm is selection sort. It iterates through each element in the given range to find the smallest and puts that at the front, then does so again starting from the next element. The worst-case running time is n^2 (n iterations for n recursions).
+</VERBATIM>
+
+---+++ 1c
+---++++ !!Result
+<VERBATIM>
+[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+</VERBATIM>
+
+---++++ !!Correctly sort
+<VERBATIM>
+Yes
+</VERBATIM>
+
+---++++ !!Explanation & running time OR counterexample
+<VERBATIM>
+It bubble sorts the array in sets of five starting from the beginning as many times as there are elements, so the running time is n^4 because bubble sort is n^2 nested in two n for loops.
+</VERBATIM>
+
+---+++ Grader comments *[25/25]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 2 *[Special-case sorting, 20 points]*
+Provide _and analyze_ the most efficient algorithm you can for sorting an array of =n= items of the following type:
+---+++ a. Integers in the range -%PHI% to %PHI% (inclusive).
+---++++ !!Algorithm
+<VERBATIM>
+I would implement a merge sort as described in the textbook.
+</VERBATIM>
+
+---++++ !!Analysis
+<VERBATIM>
+Merge sort runs in n log n time.
+</VERBATIM>
+
+---+++ b. Strings of n^{ %CALCULATE{$EVAL(1000 + $MOD(%PHI%,2000))}% } - 1</latex> characters.
+---++++ !!Algorithm
+<VERBATIM>
+Radix sort where the number of 'digits' is 1326 and the letters are represented in base 26.
+</VERBATIM>
+
+---++++ !!Analysis
+<VERBATIM>
+Runtime is 1326(n + 26).
+</VERBATIM>
+
+---+++ Grader comments *[20/20]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 3 *[Constrained sorting, 25 points]*
+---+++ Pseudocode
+<VERBATIM>
+#include <cmath>
+
+const int BASE = 12;
+
+int findMissingNum(int n)
+{
+	//calculate maximum possible value in the given array (as described in problem constraints) and number of digits
+	int maxVal = 0;
+	for(int exp = 1; n > maxVal; exp++)
+	{
+		maxVal = pow(BASE, exp);
+	}
+	int maxDigits = exp + 1;
+
+	//populate an array of arrays of digits using the fetch function (runs in n^2 time)
+	int** numArray = new int*[maxVal];
+	int* digitArray = new int[maxVal];
+	for(num = 0; num < maxVal; num++)
+	{
+		for(digit = 0; digit < maxDigits; digit++)
+		{
+			digitArray[digit] = fetch(num, digit);
+		}
+		numArray[num] = digitArray;
+	}
+	
+	//radix sort the generated array (runs in maxDigits*(n + BASE) time)
+	radixSort(numArray);
+	
+	//iterate until a number is missing (runs in n worst-case time)
+	for(int i = 0; i < maxVal; i++)
+	{
+		//digitArrayToInt converts an array of integers as digits to a single integer value
+		//e.g. digitArrayToInt([1, 2, 3]) returns 123
+		if(digitArrayToInt(numArray[i]) != i)
+			return i;
+	}
+}
+</VERBATIM>
+
+---+++ Anaylsis
+<VERBATIM>
+Creating an array to be accessed free of the restrictions of the single fetch function takes maxDigits*n^2 time, because it iterates through n numbers, maxDigits each, and fetch runs in n time.
+Radix sorting that array runs in maxDigits*(n + BASE) time, where BASE is 12 in this case.
+Finding the missing number in the sorted array runs in n time for worst-case, since it just loops through once until it finds the missing number.
+This function runs in maxDigits*n^2 + maxDigits*(n + 12) + n time, so it is &#952;(n^2).
+</VERBATIM>
+
+---+++ Grader comments  *[25/25]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+
+---++ Problem 4 *[Big Sorting, 30 points]*
+%CODE{"cpp"}%
+
+#include "bigIntSort.h"
+
+/*
+void bigIntSort::performSort() {
+    // An implementation of bubble sort
+    
+    for (int ii=0; ii<data.size(); ii++)
+        for (int jj=ii+1; jj<data.size(); jj++)
+            
+            // compare items at index ii and jj and swap if needed
+            if (*data[jj] < *data[ii]) {
+                // swap the two locations
+                bigInt *temp = data[ii];
+                data[ii]=data[jj];
+                data[jj]=temp;
+            }
+}*/
+
+//swap two bigInts
+void Swap(bigInt& a, bigInt& b)
+{
+	bigInt tmp = a;
+	a = b;
+	b = tmp;
+}
+
+//returns the point at which to split an array for quicksort
+int SplitArray(vector<bigInt*> array, bigInt pivot, int startIndex, int endIndex)
+{
+	int leftBound = startIndex;
+	int rightBound = endIndex;
+	
+	while(leftBound < rightBound)
+	{
+		while(pivot < *array[rightBound] && rightBound > leftBound)
+		{
+			rightBound--;
+		}
+		Swap(*array[leftBound], *array[rightBound]);
+		
+		while(!(pivot < *array[leftBound]) && leftBound < rightBound)
+		{
+			leftBound++;
+		}
+		Swap(*array[rightBound], *array[leftBound]);
+	}
+	return leftBound;
+}
+
+//quicksort a vector of bigInts
+void QuickSort(vector<bigInt*> array, int startIndex, int endIndex)
+{
+	bigInt pivot;// = *array[startIndex];
+	int splitPoint;
+	
+	if(endIndex > startIndex)
+	{
+		pivot = *array[startIndex];
+		splitPoint = SplitArray(array, pivot, startIndex, endIndex);
+		*array[splitPoint] = pivot;
+		QuickSort(array, startIndex, splitPoint - 1);
+		QuickSort(array, splitPoint + 1, endIndex);
+	}
+}
+
+void bigIntSort::performSort()
+{
+	QuickSort(data, 0, data.size() - 1);
+
+//	for(int i = 0; i < data.size(); i++)
+//	{
+//		cout << data[i]->print() << endl;
+//	}
+}
+
+%ENDCODE%
+
+---+++ Grader comments  *[30/30]*
+<VERBATIM>
+reserve for graders
+</VERBATIM>
+---
+
