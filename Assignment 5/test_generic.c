@@ -39,6 +39,8 @@ int main()
   // use "the_data" to print out the contents of ArrayA
   the_data = &ArrayA;
   printf("the_data now points to the float %f, %f, %f\n", *(float*) the_data, *(((float *) the_data) + 1), *(((float *) the_data) + 2));
+  printf("the_data now points to the float %f, %f, %f\n", (*(float*) the_data)[0], (*(float*) the_data)[1], (*(float*) the_data)[2]);
+
 
   return 0;
 }
