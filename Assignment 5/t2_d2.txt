@@ -1,0 +1,7 @@
+ Hello World! from child thread 140404388501248
+ Hello World! from child thread 140404378011392
+ Hello World! from child thread 140404367521536
+ Hello World! from child thread 140404357031680
+
+ main() after creating the thread.  My id is 140404396553984
+ Hello World! from child thread 140404346541824
