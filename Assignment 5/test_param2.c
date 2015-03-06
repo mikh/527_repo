@@ -6,7 +6,7 @@
 
 #include <pthread.h>
 
-#define NUM_THREADS 5
+#define NUM_THREADS 10
 
 /********************/
 void *work(void *i)
@@ -14,7 +14,7 @@ void *work(void *i)
   long int j, k;
   int f = *((int*)(i));  // get the value being pointed to
   int *g = (int*)(i);    // get the pointer itself
-
+  *g = (*g) + 1;
   for (j; j < 10000000; j++) k += j;  // busy work
 
   // printf("\nHello World from %lu with value %d\n", pthread_self(), f);
