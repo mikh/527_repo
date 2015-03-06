@@ -14,9 +14,9 @@ void *work(void *i)
   long int j, k;
   int f = *((int*)(i));  // get the value being pointed to
   int *g = (int*)(i);    // get the pointer itself
-  printf("g = %d - %d\n", g, *g);
+  printf("g = %lu - %d\n", g, *g);
   *g = (*g)++;
-  printf("g = %d - %d\n", g, *g);
+  printf("g = %lu - %d\n", g, *g);
 
   for (j; j < 10000000; j++) k += j;  // busy work
 
