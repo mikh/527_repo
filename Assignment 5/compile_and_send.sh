@@ -1,3 +1,3 @@
 git add *
-git commit -m "task 11 code"
+git commit -m "task 12 code"
 git push gg master
