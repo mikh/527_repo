@@ -25,12 +25,13 @@ int main(int argc, char *argv[])
   pthread_t threads[NUM_THREADS];
   int rc;
   long unsigned int t;
+  signed char t_c = -4;
 
   printf("\n Hello World!  It's me, MAIN!\n");
 
   for (t = 0; t < NUM_THREADS; t++) {
     printf("In main:  creating thread %ld\n", t);
-    rc = pthread_create(&threads[t], NULL, PrintHello, (void*) t);
+    rc = pthread_create(&threads[t], NULL, PrintHello, (void*) t_c);
     if (rc) {
       printf("ERROR; return code from pthread_create() is %d\n", rc);
       exit(-1);
