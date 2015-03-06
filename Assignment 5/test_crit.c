@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 
-#define NUM_THREADS 10
+#define NUM_THREADS 10000
 
 struct thread_data{
   int thread_id;
