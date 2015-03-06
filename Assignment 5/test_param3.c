@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 
-#define NUM_THREADS 5
+#define NUM_THREADS 6
 
 struct thread_data{
   int thread_id;
@@ -50,6 +50,8 @@ int main(int argc, char *argv[])
   for (t = 0; t < NUM_THREADS; t++) {
     thread_data_array[t].thread_id = t;
     thread_data_array[t].sum = t+28;
+    if(t == 5)
+      thread_data_array[t].sum = 1000;
     thread_data_array[t].message = Messages[t];
     printf("In main:  creating thread %ld\n", t);
     rc = pthread_create(&threads[t], NULL, PrintHello,
