@@ -3,7 +3,7 @@
 In main: created thread 1, which is blocked -- press a char and enter
 
    I, thread #0 (sum = 28 message = First Message) am now unblocked!
-
+s
 After joining
 
 GOODBYE WORLD! 

@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 
-#define NUM_THREADS 1    // NEED TO ADJUST Messages MANUALLY
+#define NUM_THREADS 2    // NEED TO ADJUST Messages MANUALLY
 
 struct thread_data{
   int thread_id;
@@ -27,7 +27,7 @@ void *PrintHello(void *threadarg)
   sum = my_data->sum;
   message = my_data->message;
 
-  //while (pthread_mutex_trylock(&mutexA));  // wait until released
+  while (pthread_mutex_trylock(&mutexA));  // wait until released
   
   printf("\n   I, thread #%lu (sum = %d message = %s) am now unblocked!\n",
 	 taskid, sum, message);
@@ -43,8 +43,8 @@ int main(int argc, char *argv[])
   struct thread_data thread_data_array[NUM_THREADS];
   int rc;
   long t;
-  char *Messages[NUM_THREADS] = {"First Message" /*,     //Adjust manually
-				 "Second Message",
+  char *Messages[NUM_THREADS] = {"First Message" ,     //Adjust manually
+				 "Second Message"/*,
 				 "Third Message",
 				 "Fourth Message",
 				 "Fifth Message" */ };
