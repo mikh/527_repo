@@ -1,0 +1,12 @@
+
+Hello World! 6  1
+Hello World! 10  10
+Hello World! 15  10
+Hello World! 15  10
+Hello World! 7  10
+Hello World! 15  10
+Hello World! 15  10
+Hello World! 8  10
+Hello World! 15  10
+Hello World! 10  10
+After creating the thread.  My id is 140696733218560, i = 10
