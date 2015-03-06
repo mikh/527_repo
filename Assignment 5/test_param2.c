@@ -34,6 +34,12 @@ int main(int argc, char *argv[])
   for(i = 0; i < NUM_THREADS; i++)
     values[i] = i;
 
+  printf("\n\nValues:\n");
+  for(i = 0; i < NUM_THREADS; i++){
+    printf("%d\t", values[i]);
+  }
+  printf("\n\n");
+
   for (i = 0; i < NUM_THREADS; ++i) {
     if ((i < NUM_THREADS) && pthread_create(&id[i], NULL, work, (void *)(values+i))) {
       printf("ERROR creating the thread\n");
@@ -53,11 +59,11 @@ int main(int argc, char *argv[])
     }
   }
 
-  printf("\n\nValues:");
+  printf("\n\nValues:\n");
   for(i = 0; i < NUM_THREADS; i++){
     printf("%d\t", values[i]);
   }
-
+  printf("\n\n");
   return(0);
 
 }/* end main */
