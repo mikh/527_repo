@@ -6,7 +6,7 @@
 
 #include <pthread.h>
 
-#define NUM_THREADS 10
+#define NUM_THREADS 1
 
 /********************/
 void *work(void *i)
