@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 
   for (i = 0; i < NUM_THREADS; ++i) {
     if (pthread_create(&id[i], NULL, work, (void *)(&i))) {
-      printf("ERROR creating the thread\n")
+      printf("ERROR creating the thread\n");
       exit(19);
     }
   }
