@@ -27,7 +27,7 @@ void *PrintHello(void *threadarg)
   sum = my_data->sum;
   message = my_data->message;
 
-  while (pthread_mutex_trylock(&mutexA));  // wait until released
+  //while (pthread_mutex_trylock(&mutexA));  // wait until released
   
   printf("\n   I, thread #%lu (sum = %d message = %s) am now unblocked!\n",
 	 taskid, sum, message);
