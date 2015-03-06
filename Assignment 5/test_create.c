@@ -12,6 +12,7 @@
 /***************************************************************/
 void *work(void *i)
 {
+	sleep(3);
   printf(" Hello World! from child thread %lu\n",
 	 pthread_self());
 
