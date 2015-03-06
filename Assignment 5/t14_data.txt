@@ -1,0 +1,37 @@
+
+ Hello World!  It's me, MAIN!
+In main:  creating thread 0
+In main:  creating thread 1
+Thread 0 printing before barrier 1 of 3
+Thread 0 printing before barrier 2 of 3
+Thread 0 printing before barrier 3 of 3
+In main:  creating thread 2
+Thread 1 printing before barrier 1 of 3
+Thread 1 printing before barrier 2 of 3
+Thread 1 printing before barrier 3 of 3
+In main:  creating thread 3
+Thread 2 printing before barrier 1 of 3
+Thread 2 printing before barrier 2 of 3
+Thread 2 printing before barrier 3 of 3
+In main:  creating thread 4
+Thread 3 printing before barrier 1 of 3
+Thread 3 printing before barrier 2 of 3
+Thread 3 printing before barrier 3 of 3
+
+After creating the threads.  My id is:  140411790587648
+Thread 4 printing before barrier 1 of 3
+Thread 4 printing before barrier 2 of 3
+Thread 4 printing before barrier 3 of 3
+Thread 0 printing after barrier 1 of 2
+Thread 0 printing after barrier 2 of 2
+Thread 1 printing after barrier 1 of 2
+Thread 1 printing after barrier 2 of 2
+Thread 2 printing after barrier 1 of 2
+Thread 2 printing after barrier 2 of 2
+Thread 3 printing after barrier 1 of 2
+Thread 3 printing after barrier 2 of 2
+Thread 4 printing after barrier 1 of 2
+Thread 4 printing after barrier 2 of 2
+
+After joining
+GOODBYE WORLD! 
