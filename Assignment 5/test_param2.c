@@ -12,7 +12,7 @@
 void *work(void *i)
 {
   long int j, k;
-  int f = *((int*)(i))+5;  // get the value being pointed to
+  int f = *((int*)(i));  // get the value being pointed to
   int *g = (int*)(i);    // get the pointer itself
 
   for (j; j < 10000000; j++) k += j;  // busy work
