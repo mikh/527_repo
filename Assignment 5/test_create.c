@@ -22,10 +22,11 @@ void *work(void *i)
 int main(int argc, char *argv[])
 {
   int arg,i,j,k,m;   	              /* Local variables. */
-  pthread_t id[NUM_THREADS];
+  pthread_t *id;
+  id = (pthread_t*) malloc(NUM_THREADS);
 
   for (i = 0; i < NUM_THREADS; ++i) {
-    if (pthread_create(&id[i], NULL, work, NULL)) {
+    if (pthread_create(*(id + i), NULL, work, NULL)) {
       printf("ERROR creating the thread\n");
       exit(19);
     }
