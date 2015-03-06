@@ -14,6 +14,7 @@ void *work(void *i)
   long int j, k;
   int f = *((int*)(i));  // get the value being pointed to
   int *g = (int*)(i);    // get the pointer itself
+  printf("g = %d - %d\n", g, *g);
   g++;
   printf("g = %d - %d\n", g, *g);
 
