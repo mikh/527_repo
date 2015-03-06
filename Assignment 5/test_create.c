@@ -12,7 +12,6 @@
 /***************************************************************/
 void *work(void *i)
 {
-	sleep(3);
   printf(" Hello World! from child thread %lu\n",
 	 pthread_self());
 
@@ -35,6 +34,7 @@ int main(int argc, char *argv[])
 
   printf("\n main() after creating the thread.  My id is %lu\n",
 	 pthread_self());
+	sleep(3);
 
   return(0);
 
