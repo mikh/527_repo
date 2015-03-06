@@ -1,0 +1,19 @@
+
+ Hello World!  It's me, MAIN!
+In main:  creating thread 0
+In main:  creating thread 1
+-4
+ Hello World!  It's me, thread # fffffffffffffffc ! 
+In main:  creating thread 2
+-4
+ Hello World!  It's me, thread # fffffffffffffffc ! 
+In main:  creating thread 3
+-4
+ Hello World!  It's me, thread # fffffffffffffffc ! 
+In main:  creating thread 4
+-4
+ Hello World!  It's me, thread # fffffffffffffffc ! 
+-4
+ Hello World!  It's me, thread # fffffffffffffffc ! 
+
+ It's me MAIN -- Good Bye World!
