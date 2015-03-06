@@ -14,7 +14,9 @@ void *work(void *i)
   long int j, k;
   int f = *((int*)(i));  // get the value being pointed to
   int *g = (int*)(i);    // get the pointer itself
-  *g = (*g) + 1;
+
+  *g = (*g)++;
+
   for (j; j < 10000000; j++) k += j;  // busy work
 
   // printf("\nHello World from %lu with value %d\n", pthread_self(), f);
@@ -28,9 +30,12 @@ int main(int argc, char *argv[])
 {
   int arg,i,j,k,m, t, len = 0;   	              /* Local variables. */
   pthread_t id[NUM_THREADS];
+  int values[NUM_THREADS];
+  for(i = 0; i < NUM_THREADS; i++)
+    values[i] = i;
 
   for (i = 0; i < NUM_THREADS; ++i) {
-    if ((i < NUM_THREADS) && pthread_create(&id[i], NULL, work, (void *)(&i))) {
+    if ((i < NUM_THREADS) && pthread_create(&id[i], NULL, work, (void *)(values+i))) {
       printf("ERROR creating the thread\n");
       exit(19);
     }
@@ -46,6 +51,11 @@ int main(int argc, char *argv[])
   for (t = 0; t < len; t++) {
     if (pthread_join(id[t],NULL)){ exit(19);
     }
+  }
+
+  printf("\n\nValues:");
+  for(i = 0; i < NUM_THREADS; i++){
+    printf("%d\t", values[i]);
   }
 
   return(0);
