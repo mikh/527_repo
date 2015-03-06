@@ -14,7 +14,7 @@ void *work(void *i)
   long int j, k;
   int f = *((int*)(i));  // get the value being pointed to
   int *g = (int*)(i);    // get the pointer itself
-  (*g)++;
+  g++;
 
   for (j; j < 10000000; j++) k += j;  // busy work
 
@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 
   for (i = 0; i < NUM_THREADS; ++i) {
     if (pthread_create(&id[i], NULL, work, (void *)(&i))) {
-      printf("ERROR creating the thread\n");
+      printf("ERROR creating the thread\n")
       exit(19);
     }
   }
