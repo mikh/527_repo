@@ -39,8 +39,24 @@ vector<string> load_hashes(string filename){
 
 vector<string> brute_force(vector<string> hashes, int password_length){
 	vector<string> passwords;
+
 	for(int ii = 0; ii < hashes.length(); ii++){
 		string c_h = hashes[ii];
-		
+
+	}
+}
+
+int get_base(char start, char end){
+	return end - start + 1;
+}
+
+string convert_to_string(int value, int base){
+	string ascii = "";
+
+	while(value > 0){
+		int offset = value/base;
+		if(offset == 0)
+		ascii += char('!' + offset);
+		value -= (offset * base);
 	}
 }
