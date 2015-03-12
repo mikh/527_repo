@@ -35,18 +35,20 @@ public:
 
 	string outputFilterBits(){
 		string o = "";
-		for(ii = 0; ii < length; ii++){
+		for(int ii = 0; ii < length; ii++){
 			o += convert_to_base_2(filter[ii]);
 			o += " ";
 		}
+		return o;
 	}
 
 	string outputBits(string item){
 		string o = "";
-		for(ii = 0; ii < item.length(); ii++){
+		for(int ii = 0; ii < item.length(); ii++){
 			o += convert_to_base_2(item[ii]);
 			o += " ";
 		}
+		return o;
 	}
 
 
@@ -65,11 +67,11 @@ public:
 	bool exists(string item){
 		bool answer = true;
 		vector<string> hashed = hash(item);
-		cout<<hashed[0]<<endl;
 		for(int ii = 0; ii < hashed.size(); ii++){
 			for(int jj = 0; jj < length; jj++){
-				if(filter[jj] & hashed[ii][jj] != hashed[ii][jj])
+				if(((int)filter[jj] & (int)hashed[ii][jj]) != (int)hashed[ii][jj]){
 					answer =  false;
+				}
 			}
 		}	
 		#ifdef VERIFY_FILTER
@@ -83,7 +85,7 @@ public:
 		int total = (correct + false_positive) + false_negative;
 		printf("\n\nBloom Filter Statistics\n");
 		printf("Correct = %d, False Positive = %d, False Negative = %d, Total = %d\n", correct, false_positive, false_negative, total);
-		printf("False Positive probability = %d, False Negative probability = %d\n", (int)((float)false_positive/(float)total*100.0), (int)((float)false_negative/(float)total*100.0));
+		printf("False Positive probability = %d%%, False Negative probability = %d%%\n", (int)((float)false_positive/(float)total*100.0), (int)((float)false_negative/(float)total*100.0));
 		printf("\n\n");
 	}
 
@@ -103,6 +105,18 @@ private:
 		return vec;
 	}
 
+	vector<string> hash(string item){
+
+	}
+
+	vector<string> position_hash(string item){
+		int number_of_instances = item.length()
+	}
+
+	vector<string> bitwise_hash(string item){
+
+	}
+
 	string pad_string(string item, int length, char c){
 		if(item.length() < length){
 			for(int ii = 0; ii < length - item.length(); ii++)
@@ -112,7 +126,7 @@ private:
 	}
 
 	string convert_to_base_2(int value){
-		string out = '';
+		string out = "";
 		while(value > 0){
 			if(value % 2 > 0){
 				out = "1" + out;
@@ -122,6 +136,8 @@ private:
 				out = "0" + out;
 			value /= 2;
 		}
+		for(int ii = out.length(); ii< 8; ii++)
+			out = "0" + out;
 		return out;
 	}
 
