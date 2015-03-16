@@ -11,6 +11,8 @@ const char START_CHAR = '!';
 const char END_cHAR = '~';
 const string P1_FILENAME = "p1_hashes.txt";
 const string P2_FILENAME = "p2_hashes.txt";
+const int MAX_ITERATIONS = 50000;
+const int P2_LENGTH = 5;
 
 const string P2_RAINBOW_TABLE = "table.txt";
 
@@ -21,6 +23,7 @@ vector<string> brute_force(vector<string> hashes);
 void print_hash_passwords(vector<string> hashes, vector<string> cracks);
 vector< pair<string, string> > load_rainbow_table(string rt_filename, int entry_length);
 void print_rainbow_table(vector<pair<string, string> > table);
+vector<string> rainbow_force(vector<string> hashes, vector<pair<string,string> > table, int max_iterations, int length);
 
 int main(){
 	cout<<"Starting Q4 code"<<endl;
@@ -33,8 +36,10 @@ int main(){
 
 	#ifdef P2_CODE
 		vector<string> p2_hashes = load_hashes(P2_FILENAME);
-		vector<pair<string, string> > p2_rainbow = load_rainbow_table(P2_RAINBOW_TABLE, 5);
+		vector<pair<string, string> > p2_rainbow = load_rainbow_table(P2_RAINBOW_TABLE, P2_LENGTH);
 		//print_rainbow_table(p2_rainbow);
+		vector<string> p2_cracks = rainbow_force(p2_hashes, p2_rainbow, MAX_ITERATIONS, P2_LENGTH);
+		print_hash_passwords(p2_hashes, p2_cracks);
 	#endif
 
 
@@ -58,6 +63,7 @@ vector<string> load_hashes(string filename){
 }
 
 vector<string> brute_force(vector<string> hashes){
+	cout<<endl<<"Performing brute force crack"<<endl;
 	vector<string> passwords;
 	vector<string> cracks;
 
@@ -87,18 +93,46 @@ vector<string> brute_force(vector<string> hashes){
 		if(!found)
 			cracks.push_back("NONE_FOUND");
 	}
+	cout<<"crack complete"<<endl<<endl;
 	return cracks;
 }
 
-vector<string> rainbow_force(vector<string> hashes, vector<pair<string,string> > table){
+vector<string> rainbow_force(vector<string> hashes, vector<pair<string,string> > table, int max_iterations, int length){
+	cout<<endl<<"Starting rainbow table crack"<<endl;
 	vector<string> cracks;
 	for(int ii = 0; ii < hashes.size(); ii++){
-
+		string h = hashes[ii];
+		int index = -1;
+		for(int jj = 0; jj < max_iterations; jj++){
+			string r = reduce(h, length);
+			for(int kk = 0; kk < table.size(); kk++){
+				if(table[kk].second.compare(r) == 0){
+					index = kk;
+					break;
+				}
+			}
+			if(index != -1)
+				break;
+			h = hash(r);
+		}
+		if(index == -1)
+			cracks.push_back("NONE_FOUND");
+		else{
+			string r = table[index].first;
+			string h_r = hash(r);
+			while(h_r.compare(h) != 0){
+				r = reduce(h_r, length);
+				h_r = hash(r);
+			}
+			cracks.push_back(r);
+		}
 	}
+	cout<<"crack complete"<<endl<<endl;
 	return cracks;
 }
 
 void print_hash_passwords(vector<string> hashes, vector<string> cracks){
+	cout<<endl<<"Printing solutions"<<endl;
 	for(int ii = 0; ii < hashes.size(); ii++){
 		printf("%-45s -> %10s\n", hashes[ii].c_str(), cracks[ii].c_str());
 	}
