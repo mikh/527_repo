@@ -37,7 +37,7 @@ int main(){
 	#ifdef P2_CODE
 		vector<string> p2_hashes = load_hashes(P2_FILENAME);
 		vector<pair<string, string> > p2_rainbow = load_rainbow_table(P2_RAINBOW_TABLE, P2_LENGTH);
-		//print_rainbow_table(p2_rainbow);
+		print_rainbow_table(p2_rainbow);
 		vector<string> p2_cracks = rainbow_force(p2_hashes, p2_rainbow, MAX_ITERATIONS, P2_LENGTH);
 		print_hash_passwords(p2_hashes, p2_cracks);
 	#endif
@@ -183,6 +183,8 @@ vector< pair<string, string> > load_rainbow_table(string rt_filename, int entry_
 
 void print_rainbow_table(vector<pair<string, string> > table){
 	for(int ii = 0; ii < table.size(); ii++){
-		printf("%s - %s\n", table[ii].first.c_str(), table[ii].second.c_str());
+		printf("%s - %s  -> %d - %d\n", table[ii].first.c_str(), table[ii].second.c_str(), table[ii].first.length(), table[ii].second.length());
+		int pause;
+		cin >> pause;
 	}
 }
