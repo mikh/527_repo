@@ -117,7 +117,7 @@ vector<string> brute_force_5(vector<string> hashes){
 				for(char d = START_CHAR; d <= END_cHAR; d++){
 					for(char e = START_CHAR; e <= END_cHAR; e++){
 						current_iteration++;
-						if(current_iteration == percentage_val){
+						if((long)current_iteration == (long)percentage_val){
 							printf("%d%% done. \n", percentage_val/percentage);
 							percentage_val += percentage;
 						}
