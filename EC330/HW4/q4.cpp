@@ -106,6 +106,7 @@ vector<string> brute_force_5(vector<string> hashes){
 		cracks.push_back("NONE_FOUND");
 
 	int distance = END_cHAR - START_CHAR + 1;
+	printf("%d\n", distance);
 	double total_iters = (float)distance*(float)distance*(float)distance*(float)distance*(float)distance;
 	double current_iteration = 0;
 	double percentage = total_iters / 10000, percentage_val = percentage;
