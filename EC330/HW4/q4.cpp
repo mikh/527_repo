@@ -1,7 +1,8 @@
 #include "hash.h"
 #include <vector>
 #include <iostream>
-#include <ifstream>
+#include <fstream>
+//#include <pair>
 
 #define P1_CODE
 #define P2_CODE
@@ -18,6 +19,8 @@ using namespace std;
 vector<string> load_hashes(string filename);
 vector<string> brute_force(vector<string> hashes);
 void print_hash_passwords(vector<string> hashes, vector<string> cracks);
+vector< pair<string, string> > load_rainbow_table(string rt_filename, int entry_length);
+void print_rainbow_table(vector<pair<string, string> > table);
 
 int main(){
 	cout<<"Starting Q4 code"<<endl;
@@ -30,6 +33,8 @@ int main(){
 
 	#ifdef P2_CODE
 		vector<string> p2_hashes = load_hashes(P2_FILENAME);
+		vector<pair<string, string> > p2_rainbow = load_rainbow_table(P2_RAINBOW_TABLE, 5);
+		//print_rainbow_table(p2_rainbow);
 	#endif
 
 
@@ -39,15 +44,16 @@ int main(){
 
 
 vector<string> load_hashes(string filename){
-	cout<<"Loading hashes from file "<<filename<<endl;
-	ifstream file(filename);
+	cout<<endl<<"Loading hashes from file "<<filename<<endl;
+	ifstream file(filename.c_str());
 	string str;
 	vector<string> lines;
 
 	while(getline(file, str)){
 		lines.push_back(str);
+		printf("%s\n", str.c_str());
 	}
-
+	cout<<"fully loaded"<<endl<<endl;
 	return lines;
 }
 
@@ -55,7 +61,7 @@ vector<string> brute_force(vector<string> hashes){
 	vector<string> passwords;
 	vector<string> cracks;
 
-	for(int ii = 0; ii < hashes.length(); ii++){
+	for(int ii = 0; ii < hashes.size(); ii++){
 		bool found = false;
 		string c_h = hashes[ii];
 		for(char jj = START_CHAR; jj <= END_cHAR; jj++){
@@ -84,18 +90,61 @@ vector<string> brute_force(vector<string> hashes){
 	return cracks;
 }
 
+vector<string> rainbow_force(vector<string> hashes, vector<pair<string,string> > table){
+	vector<string> cracks;
+	for(int ii = 0; ii < hashes.size(); ii++){
+
+	}
+	return cracks;
+}
+
 void print_hash_passwords(vector<string> hashes, vector<string> cracks){
 	for(int ii = 0; ii < hashes.size(); ii++){
-		printf("%-45s -> %10s\n", hashes[ii], cracks[ii]);
+		printf("%-45s -> %10s\n", hashes[ii].c_str(), cracks[ii].c_str());
 	}
 }
 
-vector< pair<string, string>> load_rainbow_table(string rt_filename){
-	cout<<"Loading rainbox table from file "<<filename<<endl;
-	ifstream file(filename);
+vector< pair<string, string> > load_rainbow_table(string rt_filename, int entry_length){
+	cout<<"Loading rainbox table from file "<<rt_filename<<endl;
+	vector< pair<string, string> > rb_table;
+	ifstream file(rt_filename.c_str());
 	string str;
-	vector<string> lines;
 	while(getline(file, str)){
-		
+		int index = 0;
+		for(index; index < str.length(); index++){
+			if(str[index] == '(')
+				break;
+		}
+		index++;
+		string first_entry = "";
+		for(index; index < str.length(); index++){
+			if(str[index] != ' ')
+				break;
+		}
+		for(int ii = 0; ii < entry_length; ii++)
+			first_entry += str[index++];
+		for(index; index < str.length(); index++)
+			if(str[index] == ',')
+				break;
+		index++;
+		for(index; index < str.length(); index++)
+			if(str[index] != ' ')
+				break;
+		string second_entry = "";
+		for(int ii = 0; ii < entry_length; ii++)
+			second_entry += str[index++];
+		pair<string, string> new_entry;
+		new_entry.first = first_entry;
+		new_entry.second = second_entry;
+		rb_table.push_back(new_entry);
+	}
+
+	return rb_table;
+}
+
+
+void print_rainbow_table(vector<pair<string, string> > table){
+	for(int ii = 0; ii < table.size(); ii++){
+		printf("%s - %s\n", table[ii].first.c_str(), table[ii].second.c_str());
 	}
 }
