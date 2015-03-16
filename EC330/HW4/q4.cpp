@@ -4,14 +4,14 @@
 #include <fstream>
 //#include <pair>
 
-#define P1_CODE
+//#define P1_CODE
 #define P2_CODE
 
 const char START_CHAR = '!';
 const char END_cHAR = '~';
 const string P1_FILENAME = "p1_hashes.txt";
 const string P2_FILENAME = "p2_hashes.txt";
-const int MAX_ITERATIONS = 50000;
+const int MAX_ITERATIONS = 100;
 const int P2_LENGTH = 5;
 
 const string P2_RAINBOW_TABLE = "table.txt";
