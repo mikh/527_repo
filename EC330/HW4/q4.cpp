@@ -24,6 +24,7 @@ void print_hash_passwords(vector<string> hashes, vector<string> cracks);
 vector< pair<string, string> > load_rainbow_table(string rt_filename, int entry_length);
 void print_rainbow_table(vector<pair<string, string> > table);
 vector<string> rainbow_force(vector<string> hashes, vector<pair<string,string> > table, int max_iterations, int length);
+vector<string> brute_force_5(vector<string> hashes);
 
 int main(){
 	cout<<"Starting Q4 code"<<endl;
@@ -38,7 +39,8 @@ int main(){
 		vector<string> p2_hashes = load_hashes(P2_FILENAME);
 		vector<pair<string, string> > p2_rainbow = load_rainbow_table(P2_RAINBOW_TABLE, P2_LENGTH);
 		//print_rainbow_table(p2_rainbow);
-		vector<string> p2_cracks = rainbow_force(p2_hashes, p2_rainbow, MAX_ITERATIONS, P2_LENGTH);
+		//vector<string> p2_cracks = rainbow_force(p2_hashes, p2_rainbow, MAX_ITERATIONS, P2_LENGTH);
+		vector<string> p2_cracks = brute_force_5(p2_hashes);
 		print_hash_passwords(p2_hashes, p2_cracks);
 	#endif
 
@@ -94,6 +96,47 @@ vector<string> brute_force(vector<string> hashes){
 			cracks.push_back("NONE_FOUND");
 	}
 	cout<<"crack complete"<<endl<<endl;
+	return cracks;
+}
+
+vector<string> brute_force_5(vector<string> hashes){
+	cout<<"Starting brute force crack for length 5 passwords"<<endl;
+	vector<string> cracks;
+	for(int ii = 0; ii < hashes.size(); ii++)
+		cracks.push_back("NONE_FOUND");
+
+	int distance = END_cHAR - START_CHAR + 1;
+	double total_iters = distance*distance*distance*distance*distance;
+	double current_iteration = 0;
+	double percentage = total_iters / 100, percentage_val = percentage;
+	for(char a = START_CHAR; a <= END_cHAR; a++){
+		for(char b = START_CHAR; b <= END_cHAR; b++){
+			for(char c = START_CHAR; c <= END_cHAR; c++){
+				for(char d = START_CHAR; d <= END_cHAR; d++){
+					for(char e = START_CHAR; e <= END_cHAR; e++){
+						current_iteration++;
+						if(current_iteration == percentage_val){
+							printf("%d%% done. \n", percentage_val/percentage);
+							percentage_val += percentage;
+						}
+						string out = "";
+						out += a;
+						out += b;
+						out += c;
+						out += d;
+						out += e;
+						string trial_hash = hash(out);
+						for(int ii = 0; ii < hashes.size(); ii++){
+							if(trial_hash.compare(hashes[ii]) == 0){
+								cracks[ii] = out;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
 	return cracks;
 }
 
