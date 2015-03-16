@@ -109,7 +109,7 @@ vector<string> brute_force_5(vector<string> hashes){
 	printf("%d\n", distance);
 	double total_iters = (float)distance*(float)distance*(float)distance*(float)distance*(float)distance;
 	double current_iteration = 0;
-	double percentage = total_iters / 100000, percentage_val = percentage;
+	double percentage = total_iters / 10000, percentage_val = percentage;
 	printf("%f %f %f\n", total_iters, percentage, percentage_val);
 	for(char a = START_CHAR; a <= END_cHAR; a++){
 		for(char b = START_CHAR; b <= END_cHAR; b++){
@@ -118,7 +118,7 @@ vector<string> brute_force_5(vector<string> hashes){
 					for(char e = START_CHAR; e <= END_cHAR; e++){
 						current_iteration++;
 						if((long)current_iteration == (long)percentage_val){
-							printf("%d%% done. \n", percentage_val/percentage);
+							printf("%d%% done. \n", (long)percentage_val/(long)percentage);
 							percentage_val += percentage;
 						}
 						string out = "";
