@@ -108,7 +108,7 @@ vector<string> brute_force_5(vector<string> hashes){
 	int distance = END_cHAR - START_CHAR + 1;
 	double total_iters = distance*distance*distance*distance*distance;
 	double current_iteration = 0;
-	double percentage = total_iters / 100, percentage_val = percentage;
+	double percentage = total_iters / 10000, percentage_val = percentage;
 	for(char a = START_CHAR; a <= END_cHAR; a++){
 		for(char b = START_CHAR; b <= END_cHAR; b++){
 			for(char c = START_CHAR; c <= END_cHAR; c++){
