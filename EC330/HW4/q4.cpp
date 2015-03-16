@@ -11,7 +11,7 @@ const char START_CHAR = '!';
 const char END_cHAR = '~';
 const string P1_FILENAME = "p1_hashes.txt";
 const string P2_FILENAME = "p2_hashes.txt";
-const int MAX_ITERATIONS = 50000;
+const int MAX_ITERATIONS = 100000;
 const int P2_LENGTH = 5;
 
 const string P2_RAINBOW_TABLE = "table.txt";
@@ -105,7 +105,7 @@ vector<string> rainbow_force(vector<string> hashes, vector<pair<string,string> >
 		int index = -1;
 		for(int jj = 0; jj < max_iterations; jj++){
 			string r = reduce(h, length);
-			cout<<r<<endl;
+		//	cout<<r<<endl;
 			for(int kk = 0; kk < table.size(); kk++){
 
 				if(table[kk].second.compare(r) == 0){
