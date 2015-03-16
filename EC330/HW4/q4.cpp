@@ -105,7 +105,9 @@ vector<string> rainbow_force(vector<string> hashes, vector<pair<string,string> >
 		int index = -1;
 		for(int jj = 0; jj < max_iterations; jj++){
 			string r = reduce(h, length);
-		//	cout<<r<<endl;
+			cout<<r<<endl;
+			int pause;
+			cin >> pause;
 			for(int kk = 0; kk < table.size(); kk++){
 
 				if(table[kk].second.compare(r) == 0){
