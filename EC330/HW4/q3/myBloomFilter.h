@@ -110,11 +110,39 @@ private:
 	}
 
 	vector<string> position_hash(string item){
-		int number_of_instances = item.length()
+		vector<string> hashes;
+		int number_of_instances = item.length() % 5 + 1;
+		int total = 0;
+		for(int ii = 0; ii < item.length(); item++)
+			total += (int)item[ii];
+		for(int ii = 0; ii < number_of_instances; ii++){
+			int index = (total+(ii*ii)) % length;
+			total -= index;
+			string o = "";
+			for(int jj = 0; jj < index; jj++)
+				 o += char(0);
+			hashes.add(o);
+		}
+
+		return hashes;
 	}
 
-	vector<string> bitwise_hash(string item){
+	vector<string> bitwise_hash(string item, vector<string> position_hashes){
+		vector<char> hashes;
+		for(int ii = 0; ii < position_hashes.size(); ii++){
+			hashes.push_back(0);
+		}
 
+		for(int ii = 0; ii < item.length(); ii++){
+			hashes[ii%hashes.size()] += item[ii];
+		}
+
+		for(int ii = 0; ii < position_hashes.size(); ii++){
+			position_hashes[ii] = position_hashes + hashes[ii];
+			position_hashes[ii] = pad_string(position_hashes[ii], length, char(0));
+		}
+
+		return hashes;
 	}
 
 	string pad_string(string item, int length, char c){
