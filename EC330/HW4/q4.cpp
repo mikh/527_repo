@@ -2,7 +2,7 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
-#include <math>
+#include <math.h>
 //#include <pair>
 
 //#define P1_CODE
@@ -17,6 +17,7 @@ const int MAX_ITERATIONS = 500000;
 const int P2_LENGTH = 5;
 
 const string P2_RAINBOW_TABLE = "table.txt";
+const string P3_RAINBOW_TABLE = "p3_rainbow_table.txt";
 
 using namespace std;
 
@@ -27,6 +28,9 @@ vector< pair<string, string> > load_rainbow_table(string rt_filename, int entry_
 void print_rainbow_table(vector<pair<string, string> > table);
 vector<string> rainbow_force(vector<string> hashes, vector<pair<string,string> > table, int max_iterations, int length);
 vector<string> brute_force_5(vector<string> hashes);
+string convert_to_string(long value, char start, char end, int length);
+vector<pair<string,string> > build_rainbow_table(int length, char start, char end, int depth);
+void write_rainbow_table_to_file(vector<pair<string,string> > rb_table, string filename);
 
 int main(){
 	cout<<"Starting Q4 code"<<endl;
@@ -47,7 +51,8 @@ int main(){
 	#endif
 
 	#ifdef P3_CODE
-
+		vector<pair<string,string> > p3_rainbow = build_rainbow_table(5, START_CHAR, END_CHAR, 500000);
+		write_rainbow_table_to_file(p3_rainbow, P3_RAINBOW_TABLE);
 	#endif
 
 
@@ -55,17 +60,70 @@ int main(){
 	return 0;
 }
 
+string convert_to_string(long value, char start, char end, int length){
+	//6786839 to base 32
+	//23 - 24 - 3 -15 - 6
+
+	int base = end - start + 1;
+
+	string con = "";
+	while(value > base){
+		int part = value % base;
+		con += (char)(start + part);
+		value -= part;
+		value /= base;
+	}
+	con += (char)(start + value);
+
+	string r_con = "";
+	for(int ii = con.length() - 1; ii >= 0; ii--)
+		r_con += con[ii];
+	for(int ii = r_con.length(); ii < length; ii++)
+		r_con += start;
+
+	return r_con;
+}
+
+void write_rainbow_table_to_file(vector<pair<string,string> > rb_table, string filename){
+	
+	ofstream file;
+	file.open(filename.c_str());
+	for(int ii = 0; ii < rb_table.size(); ii++){
+		file<<"(   "<<rb_table[ii].first<<"  ,  "<<rb_table[ii].second<<"   )\n";
+	}
+	file.close();
+}
 
 vector<pair<string,string> > build_rainbow_table(int length, char start, char end, int depth){
 	int distance = end - start + 1;
-	long password_count = (long)pow((double) distance, (double) length);
+	double password_count = pow((double) distance, (double) length);
 
-	long number_of_passwords = password_count/depth;
+	double number_of_passwords = floor(password_count/depth);
 
 	vector<pair<string, string> > rb_table;
 
-	
-	
+	//depending on the hash and reduce functions, the distribution of hashed-reduced should be initialized differently
+	//if the hashes are random enough, you will avoid collisions - which would make an entry in the rainbow table the same as another one
+
+
+	double password_value = 0;
+	for(double ii = 0; ii < number_of_passwords; ii++){
+		string first_entry = convert_to_string(password_value, start, end, length);
+		string h, r;
+		r = first_entry;
+		for(int jj = 0; jj < depth; jj++){
+			h = hash(r);
+			r = reduce(h, length);
+		}
+		string second_entry = r;
+
+		pair<string, string> entry;
+		entry.first = first_entry;
+		entry.second = second_entry;
+		rb_table.push_back(entry);
+	}
+
+	return rb_table;
 }
 
 vector<string> load_hashes(string filename){
@@ -90,9 +148,9 @@ vector<string> brute_force(vector<string> hashes){
 	for(int ii = 0; ii < hashes.size(); ii++){
 		bool found = false;
 		string c_h = hashes[ii];
-		for(char jj = START_CHAR; jj <= END_cHAR; jj++){
-			for(char kk = START_CHAR; kk <= END_cHAR; kk++){
-				for(char ll = START_CHAR; ll <= END_cHAR; ll++){
+		for(char jj = START_CHAR; jj <= END_CHAR; jj++){
+			for(char kk = START_CHAR; kk <= END_CHAR; kk++){
+				for(char ll = START_CHAR; ll <= END_CHAR; ll++){
 					string password = "";
 					password += jj;
 					password += kk;
@@ -123,17 +181,17 @@ vector<string> brute_force_5(vector<string> hashes){
 	for(int ii = 0; ii < hashes.size(); ii++)
 		cracks.push_back("NONE_FOUND");
 
-	int distance = END_cHAR - START_CHAR + 1;
+	int distance = END_CHAR - START_CHAR + 1;
 	printf("%d\n", distance);
 	double total_iters = (float)distance*(float)distance*(float)distance*(float)distance*(float)distance;
 	double current_iteration = 0;
 	double percentage = total_iters / 10000, percentage_val = percentage;
 	printf("%f %f %f\n", total_iters, percentage, percentage_val);
-	for(char a = START_CHAR; a <= END_cHAR; a++){
-		for(char b = START_CHAR; b <= END_cHAR; b++){
-			for(char c = START_CHAR; c <= END_cHAR; c++){
-				for(char d = START_CHAR; d <= END_cHAR; d++){
-					for(char e = START_CHAR; e <= END_cHAR; e++){
+	for(char a = START_CHAR; a <= END_CHAR; a++){
+		for(char b = START_CHAR; b <= END_CHAR; b++){
+			for(char c = START_CHAR; c <= END_CHAR; c++){
+				for(char d = START_CHAR; d <= END_CHAR; d++){
+					for(char e = START_CHAR; e <= END_CHAR; e++){
 						current_iteration++;
 						if((long)current_iteration == (long)percentage_val){
 							printf("%.2f%% done. \n", (float)((long)percentage_val/(long)percentage)/100.0);
