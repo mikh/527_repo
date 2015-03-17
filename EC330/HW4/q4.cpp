@@ -2,13 +2,15 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
+#include <math>
 //#include <pair>
 
 //#define P1_CODE
-#define P2_CODE
+//#define P2_CODE
+#define P3_CODE
 
 const char START_CHAR = '!';
-const char END_cHAR = '~';
+const char END_CHAR = '~';
 const string P1_FILENAME = "p1_hashes.txt";
 const string P2_FILENAME = "p2_hashes.txt";
 const int MAX_ITERATIONS = 500000;
@@ -44,11 +46,27 @@ int main(){
 		print_hash_passwords(p2_hashes, p2_cracks);
 	#endif
 
+	#ifdef P3_CODE
+
+	#endif
+
 
 	cout<<"Q4 code finished"<<endl;
 	return 0;
 }
 
+
+vector<pair<string,string> > build_rainbow_table(int length, char start, char end, int depth){
+	int distance = end - start + 1;
+	long password_count = (long)pow((double) distance, (double) length);
+
+	long number_of_passwords = password_count/depth;
+
+	vector<pair<string, string> > rb_table;
+
+	
+	
+}
 
 vector<string> load_hashes(string filename){
 	cout<<endl<<"Loading hashes from file "<<filename<<endl;
