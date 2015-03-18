@@ -98,22 +98,22 @@ private:
 	int false_positive = 0;
 	int false_negative = 0;
 	#endif
-
+/*
 	vector<string> hash(string item){
 		vector<string> vec;
 		vec.push_back(pad_string(item, length, char(0)));
 		return vec;
 	}
-
+*/
 	vector<string> hash(string item){
-
+		return bitwise_hash(item, position_hash(item));
 	}
 
 	vector<string> position_hash(string item){
 		vector<string> hashes;
 		int number_of_instances = item.length() % 5 + 1;
 		int total = 0;
-		for(int ii = 0; ii < item.length(); item++)
+		for(int ii = 0; ii < item.length(); ii++)
 			total += (int)item[ii];
 		for(int ii = 0; ii < number_of_instances; ii++){
 			int index = (total+(ii*ii)) % length;
@@ -121,14 +121,14 @@ private:
 			string o = "";
 			for(int jj = 0; jj < index; jj++)
 				 o += char(0);
-			hashes.add(o);
+			hashes.push_back(o);
 		}
 
 		return hashes;
 	}
 
 	vector<string> bitwise_hash(string item, vector<string> position_hashes){
-		vector<char> hashes;
+		vector<string> hashes;
 		for(int ii = 0; ii < position_hashes.size(); ii++){
 			hashes.push_back(0);
 		}
@@ -138,7 +138,7 @@ private:
 		}
 
 		for(int ii = 0; ii < position_hashes.size(); ii++){
-			position_hashes[ii] = position_hashes + hashes[ii];
+			position_hashes[ii] += hashes[ii];
 			position_hashes[ii] = pad_string(position_hashes[ii], length, char(0));
 		}
 
