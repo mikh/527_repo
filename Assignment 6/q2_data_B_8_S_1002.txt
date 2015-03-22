@@ -1,0 +1,14 @@
+Updating 6662eda..8897fe0
+Fast-forward
+ Assignment 6/test_SOR.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+ Hello World -- SOR serial variations 
+
+iter = 0 length = 1002 OMEGA = 1.60
+ iters = 1045
+iter = 0 length = 1002
+ iters = 1176
+iter = 0 length = 1002
+ iters = 920
+1002, 29089648594, 1045, 57657524663, 1176, 20210313718, 920
