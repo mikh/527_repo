@@ -15,7 +15,7 @@
 #define DELTA 2000
 
 #define OPTIONS 3
-#define BLOCK_SIZE 8     // TO BE DETERMINED
+#define BLOCK_SIZE 4     // TO BE DETERMINED
 
 #define MINVAL   0.0
 #define MAXVAL  10.0
