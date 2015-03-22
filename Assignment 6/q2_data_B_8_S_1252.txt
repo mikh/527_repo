@@ -1,0 +1,11 @@
+Already up-to-date.
+
+ Hello World -- SOR serial variations 
+
+iter = 0 length = 1252 OMEGA = 1.60
+ iters = 986
+iter = 0 length = 1252
+ iters = 1074
+iter = 0 length = 1252
+ iters = 41035
+1252, 8, 42797928531, 986, 70100519592, 1074, 1304070249042, 41035
