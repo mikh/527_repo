@@ -9,9 +9,9 @@
 #define GIG 1000000000
 #define CPG 2.53           // Cycles per GHz -- Adjust to your computer
 
-#define BASE  12
+#define BASE  10
 #define ITERS 1
-#define DELTA 28        // Right now only set up to do one size
+#define DELTA 190        // Right now only set up to do one size
 
 #define MINVAL   0.0
 #define MAXVAL  100.0
@@ -19,7 +19,7 @@
 #define TOL 0.00001
 
 #define O_ITERS 150        // # of OMEGA values to be tested
-#define PER_O_ITERS 100    // trials per OMEGA value
+#define PER_O_ITERS 10    // trials per OMEGA value
 double OMEGA = 0.50;     // OMEGA base - first OMEGA tested
 #define OMEGA_INC 0.01   // OMEGA increment for each O_ITERS
 
