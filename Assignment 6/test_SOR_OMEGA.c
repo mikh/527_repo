@@ -11,14 +11,14 @@
 
 #define BASE  10
 #define ITERS 1
-#define DELTA 190        // Right now only set up to do one size
+#define DELTA 90        // Right now only set up to do one size
 
 #define MINVAL   0.0
 #define MAXVAL  100.0
 
 #define TOL 0.00001
 
-#define OUT_FILENAME "q1_data_O_05_2_S_200.txt"
+#define OUT_FILENAME "q1_data_O_15_2_S_100.txt"
 
 #define O_ITERS 50        // # of OMEGA values to be tested
 #define PER_O_ITERS 10    // trials per OMEGA value
@@ -68,7 +68,7 @@ main(int argc, char *argv[])
 
 
 
-  printf("\n MAXSIZE = %d", MAXSIZE);
+  printf("\n MAXSIZE = %d\n", MAXSIZE);
 
   t_percent = O_ITERS * PER_O_ITERS;
   i_percent = t_percent/100;
