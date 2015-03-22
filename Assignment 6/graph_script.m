@@ -1,6 +1,6 @@
 %% part 1
-filenames = {'q1_data_O_05_2_S_10.txt'};
-titles = ['Size 10'];
+filenames = {'q1_data_O_05_2_S_10.txt','q1_data_O_05_2_S_20.txt'};
+titles = {'Size 10', 'Size 20'};
 colors = ['b', 'r'];
 
 figure(1);
