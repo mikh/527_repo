@@ -96,9 +96,9 @@ main(int argc, char *argv[])
   }
 
   for (i = 0; i < O_ITERS; i++)
-    printf("\n%0.2f %0.1f", convergence[i][0], convergence[i][1]);
+    fprintf(ff, "\n%0.2f %0.1f", convergence[i][0], convergence[i][1]);
 
-
+  fclose(ff);
   printf("\n");
   
 }/* end main */
