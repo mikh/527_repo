@@ -1,0 +1,11 @@
+Already up-to-date.
+
+ Hello World -- SOR serial variations 
+
+iter = 0 length = 1002 OMEGA = 1.60
+ iters = 1045
+iter = 0 length = 1002
+ iters = 1176
+iter = 0 length = 1002
+ iters = 920
+1002, 10, 28981065895, 1045, 58317532460, 1176, 21290915020, 920
