@@ -75,6 +75,8 @@ main(int argc, char *argv[])
   n_percent = i_percent;
   c_percent = 0;
 
+  printf("Iteration size = %d\n", i_percent);
+
   for (i = 0; i < O_ITERS; i++) {
     printf("\n%0.2f", OMEGA);
     double acc = 0.0;
