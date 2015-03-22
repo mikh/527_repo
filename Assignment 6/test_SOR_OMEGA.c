@@ -18,6 +18,8 @@
 
 #define TOL 0.00001
 
+#define OUT_FILENAME "q1_data_O_05_2_S_200.txt"
+
 #define O_ITERS 150        // # of OMEGA values to be tested
 #define PER_O_ITERS 10    // trials per OMEGA value
 double OMEGA = 0.50;     // OMEGA base - first OMEGA tested
@@ -47,16 +49,32 @@ main(int argc, char *argv[])
   void SOR_blocked(vec_ptr v, int *iterations);
 
   long int i, j, k;
+  long int c_percent, i_percent, n_percent, t_percent;
+  FILE *ff = fopen(OUT_FILENAME, "w");
   long int time_sec, time_ns;
+
   long int MAXSIZE = BASE+(ITERS)*DELTA;
 
   printf("\n Hello World -- SOR OMEGA test \n");
+
+  if(ff == NULL){
+  	printf("Error opening file!");
+  	exit(1);
+  }
 
   // declare and initialize the vector structure
   vec_ptr v0 = new_vec(MAXSIZE);
   iterations = (int *) malloc(sizeof(int));
 
+
+
   printf("\n MAXSIZE = %d", MAXSIZE);
+
+  t_percent = O_ITERS * PER_O_ITERS;
+  i_percent = t_percent/100;
+  n_percent = i_percent;
+  c_percent = 0;
+
   for (i = 0; i < O_ITERS; i++) {
     printf("\n%0.2f", OMEGA);
     double acc = 0.0;
@@ -65,7 +83,12 @@ main(int argc, char *argv[])
       init_vector_rand(v0, MAXSIZE);
       SOR(v0,iterations);
       acc += (double)(*iterations);
-      printf(", %d", *iterations);
+      //printf(", %d", *iterations);
+      c_percent++;
+      if (c_percent > n_percent){
+      	printf("%d%% done\n", c_percent/i_percent);
+      	n_percent += i_percent;
+      }
     }
     convergence[i][0] = OMEGA;
     convergence[i][1] = acc/(double)(PER_O_ITERS);
