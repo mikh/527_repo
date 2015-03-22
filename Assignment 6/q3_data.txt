@@ -1,68 +1,3 @@
-Already up-to-date.
-
- Hello World -- Test OMP 
-
-iter = 0
-iter = 1
-iter = 2
-iter = 3
-iter = 4
-iter = 5
-iter = 6
-iter = 7
-iter = 8
-iter = 9
-iter = 10
-iter = 11
-iter = 12
-iter = 13
-iter = 14
-iter = 15
-iter = 16
-iter = 17
-iter = 18
-iter = 19
-iter = 0
-iter = 1
-iter = 2
-iter = 3
-iter = 4
-iter = 5
-iter = 6
-iter = 7
-iter = 8
-iter = 9
-iter = 10
-iter = 11
-iter = 12
-iter = 13
-iter = 14
-iter = 15
-iter = 16
-iter = 17
-iter = 18
-iter = 19
-iter = 0
-iter = 1
-iter = 2
-iter = 3
-iter = 4
-iter = 5
-iter = 6
-iter = 7
-iter = 8
-iter = 9
-iter = 10
-iter = 11
-iter = 12
-iter = 13
-iter = 14
-iter = 15
-iter = 16
-iter = 17
-iter = 18
-iter = 19
-length, other data
 10, 1634, 885841, 1429758
 20, 4510, 175470, 154142
 30, 9687, 134497, 1326281
@@ -83,4 +18,3 @@ length, other data
 180, 352092, 305487, 367641
 190, 381334, 340785, 1514705
 200, 422484, 365875, 408114
- Good Bye World!

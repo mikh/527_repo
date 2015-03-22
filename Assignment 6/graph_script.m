@@ -41,4 +41,31 @@ ylabel('inner_loop_timing');
 title('Array size vs. Inner loop timing');
 legend('Version 1', 'Version 2', 'Version 3');
 
+%% part 3
+filename = 'q3_data.txt';
+delimiterIn = ',';
+data = importdata(filename, delimiterIn);
+figure(3);
+hold on
+scatter(data(:,1), data(:,2)./data(:,1), 5, 'b');
+scatter(data(:,1), data(:,3)./data(:,1), 5, 'r');
+scatter(data(:,1), data(:,4)./data(:,1), 5, 'g');
 
+hold off
+
+xlabel('Array Size');
+ylabel('Cycles per element');
+title('Array size vs. Inner loop timing');
+legend('1 thread', '2 threads', '4 threads');
+
+figure(4);
+hold on
+scatter(data(:,1), (data(:,3)./data(:,1)) - (data(:,2)./data(:,1)), 5, 'r');
+scatter(data(:,1), (data(:,4)./data(:,1)) - (data(:,2)./data(:,1)), 5, 'g');
+
+hold off
+
+xlabel('Array Size');
+ylabel('Cycle difference per element');
+title('Cycle Difference between baseline and threaded version per element');
+legend('2 threads', '4 threads');
