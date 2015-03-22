@@ -8,7 +8,7 @@
 #include <math.h>
 
 #define GIG 1000000000
-#define CPG 2.0           // Cycles per GHz -- Adjust to your computer
+#define CPG 2.53           // Cycles per GHz -- Adjust to your computer
 
 #define BASE  0
 #define ITERS 20
@@ -19,6 +19,8 @@
 
 #define INIT_LOW -10.0
 #define INIT_HIGH 10.0
+
+//#define COMPLEX
 
 typedef double data_t;
 
@@ -285,9 +287,13 @@ void pt_cb_bl(matrix_ptr a, matrix_ptr b, matrix_ptr c)
   data_t *b0 = get_matrix_start(b);
   data_t *c0 = get_matrix_start(c);
 
+
   for (i = 0; i < length*length; i++) 
+    #ifdef COMPLEX
     c0[i] = (data_t)(cosh(tan(sqrt(cos(exp((double)(a0[i])))))));
-  //c0[i] = a0[i];
+    #else
+    c0[i] = a0[i];
+    #endif
 }
 
 /********************/
@@ -311,8 +317,12 @@ void *cb_work(void *threadarg)
   high = ((taskid+1)* length * length)/NUM_THREADS;
 
   for (i = low; i < high; i++)
+    #ifdef COMPLEX
     cM[i] = (data_t)(cosh(tan(sqrt(cos(exp((double)(aM[i])))))));
-  //cM[i] = aM[i];
+    #else
+    cM[i] = aM[i];
+    #endif
+
 
   pthread_exit(NULL);
 }
