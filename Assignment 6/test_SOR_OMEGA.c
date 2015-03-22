@@ -20,9 +20,9 @@
 
 #define OUT_FILENAME "q1_data_O_05_2_S_200.txt"
 
-#define O_ITERS 150        // # of OMEGA values to be tested
+#define O_ITERS 50        // # of OMEGA values to be tested
 #define PER_O_ITERS 10    // trials per OMEGA value
-double OMEGA = 0.50;     // OMEGA base - first OMEGA tested
+double OMEGA = 1.50;     // OMEGA base - first OMEGA tested
 #define OMEGA_INC 0.01   // OMEGA increment for each O_ITERS
 
 typedef double data_t;
