@@ -11,7 +11,7 @@
 
 #define BASE  2
 #define ITERS 1
-#define DELTA 8        // Right now only set up to do one size
+#define DELTA 18        // Right now only set up to do one size
 
 #define MINVAL   0.0
 #define MAXVAL  100.0
