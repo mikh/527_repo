@@ -78,7 +78,7 @@ main(int argc, char *argv[])
   printf("Iteration size = %d\n", i_percent);
 
   for (i = 0; i < O_ITERS; i++) {
-    printf("\n%0.2f", OMEGA);
+    //printf("\n%0.2f", OMEGA);
     double acc = 0.0;
     for (j = 0; j < PER_O_ITERS; j++) {
       set_vec_length(v0, MAXSIZE);
