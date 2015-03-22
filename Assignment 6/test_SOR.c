@@ -12,10 +12,10 @@
 
 #define BASE  2
 #define ITERS 1
-#define DELTA 2000
+#define DELTA 1250
 
 #define OPTIONS 3
-#define BLOCK_SIZE 10     // TO BE DETERMINED
+#define BLOCK_SIZE 8     // TO BE DETERMINED
 
 #define MINVAL   0.0
 #define MAXVAL  10.0

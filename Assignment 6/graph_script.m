@@ -25,3 +25,20 @@ end
 legend(titles);
 
 hold off;
+
+%% part 2
+filename = 'q2_data_total.txt';
+delimiterIn = ',';
+data = importdata(filename, delimiterIn);
+figure(2);
+hold on
+scatter(data(:,1), data(:,3)./data(:,1), 5, 'b');
+scatter(data(:,1), data(:,5)./data(:,1), 5, 'r');
+scatter(data(:,1), data(:,7)./data(:,1), 5, 'g');
+hold off
+xlabel('Array Size');
+ylabel('inner_loop_timing');
+title('Array size vs. Inner loop timing');
+legend('Version 1', 'Version 2', 'Version 3');
+
+
