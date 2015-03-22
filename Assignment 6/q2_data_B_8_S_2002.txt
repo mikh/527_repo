@@ -1,0 +1,15 @@
+Updating f9cc4e6..01b608d
+Fast-forward
+ Assignment 6/q2_data_total.txt |    1 +
+ Assignment 6/test_SOR.c        |    4 ++--
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+
+ Hello World -- SOR serial variations 
+
+iter = 0 length = 2002 OMEGA = 1.60
+ iters = 747
+iter = 0 length = 2002
+ iters = 835
+iter = 0 length = 2002
+ iters = 772
+2002, 8, 83657944871, 747, 171088317575, 835, 68164459804, 772
