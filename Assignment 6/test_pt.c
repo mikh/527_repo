@@ -10,9 +10,9 @@
 #define GIG 1000000000
 #define CPG 2.53           // Cycles per GHz -- Adjust to your computer
 
-#define BASE  150
+#define BASE  0
 #define ITERS 20
-#define DELTA 5
+#define DELTA 10
 
 #define OPTIONS 3        // Current setting, vary as you wish!
 #define IDENT 0
@@ -20,7 +20,7 @@
 #define INIT_LOW -10.0
 #define INIT_HIGH 10.0
 
-//#define COMPLEX
+#define COMPLEX
 
 typedef double data_t;
 
