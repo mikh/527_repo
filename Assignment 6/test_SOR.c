@@ -15,7 +15,7 @@
 #define DELTA 1000
 
 #define OPTIONS 3
-#define BLOCK_SIZE 8     // TO BE DETERMINED
+#define BLOCK_SIZE 4     // TO BE DETERMINED
 
 #define MINVAL   0.0
 #define MAXVAL  10.0
@@ -111,7 +111,7 @@ main(int argc, char *argv[])
   }
 
   for (i = 0; i < ITERS; i++) {
-    printf("\n%d, ", BASE+(i+1)*DELTA);
+    printf("\n%d, %d, ", BASE+(i+1)*DELTA, BLOCK_SIZE);
     for (j = 0; j < OPTIONS; j++) {
       if (j != 0) printf(", ");
       printf("%ld", (long int)((double)(CPG)*(double)
