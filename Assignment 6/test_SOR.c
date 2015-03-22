@@ -8,7 +8,7 @@
 #include <pthread.h>
 
 #define GIG 1000000000
-#define CPG 2.0           // Cycles per GHz -- Adjust to your computer
+#define CPG 2.53          // Cycles per GHz -- Adjust to your computer
 
 #define BASE  2
 #define ITERS 1

@@ -1,3 +1,3 @@
 git pull gg master
-gcc -O1 -o test_SOR_OMEGA test_SOR_OMEGA.c -lm
-./test_SOR_OMEGA
+gcc -O1 -o test_SOR test_SOR.c -lrt -lm
+./test_SOR
