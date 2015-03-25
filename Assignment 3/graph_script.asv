@@ -1,8 +1,0 @@
-%% part 1
-filename = 'p1_data_1.txt';
-delimiterIn = ',';
-p1_data = importdata(filename, delimiterIn);
-
-figure(1);
-hold on
-scatter
