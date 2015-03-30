@@ -1,0 +1,257 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(ChristineDuong),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+
+ It should not experience primary clustering, but it should have secondary clustering. Because hi(k) is recursive, we see that hi(k) = h(k) + i + i-1 + i-2 + ... 1. The end of this function is an arithmetic sequence which sums to a quadratic. This means we'll have secondary clustering.
+
+No, we will not necessarily be able to find keys even if the table is not empty. It is possible that it will cycle through the same keys. 
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+---+++ i. Median of two
+---++++ Algorithm
+
+Find the median of X<sub>0</sub> and the median of X<sub>1</sub>. We then compare the two medians. If X<sub>0Mid</sub> < X<sub>1Mid</sub> then we take X<sub>0</sub>[Index(If X<sub>0Mid</sub>)...n] and X<sub>1</sub>[1...Index(X<sub>1Mid</sub>)] ; if we have the opposite, then we take the lower half of X<sub>0</sub> and the upper half of X<sub>1</sub> and keep finding the medians of these new halves until we obtain two arrays of size one each. The median of the two sorted arrays will then be the average of these two remaining elements. If the two medians we obtain are equal, that is the median.
+
+%CODE{"cpp"}%
+int median (A[1...n], B[1...n]) {
+        if n is 1:
+        return (A[1] + B[1]) / 2
+        if n is odd:
+        medianA = A[n/2-1];
+        medianB = B[n/2];
+        if n is even:
+        medianA = (A[n/2] + A[n/2-1])/2
+        medianB = (B[n/2] + B[n/2-1])/2
+        if medianA = medianB:
+        return medianA
+        else if medianA > median B:
+        return median(A[1...n/2], B[n/2...n])
+        else
+        return median(A[n/2...n], B[1...n/2]);
+}
+%ENDCODE%
+
+---++++ Analysis and running time
+
+Because the two arrays are sorted, the median is simply X[n/2] if n is odd or (X[n/2]+X[n/2+1])/2. This takes O(1).
+Since we halve the number of elements each time, we're going to find the median in Theta(logn).
+---+++ ii. Median of three
+---++++ Algorithm
+(Adapted from :http://stackoverflow.com/questions/6182488/median-of-5-sorted-arrays)
+
+Similarly to our method for 2 arrays, we are going to split the arrays in half. We will take X[n/2-1] and X[n/2]; let X[n/2-1] be the lower median of X and let X[n/2] be the upper median of X. Let the minimum of the lower medians be called a and then let the maximum of the upper medians be b. Let dist1 be the distance from the beginning of the array to a and dist2 be the distance from the end of the array to b. We are then going to remove the min(dist1,dist2) first elements from the array that holds a and the last min(dist1,dist2) elements from the array that holds b. This keeps an even removal of numbers from the beginning and the end of the cumulative list of numbers; in other words, we're moving an equal amount of numbers less than the median and an equal amount of numbers greater than the median. Eventually you will be left with one or two elements left which will remain to be the median (or average to the median). 
+---++++ Analysis and running time
+This, should take O(logn). 
+
+---+++ iii. Median of n
+---++++ Algorithm
+Similar to the case for 3 arrays, we can find the lower/upper medians for each array and remove the corresponding entries from the corresponding arrays. Eventually we will be left with one or two elements which is either the median or average to be the median. 
+---++++ Analysis and running time
+This will be O(nlogn)
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+#ifndef MYBLOOMFILTER_H
+#define	MYBLOOMFILTER_H
+#include <string>
+#include <vector>
+#include "BloomFilter.h"
+using namespace std;
+
+class myBloomFilter :BloomFilter{
+        public:
+        /**
+        * Instantiate an empty Bloom filter of length [ mm ] chars.
+        */
+        myBloomFilter (int mm);
+        
+        /**
+        * Instantiates a Bloom filter from a given string [filter]
+        * @requires [filter] must have been produced by the output() call of a BloomFilter object.
+        */
+        myBloomFilter (string filter);
+        /**
+        * inserts  into the filter
+        */
+        void insert(string item);
+        
+        /**
+        * Checks whether [item] is in the filter.
+        * @return  true if the item is probably in the filter
+        *          false if the item is definitely not in the filter
+        */
+        bool exists(string item);
+        
+        /**
+        * @return A string of [length] characters representing the Bloom filer
+        */
+        string output();
+        
+        protected:
+        int length; /** The length of the Bloom filter, in chars. */
+        vector<char> bloomfilter;
+};
+
+#endif	/* MYBLOOMFILTER_H */
+%ENDCODE%
+
+%CODE{"cpp"}%
+#include "myBloomFilter.h"
+#include <iostream>
+#include <string>
+using namespace std;
+
+/** A hash function that determines where to stick item into bloom filter **/
+int hash1(string item, int length) {
+        int a = 25321;
+        int b = 8753;
+        unsigned int hash=0;
+        for (int i=0; i<item.length(); i++) {
+                hash=(hash*a)^(item[i]*b);
+        }
+        return hash%length;
+}
+
+/** A hash function that determines where to stick item into bloom filter **/
+int hash2(string item, int length) {
+        int a = 21013;
+        unsigned int hash=20143;
+        for (int i=0; i < item.length(); i++) {
+                hash = hash*a+item[i];
+        }
+        return hash%length;
+}
+
+/** A hash function that determines where to stick item into bloom filter **/
+int hash3(string item, int length) {
+        unsigned int hash=6089;
+        int a = 7043;
+        int b = 10039;
+        for (int i=0; i < item.length(); i++) {
+                hash = hash*a+b*item[i];
+        }
+        return hash%length;
+}
+
+/**Instantiates an empty Bloom filter of length mm
+** @requires mm>0
+*/
+myBloomFilter::myBloomFilter(int mm) : BloomFilter(mm){
+        this->length=mm;
+        for(int index=0; index<mm; index++) {
+                bloomfilter.push_back('0');
+        }
+}
+
+/**
+* Instantiates a Bloom filter from a given string [filter]
+* @requires [filter] must have been produced by the output() call of a BloomFilter object.
+*/
+myBloomFilter::myBloomFilter(string filter)  : BloomFilter(filter){
+        this->length = filter.length();
+        for (int i=0; i<length; i++) {
+                bloomfilter.push_back(filter[i]);
+        }
+}
+
+/**
+* inserts [item] into the filter
+*/
+void myBloomFilter::insert(string item) {	
+        int index2=hash2(item,length);
+        int index3=hash3(item,length);
+        bloomfilter[index] ='1';
+        bloomfilter[index2] = '1';
+        bloomfilter[index3] = '1';
+        
+        
+}
+
+/**
+* Checks whether [item] is in the filter.
+* @return  true if the item is probably in the filter
+*          false if the item is definitely not in the filter
+*/
+bool myBloomFilter::exists(string item) {
+        int index=hash1(item, length);
+        int index2=hash2(item,length);
+        int index3=hash3(item,length);
+        char check = bloomfilter[index];
+        char check2 = bloomfilter[index2];
+        char check3 = bloomfilter[index3];
+        return check=='1' && check2=='1' && check3=='1';
+}
+
+/**
+* @return A string of [length] characters representing the Bloom filter
+*/
+string myBloomFilter::output() {
+        string equivalent="";
+        for (int i=0; i<length; i++) {
+                equivalent+=bloomfilter[i];
+        }
+        return equivalent;
+}
+%ENDCODE%
+
+---+++ Explanation
+I implemented my bloomfilter using a vector of chars. At each index there is either a 0 or a 1; a one representing an item has been hashed there and a zero meaning an item has not been hashed there yet. The insert function hashes [item] using three hash functions and places a 1 at the respective indexes. The exist function hashes [item] using the same three hash functions in insert and checks to see if there are 1's at every index. If there are, then the function assumes that [item] is in the bloomfilter. If there is a single 0 then we will say that [item] does not exist in the filter. 
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+7b1a15e79b5a1d29f1cb9b1a2d9da635d848b282 : BFD <br>
+6f3e3bcc9b8d42cd8d0ba074fdcacfacf51deb28: ETR <br>
+d7d685dee6af8b7347f3f847320a570fbddb835e: R&D <br>
+4796ad0886540784ec03ff1dc61575c6b333dee9: Sup <br>
+e74dddb5aba606ae51dbd2440e6a491ceaadd837: ckw <br>
+4716927b5d52501999f664344c50c9a4e81c5111: dos <br>
+7a2cac13edf4db3599de1b294f461a57097254f7: ger <br>
+5225829a60ca955d03ff4e969d29bc3148dd7944: oaf <br>
+ab35ed91518b27df7b7ea4b80c65a29c344fd2c8: pk. <br>
+ce5fadf6ef646c567c7eb4a47df0703568e71f15: prs
+
+---+++ 4b. Simplified rainbow tables
+c7b5cf65ec003c82e3debdc1292af2b33f43ee9a: Badon <br>
+f32799f284d777cf10838e63dfc8e67b7a6cfff1: Natal <br>
+05553c640284aaa4cd5cb0c639968ed7b1b71761: loury <br>
+07d75305c5b7058d5a5fb918c4b0f0b559511988: borak <br>
+54c15eedd7615d3d92afc152722f231ceb76366d: manis <br>
+
+The last five hashes do not need to have a chain in the rainbow table so they were not cracked. 
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+The code is attached as rainbowTable.cpp and rainbowTab.txt.
+
+I started with a string of length 5 ("Juice") and then proceeded to hash/reduce this string 1million times. The resulting reduction becomes the entry to this key in the second column of my table. I then use this reduction and add 1 to the last ASCII character to use as the key for the next entry in the table. I repeat the process of hash/reducing for 1000 entries. 
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

@@ -1,0 +1,304 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(AlejandroEguren),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+This problem set was solved with the collaboration of Alejandro Eguren and Connor Richmond
+---++ Problem 1 - Hashing
+The sequence given is recognized to be a linear probe sequence. Which means that as the function maps out to a space on the map, if occupied it will move on to the next one. It exhibits TWO of the three properties mentions: Primary Clustering, and always able to add a key if the table is not full. Primary Clustering would be a property because if the space or key is already occupied then the equation adds an i value which would result in moving to the next available term. Keys that map onto the same position would end up occupying the following adjacent spaces and would result in nearby clustering. 
+This would also show how the table will always add a key if not full since any full space would push the key to the next one available, even if it's at the end it would push it to the start of the map. Only until the table is full then will a key have no place to be mapped! 
+The function does not show secondary clustering because it's a linear equation and not a quadratic equation with i^2 where clustering would occur at further and further intervals to the original map position.
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+first you compare the 2 medians. If the median for X_0 is greater than X_1 we know that the answer will be somewhere in the lower half of X_0 or the upper half of X_1. We can recursively keep calculating the medians of the two arrays until each array only has 2 elements left. You can then take the maximum of the first elements of both arrays, add it to the minimum of the second element of both arrays and divide by 2 to get the median.
+
+---++++ Analysis and running time
+since we are dividing both arrays each time, the running time for this algorithm will be bounded by log(n).
+
+<latex> \Theta (logn) </latex>
+---+++ ii. Median of three
+---++++ Algorithm
+I know that for the three arrays that the median must be between the biggest and smallest median. We then can eliminate anything less than or equal to the the lower median in its array, and anything higher than the upper median in its array. However, this time we need to make sure that we are only deleting the same number of elements from each array. Therefore we will remove the smaller amount of the two from each array. Once you get down to 2 arrays, you no longer remove anything that is equal to the median, and then you continue until 1 element remains (your median) or 2 elements remain (average them for your median).
+
+---++++ Analysis and running time
+Since this algorithm will be run as many times as we can divide the three arrays, removing constants it will just be bounded by log(n)
+
+<latex> \Theta(log(n)) </latex>
+---+++ iii. Median of n
+---++++ Algorithm
+This will be the exact same algorithm as before. We will continue to remove the minimum amount that is greater than the maximum median in the maximum array and the minimum median in the minimum array. We will continue to do this until there are only 2 arrays left, where you no longer throw out the medians. Then continue until only 1 or 2 elements remain. If 2 elements are left just average them for your median. 
+---++++ Analysis and running time
+since we will have to divide each array log(n) times and there are n arrays, the running time will be bounded by n*log(n).
+
+<latex>\Theta(n*log(n))</latex>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+
+HEADER FILE
+%CODE{"cpp"}%
+
+#ifndef __Homework4__myBloomFilter__
+#define __Homework4__myBloomFilter__
+
+//This code was produced by the collaboration of Alejandro Eguren and Connor Richmond.
+
+#include <string>
+#include "BloomFilter.h"
+using namespace std;
+
+class myBloomFilter : public BloomFilter
+{
+public:
+    myBloomFilter (int mm) : length(mm)  //the Default constructor for the Bloom Filter
+    {
+    }
+    myBloomFilter (string filter) : length(filter.length()) // Constructor with a first entry
+    {
+    }
+    void insert(string item); //inserts a valid set
+    bool exists(string item); //tests a string to see if it's a member of the set
+    string output();          //returns a string of 0 and 1 of the Bloom filter
+    int hash1(string key);    //4 Hash Functions to put Hash into the bloom filter.
+    int hash2(string key);
+    int hash3(string key);
+    int hash4(string key);
+
+protected:
+    int length; // this is the length of the array for the bloom filter!
+};
+#endif /* defined(__Homework4__myBloomFilter__) */
+
+%ENDCODE%
+
+CPP FILE
+%CODE{"cpp"}%
+
+//This code was produced by the collaboration of Alejandro Eguren and Connor Richmond.
+
+#include "myBloomFilter.h"
+#include <vector>
+#include <string>
+#include <cmath>
+#include <sstream>
+myBloomFilter::myBloomFilter (int mm) : length(mm)
+{
+    //In this contructor the Bloom Filter will be a vector of zeros so we can keep a record of it's size
+    //and take advantage of it's properties. Length is given in the constructor.
+    length = mm;
+    vector<int> bloom_map(length, 0);
+}
+
+myBloomFilter::myBloomFilter (string filter) : length(filter.length())
+{
+    //Initiallized the Bloom Filter inserting an initial string to set length and the first insert.
+    length = filter.length();
+    vector<int> bloom_map(length, 0);
+    insert(filter);
+}
+
+void myBloomFilter::insert(string item)
+{
+    //To insert a new valid input we chose to hash it 4 times which lowers the probabilities of a false positive
+    //for high lengths. Each value of the hash mods to the Bloom filter's index and sets it to one.
+    //this represents it as 4 inputs that identifiy it as a member.
+    bloom_map[hash1(item, length)] = 1;
+    bloom_map[hash2(item, length)] = 1;
+    bloom_map[hash3(item, length)] = 1;
+    bloom_map[hash4(item, length)] = 1;
+}
+
+bool myBloomFilter::exists(string item)
+{
+    //This functions tests if the string "item" is a member. It finds the value in the Bloom Filter index
+    //with an if function testing for ones if one of the positions is zero then we know it's not a member!
+    
+    int pos1, pos2, pos3, pos4; 
+    pos1=bloom_map[hash1(item, length)];
+    pos2=bloom_map[hash2(item, length)];
+    pos3=bloom_map[hash3(item, length)];
+    pos4=bloom_map[hash4(item, length)];
+    
+    if (pos1&&pos2&&pos3&&pos4)
+        return true;
+    return false;
+}
+
+string myBloomFilter::output()
+{
+    //Using string stream we print out all the values to a string and return it from the bloom filter.
+    stringstream printout;
+    
+    for (int ii = 0; ii<length ; ii++)
+        printout << bloom_map[ii];
+    
+    return printout.str();
+}
+
+//Below are 4 hash equations. The first is based on a simple sum of the characters and mod with the length.
+//The second is the product of all the values in the key then modded.
+//The third hash functions keeps a running result of both the sum and the product.
+//The fourth simply sums all the values to thier position power.
+//Before returning each result, each hash is multiplied by a prime number to always assure a different index
+//in the filter as well as returning the absolute value to index correctly.
+int myBloomFilter::hash1(string key)
+{
+    int sum=0;
+    for (int ii=0 ; ii<key.length() ; ii++)
+        sum += key[ii];
+    
+    sum *= 7873;//prime number
+    return sum%length;
+}
+
+int myBloomFilter::hash2(string key)
+{
+    int prod=1;
+    for (int ii=0 ; ii<key.length() ; ii++)
+        prod *= key[ii];
+    
+    prod *= 29;//prime number
+    return abs(prod%length);
+}
+
+int myBloomFilter::hash3(string key)
+{
+    int prod=1;
+    int sum=0;
+    int result=0;
+    for (int ii=0 ; ii<key.length() ; ii++)
+    {
+        prod *= key[ii];
+        sum += key[ii];
+        result += sum+prod;
+    }
+    
+    result *= 47;//prime number
+    return abs(result%length);
+}
+
+int myBloomFilter::hash4(string key)
+{
+    int sum=0;
+    for (int ii=key.length()-1 ; ii>=0 ; ii--)
+        sum += pow(key[ii],ii);
+    
+    sum *= 197;//prime number
+    return abs(sum%length);
+}
+%ENDCODE%
+---+++ Explanation
+For this problem we had a couple challenges to solve. The first was to design good hash functions that would map a key in different places. We thought the simpler the hash functions the better. Another factor we considered was the optimal number number of hash functions to produce a low false positive rate. Using the the optimal equation learned in class k=m/n *.6 estimating an m and n we decided that 4 hashes would be a good number (as well as testing it experimentally). The hashes were all moded to the length of the bloom filter so we'd always index a value in. 
+
+The hashes were a simple sum, a simple product, a summation of a running sum and running product of the numbers, and finally each char to the power of it's significant digit. Since the char's are actual numbers this sum and product could be easily calculated. As a final step we multiplied each hash by a different prime number so they would all differ to a high probability and then mod with absolute value.
+
+Insert uses always all the hash functions to put the information in and exist would check if a member was in by hashing and peeking at the Bloom Filter. The print out was done simply with a string stream.
+
+In terms of solving the challenges the hash functions used different strategies and coupled with the different prime numbers almost always yielded a different value (so that no two hashes of the same string were the same). Finding the ideal number of hashes was done both thoeretically and experimentally to lower the probability of a false positive after a certain length threshold is passed. And Finally the last challenge: converting to char was easy since the multiplication or the sum would convert it to an integer that was easy to deal with and bloom filter it. 
+---+++!! Grader comments *[0/25]*
+<VERBATIM>
+No score found, email professor?
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+HEX: 6f3e3bcc9b8d42cd8d0ba074fdcacfacf51deb28   PASSWORD: ETR
+
+HEX: f30a15d2ff7844588d2bdfb408d9eadeaccdcdbf   PASSWORD: FFI
+
+HEX: 4087367e470c39b530134e9f4657e86ea675deac   PASSWORD: Nov
+
+HEX: 4bb4348d714f69b9d43ed42f8d25736c31343e86   PASSWORD: PSA
+
+HEX: bf6741838d73fb9d51850cb83597ddc66bcc2314   PASSWORD: SMB
+
+HEX: 35a6ebb4a4681bcd387453958c96eea4bcd7db77   PASSWORD: Wal
+
+HEX: 89bb853a9a04e2c091c791c8d4e119518897b636   PASSWORD: apt
+
+HEX: 361be360760e694b07aecce91f60dc1bc6ef893f   PASSWORD: ass
+
+HEX: ce5fadf6ef646c567c7eb4a47df0703568e71f15   PASSWORD: prs
+
+HEX: b63f801cadc25f2f9e9f51fddb88cf8e016a687d   PASSWORD: yen
+
+---+++ 4b. Simplified rainbow tables
+I ran all my passwords for over an hour collectively. My collaborator and I came together and solved his first and cracked a ton of them but in my case we same program that cracked before would not crack any more. I've included both since this was our mutual work:
+
+COLLABORATION:
+
+da510fcea23b55304f66f616c8f3d3e08fadd609 : Unbreakable
+
+567cf4c0b536d13d88f5a1794da17864935c3e4f : quare
+
+4d5004a7e1cded2079bf6025ad63de225ec28bac : Unbreakable
+
+d7d04aa5582228286a74be412f475f1921cc5515 : gazel
+
+28d4d2a685809550605408ac071bdbdadf5d986a : Unbreakable
+
+440f1853f63b2f59e41352340ac2c0cef9cd4ff5 : skald
+
+05553c640284aaa4cd5cb0c639968ed7b1b71761 : loury
+
+4ec6d5c184d67b1136b8123b8d111a025747ba77 : lense
+
+3957c1afc1bf2c683f6dc65477a5ef0f9307fbfd : stale
+
+3f05127ed527ba745a04f0cd026ea8cbceb1acd4 : Unbreakable
+
+
+
+
+MINE:
+
+05553c640284aaa4cd5cb0c639968ed7b1b71761: Unbreakable
+
+54c15eedd7615d3d92afc152722f231ceb76366d: Unbreakable
+
+f3c711429a835b46b6f3ecae7bc3339fc333cce0: Unbreakable
+
+d51bcee05c7dc6f4a5178b033f869fad40257551: Unbreakable
+
+3957c1afc1bf2c683f6dc65477a5ef0f9307fbfd: Unbreakable
+
+0d87fd05ab773e3fef729295b84adcfa57461fb1: Unbreakable
+
+905307595fd00ec39f82d07f96f0f8db01959212: Unbreakable
+
+417e29f338b78edf97fff1fdc241952be6892067: Unbreakable
+
+94e2a17f19fe446a6fc5c3fb0517dba21f4339a1: Unbreakable
+
+72df2133d2a84916f5512b190f4bdd58a76a249a: Unbreakable
+
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+We generated my rainbow table by slightly modifying the provided reduce function, and hashing and reducing 10,000 randomly generated 5 character strings. The rainbow table consists of the starting string, as well as the ending string after the hash/reduce cycle was completed 
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

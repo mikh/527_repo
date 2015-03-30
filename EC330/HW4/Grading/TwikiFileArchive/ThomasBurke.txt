@@ -1,0 +1,127 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(ThomasBurke),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+i and iii
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+first find the median of the two arrays. next you may eliminate any numbers below the smallest 
+median and any numbers larger than the biggest median may also be eliminated. then 
+continue finding medians of the arrays and deleting with respect to the median as was 
+aforementioned. In the end there will either be one number which is your median or 
+the median will be 1 apart in with your median will be in the middle of those two 
+values.so just simply keep checking is all the medians are the same value or if it
+ is solely 2 values in which you'd cut it in half
+</VERBATIM>
+---++++ Analysis and running time
+<VERBATIM>
+worst case <latex> \theta (logn) </latex>
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+first find the median of the three arrays. next you may eliminate any numbers below the smallest 
+median and any numbers larger than the biggest median may also be eliminated. then 
+continue finding medians of the arrays and deleting with respect to the median as was 
+aforementioned. In the end there will either be one number which is your median or 
+the median will be 1 apart in with your median will be in the middle of those two 
+values.so just simply keep checking is all the medians are the same value or if it
+ is solely 2 values in which you'd cut it in half
+</VERBATIM>
+---++++ Analysis and running time
+<VERBATIM>
+worst case <latex> \theta (logn) </latex>
+</VERBATIM>
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+first find the median of each array. next you may eliminate any numbers below the smallest 
+median and any numbers larger than the biggest median may also be eliminated. then 
+continue finding medians of the arrays and deleting with respect to the median as was 
+aforementioned. In the end there will either be one number which is your median or 
+the median will be 1 apart in with your median will be in the middle of those two 
+values.so just simply keep checking is all the medians are the same value or if it
+ is solely 2 values in which you'd cut it in half
+</VERBATIM>
+---++++ Analysis and running time
+<VERBATIM>
+worst case is <latex> \theta (nlogn) </latex>
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+   // put your code here
+   // also remember to upload it in submit page
+
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+---+++!! Grader comments *[0/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+these are the passwords respectively:
+mr2
+~3m
+7l3
+)9+
+xs2
+7F/
+y!+
+j'1
+c/:
+}-x
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the password you cracked. 
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Give out the explanation here. Remember attached the code and table
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

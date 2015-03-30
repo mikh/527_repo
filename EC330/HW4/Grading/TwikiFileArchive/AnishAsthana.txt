@@ -1,0 +1,240 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(AnishAsthana),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+Secondary Clustering
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+Merge the two arrays until you reach the nth element.
+
+1.Create two indices i, j to traverse arrays A and B. Create index k to store position of the first free cell in the merged array. i,j,k=0
+2.At each step: if both indices are in range (i < n and j < n), choose minimum of (A[i], B[j]) and write it to merged[k]. if !(i<n and j<n), go to step four.
+3.Increase k and the index smaller value array by one. If k =n, stop merging. Else, Repeat step 2.
+4.Copy the remaining values from the array which still has an in range index to Merge.
+
+Take the average of the nth element and the (n-1)th element
+
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Well, you have a total of 2n elements.
+Merging takes theta(n) time for n elements, 
+so it will take theta(2n) time for 2n elements.
+However, we are going up to 2n/2 elements,
+so it will take theta(n) time.
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+Merge the three arrays until you reach the (3n/2)th element.
+The method to merge is the same as above. Instead of two arrays you
+ will have three arrays, so four variables incrementing.
+The median is the average of the (3n/2)th element and 
+the (3n/2-1)th element if 3n is an even number.
+If 3n is an odd integer, the (3n/2)th element is the median
+
+
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Well, you have a total of 3n elements.
+Merging takes theta(n) time for n elements, 
+so it will take theta(3n) time for 3n elements.
+However, we are going up to 3n/2 elements,
+so it will take theta(n) time.
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+Merge n arrays until you reach the (n^2/2)th element.
+The algorithm for actually merging will be almost the same as the above two(n+1 indecises)
+The median is the average of the (n^2/2)th element and 
+the (n^2/2-1)th element if n^2 is an even number.
+If n^2 is an odd integer, the (n^2/2)th element is the median
+
+
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Well, you have a total of n^2 elements.
+Merging takes theta(n) time for n elements, 
+so it will take theta(n^2) time for n^2 elements.
+However, we are going up to n^2/2 elements,
+so it will take theta(n^2/2) time.
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+#include"myBloomFilter.h"
+#include<string>
+#include<iostream>
+
+using namespace std;
+
+
+//A bitwise hash function written by Justin Sobel 
+//http://www.partow.net/programming/hashfunctions/
+//I couldn't independently come up with a hashing function with a low false positive rate
+unsigned int JSHash(const string str, unsigned int hash)
+{
+  
+
+   for(int ii = 0; ii < str.size(); ii++)
+   {
+      hash ^= ((hash << 5) + str[ii] + (hash >> 2));
+   }
+
+   return hash;
+}
+
+
+//Construct bloom filter of certain length
+myBloomFilter::myBloomFilter(int mm):BloomFilter(mm)
+{
+	length=mm;
+	filter= string(length,'0');
+}
+//Copy a bloom filter 
+myBloomFilter::myBloomFilter(string str):BloomFilter(str)
+{
+	length=str.size();
+	filter=str;
+}
+
+void myBloomFilter::insert(string item)
+{
+	unsigned int pos;
+	pos= JSHash(item,1315423911);
+	pos=pos%length;
+	filter[pos]='1';
+	
+	pos= JSHash(item,1115421221);
+	pos=pos%length;
+	filter[pos]='1';
+	
+	pos= JSHash(item,1222222211);
+	pos=pos%length;
+	filter[pos]='1';
+}
+
+bool myBloomFilter::exists(string item)
+{
+	unsigned int pos;
+	int check=0;
+	pos= JSHash(item,1315423911);
+	pos=pos%length;
+	
+	if(filter[pos]=='1')
+		check=1;
+	else return false;
+	
+	pos= JSHash(item,1115421221);
+	pos=pos%length;
+	if(filter[pos]=='1')
+		check=1;
+	else return false;
+	
+	pos= JSHash(item,1222222211);
+	pos=pos%length;
+	if(filter[pos]=='1')
+		check=1;
+	else return false;
+	
+	if(check==1)
+		return true;
+}
+string myBloomFilter::output()
+{
+	return filter;
+}
+
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+I used a JS hash cause the hash I came up with had a high false positive rate.
+I am using three different numbers for three iterations of the hash which give me 3
+ different positions in the filter string which are changed from 0 to 1
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Fee
+SMB
+fub
+mpg
+ass
+Rom
+MeV
+Dey
+ETR
+voe
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+dZKBo
+scYMM
+hGFaj
+hGFaj
+QaXTh
+lgiXv
+hGFaj
+^V_g`
+hGFaj
+hGFaj
+
+For some reason it was infinitely looping when I tried finding the specific passwords, so I am submitting the matching pair member which it eventually comes to with enough hash/reductions
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+I have two loops. The outer loop runs from 0 to whenever, and the inner loop runs from 0 to 1million.
+I start with a initial string, and run 1 million hash reduce cycles, and write to a file. I open the file in ios::app mode
+so that if eng grid terminates my program I can just start running the program again and it will append to the end of the table.
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

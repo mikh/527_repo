@@ -1,0 +1,271 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(DanielVasilyonok),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+ii. secondary clustering
+The probe sequence can be written for i=1 to i = 3: h1(k) = h0(k) + 1 = h(k) + 1, h2(k) = h(k) + 1 + 2 = h(k) + 3, h3(k) = h(K) + 3 + 3 = h(k) + 6
+This is not a linear probing sequence is there will not be primary clustering. It is also not a quadratic probing sequence, but still it will exhibit
+a similar property of secondary clustering around not immediate nodes. 
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+Before Merging the two arrays each array can be cut in half
+by finding the median of the first and second array using the median function below. The true median will then be between 
+the low median and the high median. After truncating the wrong half from the two arrays,
+they can be passed into the following merge function. 
+
+Merge works similar to the merge function in merge sort
+merging the two sorted arrays.
+int[] Merge( int X0, int X1) { 
+     int size = X0.size() + X1.size();
+     int X3[size];
+     int j = 0, k = 0;
+     for(int i = 0; i < size; i++) {
+          if(X0[j] < X1[k]) {
+               X3[i] = X0[j];
+               j++;
+          }
+          else {
+               X3[i] = X1[k];
+               k++;
+          }
+     }
+     return X3;
+}
+After merging into one sorted array you can find the median with another function
+passing the sorted array
+int median(int X3) {
+     int size = X3.size();
+     int middle = size/2;
+     if(size % 2 == 0) {
+          return (X3[middle-1] + X3[middle])/2;
+     }
+     else {
+          return (X3[middle]);
+     }
+}
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+The merge function take theta(2n) time because you must loop through twice the size of one of the arrays to merge both of them.
+The median function is theta(1) because it does not based on larger input.
+Thus the worst case running time is theta(n) -- linear time.
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+If we have three arrays X0, X1, X2. The goal is the merge all 3 into one sorted array and then call the median function.
+1st we can use the merge algorithm described for two arrays on X0 and X1.
+X3 = Merge(X0,X1)
+This should return X3 which is just X0 and X1 sorted into one array. Then we can call merge again...
+X4 = Merge(X3,X2)
+This is the final merge. Lastly we can call the median function here.
+Median(X4)
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+The first merge take theta(2n), the second merge will take theta(3n), and median will take theta(1)
+This worst case running time is thus theta(n) -- linear time.
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+Using the Merge and Median functions described for two arrays above, we can approach
+the n array problem by calling Merge in an iterative or recursive fashion...
+Iterative:
+XR = {X0,X1,X2 .... Xn} //XR array containing n arrays
+Xi = XR[0]
+i = 1
+while( i < XR.size() ) {
+     X = Merge(X, XR[i])
+     i++;
+}
+//This will merge all the arrays into one sorted array
+//Then we can pass the final sorted array into the median function.
+Median = Median(X)
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+The resulting array will have a final size of n^2.
+The total number of operations will be (2n + 3n + 4n +  ... + n^2) = n(2 + 3 + 4 + ... + n) = ((n-1)(n+2)/2) * n. -->arithmetic progression
+This reduces to a worst case running time of theta(n^3)
+
+Note: The above running time is assumed if only one processor is utilized. On a multiprocessor system however, the performance
+can be improved by dividing merging of sorted arrays among the processors. The merging of two sorted arrays can be done concurrently.
+For example, if we have 64 arrays...
+We can do 32 merges, 16 merges, 8 merges, 4 merges, 2 merges, which results in (2 + 4 + 8 + 16 + 32 + 64)*n operations.
+or ( 2*(1 - 2^log(n) )/(1-2) )* n using the formula for geometric progression, which is roughly 2*log(n)*n.
+So in this case the worse case running time may be theta(nlog(n))
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+#include "myBloomFilter.h"
+#include <iostream>
+
+
+/**
+* Instantiate an empty Bloom filter of length  chars.
+*/
+myBloomFilter::myBloomFilter(int mm){
+	length = mm;
+	//bloom[length];
+	for(int i = 0; i!=length; i++) {
+		bloom.push_back('0');
+	}
+}
+/**
+* Instantiates a Bloom filter from a given string 
+* @requires  must have been produces by the output() call of a BloomFilter object.
+*/
+myBloomFilter::myBloomFilter(string filter){
+	length = filter.length();
+	//bloom[length];
+	for(int i = 0; i!=length ;i++) {
+		bloom.push_back('0');
+	}
+	int ii = hash1(filter, length);
+	int jj = hash2(filter, length);
+	bloom[ii] = 'i';
+	bloom[jj] = 'j';
+}
+
+/**
+* inserts  into the filter
+*/
+void myBloomFilter::insert(string item) {
+	int ii = hash1(item, length);
+	int jj = hash2(item, length);
+	if(bloom[ii] != 'i' && bloom[jj] != 'j') {
+		bloom[ii] = 'i';
+		bloom[jj] =  'j';
+	}
+}
+
+/**
+* Checks whether  is in the filter.
+* @return  true if the item is probably in the filter
+*          false if the item is definitely not in the filter
+*/
+bool myBloomFilter::exists(string item) {
+	if(bloom[hash1(item, length)] == 'i' && bloom[hash2(item, length)] == 'j') {
+		return true;
+	}
+	else {	
+		return false;
+	}
+}
+
+/**
+* @return A string of  characters representing the Bloom filer
+*/
+string myBloomFilter::output() {
+	return bloom;
+}
+
+int myBloomFilter::hash1(string key, int length) {
+	int ki;
+	for(int i = 0; i!=length;i++) {
+		ki += (int)key[i];
+	}
+	return (ki%length);
+}
+int myBloomFilter::hash2(string key, int length) {
+	int ki;
+	for(int i = 0; i!= length; i++) {
+		ki += (int)key[i];
+	}
+	ki *= P;
+	return (ki%length);
+}
+
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+I chose two use 2 hash functions. One one hash function flipped the '0' it got flipped to 'i'. For the other hash function, the '0' got flipped to a 'j'.
+The two hash functions used were variations of division hash functions. 
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+DIF : cd1f661819f0f5cdd22c79b5cf5a640819c97fd8
+Dey : aa0299a40190b299a6d7295a2ab4d71818cdd2e6
+EMS: e6584124725aa6506f4db8831accb36205f885a0
+EOF: 4983dec5d7d2a58148bf012219e23e29b3a25fcf
+GOK: 634ae17b636edd383df907007f0f05a9cc2dad8c
+IAH: c022f84dea73b1a8886b092d8e3f376e7caed543
+RGS: df7e831c623901a31bc4c163eb4ce245df8e6770
+eom: b1d02f3ece9656335cc5102fe700764604f009e7
+sip: cd9e85c338f9f8907ff3de5f7b615f70712b6194
+zoo: e13f3a7c6d12baf0b6ad298c2bbc0a8308158c43
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+The strings I matched in the second column of the rainbow table were:
+        ;TUih - \dWea
+	p]th`- \dWea
+	4y]{'- \dWea
+	iLQ0? - KgdkF
+	x(Y+r- hNrLk
+	!9xM5 - \dWea
+	),7.r - `sVv_
+	`HnRq - hRWPd
+	PSlE)- \dWea
+	e'IF`- Q|`XZ 
+Going back from the first string, my code was not able to find matches for the hash the was produced by the true password.
+I've attached 4b.cpp.
+
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+In 4c.cpp, I constructed a rainbow table that can be used to break 3 character passwords. To do this, I iterated through all combinations of ascii from 33 to 126 with 3 for loops.
+For each 3 char combination, I passed through a chain of 100 hash/reduce functions, which eventually gave the final string, that goes into the second column of the rainbow table.
+With more time and/or more powerful computer, a much larger rainbow table could be made that can break larger passwords.
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

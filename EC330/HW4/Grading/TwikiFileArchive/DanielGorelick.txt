@@ -1,0 +1,336 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(DanielGorelick),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+Primary Clustering - NO
+Secondary Clustering - YES
+Always able to add a keys - NO
+
+Explanation: Because this is a recursively calling function, it is not linear probing. It will probe each index in an arithmetic sequence. This method will not work in the case where the array is of length 9, because it will continually try probing the same few indexes, leaving others unchecked. 
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+To find the median of the two arrays, a recursive median of median method can be used. 
+This method will first find the two medians of each array, and then find the medians between those two medians using the same method. 
+</VERBATIM>
+
+%CODE{"cpp"}%
+int median2(int array1[], int array2[], int n)
+{
+    int median1; 
+    int median2; 
+ 
+    //base case 1
+    if (n == 1) 
+        return (array1[0] + array2[0])/2;
+    
+    //base case 2
+    if (n == 2)
+        return (max(array1[0], array2[0]) + min(array1[1], array2[1])) / 2;
+ 
+    //get new medians
+    median1 = median(array1, n); 
+    median2 = median(array2, n); 
+ 
+
+    //case where medians are equal
+    if (median1 == median2)
+        return median1;
+ 
+    //case where median1 is less than median2: 
+    //only look at elements more than median1 and less than median2
+    if (median1 < median2)
+    {
+        if (n % 2 == 0)
+            return getMedian(array1 + n/2 - 1, array2, n - n/2 +1);
+        else
+            return getMedian(array1 + n/2, array2, n - n/2);
+    }
+ 
+    //case where median2 is less than median1: 
+    //only look at elements more than median2 and less than median1
+    else
+    {
+        if (n % 2 == 0)
+            return getMedian(array2 + n/2 - 1, array1, n - n/2 + 1);
+        else
+            return getMedian(array2 + n/2, array1, n - n/2);
+    }
+}
+%ENDCODE%
+
+---++++ Analysis and running time
+<VERBATIM>
+O(n) = log(n) runtime. 
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+
+Coin Pile Method: 
+Imagine each array is a pile of coins lying next to each other with the smallest coin on the top going to the largest on the bottom. 
+The median size coin can be found be comparing the coins on top and removing the smallest. 
+Knowing the size of the piles in the beginning, if this is done until the coin reached is 3n/2, then this coin will be the median size. 
+
+Since the arrays are all sorted, the median of all three can be found by comparing the next smallest value of each of the three arrays until the 3n/2 value is reached. 
+This value (if the array length is odd) will be the median of all three. If even, then the median is (array[3n/2] + array[3n/2+1])/2.
+
+Implementation: 
+
+</VERBATIM>
+
+%CODE{"cpp"}%
+int median3(int array1[], int array2[], int array3[], int n)
+{
+    int count = 0;
+    int index1 = 0;
+    int index2 = 0; 
+    int index3 = 0;
+    int min(array1[index1], array2[index2], array3[index3]){
+        if(array1[index1] < array2[index2]){
+            else {
+                if(array1[index1] < array3[index3]){
+                    index1++; 
+                    return 1;
+                }
+            }
+        }
+        if(array2[index2] < array3[index3]){
+            else {
+                if(array2[index2] < array1[index1]){
+                    index2++; 
+                    return 2;
+                }
+            }
+        } else {
+            index3++;
+            return 3;
+            }
+        }
+    //finds min value of each of three arrays starting in the beginning of each
+    //increments indexer each time until count reaches halfway through all arrays
+    while(count < (3n/2 - 1)){
+        min(array1[index1], array2[index2], array3[index3]);
+        count++;
+    }
+    //next value after (3n/2)-1 will be the median of all the arrays
+    int median = min(array1[index1], array2[index2], array3[index3]));
+    if(median == 1){
+        return array1[index1];
+    } 
+    else if(median == 2){
+        return array2[index2];
+    } 
+    else if(median == 2){
+        return array2[index2];
+    }
+}
+%ENDCODE%
+
+---++++ Analysis and running time
+<VERBATIM>
+The runtime will be 9n/2 because it will take 3 comparisons for each n, until the index halfway through the three arrays is reached.
+Because these are just constants, this method runs in O(n) = n.
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+Very similar implementation for the three arrays, except in this case the stopping index will be n*n/2. Also, for each step, all n arrays need to be compared to find the minimum value. 
+Because there will be n comparisons instead of 3, this will increase the runtime (look in next section).
+
+Instead of there being 3 coin piles, there will be as many piles as the original height of each pile. The median can be found by finding the smallest of all the piles, then removing that coin.
+
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Since there are n arrays, to find the min in each iteration will take n comparisons. It will have to do this n*n/2 times. 
+Thus, the runtime will be O(n) = n^2 
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+//CPP FILE
+
+#include "myBloomFilter.h"
+
+//Creates string of length mm to be all '0's 
+myBloomFilter::myBloomFilter(int mm){
+        filter = "";
+        length = mm;
+        for(int ii = 0; ii < mm; ii++){
+                filter += '0';
+        }
+}
+
+//initializes with a string
+myBloomFilter::myBloomFilter (string filter){
+        length = filter.length();
+        this->filter = filter;
+}
+
+//hash function
+int hashing(string item) {
+	int total = 0;
+	for (int i = 0; i < item.length(); i++){
+                total += item[i]*457; 
+        }
+    return total;
+}
+
+//Inserts '1' into the string at the hash%length location  
+void myBloomFilter::insert(string item){
+        int hashNum = hashing(item);
+        filter[hashNum%length] = '1';
+}
+
+//Finds if element is already a '1' or '0'
+bool myBloomFilter::exists(string item){
+        int hashItem = hashing(item);
+        if (filter[hashItem % length] == '1'){
+                return true;
+        }
+        else return false;
+}
+
+string myBloomFilter::output(){
+        return filter;
+}
+
+//HEADER FILE
+
+#ifndef MYBLOOMFILTER_H
+#define	MYBLOOMFILTER_H
+#include <string>
+using namespace std;
+
+class myBloomFilter{
+        public:
+
+        myBloomFilter (int mm);
+
+        myBloomFilter (string filter);
+
+        void insert (string item);
+
+        bool exists(string item);
+
+        string output();
+        
+        protected:
+        string filter;
+	int length; /** The length of the Bloom filter, in chars. */
+};
+
+#endif	
+
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+I mostly followed the description for each of comments in the header file for my implementation. 
+I created a protected variable called filter, which would be the string passed into my function. I made a simple hash function to get a false positive ~0.75. With more appropriate hash functions I'm sure this value could be lower.
+</VERBATIM>
+
+---+++!! Grader comments *[14/25]*
+<VERBATIM>
+Score: 1655</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Afr matches with hash 11cc34b4e1cc58a68bc0f4fa20988d06e80d3333
+M-1 matches with hash 9dd06c3f4413fd8d4946f819e62d15e7d500d3bc
+SCU matches with hash 7ba2a4f3586ea97b102a3bbda29d867121d014dd
+Sui  matches with hash 3100ca7f4a968340d89d115a5c25bceb43217e95
+lab  matches with hash ed5dd0204793834a222d4bea84a083aa0768866b
+mpg  matches with hash 685df4b1503f907064c7e9ba0bdc424975db4c05
+oaf matches with hash 5225829a60ca955d03ff4e969d29bc3148dd7944
+pp. matches with hash 957ec481552393c16efbf3a292b0fb00892d806f
+tig matches with hash 1e3eda00c2c659e756da686d75f4e79ab8db27dc
+zoo matches with hash e13f3a7c6d12baf0b6ad298c2bbc0a8308158c43
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+No password found with my method. Implementation used : 
+</VERBATIM>
+
+%CODE{"cpp"}%
+#include <iostream>
+#include <sstream>
+#include <fstream>
+#include "hash.h"
+#include "sha1.h"
+#include <string>
+
+//implementation of the rainbow table finder 
+//no matches found, but it worked its hardest
+string rainbowTableFind (string password) {
+	string reducedString = reduce(password, 5);
+	string rainbowString = "p";
+	string hashingString = "";
+	string temp = "";
+	ifstream rainbow("table.txt");
+	while(getline(rainbow,rainbowString)) {
+		if (reducedString == rainbowString.substr(14,5)) {
+			hashingString = rainbowString.substr(4,5);
+			cout << "Found: " << reducedString << " going to the end now." << endl;
+			while (true) { 
+				if (hashing(hashingString) == password) {
+					return hashingString;
+				}
+				temp = hashing(hashingString);
+				hashingString = reduce ( temp, 5);
+			}
+		}
+	}
+	rainbow.clear();
+	rainbow.seekg(0, ios::beg);
+	reducedString = hashing(reducedString);
+	reducedString = reduce (reducedString, 5); 
+	return "no matches found";
+}
+
+%ENDCODE%
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+My simplified rainbow table works through strings of length 5. Each string is hashed and reduced 10000 times, and this is done for 1000 different strings. The strings are found by using rand() and then multiplying each by a number and modding each by another number. For more detail, the comments in the code explain my approach.
+
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

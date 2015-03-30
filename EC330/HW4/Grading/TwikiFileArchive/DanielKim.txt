@@ -1,0 +1,350 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(DanielKim),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+This probing sequence resembles a geometric summation, since the sequence is trailed by an i. Thus, the answer must be ii . (Secondary Clustering)
+
+The answer cannot be i. Primary Clustering because the probing sequence is not linear. The answer cannot also be iii. because some spaces will inevitably be skipped as i increases.
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+medianFunction(int ar1[], int ar2[], int n){
+	//Obtain the median value of both arrays and compare.
+	// If they're equal, return it.
+	// Otherwise, if median1 from ar1 < median2 ar2, then median must 
+	// exist in ar1[median1 ... n] or ar2[0 ... median2]
+	//
+	// Assume that if n is even, then the median will be the mean of the two middle numbers.
+	
+	if (n == 1) //If array only has 1 element.
+		return (ar1[0] + ar2[0]) / 2;
+	if (n == 2) //If array only has 2 elements
+		return (max(ar1[0], ar2[0]) + min(ar1[1] , ar2[1]) /2)
+	
+	if (n is even) // if number of elements is even
+		median1 = (arr1[n/2] + arr1[n/2 - 1] / 2);
+		median2 = (arr2[n/2] + arr2[n/2 - 1] / 2);
+	else if (n is odd) // if number of elements is odd. assume that n is an integer
+		median1 = (arr1[n/2]);
+		median2 = (arr2[n/2]);
+		
+	if (median1 == median2)
+		return median1;
+		
+	if (median1 < median2){
+		if n is even
+			return medianFunction(ar1[...median1], ar2, n - n/2 + 1) // n is odd now
+		else
+			return medianFunction(ar1[...median1], ar2, n - n/2) //n retains odd
+	if (median1 > median2){
+		if n is even
+			return medianFunction(ar2[...median2], ar1, n - n/2 + 1)
+		else
+			return medianFunction(ar2[...median2], ar1, n - n/2)
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+The running time should be bigO(log n).
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+medianFunctionWith3(int ar1[], int ar2[], int ar3[], int n){
+	// The same plan from the last part will be used.
+	// First, find the individual median of each array.
+	// Then, compare the medians.
+	// The array with the biggest median will be converted to ar[... median], 
+	// since the true median must be less than that.
+	// The other two arrays will become ar[median ...], since true median is bigger than their indiv meds.
+	// Repeat function until only one or two elements remain, or if all medians are same.
+	
+	if (n == 1) //If array only has 1 element.
+		return (ar1[0] + ar2[0] + ar3[0]) / 3;
+	if (n == 2) //If array only has 2 elements
+		return (max(ar1[0], ar2[0], ar3[]) + min(ar1[1] , ar2[1], ar3[1]) /3)
+	
+	if (n is even) // if number of elements is even
+		median1 = (arr1[n/2] + arr1[n/2 - 1] / 2);
+		median2 = (arr2[n/2] + arr2[n/2 - 1] / 2);
+		median3 = (arr3[n/2] + arr3[n/2 - 1] / 2);
+	else if (n is odd) // if number of elements is odd. assume that n is an integer
+		median1 = (arr1[n/2]);
+		median2 = (arr2[n/2]);
+		median3 = (arr3[n/2]);
+		
+	if (median1 == median2 == median3)
+		return median1;
+	
+	if (max(median1,median2,median3) == median1)
+		if n is even
+			return medianFunctionWith3(ar1[... median1], ar2[median2...], ar3[median3...], n - n/2 + 1) //Reduce n by half + 1 since we start at median now
+		else
+			return medianFunctionWith3(ar1[... median1], ar2[median2...], ar3[median3...], n - n/2)
+	if (max(median1, median2, median3) == median2){
+		if n is even
+			return medianFunctionWith3(ar1[median1...], ar2[...median2], ar3[median3...], n - n/2 + 1) // n is odd now
+		else
+			return medianFunctionWith3(ar1[median1...], ar2[...median2], ar3[median3...], n - n/2) //n retains odd
+	if (max(median1, median2,median3) == median3){
+		if n is even
+			return MedianFunctionWith3(ar1[... median1], ar2[... median1], ar3[...median3], n - n/2 + 1)
+		else
+			return MedianFunctionWith3(ar1[... median1], ar2[... median1], ar3[...median3], n - n/2)
+	
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+The answer should still be bigO(log n).
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+// First, mergesort all of the arrays into one giant big array called "bigarray".
+// The variable 'k' will indicate how many elements there are in each array.
+// The median of this "bigarray" can be found by simply finding the average of the element in (n/2)*2 + k and the element right after that.
+// There's probably a better way to do this.
+medianfunctionWith3(int ar1[], int ar2[], ... , int arn[], int k){
+	int bigarray = mergesort(ar1[], ar2[], ..., int arn[]);
+	int median = bigarray[(n/2)*k] + bigarray[(n/2)*k + 1] / 2;
+	return median;
+}
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+The running time of this algorithm is bigO(n^2 log n).
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+#include "myBloomFilter.h"
+
+myBloomFilter::myBloomFilter(int mm){
+	// Initializes a myBloomFilter with an int input.
+	length = mm;
+	for (int ii = 0; ii != mm; ii++){
+		stringinput.push_back('0');
+	}
+	// cout << "myBloomFilter created with int: " << mm << endl;
+}
+
+myBloomFilter::myBloomFilter(string filter){
+	// Initializes a myBloomFilter with a string input.
+	length = filter.length();
+	for (int ii = 0; ii != filter.length(); ii++){
+		stringinput.push_back('0');
+	}
+	int hashedint1 = hashfunction1(filter);
+	int hashedint2 = hashfunction2(filter);
+	stringinput[hashedint1] = 'a';
+	stringinput[hashedint2] = 'b';
+	// cout << "myBloomFilter created with string: " << filter << endl;
+}
+
+void myBloomFilter::insert(string item){
+	int hashedint1 = hashfunction1(item);
+	int hashedint2 = hashfunction2(item);
+	if (stringinput[hashedint1] == 'a' and stringinput[hashedint2] == 'b'){
+		// cout << "Insert failed. The item '" << item << "' already exists!" << endl;
+		}
+	else{
+		stringinput[hashedint1] = 'a';
+		// cout << stringinput[hashedint1] << endl;
+		stringinput[hashedint2] = 'b';
+		// cout << "The item '" << item << "' was inserted into the myBloomFilter." << endl;
+		}
+}
+        
+bool myBloomFilter::exists(string item){
+	int checkthis1 = hashfunction1(item);
+	int checkthis2 = hashfunction2(item);
+	if (stringinput[checkthis1] == 'a' and stringinput[checkthis2] == 'b'){
+		// cout << "Your item '" << item << "' is possibly located in the myBloomFilter." << endl;
+		return true;
+	}
+	else{
+		// cout << "Your item '" << item << "' is not in the myBloomFilter." << endl;
+		return false;
+	}
+}
+string myBloomFilter::output(){
+	//Return the characters that make up the myBloomFilter.
+	return stringinput;
+}
+
+int myBloomFilter::hashfunction1(string input){
+	// Convert all characters in string to integer based off ascii then mod by prime number.
+	// Return: the mod value
+	int mod_num = length; // Prime number used for modding
+	int asciisum = 0;
+	for (int counter = 0; counter != this->length; counter++){
+		asciisum += int(input[counter]);
+	}
+	int hashresult = asciisum % (mod_num);
+	return hashresult;
+}
+
+int myBloomFilter::hashfunction2(string input){
+	// Simple multiplication based hash function.
+	// Obtain int values of chars in string input and add them all up into asciisum.
+	// Then, run length - (asciisum % length) to obtain the hash.
+	int mul_num = length;
+	int asciisum = 0;
+	for (int i = 0; i != this->length; i++){
+		asciisum += int(input[i]);
+	}
+	int hashresult = length - (asciisum % length);
+	return hashresult;
+}
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+This is the cpp source file for myBloomFilter.
+
+Each myBloomFilter possesses the variables length (how many chars it can hold) and stringinput (what string will it output based off the chars inside the filter). The constructors used to create each BloomFilter create a string of 0s of defined length. When the user inputs his or her own strings (via constructor or the class function input()), the string is hashed into two hash functions, and the outcomes are placed into the bloomfilter string. The exists function also utilizes the same two hash functions to find whether or not the strings are located in the bloomfilter (of course, there are false positives).
+
+The hash functions in question are very simple. Both functions convert the string characters into int values based off their ASCII positions, however one uses multiplication and the other uses mod.
+</VERBATIM>
+
+---+++!! Grader comments *[20/25]*
+<VERBATIM>
+Score: 1996</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+ASCII passwords for Problem 4a:
+1. 3100ca7f4a968340d89d115a5c25bceb43217e95
+Answer: Sui
+2. bf6741838d73fb9d51850cb83597ddc66bcc2314
+Answer: SMB
+3. cc99e2e9f10a545bb4c79bb93a7fff6600077ba1
+Answer: OBS
+4. a697476fc47a0c342b2afb57f493e7fb94f27f82
+Anaswer: ays
+5. 6238277c67810458926ed9ce400fa01f7731f0f6
+Answer: sb.
+6. c3a61237871f6639e0968676ca44a963dfbf2a5a
+Answer: sma
+7. 4bb4348d714f69b9d43ed42f8d25736c31343e86
+Answer: PSA
+8. c49fa65e028b678b8c1341d0ece3227ef508948c
+Answer: i'd
+9. 2b7d678f303a4032f359d66fc1085699683c5b65
+Answer: PNA
+10. 4796ad0886540784ec03ff1dc61575c6b333dee9
+Answer: Sup
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+1.
+Your input hash is: 428130a6327d28c56a39d9a6454c1bbcbee4e6a7
+The string on the right side is: \VkaZ
+The string on the left side is: I6SM6
+Your password is: ch]aI
+
+2.
+Your input hash is: 554c496d4a059589135554f2e93332e2a1d4605d
+The string on the right side is: \dWea
+The string on the left side is: ;TUih
+Your password is: a![Gc
+
+3.
+Your input hash is: 2191f6f83bd3ceb82a54bfbe0c6e0d5037bfa5f3
+The string on the right side is: Mmjdg
+The string on the left side is: ?$F|r
+Your password is: jYw[g
+
+4.
+Your input hash is: 1e3275a9fc3aa2e41ff316de9fba5990b92513b6
+The string on the right side is: \dWea
+The string on the left side is: ;TUih
+Your password is: a![Gc
+
+5.
+Your input hash is: 132880d91f57afe988303ccce9c27da6e2f9a91b
+The string on the right side is: hRWPd
+The string on the left side is: `HnRq
+Your password is: T_okb
+
+6.
+Your input hash is: ef23c71db02bd96501d197c58ce0b05777ae8fed
+The string on the right side is: \dWea
+The string on the left side is: ;TUih
+Your password is: a![Gc
+
+7.
+Your input hash is: 9263b4f14d2ff93d52bfe4235668651b821b0f04
+The string on the right side is: `sVv_
+The string on the left side is: ),7.r
+Your password is: V_JRo
+
+8.
+Your input hash is: 0866015466b0d01d49db3e3c55216f65faf26d39
+The string on the right side is: hRWPd
+The string on the left side is: `HnRq
+Your password is: T_okb
+
+9.
+Your input hash is: 4ec6d5c184d67b1136b8123b8d111a025747ba77
+The string on the right side is: LiK=V
+The string on the left side is:  mm^g,
+Your password is: ]YdcU
+
+10.
+Your input hash is: dc31170d029df869794a9a8dbe515e873048392f
+The string on the right side is: Mmjdg
+The string on the left side is: ?$F|r
+Your password is: jYw[g
+
+
+
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+The attached code creates a rainbow table (defaulted to 3-char passwords and 100 items) by utilizing the hash and reduce functions provided to us in the hash.cpp and sha1.cpp files.
+
+All items are stored in the myrainbow.txt using fstream. The left strings are randomly generated ASCII values while the right strings are hashed and reduced versions of their respective left.
+
+Two arrays, leftside and rightside, are instantiated for holding the strings. After all strings are created, the fstream will process all contents of these arrays into the txt.
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

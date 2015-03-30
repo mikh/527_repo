@@ -1,0 +1,361 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(AlexanderWong),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+
+This probe sequence will exhibit secondary clustering (and not linear clustering), and it is not always able to add a key if the table is not full.
+
+So, only option ii.
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+
+Comparing Medians method:
+
+<VERBATIM>
+int TwoArrayMedian(int array1[], int array2[], int n)
+	int m1; // Median of the first array
+	int m2; // Median of the second array
+ 
+	// Base case: arrays of size 1
+	if (n == 1)
+		return (array1[0] + array2[0]) / 2;
+
+	// Base case: arrays of size 2
+	if (n == 2)
+		return (max(array1[0], array2[0]) + min(array1[1], array2[1])) / 2;
+
+	// Get medians of both arrays
+	m1 = Median(array1, n);
+	m2 = Median(array2, n);
+ 
+	// If the medians are equal, we know that m1=m2 will be the median of the combined array
+	if (m1 == m2)
+		return m1;
+ 
+	 // Case 1: m1 < m2 - the median for the combined array must exist in the sub-arrays array1[m1....n-1] or array2[0....m2]
+	if (m1 < m2)
+		if (n % 2 == 0)
+			return TwoArrayMedian(array1 + n/2 - 1, array2, n - n/2 +1);
+		else
+			return TwoArrayMedian(array1 + n/2, array2, n - n/2);
+ 
+	// Case 2: if m1 > m2 then median for the combined array must exist in the sub-arrays array1[0....m1] or array2[m2....n-1]
+	else
+		if (n % 2 == 0)
+			return TwoArrayMedian(array2 + n/2 - 1, array1, n - n/2 + 1);
+		else
+			return TwoArrayMedian(array2 + n/2, array1, n - n/2);
+
+Median(int array[], int n)
+	if (n%2 == 0)
+		return (array[n/2] + array[n/2-1])/2;
+	else
+		return array[n/2];
+</VERBATIM>
+---++++ Analysis and running time
+
+Finding medians and all other operations are constant time.  Iterations can only occur logn times because we can only subdivide the arrays logn times. So, the running time will be <latex> O(logn) </latex>.
+
+---+++ ii. Median of three
+---++++ Algorithm
+Strategy: The strategy here is the same as the strategy for n arrays, as after moving from two arrays the problem becomes much more complicated. *See the pseudocode for n array median.*
+
+---++++ Analysis and running time
+
+Since we are using the same strategy for three arrays as the N array median, the time complexity will be the same as for N arrays. <latex> O(logn) </latex>
+---+++ iii. Median of n
+---++++ Algorithm
+
+General strategy: We know that the median of n arrays must be between the smallest and the largest of the n medians (but not necessarily one of the medians!).  We can use this information to discard elements that we know will not be the median until we eventually come upon the median (with only one element left, or calculation from two elements).  This is also made easier by the fact that all of our arrays are the same length.
+
+<VERBATIM>
+NArrayMedian(int* arrays[numArrays], int n, int numArrays)
+	// Pointer to all arrays are all stored in the array 'arrays'
+	// n is the length of the int arrays
+	// numArrays is the number of arrays we are using
+
+	int currentArrays = number of int arrays that are not empty
+
+	// Calculate all of the medians of the arrays and put into an array, in the same order as array order
+	Median(all arrays)
+
+	// Determine lowest and highest median and their indices
+	lowestIndex = medians.min_element.index
+	highestIndex = medians.max_element.index
+
+	// Base cases:
+	if (currentArrays == 1 or 2)
+		if (totalElements == 1)
+			return that element
+		if (totalElements == 2)
+			return (element1+element2)/2
+
+		// Else delete only up to lowest and highest median
+		arrays[lowestIndex].delete[0...median-1]
+		arrays[highestIndex].delete[median+...n-1]
+
+	// Else delete down from and including lowest median and up from and including highest median
+	arrays[lowestIndex].delete[0...median]
+	arrays[highestIndex].delete[median...n-1]
+
+	// Recursively call function
+	NArrayMedian()
+
+</VERBATIM>
+---++++ Analysis and running time
+
+Again, all operations are in constant time, and we are only iterating logn times as we can only remove the number of elements logn time. So, the time complexity is <latex> \Theta(logn) </latex>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+#include "myBloomFilter.h"
+
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+/* Hash Functions */
+
+int hash1(string item){ // djb2
+    unsigned long hash = 5381;
+    char c;
+    for(int i=0; i<item.size(); i++){
+        c=item[i];
+        hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+    }
+    return hash;
+}
+
+/* Member Functions */
+
+myBloomFilter::myBloomFilter(int mm) : BloomFilter(mm) {
+	filterArray="";
+	for (int i=0; i<mm; i++){
+		filterArray += '0';
+	}
+}
+
+myBloomFilter::myBloomFilter(string filter) : BloomFilter(filter) {
+	filterArray = filter;
+}
+
+void myBloomFilter::insert(string item) {
+	filterArray[hash1(item)%length] = '1';
+}
+
+bool myBloomFilter::exists(string item) {
+	if (filterArray[hash1(item)%length] == '1')
+		return true;
+	else return false;
+}
+
+string myBloomFilter::output() {
+	return filterArray;
+}
+
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+I have created "myBloomFilter", *inherited* from BloomFilter. %BR%
+For my hash function, I have used the djb2 hash.  So, when inserting an element this hash is calculated and then the char at the hash%length of filter is 'turned on.'
+This only has one hash function currently, but adding more hash functions would increase performance.
+---+++!! Grader comments *[0/25]*
+<VERBATIM>
+No score found, email professor?
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+
+6f3e3bcc9b8d42cd8d0ba074fdcacfacf51deb28 = ETR %BR%
+f8e7985223821448bf43204dd4a65c18669f4280 = EBI %BR%
+30efd404f76280f244ee1e00b86b2d12fd4c16f3 = eme %BR%
+934594c19098524d2ce03beb0414e08d2c427129 = MTF %BR%
+957ec481552393c16efbf3a292b0fb00892d806f = pp. %BR%
+8c724c48c16b7e3b7c5bb896b256194840fbef78 = cog %BR%
+007d04468b0dafec647c305361351728f5e4d610 = bel %BR%
+04c41d16491231d8e966c5c78560272125a97634 = MeV %BR%
+cd1f661819f0f5cdd22c79b5cf5a640819c97fd8 = DIF %BR%
+5225829a60ca955d03ff4e969d29bc3148dd7944 = oaf
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the passwords you cracked. 
+</VERBATIM>
+
+** I have posted here the code that I believe should return a correct password.  However, for some reason I am still unable to find matching hashes even after first finding a corresponding entry in the rainbow table.
+
+%CODE{"cpp"}%
+
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <string>
+
+#include "hash.h"
+
+int main() {
+	/* Break the following password hashes using the rainbow table in table.txt:
+	c5ec0ed7f14df1fc53947b04a33de4062b8162c8
+	b1f9f946d0738e1512da5c37a70c0bacb0f1cce9
+	026dd8ca0f2e93059b23b0ef35c3af9245522d1e
+	daccd93d89a165d59565e1dd815414002be1d54b
+	b75c52169980998ba8ac93da57bd7bcf59390b8b
+	484ae67299a215c1a4f822f3de26b76526d365fb
+	dca176f786b33124e02bc3dee7d357ae4ae863b5
+	b56a4f72f0c4031a0737346eb80e669c6d6b3cd4
+	7000cc6ecf3553ac2ff16f43b7e6cad151f6a0ff
+	0866015466b0d01d49db3e3c55216f65faf26d39
+	*/
+	// Create array of the hashes
+	string hashes[] = {"c5ec0ed7f14df1fc53947b04a33de4062b8162c8",
+						"b1f9f946d0738e1512da5c37a70c0bacb0f1cce9",
+						"026dd8ca0f2e93059b23b0ef35c3af9245522d1e",
+						"daccd93d89a165d59565e1dd815414002be1d54b",
+						"b75c52169980998ba8ac93da57bd7bcf59390b8b",
+						"484ae67299a215c1a4f822f3de26b76526d365fb",
+						"dca176f786b33124e02bc3dee7d357ae4ae863b5",
+						"b56a4f72f0c4031a0737346eb80e669c6d6b3cd4",
+						"7000cc6ecf3553ac2ff16f43b7e6cad151f6a0ff",
+						"0866015466b0d01d49db3e3c55216f65faf26d39"};
+
+	// Create array to hold cracked passwords
+	string passwords[10];
+
+	// Create vectors to hold the rainbow table
+	std::vector<std::string> originals;
+	std::vector<std::string> reduceds;
+
+	// Read rainbow table into two vectors
+	std::ifstream in("table.txt", std::ios::in);
+	std::string p1, original, comma, reduced, p2;
+	while (in >> p1 >> original >> comma >> reduced >> p2) {
+		originals.push_back(original);
+		reduceds.push_back(reduced);
+	}
+	in.close();
+
+	// Reduce and hash until the string is found in the rainbow table
+	for (int i=0; i<10; i++) {
+		std::string currentHash = hashes[i];
+		bool foundPassword = false;
+		while (foundPassword == false) {
+			std::string currentReduction = reduce(currentHash,5);
+
+			// Iterate along all of the reduced strings in the table
+			for (int j=0; j<reduceds.size(); j++) {
+				if (currentReduction == reduceds[j]){
+					std::cout << "reduction match" << std::endl;
+					std::string currentString = originals[j];
+					std::cout << currentString << " " << reduceds[j] << std::endl;
+					
+					// Once a match has been found, hash and reduce until the corresponding password
+					// to the original hash is found
+					while (true) {
+						currentHash = hash(currentString);
+						if (currentHash == hashes[i]) {
+							std::cout << "matching hash found" << std::endl;
+							passwords[i] = currentString;
+							foundPassword = true;
+							break;
+						}
+						else {
+							currentString = reduce(currentHash,5);
+							if (currentString == currentReduction) {
+								passwords[i] = "NotFound";
+								foundPassword = true;
+								break;
+							}
+						}
+					}
+					
+					break;
+				}
+			}
+
+			// if not found, hash and repeat
+			currentHash = hash(currentReduction);
+		}
+	}
+
+	// Print the hashes and passwords
+	for (int i=0; i<10; i++) {
+		std::cout << hashes[i] << " = " << passwords[i] << std::endl;
+	}
+}
+
+%ENDCODE%
+
+Output (reduction match is the corresponding entry in the table that was matched):
+
+<VERBATIM>
+reduction match                                        
+U@FxS MlVpk                                            
+reduction match                                        
+k*p0E fTNQ|                                            
+reduction match                                        
+k*p0E fTNQ|                                            
+reduction match                                        
+6}[uX ]C]rP                                            
+reduction match                                        
+U@FxS MlVpk                                            
+reduction match                                        
+U@FxS MlVpk                                            
+reduction match                                        
+U@FxS MlVpk                                            
+reduction match                                        
+U@FxS MlVpk                                            
+reduction match                                        
+JY@6h kmFeL                                            
+reduction match                                        
+`HnRq hRWPd                                            
+c5ec0ed7f14df1fc53947b04a33de4062b8162c8 = NotFound    
+b1f9f946d0738e1512da5c37a70c0bacb0f1cce9 = NotFound    
+026dd8ca0f2e93059b23b0ef35c3af9245522d1e = NotFound    
+daccd93d89a165d59565e1dd815414002be1d54b = NotFound    
+b75c52169980998ba8ac93da57bd7bcf59390b8b = NotFound    
+484ae67299a215c1a4f822f3de26b76526d365fb = NotFound    
+dca176f786b33124e02bc3dee7d357ae4ae863b5 = NotFound    
+b56a4f72f0c4031a0737346eb80e669c6d6b3cd4 = NotFound    
+7000cc6ecf3553ac2ff16f43b7e6cad151f6a0ff = NotFound    
+0866015466b0d01d49db3e3c55216f65faf26d39 = NotFound
+</VERBATIM>
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+
+I attempted to generate random numbers to be the starting string, and then hashed and reduced multiple times to get the final reduced string. %BR%
+Note: Generating random numbers is unnecessarily incredibly difficult.  The compilers on the lab machines are too old to support all the feature of <random>, and there is no easy accessible way to generate random numbers in c++ fast enough for this purpose. %BR%
+As such, my current implementation is rudimentary. To improve it, I would of course improve the randomness, which would include randomizing the number of times the hash/reduce process occurred, etc.
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

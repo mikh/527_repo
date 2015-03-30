@@ -1,0 +1,168 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(BarronRoth),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+ii. 2ndary
+
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+int medianOneSorted(int arr[], int arrLen)
+{
+    if (arrLen%2 == 0)
+        return (arr[arrLen/2] + arr[arrLen/2-1])/2;
+    else
+        return arr[arrLen/2];
+}
+
+int medianTwoSorted(int X1[], int X2[], int arrLen)
+{
+    int m1;
+    int m2;
+   
+    m1 = medianOneSorted(X1, arrLen);
+    m2 = medianOneSorted(X2, arrLen);
+ 
+    if (arrLen <= 0)
+    	cout << "invalid array" << endl;
+
+ 
+    if (arrLen == 1)
+        return (X1[0] + X2[0])/2;
+ 
+    if (arrLen == 2)
+        return (max(X1[0], X2[0]) + min(X1[1], X2[1])) / 2;
+
+
+
+    if (m1 == m2)
+        return m1;
+ 
+
+
+    if (m1 < m2)
+    {
+        if (arrLen % 2 == 0)
+            return medianTwoSorted(X1 + arrLen/2 - 1, X2, arrLen - arrLen/2 +1);
+        else
+            return medianTwoSorted(X1 + arrLen/2, X2, arrLen - arrLen/2);
+    }
+ 
+
+    else
+    {
+        if (arrLen % 2 == 0)
+            return medianTwoSorted(X2 + arrLen/2 - 1, X1, arrLen - arrLen/2 + 1);
+        else
+            return medianTwoSorted(X2 + arrLen/2, X1, arrLen - arrLen/2);
+    }
+}
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+
+O(logn)
+
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+same idea for two arrays
+median must be between the smallest and the largest of the 3 medians
+min = medians.min & max = medians.max
+delete els < min in minArray
+delete els > max in maxArray
+iterate until length of array is 1 or 2 els
+
+
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+O(logn)
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+same idea for two arrays
+median must be between the smallest and the largest of the n medians
+min = medians.min & max = medians.max
+delete els < min in minArray
+delete els > max in maxArray
+iterate until length of array is 1 or 2 els
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+O(logn)
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+   // put your code here
+   // also remember to upload it in submit page
+
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+---+++!! Grader comments *[0/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Give out the password you cracked. Remember attached the code as 'problem4a.zip'
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the password you cracked. 
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Give out the explanation here. Remember attached the code and table
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

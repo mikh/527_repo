@@ -1,0 +1,221 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(NicholasBoukis),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+(ii)
+
+If you rewrite the sequence you get something that looks like:
+h_i(k) = h(k) + (i<sup>2</sup> + i) / 2 which is a form of quadratic probing. This type of probing causes secondary clustering and is also difficult to find an empty spot if the table is more than half full.
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+Similar to the merge step of a merge sort, create an array of size 2n. Have a pointer at the beginning of each array and when one number is smaller than the other, push_back() that number to the new array of size 2n and move that array's pointer to the right. Do this until both pointers have gone through the array. Once you have the new array, if its size is odd, return the middle element - if it's even, find the average of the middle two elements and return that.
+
+---++++ Analysis and running time
+Has a running time of 2n which is Theta(n).
+
+---+++ ii. Median of three
+---++++ Algorithm
+Similar to part i, you create an array of size 3n and set a pointer to the beginning of each array. The minimum element amongst the current pointers gets added via push_back() to the new array, and that pointer is moved to the right. When I pointer has finished adding all of its elements to the new array, it's removed and now only two of the pointers are compared until every element is accounted for. Again, once you have the new array, if its size is odd, return the middle element - if it's even, find the average of the middle two elements and return that.
+
+---++++ Analysis and running time
+Has a running time of 3n which is Theta(n).
+
+---+++ iii. Median of n
+---++++ Algorithm
+Once again, similar sort of idea here - you create an array of size n<sup>2</sup> and set a pointer to the beginning of each array. The minimum element amongst the current pointers gets added via push_back() to the new array, and that pointer is moved to the right. When I pointer has finished adding all of its elements to the new array, it's removed and the rest of the pointers are compared until every element is accounted for. Again, once you have the new array, if its size is odd, return the middle element - if it's even, find the average of the middle two elements and return that.
+
+---++++ Analysis and running time
+Has a running time of n<sup>2</sup> which is Theta(n<sup>2</sup>).
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+#include "myBloomFilter.h"
+
+//Hash the string three times and insert a 1 at each index produced
+void myBloomFilter::insert(string item)
+{
+	int indexOne = hashStepOne(item);
+	int indexTwo = hashStepTwo(item);
+	int indexThree = hashStepThree(item);
+
+	bloomFilter[indexOne] = 1;
+	bloomFilter[indexTwo] = 1;
+	bloomFilter[indexThree] = 1;
+}
+
+
+//Check if each hashed index has a 1 at its location, if it does it probably exists
+bool myBloomFilter::exists(string item)
+{
+	int indexOne = hashStepOne(item);
+	int indexTwo = hashStepTwo(item);
+	int indexThree = hashStepThree(item);
+
+	if(bloomFilter[indexOne] == 1 && bloomFilter[indexTwo] == 1 && bloomFilter[indexThree] == 1)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+//Output the current boom filter as a string of 0's and 1's
+string myBloomFilter::output()
+{
+	string returnString;
+	for (int i=0; i < bloomFilter.size(); i++)
+    {
+    	if(bloomFilter[i] == 0)
+    		returnString += "0";
+
+    	if(bloomFilter[i] == 1)
+    		returnString += "1";
+    }
+
+    return returnString;
+}
+
+//Default constructor
+//Creates a bloom filter with 95 positions filled with zeroes
+myBloomFilter::myBloomFilter() : BloomFilter (95)
+{
+	bloomFilter.resize(95, 0);
+}
+
+//Creates a bloom filter with the string produced by output()
+myBloomFilter::myBloomFilter(string filter) : BloomFilter (filter)
+{
+	vector<int> newFilter(95, 0);
+	bloomFilter = newFilter;
+
+	for (int i=0; i < filter.length(); i++)
+    {
+    	if(filter.at(i) == '1')
+    	{
+			bloomFilter[i] = 1;
+    	}
+    }
+}
+
+//Produces one version of hashing for the given string
+int myBloomFilter::hashStepOne(string str)
+{
+	int hash = 37;
+    for (int i=0; i < str.length(); i++)
+    {
+        hash = hash * 5 + str.at(i);
+    }
+
+    return (hash % 95);
+}
+
+//Produces another version of hashing for the given string
+int myBloomFilter::hashStepTwo(string str)
+{
+	int hash = 7;
+    for (int i=0; i < str.length(); i++)
+    {
+        hash = hash * 53 + str.at(i);
+    }
+
+    return (hash % 95);
+}
+
+//Produces another version of hashing for the given string
+int myBloomFilter::hashStepThree(string str)
+{
+	int hash = 311;
+    for (int i=0; i < str.length(); i++)
+    {
+        hash = hash * 2 + str.at(i);
+    }
+
+    return (hash % 95);
+}
+
+
+%ENDCODE%
+
+---+++ Explanation
+For my solution to this problem, I used three different hashing functions and a bloom filter of size 95 (the number of characters to possibly put into a string). Each hash function uses different prime numbers to calculate the hash index. Converting the vector to a string was relatively simple considering I simply chose a string of just 0's and 1's.
+---+++!! Grader comments *[0/25]*
+<VERBATIM>
+No score found</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+1: Saw
+
+2: SYC
+
+3: voe
+
+4: bel
+
+5: sma
+
+6: OBS
+
+7: abd
+
+8: SRB
+
+9: prs
+
+10: Fee
+
+---+++ 4b. Simplified rainbow tables
+1. 
+
+2. offal
+
+3. lense
+
+4. 
+
+5. 
+
+6. quare
+
+7. arado
+
+8. Mello
+
+9. Fredi
+
+10. Bazin
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+Essentially, I just created a list of passwords and for each one, simply hashed and reduced 1000 times until I was left with a string. I outputted the generated password and its corresponding value to the output file.
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

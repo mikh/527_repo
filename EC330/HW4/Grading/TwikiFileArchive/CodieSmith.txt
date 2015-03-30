@@ -1,0 +1,310 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(CodieSmith),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+ii. Secondary Clustering
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+getMedian(X0,X1)
+    m1 = X0[n/2]
+    m2 = X1[n/2]
+
+    if m1 == m2
+        return m1
+
+    if X0.length > 2
+         if m1 > m2
+              X0 = X0[0...n/2]
+              X1 = X1[n/2....n-1]
+              getMedian(X0,X1)
+         if m2 > m1
+              X0 = X0[n/2...n-1]
+              X1 = X1[0......n/2]
+              getMedian(X0,X1)
+    median = (max(X0[0],X1[0]) + min(X0[1],X1[1]))/2
+
+end      
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+This algorithm will take O(log(n)) time, because you will have to divide the array log(n) times in order to get to an array of 2.
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+getMedian(ar1,ar2,ar3)
+
+a,b,c = 0;
+
+      for i=0 to n/2
+               if ar1(a) < (ar2(b) & ar3(c))
+                       a++
+               if ar2(b) < (ar1(a) & ar3(c))
+                       b++
+               if ar3(c) < (ar1(a) & ar2(b))
+                       c++
+ 
+      if a > (b&c) 
+             median = ar1(a)
+      if b > (a&c)
+             median = ar2(b)
+      if c > (a&b)
+             median = ar3(c)
+
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+This function would run in Theta(N) time, because it will go through the array n/2 times no matter what. 
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+//
+//  myBloomFilter.h
+//  EC330 HW4
+//
+//  Created by Codie Smith on 3/18/15.
+//  Copyright (c) 2015 EC330. All rights reserved.
+//
+
+#ifndef MYBLOOMFILTER_H
+#define	MYBLOOMFILTER_H
+#include <string>
+#include <vector>
+#include <sstream>
+using namespace std;
+
+class myBloomFilter {
+public:
+    /**
+     * Instantiate an empty Bloom filter of length [ mm ] chars.
+     */
+    myBloomFilter (int mm);
+    /**
+     * Instantiates a Bloom filter from a given string [filter]
+     * @requires [filter] must have been produces by the output() call of a BloomFilter object.
+     */
+    myBloomFilter (string filter);
+    /**
+     * inserts  into the filter
+     */
+    
+    //creates hash vector
+    
+    
+    void insert(string item);
+    
+    /**
+     * Checks whether [item] is in the filter.
+     * @return  true if the item is probably in the filter
+     *          false if the item is definitely not in the filter
+     */
+    bool exists(string item);
+    
+    /**
+     * @return A string of [length] characters representing the Bloom filer
+     */
+    string output();
+    
+    int hashOne(string item);
+    int hashTwo(string item);
+    int hashThree(string item);
+    
+protected:
+    unsigned long int length; /** The length of the Bloom filter, in chars. */
+    vector<int> hashDisShit;
+};
+
+#endif	/* BLOOMFILTER_H */
+
+//
+//  myBloomFilter.cpp
+//  EC330 HW4
+//
+//  Created by Codie Smith on 3/18/15.
+//  Copyright (c) 2015 EC330. All rights reserved.
+//
+
+#include "myBloomFilter.h"
+
+myBloomFilter::myBloomFilter (int mm){
+    for(int i=0;i<mm;i++){
+        hashDisShit.push_back(0);
+    }
+    length = mm;
+}
+
+myBloomFilter::myBloomFilter (string filter){
+    length = filter.length();
+    for (int i=0;i<filter.length();i++){
+        hashDisShit.push_back(0);
+    }
+}
+
+int myBloomFilter::hashOne(string item){
+    stringstream convert;
+    int value;
+    convert << item;
+    convert >> value;
+    return value % length;
+}
+
+int myBloomFilter::hashTwo(string item){
+    int value = 0;
+    int num = 169;
+    for(int i = 0; i < item.length(); i++)
+    {
+        value = (value * num) + item[i];
+    }
+    return value % length;
+}
+
+int myBloomFilter::hashThree(string item){
+    int value = 0;
+    for (int k = 0; k < item.length(); k++)
+        value = value + int(item[k]);
+    return value % length;
+}
+
+bool myBloomFilter::exists(string item){
+    if((hashDisShit.at(hashOne(item)) == 1) && (hashDisShit.at(hashTwo(item)) == 1) && (hashDisShit.at(hashThree(item)) == 1)){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+void myBloomFilter::insert(string item){
+    hashDisShit.at(hashOne(item)) = 1;
+    hashDisShit.at(hashTwo(item)) = 1;
+    hashDisShit.at(hashThree(item)) = 1;
+}
+
+string myBloomFilter::output(){
+    string final;
+    for (int i=0;i<length;i++){
+        final[i] = hashDisShit.at(i);
+    }
+    return final;
+}
+
+
+
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+In my code, I used three hash functions. My first hash function returned the integer value of the string mod the length of the bloom filter. My second hash function returned the sum of the values in the string converted to integers mod the length of the string. My third hash function is a variation of this, with the value multiplied by 169 before it is summed. In the bloom filter class, I created a vector of integers that would later store the number 1 in the array index that the hash functions returned. 
+</VERBATIM>
+
+---+++!! Grader comments *[0/25]*
+<VERBATIM>
+Score: 1000</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+The list of passwords I found were:
+
+BPA
+FFI
+GCM
+aob
+bpt
+eme
+i'd
+oaf
+wim
+xcl
+
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the password you cracked. 
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+#include "hash.h"
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+using namespace std;
+
+int main() {
+	string password = "$$$$$";
+	ofstream myfile ("rainbowTable.txt");
+	int count = 0;
+	while (count!=6969) {
+		string original = password;
+		string final = password;		
+		for (int i = 0; i<20; i++) {
+			final = reduce(hash(final),5);
+		}	
+		if (myfile.is_open()) {
+			myfile << "( " << original << " , " << final << " )\n";		
+		}
+		password = reduce(hash(final),5);
+		count++;
+	}
+	myfile.close();
+	return 0;
+}
+
+
+
+
+I reduce and hash the password 20 times and create 6969 lines in the table. I then hash and reduce one more time at the end to get a new password. 
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

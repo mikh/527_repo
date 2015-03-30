@@ -1,0 +1,348 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(RyanOFlaherty),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+This probe sequence will exhibit properties i. and iii., as it shows characteristics of a linear probe and we are dealing with an open addressed hash table.  
+Linear probes have primary clustering due to the fact that the next item is stored only i distance away from the previous hash.  This probe will check the 
+previous stored value and try place it as close to it as it can (i is the number of collisions it encounters before storing the value).  Therefore all of the data 
+will be clustered in large groups, leading to the eventual O(n) insert time as hashes need to move n spaces to find openings.  However it will keep 
+searching and incrementing i until it finds an opening in the hash table or the table is full, which is a possibility due to the characteristics of an openly
+addressed hash table.
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+
+array1, array2 		// sorted arrays
+size				// size of array
+
+
+// main function
+findMedian(array1[], array2[], size){
+
+       // edge cases and invalid input
+	if (size <= 0)
+		return  "invalid input"
+
+	if (size = 1)
+		return (array[0] + array2[0]) / 2
+
+	if (size = 2)
+		return (max(aray1[0], array2[0]) + min(array1[1], array2[1])) / 2
+
+
+	// find median of both arrays
+	median1 = median(array1[], size)
+	median2 = median(array2[], size)
+
+	// if the medians are equal then return that value
+	if (median1 == median2)
+		return median1
+
+	// if the first median is less than the second median, then the overall
+	// median is contained in array1[median1:size] and array2[0:median2]
+	if (median1 < median2){
+		if (size % 2 == 0)
+            return findMedian(array1 + size/2 - 1, array2, size - size/2 + 1);
+        else
+            return findMedian(array1 + size/2, array2, size - size/2);
+
+	} else {
+
+	// if the second median is greater than the first, than the new median 
+	// is contained in array1[0:median1] and array2[median2:size]
+
+		if (size % 2 == 0)
+            return findMedian(array2 + size/2 - 1, array1, size - size/2 + 1);
+        else
+            return findMedian(array2 + size/2, array1, size - size/2);
+	}
+}
+
+// function to get median of one array
+median(array[], size){
+	
+	middle = size/2			// round down
+	if (size%2 == 0)
+             return (array[middle] + array[middle-1]) / 2
+        else
+             return array[middle]
+}
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Since the arrays are already sorted, and we are splitting the array in half every time the function recursively calls itself, then the run time is Theta(log n).
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+array1, array2, array3		// sorted arrays
+size						// size of array
+
+// main functiom
+findMedian(array1[], array2[], array3[], size){
+	
+	// edge cases and invalid input
+	if (size <= 0)
+		return  "invalid input"
+
+	// append arrays 
+	for (i = 0; i < size; i++){
+		j = 0;
+		unsortedarray[j] = array1[i]
+		j++
+		unsortedarray[j] = array2[i]
+		j++
+		unsortedarray[j] = array3[i]
+		j++
+	}
+
+	// sort new array
+	sortedarray = InsertionSort(unsortedarray[])
+
+	// find median of the sorted array
+	median1 = median(sortedarray)
+
+	return median1
+}
+
+// function to get median of one array
+median(array[], size){
+	
+	middle = size/2			// round up
+	if (size%2 == 0)
+        return (array[middle] + array[middle-1]) / 2
+    else
+        return array[middle]
+}
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+I had trouble optimizing my first algorithm to find the median of 3 arrays, so I decided to merge them first.
+
+This algorithm combines all three arrays by merging (not merge sorting), instead of appending them.  It then utilizes an Insertion sort which works well on partially sorted arrays.  
+If the data contained in the arrays looks similar, it will perform well and the algorithm is O(n+n).  But if the data is completely different in each array, we have O(n^2 + n) time.
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+// assume n arrays are stored in array
+
+findMedian(array[], n){
+	
+	// basically a merge sort for n arrays that are already sorted
+
+	while (i < n){
+		merge(array[i], array[i+1])
+		i++
+	}
+
+	// find median of merged array in constant time
+
+	median = median(mergedarray[])
+
+	return median
+}
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+My design for part 2 will not work here since creating an array of size n*n is just and then sorting 
+is less efficient than merging and sorting at the same time.  I merge each of the n arrays with the
+ next and end with a wholely sorted array that I can run a median on in constant time.
+
+T(n) = nlogn * n
+Theta(n^2log n)
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+#include "myBloomFilter.h"
+
+// Constructors
+myBloomFilter::myBloomFilter(int mm){
+    length = mm;
+    filter = string(mm, '0');
+}
+
+myBloomFilter::myBloomFilter(string in_filter){
+    length = in_filter.length();
+    filter = in_filter;
+}
+
+// Methods
+void myBloomFilter::insert(string item){
+    int val1, val2, val3, i = 0;
+    int sum = 0;
+    
+    // Sum ASCII values of insert item
+    for(i = 0; i < item.length(); i++){
+        sum += (item[i]);
+    }
+    
+    // Run hashes
+    //val1 = modhash(sum);
+    val2 = binhash(sum, item.length());
+    val3 = knuthhash(sum);
+    
+    // Insert into hash table
+    //filter[val1] = '1';
+    filter[val2] = '1';
+    filter[val3] = '1';
+    
+}
+
+bool myBloomFilter::exists(string item){
+    int val1, val2, val3, i = 0;
+    int sum = 0;
+    
+    // Sum ASCII values of insert item
+    for(i = 0; i < item.length(); i++){
+        sum += (item[i]);
+    }
+    
+    // Run hashes
+    //val1 = modhash(sum);
+    val2 = binhash(sum, item.length());
+    val3 = knuthhash(sum);
+    
+    // Check if exists
+    if (/*filter[val1] == '1' &&*/ filter[val2] == '1' && filter[val3] == '1')
+        return '1';
+    else
+        return '0';
+}
+
+string myBloomFilter::output(){
+    return filter;
+}
+
+int myBloomFilter::binhash(int key, int size){
+    return ((key*length)/(size*127));
+}
+
+int myBloomFilter::knuthhash(int key){
+    return (key*(key+3) % length);
+}
+                                     
+
+
+
+
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+My implementation of the bloomfilter class currently depends on two hashes - the knuth hash as well as the bin hash.  I had a hard time getting around segmentation faults, but was able to overcome it by initializing variables and messing with the hashes.
+</VERBATIM>
+
+---+++!! Grader comments *[5/25]*
+<VERBATIM>
+Score: 1207</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+1. DCE
+2. RFP
+3. Nov
+4. GOK
+5. LWP
+6. Saw
+7. SOP
+8. yen
+9. tig
+10. EMS
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+This doesnt seem right and i dont know why so I attached my code in the hopes of getting extra credit. *See problem4b.zip*
+
+1. mm^g,     LiK=V
+
+2. ;TUih     \dWea
+p]th`     \dWea
+4y]{'     \dWea
+!9xM5     \dWea
+PSlE)     \dWea
+
+3. ;TUih     \dWea
+p]th`     \dWea
+4y]{'     \dWea
+!9xM5     \dWea
+PSlE)     \dWea
+
+4. mm^g,     LiK=V
+
+5. `HnRq     hRWPd
+
+6. ;TUih     \dWea
+p]th`     \dWea
+4y]{'     \dWea
+!9xM5     \dWea
+PSlE)     \dWea
+
+7. ^8+f2     c[\[j
+#lL.C     c[\[j
+
+8. ;TUih     \dWea
+p]th`     \dWea
+4y]{'     \dWea
+!9xM5     \dWea
+PSlE)     \dWea
+
+9. ;TUih     \dWea
+p]th`     \dWea
+4y]{'     \dWea
+!9xM5     \dWea
+PSlE)     \dWea
+
+10. ;TUih     \dWea
+p]th`     \dWea
+4y]{'     \dWea
+!9xM5     \dWea
+PSlE)     \dWea
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Give out the explanation here. Remember attached the code and table
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

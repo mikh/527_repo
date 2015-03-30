@@ -1,0 +1,244 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(YassineElYousfi),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+It is secondary clustering because it is a quadratic probe. After reading the textbook and plugging in values in to h(k) we see thats what it is </VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+THIS IS THE GENERAL ANSWER SO THIS APPLIES TO PART i. and ii. just replace n with 2 and 3 respectively
+
+The algorithm I came up with finds the min of the first element of the array and start the pointer of that array to the successive element and puts that min we found in another array. After the n arrays have been exhausted we have a new array that has the values sorted of all the arrays. From there, it is simple to find the median but just analyzing the length. We are changing the references so there is no extra space needed.
+
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Linear running time since we do n increments</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+//
+//  myBloomFilter.h
+//  EC330_HW5_3
+//
+//  Created by Yassine El Yousfi on 3/17/15.
+//  Copyright (c) 2015 Yassine El Yousfi. All rights reserved.
+//
+
+#ifndef MYBLOOMFILTER_H
+#define	MYBLOOMFILTER_H
+#include <string>
+#include <math.h>
+#include "BloomFilter.h"
+using namespace std;
+
+class myBloomFilter:BloomFilter{
+public:
+    /**
+     * Instantiate an empty Bloom filter of length [ mm ] chars.
+     */
+    myBloomFilter (int mm);
+    
+    /**
+     * Instantiates a Bloom filter from a given string [filter]
+     * @requires [filter] must have been produces by the output() call of a BloomFilter object.
+     */
+    myBloomFilter (string filter);
+    
+    /**
+     * inserts  into the filter
+     */
+    void insert(string item);
+    
+    /**
+     * Checks whether [item] is in the filter.
+     * @return  true if the item is probably in the filter
+     *          false if the item is definitely not in the filter
+     */
+    
+    bool exists(string item);
+    /**
+     * @return A string of [length] characters representing the Bloom filer
+     */
+    
+    string output();
+    
+    
+protected:
+    int length; /** The length of the Bloom filter, in chars. */
+    string BFilter;
+
+};
+
+#endif	/* BLOOMFILTER_H */
+
+//===================================
+//
+//  myBloomFilter.cpp
+//  EC330_HW5_3
+//
+//  Created by Yassine El Yousfi on 3/17/15.
+//  Copyright (c) 2015 Yassine El Yousfi. All rights reserved.
+//
+//  http://www.eternallyconfuzzled.com/tuts/algorithms/jsw_tut_hashing.aspx
+//
+
+#include "myBloomFilter.h"
+#include "BloomFilter.h"
+#include <string>
+using namespace std;
+
+unsigned long int FNV(string key){
+    
+    string item = key;
+    unsigned long int len = item.length();
+    unsigned long int hsh = 2166136261;
+    char a;
+    
+    for (int i = 0; i < len; i++){
+        a = item[i];
+        hsh = (hsh ^ a) * 16777619;
+    }
+    return hsh;
+}
+
+unsigned long int oneAtATime(string key){
+    
+    string item = key;
+    unsigned int long hsh = 0;
+    
+    for (int i = 0; i < item.length(); i++){
+        hsh += item[i];
+        hsh += (hsh << 10);
+        hsh ^= (hsh >> 6);
+    }
+
+    hsh += (hsh << 3);
+    hsh ^= (hsh >> 11);
+    hsh += (hsh << 15);
+    
+    return hsh;
+}
+
+myBloomFilter::myBloomFilter(int mm):BloomFilter(mm){
+    BFilter.append(mm, '0');
+    length = BFilter.length();
+}
+
+myBloomFilter::myBloomFilter(string filter):BloomFilter(filter){
+    BFilter.append(filter.length(), '0');
+    length = BFilter.length();
+}
+
+void myBloomFilter::insert(string item){
+    
+    unsigned long int fnv = (FNV(item) % length);
+    unsigned long int one = (oneAtATime(item) % length);
+    
+    this->BFilter[fnv] = '1';
+    this->BFilter[one] = '1';
+}
+
+
+bool myBloomFilter::exists(string item){
+    
+    unsigned long int len = item.length();
+    unsigned long int fnv = (FNV(item) % length);
+    unsigned long int one = (oneAtATime(item) % length);
+    
+    char a = BFilter[fnv];
+    char b = BFilter[one];
+    
+    for (int i=0; i<len; i++){
+        if (a == '0' || b =='0')
+            {return false;}
+    }
+    
+    return true;
+}
+
+
+string myBloomFilter::output(){
+    return BFilter;
+}
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+This problem  implements an FNV hash and a One-At-A-Time hash. The ideal number of hashes, k, is b*log(2) where b is the number of bits per element which is 8. Therefore the number of hashes is roughly 6. I tried implementing that using a loop but for some reason the bloomfilter became highly inaccurate so I just kept it at two different hashes. I had some trouble extending the class as I had originally created my own from scratch. I managed to get that working though.
+</VERBATIM>
+
+---+++!! Grader comments *[2/25]*
+<VERBATIM>Score: 1091
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Attached.</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Attached in text file</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Attached.
+
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

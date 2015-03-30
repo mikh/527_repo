@@ -1,0 +1,341 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(IgorPereiraDePaula),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<pre>
+If you plug in numbers to the formula it demonstrates quadratic probing which means it demonstrates secondary clustering.  
+</pre>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+---+++Code for n arrays in which n could be 1,2,3 or more arrays
+---++++ Algorithm (C++ code, please read the comments on the code for further insight. You should be looking at the function findMedian
+%CODE{"cpp"}%
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+float findMedian(vector<pair<int*,int> > arrays){
+	
+	//declare my variables:
+	int size = 0;
+	int median_pos;
+	int counter;
+	int current_min_indx;
+	int return_val;
+	bool isEven;
+	
+	
+	// step 1: add up all the sizes:
+	for (int ii = 0; ii < arrays.size(); ii++) {
+		size += arrays[ii].second;
+	}
+	
+	// step 2: calculate position for median:
+	median_pos = size/2;
+	isEven = (size%2) == 0;
+	
+	// step 3: go through values until you reach the median:
+	//the plan is to take <median_pos> steps
+	counter = median_pos; 
+	while (counter-- > 0) {
+	
+		// find the index of the array that has the min num
+		// increment that pointer and continue
+		current_min_indx = 0;
+		for (int ii = 0; ii < arrays.size(); ii++) {
+			if (arrays[ii].first[0] <= arrays[current_min_indx].first[0]){
+				current_min_indx = ii;
+			}
+		}
+		arrays[current_min_indx].first++; cout << "first on array " << current_min_indx+1 << " is " << arrays[current_min_indx].first[0] << endl;
+	}	
+	
+	// step 4: find current min, from all the ones with indx 0; 
+	if (isEven) {
+		//find past min: that was: current_min_indx
+		return_val =  *(arrays[current_min_indx].first - 1);
+		//find new min
+		for (int ii = 0; ii < arrays.size(); ii++) {
+			if (arrays[ii].first[0] <= arrays[current_min_indx].first[0]){
+				current_min_indx = ii;
+			}
+		}
+		return (float)(arrays[current_min_indx].first[0] + return_val)/2;
+	} else {
+		for (int ii = 0; ii < arrays.size(); ii++) {
+			if (arrays[ii].first[0] <= arrays[current_min_indx].first[0]){
+				current_min_indx = ii;
+			}
+		}
+		return (float)arrays[current_min_indx].first[0];
+	}
+}
+
+int main(){
+	
+	int A_1[] = {1,2,3,4,6,9,12,15}; // 0 1 2 3 3 4 [4  6] 6 9 12 13 15 50
+	int A_2[] = {0,3,4,6,13,50};
+	
+	//pair because first will contain array, last will contain size:
+	vector<pair<int*,int> > arrays;
+	
+	//add arrays to vector:
+	arrays.push_back(pair<int*,int>(A_1,8));
+	arrays.push_back(pair<int*,int>(A_2,6));
+	
+	//call function:
+	cout << findMedian(arrays);	
+
+	return 0;
+}
+%ENDCODE%
+---++++ Analysis and running time
+<pre>
+So, the idea was to keep the algorithm running in linear time but save on space complexity. In order to accomplish that, what the algorithm does is to look at all the first elements of the arrays, find the smallest and(instead of adding to a new array) change the pointer to that array to start at the next element. 
+Lets say we have n arrays each with m_i elements, it will take sum (m_i) for i 1 -> n increments. 
+So that will be linear, and to find the min value it takes n time, once again linear. 
+
+So time complexity is linear and it uses no extra memory to copy arrays to.
+</pre>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+#include "myBloomFilter.h"
+#include "BloomFilter.h"
+#include <string>
+#include <iostream>
+using namespace std;
+
+
+
+unsigned long int oneAtATime(string key){
+
+    //http://www.eternallyconfuzzled.com/tuts/algorithms/jsw_tut_hashing.aspx
+
+    string item = key;
+    unsigned int long hsh = 0;
+
+    for (int i = 0; i < item.length(); i++)
+    {
+        hsh += item[i];
+        hsh += (hsh << 10);
+        hsh ^= (hsh >> 6);
+    }
+
+    hsh += (hsh << 3);
+    hsh ^= (hsh >> 11);
+    hsh += (hsh << 15);
+
+    return hsh;
+}
+
+myBloomFilter::myBloomFilter(int mm):BloomFilter(mm){
+    BFilter.append(mm, '0');
+    length = BFilter.length();
+}
+
+myBloomFilter::myBloomFilter(string filter):BloomFilter(filter){
+    BFilter.append(filter.length(), '0');
+    length = BFilter.length();
+}
+
+void myBloomFilter::insert(string item){
+
+   unsigned long int one = (oneAtATime(item));
+    this->BFilter[one%length] = '1';
+}
+
+
+bool myBloomFilter::exists(string item){
+
+    unsigned long int len = item.length();
+    unsigned long int one = (oneAtATime(item) % length);
+    char b = BFilter[one];
+
+    for (int i=0; i<len; i++){
+        if (b == '0')
+          return false;
+    }
+
+    return true;
+}
+
+
+string myBloomFilter::output(){
+    return BFilter;
+}
+%ENDCODE%
+
+---+++ Explanation
+<pre>
+This bloom filter implements an FNV hash and a One-At-A-Time Hash and places it in the "array" which is actually a string. 
+</pre>
+
+---+++!! Grader comments *[2/25]*
+<VERBATIM>
+Score: 1091</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<pre>PASS : DIF
+HASH : cd1f661819f0f5cdd22c79b5cf5a640819c97fd8
+
+PASS : Dey
+HASH : aa0299a40190b299a6d7295a2ab4d71818cdd2e6
+
+PASS : Dli
+HASH : 075d10bd5717c2c7149387c729cf4f2bae8e73ef
+
+PASS : RGS
+HASH : df7e831c623901a31bc4c163eb4ce245df8e6770
+
+PASS : SCU
+HASH : 7ba2a4f3586ea97b102a3bbda29d867121d014dd
+
+PASS : Sup
+HASH : 4796ad0886540784ec03ff1dc61575c6b333dee9
+
+PASS : abd
+HASH : 4fe29a82e81e5909f96d0b902a4d0befe4bf63d5
+
+PASS : apt
+HASH : 89bb853a9a04e2c091c791c8d4e119518897b636
+
+PASS : ass
+HASH : 361be360760e694b07aecce91f60dc1bc6ef893f
+
+PASS : pup
+HASH : 2adee50a101f6a2bc3d14eb04bd1b60f3b719c36
+</pre>
+----++++Just in case, here's the code for it:
+%CODE{cpp}%
+int main(){
+
+  vector<string> orginalHashes;
+  vector< pair<string,string> > crackedPaswords;
+
+  string UNO;
+  string DOS;
+  string TRE;
+
+  int matches_num = 0;
+  string hash_result;
+
+
+  orginalHashes.push_back("361be360760e694b07aecce91f60dc1bc6ef893f");
+  orginalHashes.push_back("89bb853a9a04e2c091c791c8d4e119518897b636");
+  orginalHashes.push_back("4796ad0886540784ec03ff1dc61575c6b333dee9");
+  orginalHashes.push_back("aa0299a40190b299a6d7295a2ab4d71818cdd2e6");
+  orginalHashes.push_back("2adee50a101f6a2bc3d14eb04bd1b60f3b719c36");
+  orginalHashes.push_back("df7e831c623901a31bc4c163eb4ce245df8e6770");
+  orginalHashes.push_back("4fe29a82e81e5909f96d0b902a4d0befe4bf63d5");
+  orginalHashes.push_back("cd1f661819f0f5cdd22c79b5cf5a640819c97fd8");
+  orginalHashes.push_back("7ba2a4f3586ea97b102a3bbda29d867121d014dd");
+  orginalHashes.push_back("075d10bd5717c2c7149387c729cf4f2bae8e73ef");
+
+
+  for(int ii = 33; ii < 127; ii++){
+    for(int jj = 33; jj < 127; jj++){
+      for(int kk = 33; kk < 127; kk++){
+          UNO = (char)ii;
+          DOS = (char)jj;
+          TRE = (char)kk;
+          hash_result = hash(UNO+DOS+TRE);
+          //check if matches:
+          for(int ll = 0; ll < orginalHashes.size(); ll++){
+            if(orginalHashes[ll].compare(hash_result) == 0){
+               matches_num++;
+               crackedPaswords.push_back(pair<string,string>(UNO+DOS+TRE,hash_result));
+               cout << "PASS : " << crackedPaswords[crackedPaswords.size()-1].first << endl;
+               cout << "HASH : " << crackedPaswords[crackedPaswords.size()-1].second << endl << endl;
+            }
+          }
+          if(matches_num == orginalHashes.size()){
+            goto imdone;
+          }
+      }
+    }
+  }
+
+imdone:
+
+  return 0;
+
+}
+%ENDCODE%
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the password you cracked. 
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<pre>
+Peep this code snippet:
+%CODE{cpp}%
+int main(){
+
+  string UNO;
+  string DOS;
+  string TRE;
+  string QUA;
+  string CIN;
+  string word;
+
+  int hash_times = 200;
+
+  int matches_num = 0;
+
+
+  for(int ii = 0; ii < 10000; ii++){
+    UNO = (rand() % 94) + 33;
+    DOS = (rand() % 94) + 33;
+    TRE = (rand() % 94) + 33;
+    QUA = (rand() % 94) + 33;
+    CIN = (rand() % 94) + 33;
+    word = UNO + DOS + TRE + QUA + CIN;
+
+    cout << "(   " << word << "  ,  ";
+
+    for(int ii = 0; ii < hash_times;ii++){
+      word = hash(word);
+      word = reduce(word,5);
+    }
+    cout << word << "   )" << endl;
+  }
+
+  return 0;
+
+}
+%ENDCODE%
+</pre>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---
+
+   * [[%ATTACHURLPATH%/P4.zip][P4.zip]]: Code for problem 4
+
+   * [[%ATTACHURLPATH%/P4.zip][P4.zip]]: Code for problem 4

@@ -1,0 +1,232 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(BrettMoretzky),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+Primary clustering because it is a linear probing function, 
+and it will always able to add a key if the table is not full because it is using open addressing, 
+hence it being a "probe" sequence. It probes the hash table until it finds an empty slot to put the key.
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+int median(Array X0[n], Array X1[n])
+{
+      int index_one = 0;
+      int index_two = 0;
+      Array temp[n];
+      for i=0 to n
+            if X1[index_one] < X2[index_two]
+                  temp[i] = X1[index_one];
+                  index_one++;
+            else
+                  temp[i] = X2[index_two];
+                  index_two++;
+      return temp[n];
+} 
+//Merges the two arrays together in sorted order, but stops halfway because that last value will be the median.
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Theta(n) since the arrays are already sorted, it just has to merge n values together.
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+int median(Array X0[n], Array X1[n], Array X2[n])
+{
+      int index_one = 0;
+      int index_two = 0;
+      int index_three = 0;
+      Array temp[3n/2];
+      for i=0 to 3n/2
+            if X1[index_one] is the smallest
+                  temp[i] = X1[index_one];
+                  index_one++;
+            if X2[index_two] is the smallest
+                  temp[i] = X2[index_two];
+                  index_two++;
+            if X3[index_three] is the smallest
+                  temp[i] = X3[index_three];
+                  index_three++;
+      return temp[3n/2];
+} 
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Must go through 3n/2 elements since that's where the halfway point of 3n is. So it's Theta(3n/2) which is Theta(n).
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+Will be the same algorithm as for two and three arrays but the size of the temp array is (n^2)/2 and the loop runs from 0 to (n^2)/2.
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Since the median will be at index (n^2)/2 of the merged arrays, the algorithm will be Theta((n^2)/2).
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+#include "BloomFilter.h"
+#include <iostream>
+#include <sstream>
+
+class myBloomFilter:public BloomFilter
+{
+public:
+  myBloomFilter(int m):BloomFilter(m)
+  {
+    length = m;
+    filter = new int [m];   //New array of size m
+    for (int i=0; i<m; i++)  //Puts 0 into every index
+      {
+	filter[i] = 0;
+      }
+  }
+
+  myBloomFilter(string f):BloomFilter(f)
+  {
+    length = f.length();
+    for (int i=0; i<length; i++)   //Puts 0 into all indexes of new filter
+      {
+	filter[i] = 0;
+      }
+    int found = f.find("1");   //Then searches for 1's in the string, puts 1's into the filter at the proper locations
+    while(found!=std::string::npos)
+      {
+	filter[found] = 1;
+	found = f.find("1", found+1);
+      }
+  }
+
+  void insert(string item)
+  {
+    //hashes item
+    int item_length = item.length();
+    
+    int hash = 0;
+    for (int i=0; i<item_length; i++)
+      {
+	hash = hash * i + item[i];
+      }
+    int location = hash % 33;
+  
+    filter[location] = 1;  //Puts 1 into the hash index of the filter
+  }
+
+  bool exists(string item)
+  {
+    int item_length = item.length();
+    //Hashes item
+    int hash = 0;
+    for (int i=0; i<item_length; i++)  
+      {
+	hash = hash * i + item[i];
+      }
+    int location = hash % 33;
+
+    if (filter[location] == 1)  //If there is a 1 at the hash index of the filter, the item is probably in the filter
+      {
+	return true;
+      }
+    else
+      {
+	return false;
+      }
+  }
+
+  string output()
+  {
+    string s1;
+    for (int i=0; i<length; i++)  //Converts filter of ints to a string
+      {
+	stringstream ss; 
+	ss << filter[i];
+	string s2 = ss.str();
+	s1.append(s2);
+      }
+    return s1;
+  }
+
+  int* filter;  //Pointer to array which is the filter
+
+};
+
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+Hash is a string to int, modded with 33 because that's what online resources recommended. 
+Insert() hashes the item and puts a 1 into the index of the array that is the filter, that index being the hash. 
+Exists() hashes the string and checks that index to see if there is a 1. 
+The second constructor that takes in a string creates a bloomfilter from that string by searching the string for 
+1's and then putting them into the index of an array that is the length of the string, and putting 0's everywhere else.
+</VERBATIM>
+
+---+++!! Grader comments *[0/25]*
+<VERBATIM>
+No grade found, check with Professor
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Give out the password you cracked. Remember attached the code as 'problem4a.zip'
+PCL
+ass
+PSA
+sb.
+Rom
+sma
+eme
+R&D
+Dey
+QKt
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the password you cracked. 
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Give out the explanation here. Remember attached the code and table
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

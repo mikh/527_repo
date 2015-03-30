@@ -1,0 +1,298 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(JeffreyChen),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+</VERBATIM>
+
+This probe will only exhibit secondary clustering. It will not exhibit primary clustering, and it will not always be able to add a key to the table if it is full.
+
+The function does not always create long sequences of filled slots so there is no guarantee of primary clustering, but since the function jumps around, elements will always probe the same alternate cells and secondary clustering can occur.
+
+The function will not always be able to add a key to the table if it is not full. If there is only one slot left, the function will not always place the last key in that slot. The function also only counts upwards and does not wrap around because there is no mod function
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+</VERBATIM>
+
+You can merge the two sorted arrays and when you get to the nth and (n-1)th element, average the two numbers to get the median. This takes O(n), but there is a more efficient way to compute the median.
+
+First compute median of both arrays. If they are equal, then the median overall is the same as the median of both arrays.
+
+If the median of the first array is larger than the median of the second array, we know that the median is present in the following two sub-arrays: the sub-array from the beginning of the first array to the median of the first array, and the sub-array from the median of the second array to the end of the second array.
+
+If the median of the second array is larger than the median of the first array, we know that the median is present in the following two sub-arrays: the sub-array from the beginning of the second array to the median of the second array, and the sub-array from the median of the first array to the end of the first array.
+
+Do this recursively until there are only 2 numbers in each of the two sub-arrays. The overall median can then be calculated by taking the max of the first element of both sub-arrays and the min of the second element of both sub-arrays, add them together, and divide by two.
+
+This is done in O(log(n)). Example in analysis.
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+This method works by comparing the medians in each array, and each array is already sorted, so there is no need to go through all the elements in both arrays.
+
+Ex: Given the two arrays [3, 5, 15, 18, 19] and [6, 8, 14, 16, 20], you first compare the two medians (15 and 14). Since 15 is greater, your new two sub-arrays will be [3, 5, 15] and [14, 16, 20].
+Repeat the same procedure and your new sub-arrays are [5, 15] and [14, 16]. Add the maximum of the first elements in each array with the minimum of the second elements in each array and divide by 2 (14 + 15)/2 = 14.5
+
+The running time is O(logn). Each iteration (finding median and throwing away halves of arrays) takes constant time, and you will have log(n) iterations.
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+</VERBATIM>
+
+Again, you can merge the three arrays together and the median will be the (3n-1)/2 element. This can be done in O(n) time.
+
+Another way to do this is to again compare the medians. In the array with the smallest median, throw away the smaller half of the array, including the median. In the array with the largest median, throw away the larger half of the array, including the median. Once you get down to two arrays, throw away the halves of the array not including the median. Once you get down to two elements in each array, take the max of the first elements and the min of the first elements, add them up, and divide by two to get the median. If you manage to get down to one array, the median of that array will be the overall median.
+
+This can be done in O(log(n)) time. Example in the analysis
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+Ex: Given arrays [0 5 10], [1 7 19], [4 8 21], compare 5, 7, and 8. 8 is the largest and 5 is the smallest, so throw away halves of those two arrays, including the medians. The resulting sub-arrays are [10], [1 7 19], and [4]. Repeat the procedure: compare 10, 7, and 4. Throw away 10 and 4 and you're left with [1 7 19]. Therefore the overall median is 7.
+
+The running time is O(logn). Each iteration (finding median and throwing away halves of arrays) takes constant time, and you will have log(n) iterations.
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+</VERBATIM>
+
+Same answers as before. You can merge the n arrays together and the n^2/2 element will be the median. Running time will be O(n^2)
+
+You can also do the median comparisons and throwing away the halves of the arrays until you get down to 2 or 1 arrays with few elements. Then repeat the steps in previous two answers to get the median.
+
+This time will be O(log(n))
+---++++ Analysis and running time
+<VERBATIM>
+</VERBATIM>
+
+The running time is O(nlogn). Each iteration (finding median and throwing away halves of arrays) takes constant time, and you will have log(n) iterations.
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+
+myBloomFilter.cpp:
+
+%CODE{"cpp"}%
+//Collaborated with Austin Schiller
+
+#include "myBloomFilter.h"
+
+// RSHash and JSHash were obtained from the general C++ functions. These functions were obtained from a site called snipplr
+// RSHash created by Robert Sedgwick's Algorithms in C book
+unsigned int RSHash(const string& str)
+{
+    unsigned int b = 378551;
+    unsigned int a = 63689;
+    unsigned int hash = 0;
+
+    for(size_t i = 0; i < str.length(); i++)
+    {
+        hash = hash * a + str[i];
+        a = a * b;
+    }
+
+    return (hash & 0x7FFFFFFF);
+}
+
+// JSHash created by Justin Sobel
+unsigned int JSHash( string& str)
+{
+    unsigned int hash = 1315423911;
+
+    for(size_t i = 0; i < str.length(); i++)
+    {
+        hash ^= ((hash << 5) + str[i] + (hash >> 2));
+    }
+
+    return (hash & 0x7FFFFFFF);
+}
+
+// Create a bloom filter with a given integer length. Then all of the values of the bloom filter are set to 0 for false.
+myBloomFilter::myBloomFilter(int mm) : length (mm)
+{
+    length = mm;
+    // Fill the vector of size length with '0'
+    bloom = vector<char> (length, '0');
+}
+
+// This function makes length the length of the input string. It then sets the bloom filter to be the string
+myBloomFilter::myBloomFilter(string filter)
+{
+    length = filter.length();
+    bloom = vector <char> (length);
+    for(int ii = 0; ii < length; ii++)
+    {
+        bloom[ii] = filter[ii];
+    }
+}
+
+// Insert an item into the bloom filter by putting it through the hash functions and setting the corresponding array indexes to 1
+void myBloomFilter::insert(string item)
+{
+
+    int hash1 = (RSHash(item)%length);
+    int hash2 = (JSHash(item)%length);
+    if(bloom[hash1]== '0')
+    {
+        bloom[hash1] = '1';
+    }
+    if(bloom[hash2]== '0')
+    {
+        bloom[hash2] = '1';
+    }
+}
+
+// Again put item through hash functions and see if there are 1's where we expect 1's
+bool myBloomFilter::exists(string item)
+{
+
+    int hash1 = (RSHash(item)%length);
+    int hash2 = (JSHash(item)%length);
+    if((bloom[hash1] == '1') && (bloom[hash2] == '1'))
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+// Output the bloom filter
+string myBloomFilter::output()
+{
+    string output;
+    for(int ii = 0; ii< length; ii++)
+    {
+        output+= bloom[ii];
+    }
+    return output;
+}
+%ENDCODE%
+
+myBloomFilter.h: 
+
+%CODE{"cpp"}%
+//Collaborated with Austin Schiller
+
+#ifndef MYBLOOMFILTER_H
+#define	MYBLOOMFILTER_H
+#include <string>
+#include <vector>
+#include <iostream>
+using namespace std;
+
+class myBloomFilter
+{
+public:
+    vector <char> bloom;
+
+    /**
+    * Instantiate an empty Bloom filter of length [ mm ] chars.
+    */
+    myBloomFilter (int mm);
+
+    /**
+    * Instantiates a Bloom filter from a given string [filter]
+    * @requires [filter] must have been produces by the output() call of a BloomFilter object.
+    */
+    myBloomFilter (string filter);
+    /**
+    * inserts  into the filter
+    */
+    void insert(string item);
+
+    /**
+    * Checks whether [item] is in the filter.
+    * @return  true if the item is probably in the filter
+    *          false if the item is definitely not in the filter
+    */
+    bool exists(string item);
+
+    /**
+    * @return A string of [length] characters representing the Bloom filer
+    */
+
+
+    string output();
+
+protected:
+    int length; /** The length of the Bloom filter, in chars. */
+};
+
+
+#endif	/* BLOOMFILTER_H */
+%ENDCODE%
+---+++ Explanation
+<VERBATIM>
+</VERBATIM>
+
+Two hash functions were found online and used in our bloom filter. The filter is created with a given length, and initially all spaces are filled with 0's (logical false). To insert, strings are passed through the hash functions and populate the spaces, filling them with 1's (logical true). To check if strings exist, they are passed through the hash functions and if the spaces where they should populate are filled with 1's, then they may be there. If the spaces where they should be are filled with 0's, then the string is not there.
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Give out the password you cracked. Remember attached the code as 'problem4a.zip'
+</VERBATIM>
+
+DIF
+Dli
+EMS
+IHS
+MWA
+PNA
+RQS
+ays
+oaf
+sea
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+</VERBATIM>
+
+1st password: U0'xz
+
+3rd password: `HnRq
+
+6th password: 'h]8]
+
+8th password: ),7.r
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+</VERBATIM>
+
+The given hash function was run for all three-character ASCII combinations to create a very simple rainbow table.
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

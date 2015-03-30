@@ -3,23 +3,26 @@ package control_structure;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 
 public class Defines {
 	
 	//web client defines
-	public static final String BASE_URL = "https://algorithmics.bu.edu/twiki/bin/view/EC330_admin/HomeworkThreeDrop";
+	public static final String BASE_URL = "https://algorithmics.bu.edu/twiki/bin/view/EC330_admin/HomeworkFourDrop";
 	public static final String USERNAME = "MikhailAndreev";
 	public static final String PASSWORD = "SIRen_song_27";
-	//public static final String FIREFOX_INSTALL_LOCATION = "D:\\Firefox Installs\\firefox.exe";
-	public static final String FIREFOX_INSTALL_LOCATION = "C:\\FirefoxInstalls\31\firefox.exe";
+	public static final String FIREFOX_INSTALL_LOCATION = "D:\\Firefox Installs\\firefox.exe";
+	//public static final String FIREFOX_INSTALL_LOCATION = "C:\\FirefoxInstalls\31\firefox.exe";
 	
 	//archive files
-	//public static final String TWIKI_FILE_ARCHIVE = "D:\\EC527\\EC330\\HW4\\Grading\\TwikiFileArchive";
-	public static final String TWIKI_FILE_ARCHIVE = "C:\\Users\\Mikhail\\Desktop\\527\\EC330\\HW4\\Grading\\TwikiFileArchive";
-	public static final boolean ACQUIRE = true;
+	public static final String TWIKI_FILE_ARCHIVE = "D:\\EC527\\EC330\\HW4\\Grading\\TwikiFileArchive";
+	//public static final String TWIKI_FILE_ARCHIVE = "C:\\Users\\Mikhail\\Desktop\\527\\EC330\\HW4\\Grading\\TwikiFileArchive";
+	public static final String DEBUG_TWIKI_FILE_OUTPUT = "D:\\EC527\\EC330\\HW4\\Grading\\DebugOutput";
+	public static final boolean ACQUIRE = false;
 	public static final boolean OVERWRITE = false;
+	public static final String FAILURE_LOG_LOCATION = "D:\\EC527\\EC330\\HW4\\Grading\\failure_log.txt";
 	
 	//link parsing
 	public static final String LINK_START_PATTERN = "<li> <a ";
@@ -27,12 +30,17 @@ public class Defines {
 	public static final String PASS_LINK_CLASS = "twikiLink";
 	public static final String WEBSITE_BASE = "https://algorithmics.bu.edu";
 	public static final boolean FILTER_USERS = false;
-	//public static final String FILTER_FILE_PATH = "D:\\EC527\\EC330\\HW4\\Grading\\students.txt";
-	public static final String FILTER_FILE_PATH = "C:\\Users\\Mikhail\\Desktop\\527\\EC330\\HW4\\Grading\\students.txt";
+	public static final String FILTER_FILE_PATH = "D:\\EC527\\EC330\\HW4\\Grading\\students.txt";
+	//public static final String FILTER_FILE_PATH = "C:\\Users\\Mikhail\\Desktop\\527\\EC330\\HW4\\Grading\\students.txt";
 
 	
 	//custom twiki strings
 	public static final String HOMEWORK_NAME = "HomeworkFour";
+	public static final String PROBLEM_HEADER = "---++ Problem ";
+	public static final String GRADER_HEADER = "---+++!! Grader comments";
+	public static final String OUTPUT_BLOCK_SECTION_START = "<VERBATIM>";
+	public static final String OUTPUT_BLOCK_SECTION_END = "</VERBATIM>";
+	
 	
 	//delay timings
 	public static final long WAIT_FOR_PAGE = 5000;
@@ -43,12 +51,12 @@ public class Defines {
 	public static final String STOP_COLUMN = "G";
 	public static final int START_ROW = 1;
 	public static final int STOP_ROW = 121;
-	//public static final String EXCEL_FILE_PATH = "D:\\EC527\\EC330\\HW4\\Grading\\grades.xls";
-	public static final String EXCEL_FILE_PATH = "C:\\Users\\Mikhail\\Desktop\\527\\EC330\\HW4\\Grading\\grades.xls";
+	public static final String EXCEL_FILE_PATH = "D:\\EC527\\EC330\\HW4\\Grading\\grades.xls";
+	//public static final String EXCEL_FILE_PATH = "C:\\Users\\Mikhail\\Desktop\\527\\EC330\\HW4\\Grading\\grades.xls";
 
 	
 	//debug
-	public static final boolean DEBUG_MODE = true;
+	public static final boolean DEBUG_MODE = false;
 	public static final boolean START_CLIENT_DEBUG = false;
 	public static final boolean LOG_IN_DEBUG = false;
 	public static final boolean GET_LINKS_DEBUG = false;
@@ -59,6 +67,7 @@ public class Defines {
 	public static final boolean WRITE_TWIKI_DATA_TO_FILES_DEBUG = true;
 	public static final boolean WRITE_TWIKI_DATA_TO_WEB_DEBUG = true;
 	public static final boolean OUTPUT_ERROR_DEBUG = true;
+	public static final boolean DEBUG_PRINT_OUTPUT = true;
 	
 	public static void delay(long milliseconds){
 		try {
@@ -82,5 +91,12 @@ public class Defines {
 			System.exit(-1);
 		}
 		return null;
+	}
+	
+	public static void string_to_clipboard(String str){
+		StringSelection selection = new StringSelection(str);
+		Toolkit toolkit = Toolkit.getDefaultToolkit();
+		Clipboard clipboard = toolkit.getSystemClipboard();
+		clipboard.setContents(selection, selection);
 	}
 }

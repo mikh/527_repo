@@ -17,4 +17,24 @@ public class QuestionFormat {
 			total += i;
 		}
 	}
+	
+	public String build_output(){
+		String output = "";
+		output += String.format("Question %d Results:\n\n", question_number);
+		if(use_parts){
+			calculate_total();
+		}
+		output += String.format("Total Grade: %d", total);
+		if(!use_parts)
+			output+= ("\t\t" + overall_comment);
+		else{
+			output += "\n\n";
+			for(int ii = 0; ii < question_part_grades.size(); ii++){
+				output += String.format("\t%-10d\t\t%s\n", question_part_grades.get(ii), question_part_comments.get(ii));
+			}
+		}
+		
+		output += "\n\n";
+		return output;
+	}
 }

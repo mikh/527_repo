@@ -1,0 +1,454 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(AlexandraNero),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+Give out answer here.
+i. False. Breaking the function down:
+hi(k) = ho(k) + the sum of n from n = 0 to i
+the sum of n from n=0 to i results in a quadratic function
+ii. True. Since the function has a quadratic component, it is secondary
+iii. False. Secondary probing has the potential to skip empty buckets since it is 
+optimized for data with a large range and many empty spaces (does not want
+ to check every empty bucket)
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+
+int findMedian(int* x0, int* x1, int n)
+{
+   int ix0, ix1 = 0;
+//since size of the array is even we need to return the average of the two middle numbers
+   int med1, med2;
+   for (i = 0 to n)
+   {
+
+//if all of one array's elements are larger than the other's, we can assume m1 is the largest value of the smaller array and m2 is the smallest value of the largest array
+      if (ix0 == n)
+      {
+         med1=med2;
+         med2 = x1[0];
+         break;
+      }
+      else if (ix1 == n)
+      {
+         med1=med2;
+         med2 = x0[0];
+         break;
+      }
+
+//here there is counting of the smallest number (the combined array in order from smallest to largest until reaching the position where the median is)
+      if (x0[ix0] < x1[ix1])
+      {
+         med1 = med2;
+         med2 = x0[ix0];
+         ix0++;
+      }
+      else
+      {
+         med1 = med2;
+         med2 = x1[ix1];
+         ix1++;
+      }
+   }
+   return (med1+med2)/2;
+}
+
+
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+This algorithm uses part of the merge sort
+This function assumes the median will always be at 2*n/2 = (n and n -1)
+Instead of physically merging the array, this function just counts the numbers added from smallest to largest until it reaches n, it records n and n-1 as the two medians and returns the average for the final median.
+
+see comments for specifics
+
+This function is linear because it goes through and records the smallest numbers n times (one for loop)
+T(n) = BigTheta(n)
+
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+see median of n, just input sizeOfArray = n, numOfArray = 3
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+see median of n, just input sizeOfArray = n, numOfArray = 3
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+#include <cmath>
+
+int findMedian(int** arr, int sizeOfArray, int numOfArray)
+{
+//declaring varaibles
+	int index[numOfArray] = {0,0,0...etc}; //go through and fill this array with zeros
+	count = floor(sizeOfArray*numOfArray/2) //(if a decimal when want the decimal truncated) ex. sizeOfArray = 15, we want 7 and 8, that's the positions where the median will be.
+	int med1, med2 = -1;
+
+	for i = 0 to count
+	{
+///here it checks to see if the end of an array has been reached, if so its useless and should be deleted
+		for i = 0 to index.size()
+		{
+			if index[i]	== sizeOfArray;
+			{
+				delete index[i] and *(arr)
+			}
+		}
+
+//finds the smallest number in the arrays and instead of inserting it into a new array like mergesort, it just records the value and counts until reaching the position of the median
+		int array = arr[0];
+		int smallest = array[index[0]];
+		int smallestindex= index[0];
+		int smallesti = 0;
+		for i = 0 to arr.size()
+		{
+			array = arr[i];
+			if (array[[index[i]]<smallest)
+			{
+				smallest = array[[index[i]]];
+				smallestindex = index[i];
+				smallesti = i;
+			}
+		}
+
+//increment the index where we have recorded the smallest value
+		index[smallesti]++
+		med1 = med2;
+		med2 = smallest;
+
+	}
+
+//return the middle number or the average of the middle numbers (dependent on whether it is even or odd
+	if (sizeOfArray*numOfArray%2 == 0)
+		return (med1+med2)/2;
+	else
+		return med1;
+}
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+just input sizeOfArray = n, numOfArray = n
+
+The function works on inputting an array of arrays (will also work for n = 2, for part 2a but the running time is shorter in the function I gave up there because the running time is better)
+It runs on the same logic as the one given in 2a 
+First there is a for loop where the function goes through each array and finds the smallest values to the largest values (stops once again, when the position reaches the position expected at the median) The indices are important to keep track of and they increment when a smallest value is found. 
+Then there is a section where the arrays may reach the end even though the median has not been found. In that case, the array and the index is deleted and not recorded anymore.
+
+This function has two nested for loops dependent on n so 
+T(n) = BigTheta(n^2)
+</VERBATIM>
+
+---+++!! Grader comments *[0/25]*
+<VERBATIM>
+Score: 1000
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+   // put your code here
+#include <iostream>
+#include <string>
+#include <cmath>
+#include "myBloomFilter.h"
+
+using namespace std;
+
+myBloomFilter ::myBloomFilter(int mm) :BloomFilter(mm)
+{
+	length = mm;
+	for (int i = 0; i < length; i++)
+		bFilter.push_back(0);
+	
+}
+
+myBloomFilter ::myBloomFilter(string filter) :BloomFilter(filter)
+{
+	length = filter.length();
+	for (int i = 0; i < length; i++)
+		bFilter.push_back(0);
+}
+
+void myBloomFilter ::insert(string item)
+{
+	int h1;
+	int h2;
+	int h3;
+	h1 = hash1(item);
+	h2 = hash2(item);
+	h3 = hash3(item);
+	bFilter[h1] = 1;
+	bFilter[h2] = 1;
+	bFilter[h3] = 1;
+}
+
+bool myBloomFilter ::exists(string item)
+{
+	int h1;
+	int h2;
+	int h3;
+	h1 = hash1(item);
+	h2 = hash2(item);
+	h3 = hash3(item);
+	if(bFilter[h1]==1 && bFilter[h2]==1 && bFilter[h3]==1)
+		return true;
+	else 
+		return false;
+}
+
+string myBloomFilter ::output()
+{
+	/*char array[length];
+	for (int i = 0; i < length; i++)
+	{
+		if (bFilter[i]==1)
+			array[i] = 'X';
+		else
+			array[i] = 'O';
+	}
+	return string(array);*/
+	return "bFilter";
+}
+
+int myBloomFilter ::hash1(string item)
+{
+	int a = 13;
+    int b = 7;
+    int hash = 0;
+
+    for(int i = 0; i < item.size(); i++)
+    {
+        hash = hash + a + item[i];
+        a += b;
+    }
+    return hash;
+}
+
+int myBloomFilter ::hash2(string item)
+{
+	int s = 23;
+	int hash = 11;
+
+	for(int i = 0; i < item.size(); i++)
+	{
+		s = item[i];
+		hash = s + hash + 23;
+	}
+	return hash;
+}
+
+int myBloomFilter ::hash3(string item)
+{
+	char input[length];
+	int hash = 13;
+	for(int i = 0; i < item.size(); i++)
+	{
+		input[i] = item[i];
+		hash = input[i] + hash + 53;
+	}
+
+	return hash;
+}
+
+
+#ifndef MYBLOOMFILTER_H
+#define	MYBLOOMFILTER_H
+#include <string>
+#include <vector>
+#include "BloomFilter.h"
+using namespace std;
+
+class myBloomFilter : public BloomFilter 
+{
+public:
+	myBloomFilter(int mm);
+	myBloomFilter(string filter);
+	void insert(string item);
+	bool exists(string item);
+	string output();
+	int hash1(string item);
+	int hash2(string item);
+	int hash3(string item);
+
+private:
+	vector<int> bFilter;
+};
+
+#endif	/* MYBLOOMFILTER_H */
+
+
+   // also remember to upload it in submit page
+
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+Give out answer here.
+For my code, I choose a vector of int to store the hashes. Insert just computed the 3 different hashes and stored it into the array. Exists computed the 3 different hashes and checked if those spots were replaced with a 1.
+The hashes were all different and based on prime numbers to avoid collisions.
+The constructor just use the parent class while first filling the vector of ints with 0s
+
+
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Give out the password you cracked. Remember attached the code as 
+
+passwords for respective hash
+PCL
+lab
+BNS
+cog
+prs
+EOF
+DIF
+apt
+dis
+fub
+
+'problem4a.zip'
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the password you cracked. 
+
+Passwords:
+
+U@FxS
+U@FxS
+U@FxS
+U@FxS
+U@FxS
+U@FxS
+U0`xz
+U@FxS
+k*p0E
+34]d=
+
+
+Code used:
+#include <iostream>
+#include <cstring>
+#include <sstream>
+#include <fstream>
+#include <string>
+#include "sha1.h"
+#include "hash.h"
+
+using namespace std;
+
+string searchRainbow(string str)
+{
+	ifstream myfile ("table.txt");
+
+ 	if (myfile.is_open())
+  	{
+		for(int i = 0; i < 5871; i++)
+		{
+			string para1, password, comma, reduction, para2; 
+    		myfile >> para2 >> password >> comma >> reduction >> para2;
+    		if (str == reduction)
+    		{
+    			return password;
+    		}
+    		
+		}
+
+	}
+	else
+	{
+		cout <<"Unable to open file"<<endl;
+	}
+	return "0";
+}
+
+string RainbowCrack(string str)
+{
+	string entry = reduce(str, 5);
+	string password = searchRainbow(entry);
+	
+	while (password == "0")
+	{
+		entry = reduce(hash(entry), 5);
+		password = searchRainbow(entry);
+	}
+
+	return password;
+}
+
+int main()
+{
+  cout << RainbowCrack("b75c52169980998ba8ac93da57bd7bcf59390b8b")<<endl;
+  cout << RainbowCrack("921532986acb4b7e271dcce6e8c15b1316ba0c4e")<<endl;
+  cout << RainbowCrack("8665f14ffcfb8acdee369993ed3c62a15b0f606a")<<endl;
+  cout << RainbowCrack("b56a4f72f0c4031a0737346eb80e669c6d6b3cd4")<<endl;
+  cout << RainbowCrack("417e29f338b78edf97fff1fdc241952be6892067")<<endl;
+  cout << RainbowCrack("c5ec0ed7f14df1fc53947b04a33de4062b8162c8")<<endl;
+  cout << RainbowCrack("6eff35ae47651f8aa6ded0e8359451a222f054fb")<<endl;
+  cout << RainbowCrack("d1a4f30f9585a7ab0118ee8d6591da9b443f25ba")<<endl;
+  cout << RainbowCrack("026dd8ca0f2e93059b23b0ef35c3af9245522d1e")<<endl;
+  cout << RainbowCrack("82cef8ddfe6079b35407f7df16a51bf23fd66750")<<endl;
+  return 0;
+}
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Give out the explanation here. Remember attached the code and table
+For my code I just got a large combination of letters I randomly inputted abc to make 5 characters in total like 4c. I could not do five for loops (would take way too long)
+Then I changed the first two digits and reduced and hashed them over 5000 times.
+
+
+
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

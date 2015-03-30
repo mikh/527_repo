@@ -1,0 +1,355 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(DavidAsbjornsson),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+
+If we reach (i=m) the end of the hash table, we still have slots in between that are NULL, we are not able to use them due to the probe sequence. 
+The table is not full even though you have reached the end of the table, because you have these empty spaces in between, 
+but you are not able to add a key in those empty slots, so they are just a waste of space.
+This is a linear probe sequence, easy to implement but has the problem of primary clustering. As the slots get filled, the search time increases.
+
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+Let‘s say the two arrays are A[]={0...n-1} and B[]={0...n-1}
+1) We calculate the median of each array: Median(A) and Median(B).
+2) We have three possible results:
+	i) The medians are the same
+		- We are done!
+	ii) Median(A) < Median(B)
+		-We delete A[0:ceil((n/2)-2)] and B[ceil(n/2):end]
+	iii) Median(A) > Median(B)
+		-We delete A[ceil(n/2):end] and B[0:ceil((n/2)-2)]
+3) 
+i) If we have two elements remaining in each array we calculate the median:
+Median(A,B) = (higher value of the elements A[0] and B[0] + lower value of the elements A[1] and B[1]) / 2. An we’re done!
+   	ii) If not, we go back to step 1 with our new A and B arrays.
+
+Example:
+A = [ 8 13 21 34 39]
+B = [ 3 4 19 21 41 ]
+
+A = [ 8 13 21 34 39]	median = 21
+B = [ 3 4 19 21 41 ]	median = 19
+
+A = [ 8 13 21 ]		median = 13
+B = [ 19 21 41 ]		median = 21
+
+A = [ 13 21 ]		
+B = [ 19 21 ]		MEDIAN = (19+21)/2 = 20
+
+Example:
+A = [ 1 12 34 45 ]	median = (34+12)/2 = 23
+B = [ 1 13 21 99 ]	median = (21+13)/2 = 17
+
+A = [ 1 12 34 ]		median = 12
+B = [ 13 21 99]		median = 21
+
+A = [ 12 34 ]
+B = [ 13 21 ]		MEDIAN = (21+13)/2 = 17
+
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+running time O(lg(n))
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+myBloomFilter.h
+
+   #ifndef BLOOMFILTER_H
+#define	BLOOMFILTER_H
+#include <string>
+using namespace std;
+
+class BloomFilter {
+public:
+
+	//the actual bloom filter
+	string myFilter;
+	/**
+	* Instantiate an empty Bloom filter of length  chars.
+	*/
+	BloomFilter(int mm); // sets: length = (mm)
+	
+	/**
+	* Instantiates a Bloom filter from a given string
+	* @requires  must have been produces by the output() call of a BloomFilter object.
+	*/
+	BloomFilter(string filter); // sets: length = (filter.length()){}
+	/**
+	* inserts  into the filter
+	*/
+	void insert(string item);
+
+	/**
+	* Checks whether  is in the filter.
+	* @return  true if the item is probably in the filter
+	*          false if the item is definitely not in the filter
+	*/
+	bool exists(string item);
+
+	/**
+	* @return A string of  characters representing the Bloom filer
+	*/
+	string output();
+
+protected:
+	int length; /** The length of the Bloom filter, in chars. */
+};
+
+
+
+
+#endif	/* BLOOMFILTER_H */
+
+
+myBloomFilter.cpp
+
+#include<iostream>
+#include "myBloomFilter.h"
+using namespace std;
+
+//implementation of objects:
+
+//bloomfilter constructor, sets length to input mm
+//and creates an empty bloomfilter of length mm
+//a period resembles each empty slot
+BloomFilter::BloomFilter(int mm)
+{
+	length = mm;
+	for (int ii = 0; ii < mm; ii++)
+	{
+		myFilter = myFilter + ".";
+	}
+}
+
+//bloomfilter constructor, sets the bloom filter to the input
+BloomFilter::BloomFilter(string filter)
+{
+	length = filter.length();
+	myFilter = filter;
+}
+
+//insertion function
+//hashes input twice with two separate hashing functions and assigns two slots to input data,
+//index that corresponds to each hash gets value 1
+//
+//hasing functions are just simple and made on the spot to make things run
+//implementing better hashing functions is the next step
+void BloomFilter::insert(string item)
+{
+	int myhasher1a = (item.size() * 41 * char(item[0]) * 7) % length;
+	int myhasher2a = (myhasher1a * 41 * char(item[0]) * 7) % length;
+
+	int myhasher1b = (item.size() * 77 * char(item[0]) * 31) % length;
+	int myhasher2b = (myhasher1b * 77 * char(item[0]) * 31) % length;
+
+	myFilter[myhasher2a] = 1;
+	myFilter[myhasher2b] = 1;
+}
+
+//looks for input by hashing it as it is being inserted
+//but insted of swithcing indexes of hash to 1 we check if
+//they are already 1, which means the input is most likely in our
+//filter, if they are not both 1 input is not in our filter
+bool BloomFilter::exists(string item)
+{
+	int myhasher1a = (item.size() * 41 * char(item[0]) * 7) % length;
+	int myhasher2a = (myhasher1a * 41 * char(item[0]) * 7) % length;
+
+	int myhasher1b = (item.size() * 77 * char(item[0]) * 31) % length;
+	int myhasher2b = (myhasher1b * 77 * char(item[0]) * 31) % length;
+
+
+	if ((myFilter[myhasher2a] == 1) && (myFilter[myhasher2b] == 1))
+	{
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+//returns our bloomfilter
+string BloomFilter::output()
+{
+	return myFilter;
+}
+
+
+
+
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+See //comments
+</VERBATIM>
+
+---+++!! Grader comments *[0/25]*
+<VERBATIM>
+No score found</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Give out the password you cracked:
+h1: mpg
+h2: Nov
+h3: QKt 
+h4: sip
+h5: DIF
+h6: deb
+h7: pk.
+h8: Rom
+h9: zoo
+h10: MeV
+
+ Attached is the code as 'problem4a.zip'
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+
+Couldn't figure this one out but this is my attempt:
+
+#include "sha1.h"
+#include "hash.h"
+#include "hash.cpp"
+#include "sha1.cpp"
+#include <iostream>
+#include <string>
+#include <fstream>
+using namespace std;
+
+
+string secondstep(string inString)
+{
+	string ORG = inString;
+	for(int ii=0;ii<50;ii++)
+	{
+		ORG = hash(ORG);
+		if(ORG == "1e3275a9fc3aa2e41ff316de9fba5990b92513b6")
+		{
+			return ORG;
+		}
+		else
+		{
+			ORG = reduce(ORG,5);
+		}
+	}
+
+	
+};
+	
+
+
+string lookforpw(string theHash)
+{
+	string line;
+	string theReduced;
+	ifstream myfile("rainbowtable.txt");
+
+	theReduced = reduce(theHash, 5);
+
+	
+
+	if (myfile.is_open())
+	{
+		while (getline(myfile, line))
+		{
+			if (line.compare(14, 5, theReduced) == 0)
+			{
+				return line;
+			}
+			else if(line.compare("(   u#wUP  ,  [p_gV   )") == 0)
+			{
+				myfile.close();
+			}
+		}
+	
+	}
+	return lookforpw(hash(theReduced));
+};
+
+///////////
+///////////
+///////////
+
+int main()
+{
+
+//cout << secondstep(";TUih") << endl;
+
+cout << lookforpw("4166891acc5853ba8e651ad2be43c53350cc11d1") << endl;
+
+
+return 0;
+}
+
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Give out the explanation here. Remember attached the code and table
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

@@ -1,0 +1,204 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(WinstonChen),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+ 
+hi(k) = hi-1(k) + i, with h0(k) = h(k) - Expanding this recurrence, we yield hi-1(k) + i/2, then hi-2(k) + i/4 + (i^2)/2 and so on. This results in quadratic probing, but there is no mod, resulting in out of range for the table.
+
+so, 
+i. false
+ii. true
+iii. false
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+N is given, so the median is n/2. A simply way to computing for two arrays is by merging the arrays together. At the same time, use a count that increments after each merge. When the count = n/2, that is the median of the array.
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+The running time is theta(n). You have 2 arrays of n, so worst case is 2N, but since I stop at when the median is found, the running time is 2N/2 = N.
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+For 3 arrays, I would use the median of medians method, as discussed in class: 
+split array in groups of 5 with a total of n/5 groups
+find median each sub group
+then find median of the medians of the sub group 
+then find median between the three arrays
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+As proven in class, the running time to find medians of median for one array is O(n): T(n) = T(2n/10)+T(7n/10)+ cn --> T(n) <= 10cn --> O(n). With 3 arrays, the running time is O(3n) -> O(n).
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+For n arrays, I would use the median of medians method again as discussed in class: split array in groups of 5 with a total of n/5 groups find median each sub group then find median of the medians of the sub group then find median between the three arrays.
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+The running time would be O(n^2). Finding the median of median of one array is n. With n arrays, you'll be finding the median of the array at O(n) already. So, the running time is n*n = O(n^2).
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+   // put your code here
+   // also remember to upload it in submit page
+
+#ifndef MYBLOOMFILTER_H
+#define MYBLOOMFILTER_H
+
+#include <string>
+#include <iostream>
+#include "BloomFilter.h"
+using namespace std;
+
+class MyBloomFilter: public BloomFilter
+{
+public:
+	//Inherit base constructor of BloomFilter.h
+	MyBloomFilter(int mm);
+
+	MyBloomFilter(string filter);
+	//
+	int hash(string characters);
+
+	//
+	void insert(string item);
+
+	bool exists(string item);
+        
+    /**
+    * @return A string of [length] characters representing the Bloom filter
+    */
+    string output();
+};
+
+#endif
+
+
+
+
+#include "myBloomFilter.h"
+
+MyBloomFilter::MyBloomFilter(int mm) : BloomFilter(mm)
+{
+	char filter[mm + 1];
+}
+
+MyBloomFilter::MyBloomFilter(string filter): BloomFilter(filter)
+{
+	length = filter.length();
+}
+
+int MyBloomFilter::hash(string word)
+{
+	int size = word.length();
+	int num_of_hashes = 7;
+	int word_to_num;
+	for(int ii = 0; ii < size; ii++){
+		word_to_num += (((word[ii] << 5) ^ (word[ii] << (size % ii)) - '0'));
+	} 
+	return word_to_num % 31;
+}
+
+void MyBloomFilter::insert(string item)
+{
+	int position = hash(item);
+	this->filter[position] = 1;
+}
+
+bool MyBloomFilter::exists(string item)
+{
+	int position = hash(item);
+	if(this->filter[position] == 1){
+		return true;
+	} else {
+		return false;
+	}
+}
+
+string MyBloomFilter::output()
+{
+	string result;
+	for(int ii = 0; ii < length; ii++){
+		result += filter[ii];
+	}
+	return result;
+}
+
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+I calculate the numerical value of the string by bit shifting the character string to the left by 5, then xor with decreasing left bit shift by length of string modulo the current iteration of the for loop. The goal is to spread out the strings based on length and unique characters to have less collisions. Position is the final value calculated modulo 31. 31 is a prime number and prime numbers have the most modulo values of any number.
+---+++!! Grader comments *[0/25]*
+<VERBATIM>No score found
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Give out the password you cracked. Remember attached the code as 'problem4a.zip'
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the password you cracked. 
+</VERBATIM>
+
+This is impossible. I attached my code below. I am able to get to the last hash in the rainbow table, but when I attempt to generate the right password my program goes on forever.
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Give out the explanation here. Remember attached the code and table
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

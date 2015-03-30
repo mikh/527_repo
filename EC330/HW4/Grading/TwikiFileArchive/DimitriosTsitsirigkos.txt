@@ -1,0 +1,363 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(DimitriosTsitsirigkos),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+ii
+
+Explanation:
+hn=h(n-1)+sum of ns
+(through iteration) this is not linear and it fall to the category of a quadratic probing although it is not exactly one.
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+int mymed(int X0[], int left0, int right0, int X1[], int left1, int right1)
+{
+  mid0 =  left0 + (left0+right0)/2;
+  med0 = X0[mid0];  //median of X0
+ 
+  mid1 = left1 + (left1+right1)/2;
+  med1 = X1[mid1];  //median of X1
+
+if(right0 - left0 + right1 - left1  <   4  )
+{
+find median of elements.  (this will take constant running time)
+}
+
+else if (med0<med1)
+{
+mymed(X0[],mid0,right0,left1,right1,mid1+1);
+}
+
+else
+mymed(X1[],mid0+1,right0,left1,right1,mid1);
+
+
+
+}
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+We know that the medians of the two arrays will be between the medians of array0 and array1, med0 and med1. Therefore, for array x0 we dont need the elements less than the median of X0 and for array X1 we dont need the numbers that are bigger than median of X1. Also right denotes the last element and left the first element. Therefore, right0 is the rightmost element of array zero etc.
+The running time for this process will be bigtheta of logn.
+We get that because it is a recursvive relationship where T(n) = T(n/2) which leads to logn.
+
+
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+For this one I will use the exact same procedure with above. The only difference will be that I have to find the smallest and the largest median of these three arrays so that I can bound the median between these two. 
+
+so
+smallest_med = min(med0,med1,med2);
+largest_med = max(med0,med1,med2);
+
+again we will discard the elements of the array with the smallest median that are left from that median and also discard the exact same amount of elements from the array that has the largest median.
+With this procedure if we do it several times we will end up with two arrays and the above method can be used.
+
+
+
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+The running time for this problem will be the exact same with above except for the call of the recursion call. So theregore we will have something like c*logn becasue we do the exact same with the abavoce but calling it more times. so it will again be theta of logn
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+For this one I will use the exact same procedure with above. However, I will have to do it more times in order to end up with two arrays.
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Because of the increases number of times that this has to be done, and more specifically it will be done n times the final running time will be the same with part i but times n. Therefore, bigtheta of nlogn
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+  #include "myBloomFilter.h"
+
+#include <string>
+
+
+using namespace std;
+
+
+
+int FNV_INIT = 16777629;
+//
+int nhashf = 5;
+
+
+
+
+
+
+
+int hashFun(string mystr,
+        int hashVal){
+    
+	for ( int i = 0; i<mystr.size(); i++){
+        
+		hashVal ^= (int)mystr[i];
+        
+		hashVal += (hashVal << 1) + (hashVal << 4) + (hashVal << 7) + (hashVal << 8) + (hashVal << 24);
+        
+	}
+	return hashVal;
+}
+
+
+
+
+
+
+
+
+
+int hash_fnv(string mystr, int hashVal){
+    
+	for ( int i = 0; i<mystr.size(); i++){
+        
+		hashVal += (hashVal << 1) + (hashVal << 4) + (hashVal << 7) + (hashVal << 8) + (hashVal << 24);
+        
+		hashVal ^= (int)mystr[i];
+	}
+	return hashVal;
+}
+
+
+myBloomFilter::myBloomFilter(int length) :BloomFilter(length){
+    
+	filter = string(length, 0x00);
+    
+}
+
+
+
+
+
+myBloomFilter::myBloomFilter(string Filter) : BloomFilter(Filter.length()) {
+	filter = Filter;
+    
+}
+
+void myBloomFilter::insert(string obj){
+    
+int hash;
+    
+	for (int i = 0; i<nhashf; i++){
+        
+		if (i == 0)
+			hash = hashFun(obj, FNV_INIT);
+		else
+			hash = hashFun(obj, hash);
+
+        int iii = hash % (length * 8);
+        
+	int ByteNumber = iii/ 8;
+int BitNumber = iii % 8;
+        
+		filter[ByteNumber] |= (0x80 >> BitNumber);
+        
+	}
+    
+}
+
+bool myBloomFilter::exists(string obj){
+    
+ int hash;
+    
+    
+	
+    for (int i = 0; i<nhashf; i++){
+        
+		
+        
+        if (i == 0)
+			hash = hashFun(obj, FNV_INIT);
+		
+        
+        else
+            
+            
+            hash = hashFun(obj, hash);
+        
+		
+        
+        
+        
+        
+int ii = hash % (length * 8);
+        
+		int ByteNumber = ii / 8;
+		int BitNumber = ii % 8;
+        
+        
+		if (filter[ByteNumber] & (0x80 >> BitNumber))
+            continue;
+		else
+            return false;
+        
+	}
+	return true;
+}
+
+string myBloomFilter::output(){
+	
+    
+    return filter;
+}
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+For this problem I used an approach that I found online that describes in words a procedure. Then I implemented and changed the procedure a little bit.
+http://isthe.com/chongo/tech/comp/fnv/
+
+So, I used the fnv algorithms found on the website above. My hash functio  in every octet of information that needs to be hashed it multiplies the hash with itslelf and the fnv prime.
+it basically xors the hash with the octet mentioned above. It is a very specific algorithm that I found interesting and I tried to implment. 
+Basically, what this implementation does is that it shifts values by powers.
+That means that the value of the hash is multiplied by the fnv prime number (which is generated from a list of magic numbers) and it ends up to be a summation of powers of two. This is then shifted to the left for every power that has been chosen.
+
+
+
+</VERBATIM>
+
+---+++!! Grader comments *[15/25]*
+<VERBATIM>
+Score: 1708</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+
+
+DIF
+Dey
+ETR
+Fee
+GOK
+SYC
+Sui
+WGS
+dis
+eom
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+So for this one if I keep hashing and reducing I will get more than one to be the possible password. Therefore I assumed that the password is the first result of each hash, which is not right.
+Basically what i did is if some reduced pass matches with some of the table that is the password. However, I am getting more than one answers for each hash that I could include here, but for some of them I just get so many that I decided to add just the first one.
+
+So i get:
+
+i['YO
+I>JHg
+_0&uI
+(ELuc
+_0&uI
+=Lk%L
+ZS7*v
+m9Y&;
+C]_TM
+LFmBc
+
+
+
+
+Bellow is my code:
+
+
+#include <string>
+#include <iostream>
+#include "hash.h"
+#include <algorithm>
+#include <fstream>
+
+using namespace std;
+int main()
+{
+    string s,s2,s3,s4;
+    string line;
+    char m[100];
+    int k=0;
+    
+       
+    
+    
+    ifstream myfile ("table.txt");
+    if(myfile.is_open())
+    {
+       
+        
+        
+        
+        while (getline (myfile,line))
+        {
+            s2 = "61fb49567cb972d62edac6a76f9454b5741f3587";
+
+            char mys[6] = {line[14],line[15],line[16],line[17],line[18]};
+            
+           
+            for(int i=0; i<100; i++)
+            {
+                s2 = reduce(s2,5);
+                if(s2==mys)
+                {
+                    cout<<"DONE"<<endl;
+                }
+                
+                s2 = hash(s2);
+            }
+        
+        }
+    }
+        myfile.close();
+return 0;
+}
+
+
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Give out the explanation here. Remember attached the code and table
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

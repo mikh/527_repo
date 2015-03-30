@@ -1,0 +1,353 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(RajaPatel),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+Give out answer here.
+
+ANSWER: 
+The probe sequence will exhibit primary clustering due to the fact that h(k) is a linear function; the addition of the variable 'i' denotes linear probing, thus classifying the sequence to exhibit primary clustering. It cannot produce secondary clustering because h(k) would need to be a quadratic function and have a variable with a power greater than 1. Lastly, the function will not always be able to add a key if the table is not full; this is true because 'i' causes a shift in the equation, thus restricting the equation to produce keys to fill up all the available spots in the bit vector. 
+
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+
+To calculate a single median from two arrays, we can first find two medians and then compare them to see if it is the final median or if we need to narrow down the choices. To do this, we first find the median of each array; since both arrays are already sorted, the median will equal arrayLength/2 (if length is an even number) or floor(arrayLength/2)) (if length is an odd number). If the median from both arrays are equal, print that value. 
+
+If the medians are not equal, then:
+If median1 < median2, create subarray1 from median1 to the last element (from array1) and create subarray2 from the first element to median2 (from array2).
+If If median1 > median2, create subarray1 from the 1st element to median1 (from array1) and create subarray2 from median2 to the last element (from array2).
+
+Then find two new medians from the two new subarrays. If median1 does not equal median 2, repeat this process until each subarray only holds 2 elements. Once you have 2 subarrays each with only 2 elements, place the maximum values from each array into a new array called 'maxArray' and place the minimum values from each array into another new array called 'minArray'. Then add min(maxArray) and max(minArray) and divide that by 2 to get the final median.
+
+
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+
+RUNTIME: O(log(n))
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+
+The procedure for finding the overall median from 3 different arrays is pretty similar to the previous question using only 2 arrays. 
+
+
+We first find each median from all three arrays and then compare them to see which array had the median with the smallest value and another array which had the median with the largest value. Once we figure this out, we narrow our comparison to only 2 arrays.  
+
+If the medians are not equal, then:
+If median1 < median2, create subarray1 from median1 to the last element (from array1) and create subarray2 from the first element to median2 (from array2).
+If If median1 > median2, create subarray1 from the 1st element to median1 (from array1) and create subarray2 from median2 to the last element (from array2).
+
+Then find two new medians from the two new subarrays. If median1 does not equal median 2, repeat this process until each subarray only holds 2 elements. Once you have 2 subarrays each with only 2 elements, place the maximum values from each array into a new array called 'maxArray' and place the minimum values from each array into another new array called 'minArray'. Then add min(maxArray) and max(minArray) and divide that by 2 to get the final median.
+
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+
+RUNTIME: O(log(n))
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+
+First find the median of all arrays by locating the middle index (arrayLength/2). Compare all medians are only find the MIN and MAX medians; these medians and the arrays they were associated with will be further narrowed down into subarrays (similar to the procedure for 2 arrays) until the each subarray only has 2 elements. Once you have 2 subarrays each with only 2 elements, place the maximum values from each array into a new array called 'maxArray' and place the minimum values from each array into another new array called 'minArray'. Then add min(maxArray) and max(minArray) and divide that by 2 to get the final median.
+
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+
+RUNTIME: O(nlog(n))
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+   // put your code here
+   // also remember to upload it in submit page
+
+//
+//  myBloomFilter.h
+//  ec330hw4
+//
+//
+
+#ifndef myBloomFilter_h
+#define myBloomFilter_h
+
+#include <stdio.h>
+#include "BloomFilter.h"
+
+class myBloomFilter: public BloomFilter
+{
+    //define functions that you will overload in bloomFilter.h
+    // -- overload: insert(), exists(), output()
+public:
+
+    myBloomFilter (int mm);
+    myBloomFilter (string filter);
+    void insert(string item);
+    /*
+        1. insert hash
+     */
+    
+    bool exists(string item);
+    /*
+        1. Checks whether 'item' is in the filter.
+            i) variable: string filter
+        2. Return something depending on if-statement
+            i)  Item might be in filter --> return TRUE
+            ii) Item not in filter      --> return FALSE
+     
+     Comment: add hash functions here?
+     */
+    
+    int hashFunct1(string item);
+    int hashFunct2(string item);
+    int hashFunct3(string item);
+    int hashFunct4(string item);
+    string output();
+    /*
+     1. Return string of characters representing the Bloom Filter?
+     */
+    
+protected:
+    string bitVector;
+    
+};
+
+#endif /* defined(__ec330hw4__myBloomFilter__) */
+
+
+
+
+
+
+
+
+//
+//  myBloomFilter.cpp
+//  ec330hw4
+//
+//
+
+#include <cstring>
+#include <string>
+
+#include "myBloomFilter.h"
+
+
+myBloomFilter::myBloomFilter(int mm):BloomFilter(mm)
+{
+    string array(mm, '0');
+    bitVector = array;
+}
+
+
+myBloomFilter::myBloomFilter(string filter) : BloomFilter(filter)
+{
+    bitVector = filter;
+}
+
+
+int myBloomFilter::hashFunct1(string item)
+{
+    //-----convert string to int-----
+    //convert: string --> char
+    char *str2char = new char[item.length() + 1];
+    strcpy(str2char, item.c_str());
+    //convert: c-string --> integer
+    int sum = 0;
+    for (int i = 0; i < (item.length()+1); i++){
+        int char2int = static_cast<int>(*(str2char+i)); //outputs integer
+        sum += char2int; // ASCII value of entire string
+    }
+    
+    //-----creating the HASH-----
+    //division hash for sum of ASCII values of the string
+    
+    int hashVar = sum; // intger value of the input
+    int remainder = hashVar % length;
+    
+    
+    return remainder;
+}
+
+
+int myBloomFilter::hashFunct2(string item)
+{
+    //modulus of length of string
+    
+    //-----convert string to int-----
+    char *str2char = new char[item.length() + 1];
+    strcpy(str2char, item.c_str());
+    //convert: c-string --> integer
+    int sum = 0;
+    for (int i = 0; i < (item.length()+1); i++){
+        int char2int = static_cast<int>(*(str2char+i)); //outputs integer
+        sum += char2int; // ASCII value of entire string
+    }
+
+    //-----creating the HASH-----
+    //division hash for sum of ASCII values of the string
+    int hashVar = sum;
+    int remainder = (20*hashVar) % length;
+    return remainder;
+}
+
+int myBloomFilter::hashFunct3(string item)
+{
+    //-----convert string to int-----
+    char *str2char = new char[item.length() + 1];
+    strcpy(str2char, item.c_str());
+    //convert: c-string --> integer
+    int sum = 0;
+    for (int i = 0; i < (item.length()+1); i++){
+        int char2int = static_cast<int>(*(str2char+i)); //outputs integer
+        sum += char2int; // ASCII value of entire string
+    }
+    //-----creating the HASH-----
+    int hashVar = sum;
+    int remainder = (42*hashVar) % 10;
+    return remainder;
+}
+
+int myBloomFilter::hashFunct4(string item)
+{
+    //modulus of length of string
+    
+    //-----convert string to int-----
+    char *str2char = new char[item.length() + 1];
+    strcpy(str2char, item.c_str());
+    //convert: c-string --> integer
+    int sum = 0;
+    for (int i = 0; i < (item.length()+1); i++){
+        int char2int = static_cast<int>(*(str2char+i)); //outputs integer
+        sum += char2int; // ASCII value of entire string
+    }
+    
+    //-----creating the HASH-----
+    int hashVar = sum;
+    int remainder = (hashVar*17) % 5;
+    return remainder;
+
+}
+
+
+void myBloomFilter::insert(string item)
+{
+    //insert 1 at the defined key(s)
+    int index1 = hashFunct1(item); 
+    bitVector[index1] = '1';
+    
+    int index2 = hashFunct2(item); 
+    bitVector[index2] = '1';
+    
+    int index3 = hashFunct3(item); 
+    bitVector[index3] = '1';
+    
+    int index4 = hashFunct4(item); 
+    bitVector[index4] = '1';
+}
+
+bool myBloomFilter::exists(string item)
+{
+    int hashIndex1 = hashFunct1(item); 
+    int hashIndex2 = hashFunct2(item); 
+    int hashIndex3 = hashFunct3(item); 
+    int hashIndex4 = hashFunct4(item); 
+    
+    if ((bitVector[hashIndex1] == '1')&&
+        (bitVector[hashIndex2] == '1')&&
+        (bitVector[hashIndex3] == '1')&&
+        (bitVector[hashIndex4] == '1'))
+        return true;
+    else
+        return false;
+
+}
+
+string myBloomFilter::output()
+{
+    return bitVector;
+}
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+Give out answer here.
+
+The header and implementation files are created to define a child class of the given BloomFilter class. Within the implementation file (myBloomFilter.cpp), a new constructor, myBloomFilter, was created and several functions--insert(), exist(), output(), hashFunct()--were defined. Many of the functions were already given in the parent header file and needed to be defined further in the child class, however, the hashFunct() was an additional function used to convert the string input into integers and return it's hashed value. Within this function, the string was first converted into an array of characters to then be converted into its ASCII equivalent value as an integer using the static cast function. This integer value was then hashed, by using division hashing and then returned. Within the code, 4 hash functions, each with a different division hashing equation, were defined. This was done to increase the number of hashes each input had, thus reduce the probability of encountering a false positive. 
+
+The exist() function took in the user defined hash function and checked to see if the given bit vector possibly contained the input. If so, it would return true otherwise it would return as false. The insert function took the hash value created from the hash function and use that value as an index to access the bit vector in oder to change certain values from false to true. The output() function, which was self explanatory, just returns the entire set of values of the bit vector as a giant string. 
+
+
+</VERBATIM>
+
+---+++!! Grader comments *[16/25]*
+<VERBATIM>
+Score: 1788</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Give out the password you cracked. Remember attached the code as 'problem4a.zip'
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the password you cracked. 
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Give out the explanation here. Remember attached the code and table
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---
+
+   * [[%ATTACHURLPATH%/myBloomFilter.cpp][myBloomFilter.cpp]]: Header and implementation files for question 3
+
+   * [[%ATTACHURLPATH%/myBloomFilter.h][myBloomFilter.h]]: Header and implementation files for question 3

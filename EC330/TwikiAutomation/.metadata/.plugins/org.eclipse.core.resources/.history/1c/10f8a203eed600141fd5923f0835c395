@@ -1,0 +1,164 @@
+package control_structure;
+
+import java.awt.AWTException;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+
+import data_structures.LinkStruct;
+import data_structures.QuestionFormat;
+import parsers.C_HTMLParser;
+import parsers.CustomParser;
+import parsers.ExcelParser;
+import parsers.StringParser;
+import web.Client;
+
+public class Control {
+	public static void main(String[] args){
+		System.out.println("Starting Twiki Automation code...");
+		Client client = null;
+		ArrayList<LinkStruct> links = null, fails = null;
+		
+		
+		
+		
+		System.out.println("Starting Client...");
+		if((!Defines.DEBUG_MODE) || (Defines.DEBUG_MODE && Defines.START_CLIENT_DEBUG)){
+			client = new Client(Defines.BASE_URL, null, Defines.FIREFOX_INSTALL_LOCATION);   //open web browser
+		}
+		System.out.println("Logging In...");
+		if((!Defines.DEBUG_MODE) || (Defines.DEBUG_MODE && Defines.LOG_IN_DEBUG)){
+			while(client.islogin())   //login to twiki
+				client.login(Defines.USERNAME, Defines.PASSWORD);
+		}
+		
+		System.out.println("Getting Links...");
+		//get all the links on the page
+		if((!Defines.DEBUG_MODE) || (Defines.DEBUG_MODE && Defines.GET_LINKS_DEBUG)){
+			links = C_HTMLParser.filter_links_by_class(C_HTMLParser.parseLinks(C_HTMLParser.filter_html(client.getPageSource(), Defines.LINK_START_PATTERN, Defines.LINK_STOP_PATTERN)), Defines.PASS_LINK_CLASS);
+			links = CustomParser.filter_links_on_homework_name_and_get_student_name_and_make_full_links(links, Defines.HOMEWORK_NAME, Defines.WEBSITE_BASE);
+			fails = new ArrayList<LinkStruct>();
+		}
+		
+		
+		//filter links based on selection
+		if((!Defines.DEBUG_MODE) || (Defines.DEBUG_MODE && Defines.FILTER_USERS_DEBUG)){
+			if(Defines.FILTER_USERS){
+				System.out.println("Filtering Links...");
+				try {
+					ArrayList<String> users_to_filter = StringParser.parse_list_file(Defines.FILTER_FILE_PATH);
+					ArrayList<LinkStruct> passed_links = new ArrayList<LinkStruct>(); 
+					for(int ii = 0; ii < users_to_filter.size(); ii++){
+						boolean found = false;
+						for(int kk = links.size(); kk >= 0; kk--){
+							if(users_to_filter.get(ii).equals(links.get(kk).l_name)){
+								passed_links.add(links.get(kk));
+								found = true;
+								break;
+							}
+						}
+						if(!found){
+							LinkStruct fail_struct = new LinkStruct();
+							fail_struct.l_name = users_to_filter.get(ii);
+							fail_struct.l_error = "Cannot find user in links";
+						}
+					}
+					links = passed_links;
+				} catch (IOException e) {
+					System.out.println("Unable to open filter file");
+				}
+			}
+		}
+		
+		//if performing acquire, download all the twiki data for different students
+		if((!Defines.DEBUG_MODE) || (Defines.DEBUG_MODE && Defines.ACQUIRE_TWIKI_DATA_DEBUG)){
+			if(Defines.ACQUIRE){
+				System.out.println("Acquiring current Twiki Code...");
+				for(int kk = links.size(); kk >= 0; kk--){
+					LinkStruct ls = links.get(kk);
+					boolean fail = false;
+					client.getPage(ls.l_edit_link);
+					Defines.delay(Defines.WAIT_FOR_PAGE);
+					try {
+						ls.l_page = client.getPageText(Defines.KEY_PRESS_DELAY);
+					} catch (AWTException e) {
+						System.out.println("[" + ls.l_name + "] Failed to acquire page text");
+						ls.l_error = "Failed to acquire page text";
+						links.remove(kk);
+						fail = true;
+					}
+					Defines.delay(Defines.WAIT_FOR_PAGE);
+					
+					if(!fail){
+						//destination archive path
+						String archive_path = (((Defines.TWIKI_FILE_ARCHIVE + "\\") + ls.l_name) + ".txt");
+						File ff = new File(archive_path);
+						if(ff.exists() && ! ff.isDirectory() && !Defines.OVERWRITE){
+							System.out.println("Ignoring Existing File "+ archive_path);
+						} else{
+							try {
+								ls.write_to_file(archive_path);
+							} catch (IOException e) {
+								System.out.println("[" + ls.l_name + "] Unable to write archive to file");
+								ls.l_error = "Unable to write archive to file";
+								links.remove(kk);
+								fail = true;
+							}
+						}
+					}
+					if(fail)
+						fails.add(ls);
+				}
+			}
+		}
+		
+		
+		//else if performing revert, open up archives for twiki data
+		if((!Defines.DEBUG_MODE) || (Defines.DEBUG_MODE && Defines.REVERT_TWIKI_DATA_DEBUG)){
+			if(!Defines.ACQUIRE){
+				System.out.println("Loading previous archives...");
+				for(int kk = links.size(); kk >= 0; kk--){
+					LinkStruct ls = links.get(kk);
+				
+					//destination archive path
+					String archive_path = (((Defines.TWIKI_FILE_ARCHIVE + "\\") + ls.l_name) + ".txt");
+					try{
+						ls.read_from_file(archive_path);
+					} catch(IOException e){
+						System.out.println("[" + ls.l_name + "] Unable to read archive from file");
+						ls.l_error = "Unable to read archive from file";
+						links.remove(kk);
+					}
+					
+				}
+			}
+		}
+		
+		//load data to write from excel spreadsheet
+		if((!Defines.DEBUG_MODE) || (Defines.DEBUG_MODE && Defines.LOAD_EXCEL_DATA_DEBUG)){
+			try {
+				ArrayList<ArrayList<String>> matrix = ExcelParser.get_excel_matrix(Defines.EXCEL_FILE_PATH, Defines.START_COLUMN, Defines.STOP_COLUMN, Defines.START_ROW, Defines.STOP_ROW);
+				ArrayList<ArrayList<QuestionFormat>> qtrix = ExcelParser.parse_matrix(matrix);
+				System.out.println("test");
+			} catch (IOException e) {
+				System.out.println("Could not load the excel data. Fatal Error.");
+				System.exit(-1);
+			}
+		}
+		//write data into twiki data files
+		if((!Defines.DEBUG_MODE) || (Defines.DEBUG_MODE && Defines.WRITE_TWIKI_DATA_TO_FILES_DEBUG)){
+			
+		}
+		
+		//write twiki data files back into twiki web
+		if((!Defines.DEBUG_MODE) || (Defines.DEBUG_MODE && Defines.WRITE_TWIKI_DATA_TO_WEB_DEBUG)){
+			
+		}
+		
+		//output error
+		if((!Defines.DEBUG_MODE) || (Defines.DEBUG_MODE && Defines.OUTPUT_ERROR_DEBUG)){
+
+		}	
+		System.out.println("Twiki Automation complete.");
+	}
+}

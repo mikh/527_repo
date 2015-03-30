@@ -64,6 +64,22 @@ public class Client {
 		return Defines.clipboard_to_string();
 	}
 	
+	public void pasteText(long key_press_delay, String text) throws AWTException{
+		Robot r = new Robot();
+		Defines.string_to_clipboard(text);
+		r.keyPress(KeyEvent.VK_CONTROL);
+		Defines.delay(key_press_delay);
+		r.keyPress(KeyEvent.VK_A);
+		Defines.delay(key_press_delay);
+		r.keyRelease(KeyEvent.VK_A);
+		Defines.delay(key_press_delay);
+		r.keyPress(KeyEvent.VK_V);
+		Defines.delay(key_press_delay);
+		r.keyRelease(KeyEvent.VK_V);
+		Defines.delay(key_press_delay);
+		r.keyRelease(KeyEvent.VK_CONTROL);		
+	}
+	
 	public void close(){
 		driver.close();
 	}

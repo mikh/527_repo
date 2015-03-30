@@ -1,0 +1,177 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(YaoyuChen),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+
+i
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+%CODE{"cpp"}%
+int findMid(){
+if x0.length = 1 && x1.length = 1{
+return findMid();
+}
+else{
+if x0[n/2]>x1[n/2]{
+    take first half of x0 and second half of x1
+}
+else{     
+    take second half of x0 and first half of x1
+}
+findMid()
+}
+   }                                                                                                                                  
+%ENDCODE%
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+we first compare the median of two arrays. take the first half of the array that has larger median and take second half of the array that has smaller median. Then compare the median again, do the same thing. At last, the number left is the median of the two arrays. It takes theta(log n) times.
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+%CODE{"cpp"}%
+int pivot;
+int j = 0;
+int k = 0;
+int l = 0;
+for i = 0 to 3n/2{
+   compare x0[j],x1[k],x2[l]
+   if x0[j] is the smallest{
+       pivot = x0[j];
+       j++;
+}
+   else if x1[k] is the smallest{
+      pivot = x1[k];
+      k++;
+}
+   else{
+      pivot = x2[l];
+      l++;
+}
+   i++;
+}
+
+return pivot;                                                                                                                                                
+%ENDCODE%
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+We merge three arrays into one array and stops when merged to the 3n/2 term of the array and that is the median of the three arrays. the runtime is also theta(n)
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+%CODE{"cpp"}%
+int findMid(){
+get median of all n arrays and find max and min;//takes theta(n)
+go through all arrays and remove all the element larger than maximum median and all the element smaller than minimum median.//takes theta(log n)
+findMid&#65288;&#65289;//takes theta(log n)
+}
+                                                                                                                           
+%ENDCODE%
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+first find all the medians of all the arrays and find the maximum and minimum of those medians. Then go through all the element and delete the elements which are larger than the maximum median and the elements which are less than minimum median. Then do the recursion until their are only one element left which should be the median of all elements. The total time is n*logn *log n = theta(n(log n)^2)
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+   // put your code here
+   // also remember to upload it in submit page
+
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+---+++!! Grader comments *[0/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Give out the password you cracked. Remember attached the code as 'problem4a.zip'
+</VERBATIM>
+
+9,x
+
+.+j
+
+mr2
+
+'#>
+
+@z[
+
+$~v
+
+f*$
+
+x)+
+
+px(
+
+1Bj
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the password you cracked. 
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Give out the explanation here. Remember attached the code and table
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

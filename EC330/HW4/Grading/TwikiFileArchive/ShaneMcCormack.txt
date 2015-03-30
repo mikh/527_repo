@@ -1,0 +1,282 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(ShaneMcCormack),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+This is quadratic because hi(k) = sum from 0 to i of n, which is equal to hi(k) = h(k) + i(i+1)/2
+It will not exhibit primary clustering (i), as it is a quadratic probe sequence, it does not go one-by-one
+This will exhibit secondary clustering (ii); it is a quadratic probe sequence, if they have the same i, they will hit the same values and there will be clustering issues.
+It will not be always able to add a key if the table is not full (iii), because it is a quadratic probe sequence, it doesn't go one-by-one
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+if n==1, return (x0[0]+x1[0])/2 as median
+if n is odd {
+oddMeds= {x0[n-1],  x1[n-1], x2[n-1]}
+if (oddMeds[0]==oddMeds[1]) return oddMeds[0] 
+delete all positions to the right of max(oddMeds) in its respective array of origin
+delete all positions to the left of min(oddMeds) in its respective array of origin
+update n for new array lengths
+jump back to start of code (recurse)
+}
+if n is even {
+evenMeds[] = {x0[n-1], x0[n], x1[n-1],x1[n]} 
+if evenMeds[0]==evenMeds[2] and evenMeds[1]==evenMeds[3], return (evenMeds[0]+evenMeds[1])/2 as median
+if max and min of evenMeds come from the same array of origin, return average of the other array's evenMeds as median
+else{
+delete all positions to the right of max(evenMeds) in its respective array of origin
+delete all positions to the left of min(evenMeds) in its respective array of origin
+update n for new array lengths
+jump back to start of code (recurse)
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+each run this code will delete n/2-1 values from each array, worst case, until there is only one value in each array thus, worst case run time is theta log(n)
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+Same as for medians of 2, except:
+must check if each array's length is odd or even, and find it's median or median pair accordingly (can no longer use n as a checker because all array's sizes can be different)
+will be choosing the highest/lowest of 3 medians now - but still only finding the 2 most extreme medians
+while the number of arrays that still contain numbers is >2, remove the extrema medians along with the numbers to the right or left of them
+if one extrema median has a different array size than the other, delete numbers from the smaller array like normal, but only delete the same amount of numbers from the extreme side of the larger array
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+This still removes half of the digits of at least one array with every run. It no longer removes half the values from two arrays every run, as now if one extrema median's array is smaller, it's size limits how many numbers are removed from the larger array.
+This only multiplies by a constant how many loops we make, so worst case is still theta(log(n))
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+Exactly the same as medians of 3, just uses n instead of 3 while looping through the arrays
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+This will still be eliminating at least half of one array as stated in medians of three, but now there are n arrays to go through. Thus worst case run time is theta(nlog(n)).
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+//Shane McCormack HW4P3
+#include "myBloomFilter.h"
+#include "BloomFilter.h"
+#include <cmath>
+#include <string>
+#include <cstring>
+#include <iostream>
+
+using namespace std;
+
+myBloomFilter::myBloomFilter(int mm) : BloomFilter(mm)	//creating bloom filter string with mm slots for chars
+{
+	length = mm;
+	bloomFilter = string(mm, 'X');
+}
+
+myBloomFilter::myBloomFilter(string filter) : BloomFilter(filter)	//copies filter into new bloomFilter
+{
+	length = filter.size();
+	string bloomFilter=filter;
+}
+
+void myBloomFilter::insert(string item)	//inserts item's 3 hashes into bloomFilter
+{
+	unsigned int position = MurmurHash2(item, item.size(), 1);	//3 different hashes
+	bloomFilter[position] = 'O';
+	cout << "position 1 is " << position << endl;
+	position = MurmurHash2(item, item.size(), 3);
+	cout << "position 2 is " << position << endl;
+	bloomFilter[position] = 'O';
+	position = MurmurHash2(item, item.size(), 5);
+	cout << "position 3 is " << position << endl;
+	bloomFilter[position] = 'O';
+}
+
+bool myBloomFilter::exists(string item)	//checks if the 3 spots for a string are already hashed into bloomFilter
+{
+	if (bloomFilter[MurmurHash2(item, item.size(), 1)] == 'X') return false;
+	if (bloomFilter[MurmurHash2(item, item.size(), 3)] == 'X') return false;
+	if (bloomFilter[MurmurHash2(item, item.size(), 5)] == 'X') return false;
+	else
+	{
+		cout << item << " could be here" << endl;
+		return true;
+	}
+}
+string myBloomFilter::output()	//returns string bloomFilter
+{
+	return bloomFilter;
+}
+
+//-----------------------------------------------------------------------------
+// MurmurHash2, by Austin Appleby <---- Source (modified a bit by yours truly)
+
+unsigned int myBloomFilter::MurmurHash2(string key, int len, unsigned int seed)
+{
+	// 'm' and 'r' are mixing constants generated offline.
+	// They're not really 'magic', they just happen to work well.
+
+	const unsigned int m = 0x5bd1e995;
+	const int r = 24;
+
+	// Initialize the hash to a 'random' value
+
+	unsigned int h = seed ^ len;
+
+	// Mix 4 bytes at a time into the hash
+
+	string data = key;
+
+	while (len >= 4)
+	{
+		unsigned int k = (int)data[0];
+
+		k *= m;
+		k ^= k >> r;
+		k *= m;
+
+		h *= m;
+		h ^= k;
+
+		data += 4;
+		len -= 4;
+	}
+
+	// Handle the last few bytes of the input array
+
+	switch (len)
+	{
+	case 3: h ^= data[2] << 16;
+	case 2: h ^= data[1] << 8;
+	case 1: h ^= data[0];
+		h *= m;
+	};
+
+	// Do a few final mixes of the hash to ensure the last few
+	// bytes are well-incorporated.
+
+	h ^= h >> 13;
+	h *= m;
+	h ^= h >> 15;
+	h = h % length;
+	return h;
+}
+//my hashes... not so great in terms of false positive probability
+/*int myBloomFilter::hash1(string item)	//first hash
+{
+	int out = 1;
+	for (int ii = 0; ii < item.size(); ii++)
+	{
+		out = out * 3 + (int)item[ii];
+	}
+	out = out % length;
+	return out;
+}
+
+int myBloomFilter::hash2(string item)	//second hash
+{
+	int out = 1;
+	for (int ii = 0; ii < item.size(); ii++)
+		{
+			out = out * 5 + (int)item[ii];
+		}
+	out = out % length;
+	return out;
+}
+
+int myBloomFilter::hash3(string item)	//third hash
+{
+	int out = 1;
+	for (int ii = 0; ii < item.size(); ii++)
+		{
+			out = out * 7 + (int)item[ii];
+		}
+	out = out % length;
+	return out;
+}
+*/
+/*
+int main()
+{
+	myBloomFilter test(10);
+	test.insert("fred");
+	cout << "test" << test.output() << endl;
+	test.exists("fred");
+	test.exists("jill");
+	system("pause");
+	return 0;
+}
+*/
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+Used murmurhash2, with 3 different seeds, to reduce false positive probability. Originally made my own hashes (commented out), but they had super high false positive rates, so looked for a good one online. Source: https://sites.google.com/site/murmurhash/ , also described in comments
+</VERBATIM>
+
+---+++!! Grader comments *[5/25]*
+<VERBATIM>
+Score: 1207</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+abd
+moa
+deb
+PNA
+SRB
+ISS
+DTB
+pp.
+DBO
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the password you cracked. 
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Give out the explanation here. Remember attached the code and table
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

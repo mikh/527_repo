@@ -1,0 +1,298 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(JesseBelanger),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+
+Secondary clustering, rather than primary clustering, will be a problem. Any elements that initially hash to the same index will then follow the exact same probing sequence.
+For instance, for anything with initial hash h_0(k) = 2, then h_1(k)=3, h_2(k) =5, etc.
+
+However, depending on the size of the array and the initial h(k), the probe sequence will not always be able to find an an empty slot in which to place a key. 
+For instance, if there are 10 slots, the initial h(k)=8, and the slots 8,9,1,4,3, and 6 are already filled, then the key will not be able to be added, since the
+ sequence will repeat those indices over and over forever.
+
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+Pseudocode:
+
+findMedian(array A, array B, left index, right index, n)
+     midA = (right index - left index)/2
+     midB = n - midA - 1
+     
+     // Median of A is also median of B, done
+     if B[midB] <= A[midA] <= B[midB]
+          return average(A[midA], B[midB])
+
+     // Median of A is less than the lower midpoint of B, search for larger median in A
+     if A[midA] < B[midB]
+          findMedian(A, B, midA+1, right index, n)
+
+     // Median of A is greater than the greater midpoint of B, search for smaller median in A
+     if A[midA] > B[midB + 1]
+          findMedian(A, B, left index, midA - 1, n)
+
+For Array1 and Array2, run findMedian(Array1, Array2, 0, n, n) to search for the median in A.
+If that doesn't return a value, do findMedian(Array2, Array1, 0, n, n) to search for the median in B.
+
+
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+The median of a single array is calculated in constant time. Each time half of one of the arrays
+is discarded, which makes the run time smaller than n. I read in the book about this sort of problem,
+and this algorithm mostly makes use of binary search, which runs in Theta(lgn) time. 
+
+So this algorithm is Theta(lgn).
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+array Sorted[3*n]
+
+for all 3 arrays
+     insert contents into Sorted
+
+median  = Sorted[(n^2)/2]
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+This doesn't perform optimally on space, since it takes up O(n) space.
+With regards to time, it would take O(n) time. The time to merge two 
+sorted arrays is O(n+m), where merging the first two would be O(n+n) = O(2n).
+Then merging the third one in would be O(2n + n) = O(3n). The median is then found
+in constant time.
+
+This isn't optimal, which I talk about in more detail in the next part, since my algorithm
+for this one and the next are essentially the same.
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+array Sorted[n^2]
+
+for all n arrays
+     insert contents into Sorted
+
+median  = Sorted[(n^2)/2]
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+This is not optimal. It will take Theta(n^2) space, which is pretty big.
+It's also suboptimal on time. The time to merge two sorted arrays is O(n+m),
+so the first two arrays will take O(2n), the next one O(3n), all the way up to
+O(n^2).
+
+From researching this problem, I assume it's possible to do this in Theta(lgn).
+The method for doing that involves finding the medians of each array and then eliminating
+elements based on whether they're greater than the greatest median or smaller than the smallest
+median and then doing that over and over again. However, I'm not confident
+enough about that idea to write meaningful pseudocode about it.
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+   #include "myBloomFilter.h"
+#include <string>
+#include <iostream>
+
+unsigned djb_hash(string, int);
+
+myBloomFilter::myBloomFilter(int mm) : BloomFilter::BloomFilter(mm) {
+	string temp(length,'0');
+	bFilter = temp;
+}
+
+myBloomFilter::myBloomFilter(string filter) : BloomFilter::BloomFilter(filter) {
+	bFilter = filter;
+}
+
+void myBloomFilter::insert(string item) {
+	int index1 = djb_hash(item,item.length()) % length;
+	bFilter[index1] = '1';
+}
+
+bool myBloomFilter::exists(string item) {
+	int index1 = djb_hash(item,item.length()) % length;
+
+	if (bFilter[index1] == '1') {
+		return true;
+	}
+
+	else
+		return false;
+}
+
+string myBloomFilter::output() {
+	return bFilter;
+}
+
+
+// Hash algorithm courtesy of http://www.eternallyconfuzzled.com/tuts/algorithms/jsw_tut_hashing.aspx
+unsigned djb_hash(string key, int len)
+{
+    string p = key;
+    unsigned h = 0;
+    int i;
+
+    for (i = 0; i < len; i++)
+    {
+        h = 33 * h ^ p[i];
+    }
+
+    return h;
+}
+
+
+%ENDCODE%
+
+%CODE{"cpp"}%
+#ifndef MY_BLOOMFILTER_H
+#define MY_BLOOMFILTER_H
+
+#include "BloomFilter.h"
+#include <string>
+
+class myBloomFilter : public BloomFilter {
+public:
+	/**
+    * Instantiate an empty Bloom filter of length [ mm ] chars.
+    */
+	myBloomFilter(int);
+
+	/**
+    * Instantiates a Bloom filter from a given string [filter]
+    * @requires [filter] must have been produces by the output() call of a BloomFilter object.
+    */
+	myBloomFilter(string);
+	
+	/**
+    * inserts  into the filter
+    */
+	void insert(string);
+
+	/**
+    * Checks whether [item] is in the filter.
+    * @return  true if the item is probably in the filter
+    *          false if the item is definitely not in the filter
+    */
+	bool exists(string);
+
+	/**
+    * @return A string of [length] characters representing the Bloom filer
+    */
+	string output();
+
+protected:
+	string bFilter; /** A string to hold the stored representation of the filter */
+};
+
+
+#endif
+%ENDCODE%
+---+++ Explanation
+<VERBATIM>
+To implement my Bloom filter, I extended the given bloomFilter class and added in a 
+member variable called bFilter to hold the stored representation of the filter. In one 
+constructor, this string is set to be full of the given length's worth of zeros. In the other
+ constructor, this string is set to the given string. The output function simply returns this
+string to be printed.
+
+For the insert and exists functions, I did some research to find a hash function that could
+efficiently hash strings with a good distribution. The one that I found was a modified 
+Bernstein hash (source cited in the source file). In each of those functions, I would call
+the hash on the given string, and then mod that output with the length of the filter to get an 
+index into the string representing the filter. For insert, I would insert a '1' char into that index.
+For exists, I would check if there was a '1' char there, and if so, print a true.
+
+
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+4fe29a82e81e5909f96d0b902a4d0befe4bf63d5 = abd
+934594c19098524d2ce03beb0414e08d2c427129 = MTF
+ee6ded4fb1b29dae5c1b3a0ea976c2563564dc16 = wim
+aa0299a40190b299a6d7295a2ab4d71818cdd2e6 = Dey
+ceab7606dfe83f9b44fc18f654ed77d8c830c462 = ufo
+ed5dd0204793834a222d4bea84a083aa0768866b = lab
+2b7d678f303a4032f359d66fc1085699683c5b65 = PNA
+bf6741838d73fb9d51850cb83597ddc66bcc2314 = SMB
+45c9b670177fba376c3cdf8334fec71169f027da = fub
+cd1f661819f0f5cdd22c79b5cf5a640819c97fd8 = DIF
+
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+For f32799f284d777cf10838e63dfc8e67b7a6cfff1 the password could be: ;TUih, p]th`, 4y]{', !9xM5, PSlE) 
+For 4166891acc5853ba8e651ad2be43c53350cc11d1 the password could be: ;TUih, p]th`, 4y]{', !9xM5, PSlE)'
+For f21e77142fdc5b2075bfa10dcd1cad930af3a1e6  the password could be: ;TUih, p]th`, 4y]{', !9xM5, PSlE)
+For 0e42476edb2eb93ff32e3ea4fba237c098a6b9f4 the password could be: ;TUih, p]th`, 4y]{', !9xM5, PSlE)
+For ff8b6a673cd1debc344ea6a5a3bb623bb951c4bc the password could be: ;TUih, p]th`, 4y]{', !9xM5, PSlE)
+For b56a4f72f0c4031a0737346eb80e669c6d6b3cd4 the password could be: ;TUih, p]th`, 4y]{', !9xM5, PSlE)
+For d9cb375d9d7e8e9d296617f895e031d4a732553c the password is mm^g,
+For 27fad73b6e2c5aa9d4dfe002d3cd6c17cb7f002a the password is `HnRq
+For 026dd8ca0f2e93059b23b0ef35c3af9245522d1e the password is mm^g,
+For 7be94b2a34252709b102e4821e842f81f4f18806 the password is `HnRq
+
+
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+My code generates various permutations of 5 character strings, where each character is
+between ! and ~ in the ASCII Table. For each generated password, three hash/reduce cycles
+are done with it as a seed, and then the password is stored alongside the final reduce as a pair
+in the rainbow table text file. 
+
+The code is set to run for all permutations from !!!!! to ~~~~~, but running the code to completion
+would take upwards of 15 hours, so it isn't really meant to run for that long. I generated my table by
+running the code for about 5 hours. 
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---
+
+   * [[%ATTACHURLPATH%/problem4a.zip][problem4a.zip]]: Problem 4 files
+
+   * [[%ATTACHURLPATH%/problem4c.zip][problem4c.zip]]: Problem 4 files

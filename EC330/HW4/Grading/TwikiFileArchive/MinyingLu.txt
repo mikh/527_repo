@@ -1,0 +1,252 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(MinyingLu),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+Give out answer here.
+It is not Primary Probing or Quadratic Probing, because hi(k) = hi-1(k) + i = h0(k) + 1 + 2 + ... + i.
+Therefore, the answer is iii)
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+Insert elements in X1 into X0 using insertion sort, and the median will be the nth element of the new X0 array. 
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+Because both arrays are sorted, we can make the iterator start from the last inserted index instead of 0, when inserting x1 elements to X0. 
+Therefore each element in X0 array should only be iterated through once. 
+Keep track of the size of new X0, we know the nth element is the median of two arrays, when the size reaches n, return nth element. 
+This will avoid the redundant iteration in arrays and the running time will be Theta(n)
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+Find the median of each of the arrays m0, m1, m2. 
+if we are super lucky that m0 = m1 = m2, we have our median.
+if not, we compare m0, m1, m2 and find the smallest and largest median. 
+throw away all element <= the smallest median in its array, and throw array all elements >= the largest median in its array. 
+find the new median of the shorten arrays
+compare the new medians, and repeat the process, until there's total 1 or 2 elements left.
+Then find the average number of the two elements, or return the last element. 
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+Because all arrays are sorted, it's constant time to find the median of each arrays.
+Every time we compare the medians, we throw array half of the elements of at least one array until there's only one or two element left.
+Therefore, the running time is logn for each array, there's three arrays, 
+The running time is Theta(3*logn)
+   
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+Use the same algorithm as ii). 
+Fine all the medians for all the arrays
+throw array all elements <= the smallest median in its array and throw array all elements >= the largest median in its array.
+compare the medians again.
+repeat the process until there's only one or two element left
+return the last element or the average of the last two elements. 
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+Because it takes Theta(logn) running time for each array to have 1 or two elements left. (half in size every time it has the smallest or largest median)
+The total running time for n sorted array with n elements is Theta(nlogn)
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+   // put your code here
+   // also remember to upload it in submit page
+///////////myBloomFilter.h//////////////////////
+
+#ifndef MY_BLOOMFILTER_H
+#define	MY_BLOOMFILTER_H
+#include "BloomFilter.h"
+#include <string>
+#include <vector>
+#include <iostream>
+using namespace std;
+
+class myBloomFilter:public BloomFilter{
+    public:
+		vector<char> bloom;
+		myBloomFilter (int mm);
+		myBloomFilter (string filter);
+		void insert(string item);
+		bool exists(string item);
+		string output();
+		unsigned long int hash1(const string& str);
+		unsigned long int hash2(const string& str);
+};
+#endif	//My_BLOOMFILTER_H 
+
+
+///////////myBloomFilter.cpp///////////////////
+
+#include "myBloomFilter.h"
+using namespace std;
+
+myBloomFilter::myBloomFilter(int mm):BloomFilter(mm){
+	myBloomFilter::length = mm;
+	bloom = vector<char> (mm, 'o');
+}
+
+myBloomFilter::myBloomFilter (string filter):BloomFilter(filter){
+	myBloomFilter::length = filter.length();
+	bloom = vector<char> (myBloomFilter::length, 'o');
+	//insert(filter);
+	for (int ii = 0; ii < myBloomFilter::length; ii++){
+		bloom[ii] = filter.at(ii);
+	} 
+}
+
+//change the character on the index to 'x', if it's not already 'x'
+void myBloomFilter::insert(string item){
+	//flip the character(bit) when it's not flipped (o->x) or (0->1) 
+	if(bloom[hash1(item)] == 'o')
+		bloom[hash1(item)] = 'x';
+	if(bloom[hash2(item)] =='o')
+		bloom[hash2(item)] = 'x';
+}
+
+//checks if the string exists in the 
+bool myBloomFilter::exists(string item){
+	if ((bloom[hash1(item)] != 'o') && (bloom[hash2(item)] != 'o'))
+		return true;
+	return false;
+}
+
+//hash function 1
+//refer to RSHash, one of the general hash functions
+unsigned long int myBloomFilter::hash1(const string& str)
+{
+    unsigned int b    = 378551;
+    unsigned int a    = 63689;
+    unsigned int hash = 0;
+
+    for(std::size_t i = 0; i < str.length(); i++)
+    {
+        hash = hash * a + str[i];
+        a    = a * b;
+    }
+
+    return (hash & 0x7FFFFFFF);
+ }
+
+
+//hash function 2
+//refer to JSHash, one of the genenral hash functions.  
+unsigned long int myBloomFilter::hash2(const string& str)
+ {
+      unsigned int hash = 1315423911;
+
+      for(std::size_t i = 0; i < str.length(); i++)
+      {
+          hash ^= ((hash << 5) + str[i] + (hash >> 2));
+      }
+
+      return (hash & 0x7FFFFFFF);
+ }
+
+//print out the current bloomfilter. 
+string myBloomFilter::output(){
+	string output;
+	for (int ii = 0; ii < myBloomFilter::length; ii++){
+		output += bloom[ii];
+	}
+	cout << "output = " << output << endl;
+	return output;
+}
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+Give out answer here.
+my BloomFilter used two different hashes (refer to as JH Hash and RSHash) to find two different indexes for the same string that's being insert into the BloomFilter. And it will call insert function to insert the strings. if the index of the string is 'o', change it to 'x', if it's 'x' leave it unchanged. 
+After insertion for all of the arrays, call exist(str) to check if str is inside the BloomFilter, by using the hash functions to find indexes of str and access the element in the bloomfilter. if anyone of the index returns 'o', that means the str is not in the array. 
+
+For some reason, my code keeps having segmentation faults, but it did worked and I got 1090 as my highest score before I changed something while I was trying to optimized it. And because we are NOT given the script, I don't really know what caused the problem. 
+</VERBATIM>
+
+---+++!! Grader comments *[2/25]*
+<VERBATIM>
+Score: 1092</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Give out the password you cracked. Remember attached the code as 'problem4a.zip'
+
+3915f1a108c95cb8c3b0564f3c3b6ebfd75e8add = DBO
+6971a698c535c6db3b44bfe6887e96314ec3fb8f = DTB
+3ddcaa159254b009131d7c8c9b732278b5cdc9b1 = Gee
+6c10fb70b7e99aedd209b1d3e3083779e2872f95 = IBA
+2b7d678f303a4032f359d66fc1085699683c5b65 = PNA
+6d678adb1578af11cbe73b77fd0aa0864be09e41 = SYC
+30efd404f76280f244ee1e00b86b2d12fd4c16f3 = eme
+957ec481552393c16efbf3a292b0fb00892d806f = pp.
+ce5fadf6ef646c567c7eb4a47df0703568e71f15 = prs
+2adee50a101f6a2bc3d14eb04bd1b60f3b719c36 = pup
+
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the password you cracked. 
+f3c711429a835b46b6f3ecae7bc3339fc333cce0 => canon
+4ceb1c68d95f4f38f47fdcd1d96fdb452a8d4e3f => Gibil
+288feebfd27adaf7c011b420d70a092e419ac514 => Vichy
+ac73ddf9d2faca130edfc5c6917b6ab18bbffe5c => dauts
+54c15eedd7615d3d92afc152722f231ceb76366d => manis
+//5 missing, running for waaaaay too long
+
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Give out the explanation here. Remember attached the code and table
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

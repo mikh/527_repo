@@ -1,0 +1,363 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(BrianTan),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+The provided probe sequence resembles a quadratic probing sequence. When expanded, hi(k) = h(k) + (i^2 + i) / 2. It turns out, the hashing function is just the base hash added with the summation of the numbers 0 to i. Because this is a quadratic probing sequence, it will exhibit secondary clustering. 
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+
+//Create a new array that is twice the size of n 
+int newArray[2n];
+int i = 0;
+int j = 0;
+int k = 0;
+//Create a new array that is the sorted combination of the original two 
+//This is done by implementing the back half of merge sort, just using the two finger sorting method
+while(i != n || j != n)
+{
+   if(X0[i] > X1[j])
+   {
+      newArray[k]  = X0[i];
+      i++;
+      k++;
+   }
+   else
+   {
+      newArray[k] = X1[j];
+      j++;
+      k++; 
+   }
+}
+if(i == n)
+{
+   fill the rest of newArray[] with the remaining elements of X1;
+}
+else
+{
+   fill the rest of newArray[] with the remaining elements of X0; 
+}
+
+//Find the average of the two median terms (the size of the new array is even so we will be left with two numbers in the middle) 
+medIndex = average(n/2 + (n/2 - 1));
+return newArray[medIndex]; 
+
+
+
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+This algorithm takes 2n steps in order to iterate through the two arrays. Then, accessing the median value will  take a constant time. So overall, this algorithm would run Big O(n). 
+
+</VERBATIM>
+
+---+++ ii. Median of three
+
+---++++ Algorithm
+<VERBATIM>
+//Say our arrays are called X0, X1, and X2
+//Run the first algorithm on X0 and X1 to get newArray[], of size 2n
+
+int finalArray[3n];
+int i = 0;
+int j = 0;
+int k = 0;
+while(i != 2n  || k != n)
+{
+   if(newArray[i] > X2[j])
+   {
+      finalArray[k] = newArray[i];
+      i++;
+      k++;
+   }
+   else
+   {
+      finalArray[k] = X2[j];
+      j++;
+      k++;
+   }
+}
+if(i == 2n)
+   fill the rest of finalArray[] with the remaining elements of X2
+else
+  fill the rest of finalArray[] with the remaining elements of newArray[]
+
+if(3n%2 == 1)
+   return finalArray[3n/2];
+else
+{
+   medIndex = average(3n/2 + (3n/2 - 1));
+   return finalArray[medIndex];
+}
+
+
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+The initial set up to sort array X0 and X1 takes 2n time. To create the final array takes 3n time and to select the medium index takes a constant time. So the total time it takes is 5n + 1 time which is Big O(n) time. 
+
+
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+This algorithm to find the medium of n arrays of size n will utilize the first algorithm an amount of times equal to n - 1 times. Similar to how the first algorithm was adopted for the second, it will be adopted for this question. The first n-1 arrays will all be combined and sorted using the first algorithm. Then the last array with this new huge array will be combined,sorted, and have its medium extracted. 
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+If run for a large n, this algorithm will have a runtime of 
+
+(Summation from 2 to n) * n + 1, which is equivalent to (n^3)/2 + n^2 + 1.
+This run time will be Big O(n^3). 
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+#include "myBloomFilter.h"
+///// myBloomFilter Class Functions
+
+myBloomFilter::myBloomFilter(int mm) : BloomFilter(mm)
+{
+   length = mm;
+   for(int i = 0; i < mm; i++)
+   {
+      bloomFilt.push_back(0);
+   }
+   //cout << "Constructed an empty myBloomFilter." << endl;
+
+}
+
+myBloomFilter::myBloomFilter(string filter) : BloomFilter(filter)
+{
+   length = filter.length();
+
+   for(int i = 0; i < length; i++)
+   {
+      //insert the char in the string that has been converted to an int
+      char val = 0;
+      if (filter.c_str()[i] == '1')
+      {
+         val = 1;
+      }
+
+      bloomFilt.push_back(val);
+      
+   }
+   //cout << "Constructed a myBloomFilter." << endl;
+
+
+}
+
+string myBloomFilter::output()
+{
+   string outputString = "";
+   for(int i = 0; i < length; i++)
+   {
+      char val = '0';
+      
+      if (bloomFilt[i] == 1)
+         val = '1';
+       
+      outputString = outputString + val;
+      
+   }
+   
+   cout << outputString << endl;
+   
+   return outputString;
+
+}
+
+
+// PRIVATE Hash Functions
+
+
+int myBloomFilter::h0(string input)
+{
+
+/*
+   //The simplest of the hashes
+   //convert the string into ascii values, add them and mod them by the size of the bloomfilter
+   int sum = 0;
+   for(int i = 0; i < input.length(); i++)
+   {
+      sum = sum + input.c_str()[i];
+   }
+   return sum%length;
+*/
+
+
+   int sum = input[0] * 128;
+   sum = sum + (input[1] * 34);
+   for(int i = 2; i < input.length(); i++)
+   {
+      sum = sum + input.c_str()[i];
+   }
+   return sum%length;
+
+}
+
+int myBloomFilter::h1(string input)
+{
+   //Hash from textbook
+   int sum = input[0] * 128;
+   for(int i = 1; i < input.length(); i++)
+   {
+      sum = sum + input.c_str()[i];
+   }
+   return sum%length;
+}
+
+int myBloomFilter::h2(string input)
+{
+
+   int sum = input[input.length()-1] * 14;
+   for(int i = 0; i < input.length()-1; i++)
+   {
+      sum = sum + input.c_str()[i];
+   }
+   return sum%length;
+
+}
+
+
+
+////// Member Functions
+
+
+void myBloomFilter::insert(string item)
+{
+   //This should hash the string with 7 hashes and map to bloom filter
+   //cout << "insert: " << item << endl;
+   
+   //perform h0
+   int h0res = h0(item);
+   bloomFilt[h0res] = 1;
+   
+   //perform h1
+   int h1res = h1(item);
+   bloomFilt[h1res] = 1;
+   
+   /*
+   //perform h2
+   int h2res = h2(item);
+   bloomFilt[h2res] = 1;
+   */
+   
+   //cout << "INSERTION SUCCESS" << endl;
+}
+
+
+bool myBloomFilter::exists(string item)
+{
+   //cout << "exists?: " << item << endl;
+
+   //hash the item with each hash function
+   int hashIndex1 = 0, hashIndex2 = 0; //hashIndex3 = 0;
+   hashIndex1 = h0(item);
+   hashIndex2 = h1(item);
+   //hashIndex3 = h2(item);
+   
+   //see if the indexes of the bloomfilter contain a 1
+   //if even one of the indexes does not contain a 1, we know the word is not in there
+   if(bloomFilt.at(hashIndex1) == 0)
+      return false;
+   if(bloomFilt.at(hashIndex2) == 0)
+      return false;
+   
+   /*
+   if(bloomFilt.at(hashIndex3) == 0)
+      return false;
+   */
+   
+   //If all three indexes contain a one, then the word might be in there
+   return true;
+   
+   
+
+
+}
+
+
+
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+The BloomFilter will be a vector. Whenever a string is entered, it will be hashed by two different functions. The two hashes correspond to two indexes in the BloomFilter which will be flipped to 1 from 0. When a word is searched for in the BloomFilter, it is hashed with the same functions and tested to see if its hashes match those in the BloomFilter. If there isn't a '1' in one of the indexes which the tested word is hashed to, we know for certain it is not in the BloomFilter. If the resulting indexes from the hash functions all appear in the BloomFilter, then we know the word might be in the BloomFilter. 
+
+
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Give out the password you cracked. Remember attached the code as 'problem4a.zip'
+apt
+Nov
+IHS
+ger
+dub
+EBI
+prs
+WGS
+BPA
+scr
+
+
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the password you cracked. 
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Give out the explanation here. Remember attached the code and table
+
+In order to come up with the beginning of each chain of the rainbow table, a function to generate a random string of length 5 was used. Then, each of these random strings were run through the hash and reduce functions 15000 times to produce the last link of the rainbow table chain. 500 of these chains were created with a for loop. These strings were written into the file rainbowTableIn.txt. 
+
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

@@ -1,0 +1,214 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(JoshJoseph),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+The table will exhibit primary clustering, as close-together values of k will tend to keep incrementing by one.
+The table will not necessarily be able to add keys if all of the following slots are filled because the function 
+is not modular, and won't wrap around. </VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+
+---++++ Algorithm
+We have two sorted arrays of n integers: X0[1..n] and X1[1..n]. <br>
+Find the median of each array via their index (med = n/2), X0[med] and X1[med] (constant time) <br>
+Compare the medians<br>
+&nbsp;&nbsp; if (X0[med] == X1[med]), return either X0[med] or X1[med]<br>
+&nbsp;&nbsp; else if (n == 2)<br>
+&nbsp;&nbsp;&nbsp;&nbsp; return (max(X0[1],X1[1]) + min(X0[2],X1[2]))/2<br> 
+&nbsp;&nbsp; else if (X0[med] > X1[med]), return median(X0[1..med], X1[med...n])<br>
+&nbsp;&nbsp; else if (X0[med] < X1[med]), return median(X0[med...n]], X1[1..med])<br>
+---++++ Analysis and running time
+<VERBATIM>
+This will run in O(lg(n)) time, as each step will bisect the n length array,
+the rest of the operations are in constant time. </VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+We have three sorted arrays of n integers: X0[1..n], X1[1..n], and X2[1..n] <br>
+Find the median of each array via their index (med = n/2), X0[med] and X1[med] (constant time) <br>
+Compare the medians<br>
+&nbsp;&nbsp; if they are all equal, return any one of them<br>
+&nbsp;&nbsp; else if (the number of arrays is greater than 2)  <br>
+&nbsp;&nbsp;&nbsp;&nbsp; for the largest median and smallest median<br>
+&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; n' = minimum(distance from start of array to the smaller median, end of array to the larger median)<br>
+&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; remove n' entries from the beginning of the array of the smallest median, and the end of the array of the largest. <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (this will also remove the largest and smallest medians, and will eventually delete arrays of length 1) <br>
+
+&nbsp;&nbsp; else if (number of arrays equals 2) <br>
+&nbsp;&nbsp;&nbsp;&nbsp; for the largest median and smallest median<br>
+&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; n'' = minimum(distance from start of array to the smaller median, end of array to the larger median)<br>
+&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; remove (n''-1) entries from the beginning of the array of the smallest median, and the end of the array of the largest. <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (this will not remove the largest and smallest medians) <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (length of both arrays &#8804; 2)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case 1 - two elements in each <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return (max(second element of each array) + min(first element of each array))/2
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case 2 - one elements in one, two elements in the other <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; treat the remaining three elements as one group, find the max, min and return the remaining element<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case 3 - one non-equal element in each <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return (element of 1st array + element of 2nd array)/2<br>
+
+
+
+
+
+&nbsp;&nbsp; else if (number of arrays equals 1) <br>
+&nbsp;&nbsp;&nbsp;&nbsp; return array[n/2] <br>
+---++++ Analysis and running time
+<VERBATIM>
+This is still O(lg(n)).
+Although this will be called more times than in the case of two arrays, on each call, we are bisecting two arrays.
+Thus this will be a multiple of lg(n).
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+We have n sorted arrays of n integers: X0[1..n], X1[1..n], ... XN[1..n] <br>
+Find the median of each array via their index (med = n/2), X0[med] ... XN[med] (constant time) <br>
+Compare the medians<br>
+&nbsp;&nbsp; if they are all equal, return any one of them<br>
+&nbsp;&nbsp; else if (the number of arrays is greater than 2)  <br>
+&nbsp;&nbsp;&nbsp;&nbsp; for the largest median and smallest median<br>
+&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; n' = minimum(distance from start of array to the smaller median, end of array to the larger median)<br>
+&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; remove n' entries from the beginning of the array of the smallest median, and the end of the array of the largest. <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (this will also remove the largest and smallest medians, and will eventually delete arrays of length 1) <br>
+
+&nbsp;&nbsp; else if (number of arrays equals 2) <br>
+&nbsp;&nbsp;&nbsp;&nbsp; for the largest median and smallest median<br>
+&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; n'' = minimum(distance from start of array to the smaller median, end of array to the larger median)<br>
+&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; remove (n''-1) entries from the beginning of the array of the smallest median, and the end of the array of the largest. <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (this will not remove the largest and smallest medians) <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (length of both arrays &#8804; 2)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case 1 - two elements in each <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return (max(second element of each array) + min(first element of each array))/2
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case 2 - one elements in one, two elements in the other <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; treat the remaining three elements as one group, find the max, min and return the remaining element<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case 3 - one non-equal element in each <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return (element of 1st array + element of 2nd array)/2<br>
+
+
+
+
+
+&nbsp;&nbsp; else if (number of arrays equals 1) <br>
+&nbsp;&nbsp;&nbsp;&nbsp; return array[n/2] <br>
+
+---++++ Analysis and running time
+<VERBATIM>
+This will be O(n lg(n)).  This proceeds in the same manner as the case of three arrays, with a bisection (or more aggressive cut) of two arrays in every step.
+For reference on this problem, I referred to both SO and to Greg N. Frederickson, Donald B. Johnson, “Generalized selection and ranking Sorted matrices,” SIAM Journal on Computing, 13(1), 14–30, with columns being of size 1.
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+#include "myBloomFilter.h"
+#include <iostream>
+#include <string>
+using namespace std;
+
+
+myBloomFilter::myBloomFilter (int mm) : BloomFilter(mm) 
+{
+        	int totalLength = mm;
+        	for (int ii = 0; ii < totalLength; ii++)
+        		internalRepresentation += ' ';
+}
+
+myBloomFilter::myBloomFilter (string filter) : BloomFilter (filter) 
+{
+        	internalRepresentation = filter;
+}
+
+void myBloomFilter::insert(string item)
+{
+	for(int ii = 0; ii < item.length(); ii++)
+	{
+		int hashedIndex = (item[ii] % this->length);
+		if (this->internalRepresentation[hashedIndex] == ' ')
+			this->internalRepresentation[hashedIndex] = item[ii];
+	}
+}
+
+bool myBloomFilter::exists(string item)
+{
+	for(int ii = 0; ii < item.length(); ii++)
+	{
+		int hashedIndex = (item[ii] % this->length);
+		if (this->internalRepresentation[hashedIndex] == ' ')
+			return false;
+	}
+	return true;
+}
+
+string myBloomFilter::output()
+{
+	string outputString = "";
+	for(int ii = 0; ii < this->internalRepresentation.length(); ii++)
+	{
+		//if (internalRepresentation[ii] != ' ')
+		//{
+			outputString += internalRepresentation[ii];
+		//}
+	}
+	
+	return outputString;
+}
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+This was my original attempt at a (dumb) bloom filter, which originally used blocks of alphabetic chars for each input (26 characters for each).
+I didn't quite get that the string input would also include numbers!
+Redoing it, every entry in the bloom filter is mod (length of filter), with an internal string representing the filter, of length length*26.
+
+</VERBATIM>
+
+---+++!! Grader comments *[7/25]*
+<VERBATIM>
+Score: 1345</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Give out the password you cracked. Remember attached the code as 'problem4a.zip'
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the password you cracked. 
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Give out the explanation here. Remember attached the code and table
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

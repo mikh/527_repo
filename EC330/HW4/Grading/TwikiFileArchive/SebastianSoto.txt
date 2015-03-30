@@ -1,0 +1,234 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(SebastianSoto),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+i) no because its not linear
+ii) Secondary hashing occurs as keys will clutter around certain points, but less than if the probe sequence was linear
+iii) Not true, as there is no modulus involved so as i increases, hi(k) never "wraps around", meaning that if h0(k)=5, hi(k) is always greater or equal to 5, so if the only empty space is from 0-4 the key cannot be inserted. 
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+	double median=0;
+	int i,j,k;
+	bool lastJ=false;
+	i=j=k=0;
+	while(i<n){
+		if(x0[j]<x1[k]){
+			j++;
+			lastJ=true;
+			}
+		else{
+			k++;
+			lastJ=false;
+			}
+		i++;
+		}
+	if(lastJ)
+		median= (x0[j-1]);
+	else
+		median= (x1[k-1]);
+	if(x0[j]<x1[k])
+		median= (median+ x0[j])/2;
+	else
+		median= (median+ x1[k])/2;
+	return median;
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Goes through n items of the arrays therefore there is a theta(n) running time
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+	int n=6;
+	double median=0;
+	int i,j,k,l;
+	bool lastJ=false;
+	bool lastK=false;
+	i=j=k=l=0;
+	while(i<(3*n/2)){
+		if(x0[j]<x1[k] && x0[j]<x2[l]){
+			j++;
+			lastJ=true;
+			lastK=false;
+			}
+		else if(x1[k]<x0[j] && x1[k]<x2[l]){
+			k++;
+			lastK=true;
+			lastJ=false;
+			}
+		else{
+			l++;
+			lastJ=false;
+			lastK=false;
+		}
+		i++;
+
+		}
+	if((3*n)%2==0){
+		if(lastJ)
+			median= (x0[j-1]);
+		else if(lastK)
+			median= (x1[k-1]);
+		else
+			median= (x2[l-1]);
+			if(x0[j]<x1[k] &&x0[j]<x2[l])
+				median= (median+ x0[j])/2;
+			else if(x1[k]<x0[j] && x1[k]<x2[l])
+				median= (median+ x1[k])/2;
+			else
+				median= (median+x2[l])/2;
+		}
+	else
+		if(lastJ)
+			median= (x0[j]);
+		else if(lastK)
+			median= (x1[k]);
+		else
+			median= (x2[l]);
+
+	return median;
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Goes through 3*n/2 members of the arrays, giving a theta(n) running time.
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+Go through each array counting up from the absolute lowest values out of the three arrays, when the middle value is reached return that. If there is an odd number of values then return the average of the middle two values. 
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Goes through n*n/2 members of the arrays, giving a theta(n^2) running time.
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+#include "myBloomFilter.h"
+class myBloomFilter;
+    myBloomFilter::myBloomFilter(int mm):BloomFilter(mm) {
+        length=mm;
+    	filterArray= new char[length];
+        std::cout<<length;
+    }
+    myBloomFilter::myBloomFilter (string filter) :BloomFilter(filter) {
+            length=filter.length();
+            filterArray= new char[length];
+            for(int i=0;i<length;i++){
+                    filterArray[i]=filter[i];
+            }
+    }
+    void myBloomFilter::insert(string item){
+            filterArray[hashA(item)]=0x01;
+            filterArray[hashB(item)]=0x01;
+    }
+    bool myBloomFilter::exists(string item){
+            if(filterArray[hashA(item)]==0x01 && filterArray[hashB(item)]==0x01)
+                    return true;
+            else
+                    return false;
+    }
+    string myBloomFilter::output(){
+            string out="";
+            for(int i=0;i<length;i++){
+                out+=(*(filterArray+i));
+            }
+            return out;
+            // std::ostringstream s;
+            // for(int i=0;i<length;i++){
+            //     s << *(filterArray+i);
+            //     out.append(s.str());
+            // }
+            // return out;
+    }
+
+    int myBloomFilter::hashA(string k){
+            int sum=0;
+            for(int i=0;i<k.length();i++){
+                    sum+=int(k[i]);
+            }      
+            return sum%length;
+    }
+    
+    int myBloomFilter::hashB(string k){
+            int hash=1;
+            for(int i=0;i<k.length();i++){
+                    hash+=int(k[i])*11;
+            }
+            return hash%length;
+    }
+
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+I used two hash functions to hash to the bloom filter. Insert by hashing inputs through both filters and check if exists by seeing if there were already values hashed to both hashA(input) and hashB(input). My code works on my computer but I get 0 points on the tester. I am able to do everything even though it says i am giving false negatives on the insert.
+</VERBATIM>
+
+---+++!! Grader comments *[0/25]*
+<VERBATIM>
+No score found</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+ Sup
+ dub
+ sma
+ ass
+ BFD
+ mpg
+ PSA
+ IHS
+ IAH
+ MTF
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the password you cracked. 
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Give out the explanation here. Remember attached the code and table
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

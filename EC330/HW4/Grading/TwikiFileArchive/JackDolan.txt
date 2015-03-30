@@ -1,0 +1,378 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(JackDolan),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+Part ii is true.
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+
+int findMedian (array X0, array X1, int n){
+median0 = X0[n/2]
+median1 = X1[n/2]
+
+if median0 == median 1
+    return median0
+
+if median0 < median1
+    return findMedian([median0 to last item of X0] , [first element of X1 to median1])
+
+else
+    return findMedian ([first element of X0 to median0], [median0 to last item of X0])
+
+}
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Recursion of code that can take at most linear time, and can be repeated up to n/2 times.
+
+Running time  = theta(log n)
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+
+max = [maximum value in x0, x1, and x2]
+min= [minimum value in x0, x1, and x2]
+int counter
+median = getMedian(X0, X1, X2, n, min, max)
+
+int getMedian(X0, X1, X2, n, min, max){
+
+for 0 to n
+    if X0[i] > (max+min)/2
+        counter++
+    if X1[i] > (max+min)/2
+        counter++
+    if X2[i] > (max+min)/2
+        counter++
+if min == max
+    return counter
+else
+    return getMedian(X0, X1, X2, n, min, (max+min)/2)
+}
+
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+= Theta(3 log 3 of n)
+=Theta (log n)
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+max = [maximum value in x0, x1, and x2]
+min= [minimum value in x0, x1, and x2]
+int counter
+median = getMedian(X0, X1, X2, n, min, max)
+
+int getMedian(X0, X1, X2...Xn, n, min, max){
+
+for 0 to n
+    if X0[i] > (max+min)/2
+        counter++
+    if X1[i] > (max+min)/2
+        counter++
+    if X2[i] > (max+min)/2
+        counter++
+    .... all the way up to Xn
+if min == max
+    return counter
+else
+    return getMedian(X0, X1, X2 ... Xn, n, min, (max+min)/2)
+}
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+= Theta(3 log 3 of n)
+=Theta (log n)
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+//Here is the .cpp
+#include "myBloomFilter.h"
+
+
+
+myBloomFilter::myBloomFilter (int mm){
+
+    for(int i=0;i<mm;i++){
+
+        hash_this.push_back(0);
+
+    }
+
+    length = mm;
+
+}
+
+
+
+myBloomFilter::myBloomFilter (string filter){
+
+    length = filter.length();
+
+    for (int i=0;i<filter.length();i++){
+
+        hash_this.push_back(0);
+
+    }
+
+}
+
+
+
+int myBloomFilter::first(string item){
+
+    stringstream convert;
+
+    int value;
+
+    convert << item;
+
+    convert >> value;
+
+    return value % length;
+
+}
+
+
+
+int myBloomFilter::second(string item){
+
+    int value = 0;
+
+    int num = 845;
+
+    for(int i = 0; i < item.length(); i++)
+
+    {
+
+        value = (value * num) + item[i];
+
+    }
+
+    return value % length;
+
+}
+
+
+
+int myBloomFilter::third(string item){
+
+    int value = 0;
+
+    for (int k = 0; k < item.length(); k++)
+
+        value = value + int(item[k]);
+
+    return value % length;
+
+}
+
+
+
+bool myBloomFilter::exists(string item){
+
+    if((hash_this.at(first(item)) == 1) && (hash_this.at(second(item)) == 1) && (hash_this.at(third(item)) == 1)){
+
+        return true;
+
+    }
+
+    else{
+
+        return false;
+
+    }
+
+}
+
+
+
+void myBloomFilter::insert(string item){
+
+    hash_this.at(first(item)) = 1;
+
+    hash_this.at(second(item)) = 1;
+
+    hash_this.at(third(item)) = 1;
+
+}
+
+
+
+string myBloomFilter::output(){
+
+    string final;
+
+    for (int i=0;i<length;i++){
+
+        final[i] = hash_this.at(i);
+
+    }
+
+    return final;
+
+//Here is the .h
+
+#ifndef MYBLOOMFILTER_H
+
+#define	MYBLOOMFILTER_H
+
+#include <string>
+
+#include <vector>
+
+#include <sstream>
+
+using namespace std;
+
+
+
+class myBloomFilter {
+
+public:
+
+    /**
+
+     * Makes an empty filter of [ mm ] chars.
+
+     */
+
+    myBloomFilter (int mm);
+
+    /**
+
+     * Makesa filter from a given string (filter)
+
+     * @requires (filter) must have been produces by the output() call of a BloomFilter object.
+
+     */
+
+    myBloomFilter (string filter);
+
+    /**
+
+     * inserts  into the filter
+
+     */
+
+    
+
+    makes hash vector
+    
+
+    void insert(string item);
+
+    
+
+    /**
+
+     * Is [item] in the filter?
+
+     * @return  true if the item is probably in the filter
+
+     *          false if the item is definitely not in the filter
+
+     */
+
+    bool exists(string item);
+
+    
+
+    /**
+
+     * @return A string of [length] characters representing the Bloom filer
+
+     */
+
+    string output();
+
+    
+
+    int first(string item);
+
+    int second(string item);
+
+    int third(string item);
+
+    
+
+protected:
+
+    unsigned long int length; /** The length of filter, in chars. */
+
+    vector<int> hash_this
+
+};
+
+
+
+#endif	/* BLOOMFILTER_H */
+
+}
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+---+++!! Grader comments *[0/25]*
+<VERBATIM>
+No score found</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Give out the password you cracked. Remember attached the code as 'problem4a.zip'
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the password you cracked. 
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Give out the explanation here. Remember attached the code and table
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

@@ -1,0 +1,398 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(JiehongBrandonChung),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+i. No
+ii. Yes
+iii. No
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+//get the median of two sorted arrays of size n
+int getMedian(int ar1[], int ar2[], int n)
+{
+    int i = 0;
+    int j = 0;
+	
+	//make a new array with 2n/2 = n elements
+	int size = 2*n/2;
+	int* merged = new int[size];
+	
+	//merge the two sorted arrays up to the midpoint
+	for(int index = 0; index < size; index++)
+	{
+		if(ar1[i] <= ar2[j])
+		{
+			merged[index] = ar1[i];
+			i++;
+		}
+		else
+		{
+			merged[index] = ar2[j];
+			j++;
+		}
+	}
+	
+	//the last element in the array should be the median
+	int result = merged[size - 1];
+	delete[] merged;
+	
+	return result;
+}
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Looping through each array takes n time, so for 2 arrays it will take 2n time, but stopping halfway (which is at the median) divides that by 2 to get n.
+Running time: theta(n)
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+//get the median of three sorted arrays of size n
+int getMedian(int ar1[], int ar2[], int ar3[], int n)
+{
+    int i = 0;
+    int j = 0;
+    int k = 0;
+	
+	//make a new array with 3n/2 elements
+	int size = 3*n/2;
+	int* merged = new int[size];
+	
+	//merge the two sorted arrays up to the midpoint
+	for(int index = 0; index < size; index++)
+	{
+		//get the number of the array that has the smallest next element
+		int minArray = getMinArray(ar1, i, ar2, j, ar3, k);
+		
+		//merge all 3 arrays
+		switch(minArray)
+		{
+			case 1:
+				merged[index] = ar1[i];
+				i++;
+				break;
+			case 2:
+				merged[index] = ar2[j];
+				j++;
+				break;
+			case 3:
+				merged[index] = ar3[k];
+				k++;
+				break;
+		}
+	}
+	
+	//the last element in the array should be the median
+	int result = merged[size - 1];
+	delete[] merged;
+	
+	return result;
+}
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Looping through each array takes n time, so for 3 arrays it will take 3n time, but stopping halfway (which is at the median) divides that by 3 to get 3n/2.
+Running time: theta(3n/2)
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+//get the median of n sorted arrays of size n
+//arr is an array of n arrays, with n elements each
+int getMedian(int* arr[], int n)
+{
+	//keep track of all indices, initialize to zero
+    int* indices = new int[n];
+	for(int i = 0; i < n; i++)
+		indices[i] = 0;
+	
+	//make a new array with n^2/2 elements
+	int size = n*n/2;
+	int* merged = new int[size];
+	
+	//merge the two sorted arrays up to the midpoint
+	for(int index = 0; index < size; index++)
+	{
+		//get the number of the array that has the smallest next element
+		int minArray = getMinArray(arr);
+		
+		merged[index] = arr[minArray][indices[minArray]];
+		indices[minArray]++;
+	}
+	
+	//the last element in the array should be the median
+	int result = merged[size - 1];
+	delete[] merged;
+	delete[] indices;
+	
+	return result;
+}
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Looping through each array takes n time, so for n arrays it will take n*n or n^2 time, but stopping halfway (which is at the median) divides that by 2 to get n^2/2.
+Running time: theta(n^2/2)
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+//myBloomFilter.h
+#ifndef MY_BLOOM_FILTER_H
+#define MY_BLOOM_FILTER_H
+
+#include "BloomFilter.h"
+#include <string>
+#include <iostream>
+using namespace std;
+
+class myBloomFilter : public BloomFilter
+{
+public:
+	//instantiate an empty myBloomFilter of length length
+	myBloomFilter(int len);
+	
+	//instantiate a myBloomFilter from a given string
+	myBloomFilter(string filter);
+	
+	~myBloomFilter();
+	
+	//insert item into filter
+	void insert(string item);
+	
+	//check if item is probably in the filter or definitely not
+	bool exists(string item);
+	
+	//returns text representation of the filter
+	string output();
+private:
+	static const int NUM_HASHES = 3;
+	int seedValues[NUM_HASHES];
+	string filter;
+};
+
+#endif
+
+//myBloomFilter.cpp
+#include "myBloomFilter.h"
+
+//MurmurHash is a commonly used, simply hash developed by Austin Appleby in 2010
+//source here: https://sites.google.com/site/murmurhash/
+unsigned int MurmurHash2 (const void * key, int len, unsigned int seed)
+{
+	// 'm' and 'r' are mixing constants generated offline.
+	// They're not really 'magic', they just happen to work well.
+
+	const unsigned int m = 0x5bd1e995;
+	const int r = 24;
+
+	// Initialize the hash to a 'random' value
+
+	unsigned int h = seed ^ len;
+
+	// Mix 4 bytes at a time into the hash
+
+	const unsigned char * data = (const unsigned char *)key;
+
+	while(len >= 4)
+	{
+		unsigned int k = *(unsigned int *)data;
+
+		k *= m; 
+		k ^= k >> r; 
+		k *= m; 
+		
+		h *= m; 
+		h ^= k;
+
+		data += 4;
+		len -= 4;
+	}
+	
+	// Handle the last few bytes of the input array
+
+	switch(len)
+	{
+	case 3: h ^= data[2] << 16;
+	case 2: h ^= data[1] << 8;
+	case 1: h ^= data[0];
+	        h *= m;
+	};
+
+	// Do a few final mixes of the hash to ensure the last few
+	// bytes are well-incorporated.
+
+	h ^= h >> 13;
+	h *= m;
+	h ^= h >> 15;
+
+	return h;
+}
+
+int Hash(string item, int seed)
+{
+	int result = 0;
+	for(int i = 0; i < item.length(); i++)
+	{
+		result += (int)item[i];
+		result = result % (17*seed) >> 31^(i + 7);
+	}
+	return result;
+}
+
+//instantiate an empty myBloomFilter of length length
+myBloomFilter::myBloomFilter(int len) : BloomFilter(length)
+{
+	//initialze hash settings
+	for(int i = 0; i < NUM_HASHES; i++)
+	{
+		seedValues[i] = i + 100;
+	}	
+
+	length = len;
+	//initialize to empty filter
+	filter = string(length, '0');
+}
+
+//instantiate a myBloomFilter from a given filter's string representation
+myBloomFilter::myBloomFilter(string filter) : BloomFilter(filter)
+{
+	//initialize hash settings
+	for(int i = 0; i < NUM_HASHES; i++)
+	{
+		seedValues[i] = i + 100;
+	}
+	
+	length = filter.length();
+	this->filter = filter;
+}
+
+myBloomFilter::~myBloomFilter()
+{
+	
+}
+
+//insert item into filter
+void myBloomFilter::insert(string item)
+{	
+	int index;
+	
+	//hash and mod with the array length to bound index, set true  
+	for (int i=0; i < NUM_HASHES; i++)
+	{
+		index = MurmurHash2(item.c_str(), item.length(), seedValues[i]) % length;
+		//index = Hash(item, seedValues[i]) % length;
+		filter[index] = '1';
+	}	
+}
+
+//check if item is probably in the filter or definitely not
+bool myBloomFilter::exists(string item)
+{
+	int index;
+	
+	//hash and mod, check if false
+	for(int i = 0; i < NUM_HASHES; i++)
+	{
+		index = MurmurHash2(item.c_str(), item.length(), seedValues[i]) % length;
+		//index = Hash(item, seedValues[i]) % length;
+		if (filter[index] != '1')
+			return false;
+	}
+
+	//only '1' found in each slot, so probably true
+	return true;
+}
+
+//returns text representation of the filter
+string myBloomFilter::output()
+{
+	return filter;
+}
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+My myBloomFilter implements a series of three Murmur hashes, involving mostly exponents and bit shifts based on the input, to determine the indices in the filter for each string added.
+The filter itself marks the character '1' if a certain position is selected, and '0' if not.
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Ruy
+MWA
+Saw
+Dli
+IHS
+HAP
+Fee
+scr
+RFP
+ISS
+</VERBATIM>
+   * [[%ATTACHURLPATH%/problem4a.zip][problem4a.zip]]: Source and makefile for problem 4a
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+hRdaX
+hGFaj
+hGFaj
+hGFaj
+hGFaj
+hGFaj
+JibG]
+hGFaj
+scYMM
+hGFaj
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Starting with the arbitrary string "ABCDE", I write that value to the first line of a file, go through 1 million hashes/reductions, and write the resulting hash as the second value of that pair.
+Then for each subsequent row in the table, I start by using the reduction of the last hash and go through the same million. This loops 8000 times, resulting in 8 billion total iterations, which
+should cover most of the 96^5 combinations of printable characters for a 5-character password.
+</VERBATIM>
+   * [[%ATTACHURLPATH%/problem4c.zip][problem4c.zip]]: Rainbow Table and code for generating it
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---
+

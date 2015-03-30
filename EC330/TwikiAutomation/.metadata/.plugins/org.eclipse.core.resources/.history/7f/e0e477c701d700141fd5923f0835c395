@@ -1,0 +1,12 @@
+package parsers;
+
+public class TwikiParser {
+	public static int find_question(String twiki, int question, String question_header){
+		String q = question_header + Integer.toString(question);
+		int index = twiki.indexOf(q);
+		if(index == -1)
+			return -1;
+		else
+			return index + q.length();		
+	}
+}

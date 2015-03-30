@@ -1,0 +1,179 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(AdinHorovitz),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+
+This hash will display secondary clustering only.
+
+The slot found for any key on its Ith collision will be stored in slot:
+
+h_i(k) = h(k) + i(i+1)/2
+
+This is a quadratic probe sequence, therefore it will display secondary clustering.
+
+
+ii: Primary clustering will only be seen in linear probe sequences. 
+iii: This probe sequence will fail to fill a map with an odd number of slots. 
+
+--> Assuming there is a modulus implied in the probe sequence, the slots identified after enough clusters will 
+address the same limited slots infinitely
+
+--> If we don't assume an implied modulus, there is nothing in this probe structure as it's written to indicate
+that a slot with an address greater than the size of the map will address slots that are out of bounds.
+
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+
+Merge sorted arrays (a la merge sort)
+
+Median value is in the middle index
+
+
+
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+
+The merge step runs in O(n log n)
+
+Indexing the median is in constant time...
+
+
+Overall run time = O(n log n)
+
+
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+
+Merge first two arrays a la merge sort.
+
+Merge third array into array.
+
+Once all are merged, median is in middle index.
+
+
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+
+Merge will run in O(2n log n) 
+
+Therefore, this will not have a different asymptotic bound.
+
+O(nlogn)
+
+
+
+</VERBATIM>
+
+---+++ iii. Median of n
+
+
+Continue merging all arrays together.
+
+Index median value.
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+
+Merging each array will run in O(nlogn) time
+
+Therefore, overall runtime = O(n^2 log n)
+
+
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+   // put your code here
+   // also remember to upload it in submit page
+
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+---+++!! Grader comments *[0/25]*
+<VERBATIM>
+No Score Found
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force
+
+<VERBATIM> 
+
+HASH CRACKED: 3ddcaa159254b009131d7c8c9b732278b5cdc9b1  .....PASSWORD:Gee
+HASH CRACKED: 1e3eda00c2c659e756da686d75f4e79ab8db27dc  .....PASSWORD:tig
+HASH CRACKED: f110e778b7a0bb6989e4df4c78b83fd76ce3e088  .....PASSWORD:NRL
+HASH CRACKED: 3915f1a108c95cb8c3b0564f3c3b6ebfd75e8add  .....PASSWORD:DBO
+HASH CRACKED: 97e66cdf549b8d9026e13c5ecefb86de5f800ebf  .....PASSWORD:LWP
+HASH CRACKED: c26a7dd817239c66e24a3aedc4288bffd3d32648  .....PASSWORD:Rom
+HASH CRACKED: ebbe3c44f32a202f32d2bc59f3a1f63b6cc3c889  .....PASSWORD:scr
+HASH CRACKED: e74dddb5aba606ae51dbd2440e6a491ceaadd837  .....PASSWORD:ckw
+HASH CRACKED: 770c46bf00a86db695a9bacf3e041553448e15cb  .....PASSWORD:Saw
+HASH CRACKED: a9bcbda00e535e0d5d832450f3bd19e145f27486  .....PASSWORD:IHS
+
+
+source code attached in file: problem4a.zip
+
+
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the password you cracked. 
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Give out the explanation here. Remember attached the code and table
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---
+
+   * [[%ATTACHURLPATH%/problem4a.zip][problem4a.zip]]: HW4_problem4a_hashCracking

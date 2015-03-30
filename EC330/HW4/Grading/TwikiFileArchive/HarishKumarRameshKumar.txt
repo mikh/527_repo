@@ -1,0 +1,223 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(HarishKumarRameshKumar),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+
+Primary clustering is when there is a cluster and the initial position of a new record would fall anywhere in the cluster and the cluster size increases. Linear probing such as the one seen in this question leads to this type of clustering.
+
+
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+
+1) First calculate the medians m1 and m2 of the input arrays (ar1[] 
+   and ar2[]) respectively.
+2) If m1 and m2 both are equal then return m1 (or m2 as they are the same!)
+3) If m1 is greater than m2, then median is present in one 
+   of the below two subarrays.
+    -->  From first element of ar1 to m1 
+    -->  From m2 to last element of ar2  
+4) If m2 is greater than m1, then median is present in one    
+   of the below two subarrays.
+   -->  From m1 to last element of ar1  
+   -->  From first element of ar2 to m2 
+5) The above process is then repeated until size of both the subarrays 
+   are 2.
+6) If size of the two arrays is 2 (which at this point it will be) then 
+7) Median = (max(ar1[0], ar2[0]) + min(ar1[1], ar2[1]))/2
+
+
+
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+O(logn)
+</VERBATIM>
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+1) First calculate the medians m1, m2 and m3 of the input arrays (ar1[], ar2[] and ar3[]) respectively.
+2) If m1, m2, m3 are equal then return m1 (or m2 or m3 as they are the same!)
+3) If m1 is greater than m2 and m3, then median is present in one 
+   of the below two subarrays.
+    -->  From first element of ar1 to m1 
+    -->  From m2 to last element of ar2
+    --> From m3 to last element of ar3
+4) If m2 is greater than m1 and m3, then median is present in one    
+   of the below two subarrays.
+   -->  From m1 to last element of ar1  
+   -->  From m3 to last element of ar3
+   -->  From first element of ar2 to m2 
+5) If m3 is greater than m1 and m2, then median is present in one 
+   of the below two subarrays.
+    -->  From first element of ar3 to m3 
+    -->  From m2 to last element of ar2
+    --> From m1 to last element of ar1
+6) The above process is then repeated until size of all the subarrays 
+   are 2.
+7) If size of the arrays are 2 (which at this point it will be) then 
+8) Median = (max(ar1[0], ar2[0],ar3[0]) + min(ar1[1], ar2[1],ar3[1]))/2
+</VERBATIM>
+---++++ Analysis and running time
+<VERBATIM>
+O(logn)
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+The same process can be used, while accounting of the appropriate changes in the algorithm, while looping thru n number of times. This will loop through and include all the n number of arrays while calculating the median. Hence the runtime will be O(nlogn).
+</VERBATIM>
+---++++ Analysis and running time
+<VERBATIM>
+O(nlogn)
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+//Collaborator: Aidar Aidymbekov
+//Harish Kumar
+
+#include "myBloomFilter.h"
+#include <iostream>
+
+myBloomFilter::myBloomFilter(int mm){
+	length = mm;
+	bloom[length];
+	for(int iii = 0; iii!=length; iii++) {
+		bloom.push_back('0');
+	}
+}
+// the following produces by the output call of a BloomFilter object.
+myBloomFilter::myBloomFilter(string filter){
+	length = filter.length();
+	bloom[length];
+	for(int iii = 0; iii!=length; iii++) {
+		bloom.push_back('0');
+	}
+	int ii = hash1(filter, length);
+	int jj = hash2(filter, length);
+	bloom[ii] = 'i';
+	bloom[jj] = 'j';
+}
+
+
+void myBloomFilter::insert(string item) {
+// insert
+
+	int ii = hash1(item, length);
+	int jj = hash2(item, length);
+
+	if(bloom[ii] != 'i' && bloom[jj] != 'j') {
+
+		bloom[ii] = 'i';
+		bloom[jj] =  'j';
+	}
+
+}
+
+bool myBloomFilter::exists(string item)
+// Checking if it is in the filter
+ {
+	if(bloom[hash1(item, length)] == 'i' && bloom[hash2(item, length)] == 'j') {
+		return true;
+	}
+	else {	
+		return false;
+	}
+}
+
+
+string myBloomFilter::output() 
+{
+
+	return bloom;
+}
+
+
+
+int myBloomFilter::hash1(string key, int length) {
+
+
+	int kkk;
+	for(int i = 0; i!=length;i++)
+	{
+		kkk += (int)key[i];
+	}
+	return (kkk%length);
+}
+int myBloomFilter::hash2(string key, int length) {
+	
+	int kkk;
+
+	for(int i = 0; i!= length; i++) 
+	{
+		kkk += (int)key[i];
+	}
+
+	kkk *= K;
+	
+	return (kkk%length);
+}
+
+
+%ENDCODE%
+---+++ Explanation
+<VERBATIM>
+
+Firstly an empty Bloom filter of length chars needs to be instantiated. The the Bloom Filter instantiates from a given string actually requires being produced by the output of the object of a BloomFilter. Then we need to check if the filter has returned a true or a false.
+
+</VERBATIM>
+
+---+++!! Grader comments *[0/25]*
+<VERBATIM>
+Score: 1000</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Give out the password you cracked. Remember attached the code as 'problem4a.zip'
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the password you cracked. 
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Give out the explanation here. Remember attached the code and table
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

@@ -1,0 +1,213 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(ZacherySarkis),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+exhibits: i, iii
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+<latex>
+X_{2}</latex>[2n]
+
+kk = 1
+
+ii = 1
+
+for(ii to n) {
+
+<latex>X_{2}[ii] = X_{0}[kk]</latex>
+
+<latex>X_{2}[ii+1] = X_{1}[kk]</latex>
+
+ii = ii+2
+
+kk = kk+1
+
+}
+
+BubbleSort<latex>(X_{2})</latex>
+
+return <latex>X_{2}[n]</latex>
+
+
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+x_2 is nearly sorted which means bubble sort works well.
+
+<latex>O(n^{2})</latex>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+<latex>
+X_{3}</latex>[3n]
+
+kk = 1
+
+ii = 1
+
+for(ii to n) {
+
+  <latex>X_{3}[ii] = X_{0}[kk]</latex>
+
+  <latex>X_{3}[ii+1] = X_{1}[kk]</latex>
+
+  <latex>X_{3}[ii+2] = X_{2}[kk]</latex>
+
+  ii = ii+3
+
+  kk = kk+1
+
+}
+
+BubbleSort<latex>(X_{3})</latex>
+
+return <latex>X_{3}[1.5*n]</latex>
+
+
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+x_3 is nearly sorted which means bubble sort works well.
+
+<latex>O(n^{2})</latex>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+<latex>
+X_{n-1}</latex>[(n-1)n]
+
+kk = 1
+
+ii = 1
+
+jj = 0
+
+for(ii to n) {
+
+  for((jj to n-1) {
+     <latex>X_{n-1}[ii+jj] = X_{jj}[kk]</latex>
+
+     ii = ii+3
+
+     kk = kk+1
+
+     jj = jj+1
+  }
+}
+
+BubbleSort<latex>(X_{n-1})</latex>
+
+return <latex>X_{n-1}[n/2*n]</latex>
+
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+
+x_n is nearly sorted which means bubble sort works well.
+
+<latex>O(n^{2})</latex>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+   // put your code here
+   // also remember to upload it in submit page
+
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+---+++!! Grader comments *[0/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Give out the password you cracked. Remember attached the code as 'problem4a.zip'
+</VERBATIM>
+
+t*}
+
+4!o
+
+)`"
+
+5't
+
+&%R
+
+3e*
+
+vy|
+
+(r&
+
+5y?
+
+q3)
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the password you cracked. 
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Give out the explanation here. Remember attached the code and table
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

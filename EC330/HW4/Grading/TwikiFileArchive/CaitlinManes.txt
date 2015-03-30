@@ -1,0 +1,415 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+---++_Sources:_
+   * http://www.cs.umd.edu/class/fall2002/cmsc214/Tutorial/makefile.html
+   * http://www.cs.swarthmore.edu/~newhall/unixhelp/howto_makefiles.html
+   * http://stackoverflow.com/questions/16931770/makefile4-missing-separator-stop
+   * http://stackoverflow.com/questions/8960087/how-to-convert-a-char-array-to-a-string
+   * http://book.realworldhaskell.org/read/advanced-library-design-building-a-bloom-filter.html
+   * _Introduction to Programming with C++_, 2nd edition, by Y. Daniel Liang
+   * http://www.cplusplus.com/reference/vector/vector/
+   * http://www.cplusplus.com/reference/string/string/
+   * http://www.cplusplus.com/reference/cmath/
+   * http://www.oxforddictionaries.com/us/words/what-is-the-frequency-of-the-letters-of-the-alphabet-in-english
+   * http://www.cplusplus.com/reference/cctype/tolower/
+   * http://stackoverflow.com/questions/17983511/how-can-you-define-const-static-stdstring-in-header-file
+   * http://stackoverflow.com/questions/20207400/dynamically-allocated-string-array-then-change-its-value
+   * http://stackoverflow.com/questions/16872094/dynamically-allocate-array-of-stdstring
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(CaitlinManes),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+secondary clustering
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+// list0 is X0 and list1 is X1
+
+int start0 = 0, start1 = 0;					// start indices for lists
+int end0 = size - 1, end1 = size - 1;		// end indices for lists
+int median0, median1;						// current medians for each list
+int med_index0, med_index1;					// current median indices for each list
+int cut_amt;								// amount to cut off the lists
+
+// while lists are greater than one element
+while ( (end0 - start0 + 1 > 1) && (end1 - start1 + 1 > 1)) {
+	med_index0 = (end0 - start0 + 1) / 2 + start0;			// calculate current median indics
+	med_index1 = (end1 - start1 + 1) / 2 + start1;
+	median0 = list0[med_index0];							// select current medians
+	median1 = list1[med_index1];
+	
+	// whichever median is smaller, cut off the first part of that list,
+	// cut the same amount off the second part of the other list.
+	// parts are divided by median
+	if (median0 < median1) {
+		cut_amt = med_index0 - start0;
+		start0 += cut_amt;
+		end1 -= cut_amt;
+	} else {
+		cut_amt = med_index1 - start1;
+		start1 += cut_amt;
+		end0 -= cut_amt;
+	}
+	
+}
+
+// calculate median
+double median = ((double)list0[start0] + (double)list1[start1]) / 2.0;
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+On each iteration, the size of the lists is <latex>\frac{n}{2} + 1</latex>.
+
+The while loop stops executing once the lists are length 1.
+
+Since each iteration divides the list in 2, the running time is <latex>\Theta(log_2n)</latex>.
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+Combine 2 of the arrays and then follow the procedure for finding median of 2 described above.
+The 2 arrays can be combined by:
+</VERBATIM>
+index0 = 0;
+index1 = 0;
+
+for (xx = 0; xx < n; xx++ ) {
+    if(X0[index0] < X1) {
+        insert_at_end(X0[index0]);
+        index0++;
+    } else {
+        insert_at_end(X1[index1]);
+        index1++;
+    }
+}
+
+---++++ Analysis and running time
+<VERBATIM>
+</VERBATIM>
+
+It will take 2n to combine the arrays. Then you must add the analysis for combining 2 arrays.
+
+It will take <latex>\Theta(n)</latex>.
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+Combine n arrays into 2 arrays using the procedure described in (ii).
+Find the median using the procedure described in (i).
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+</VERBATIM>
+
+It takes <latex>n^2</latex> to combine the arrays + the time to find the median of 2 arrays.
+
+The total running time is <latex>\Theta(n^2)</latex>.
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+   // put your code here
+   // also remember to upload it in submit page
+
+#ifndef MY_BLOOMFILTER_H
+#define	MY_BLOOMFILTER_H
+
+#include "BloomFilter.h"
+#include <vector>
+#include "math.h"
+
+class myBloomFilter : public BloomFilter {
+
+	public:
+		// myBloomFilter constructors
+		myBloomFilter (int mm);
+		myBloomFilter (string filter);
+		
+		// destructor
+		~myBloomFilter();
+        
+        /**
+        * inserts  into the filter
+        */
+        void insert(string item);
+        
+        /**
+        * Checks whether  is in the filter.
+        * @return  true if the item is probably in the filter
+        *          false if the item is definitely not in the filter
+        */
+        bool exists(string item);
+        
+        /**
+        * @return A string of  characters representing the Bloom filter
+        */
+        string output();
+		
+	private:
+		vector<char> chars;		// create char vector to store given chars in
+		void init_chars();		// set all values to NUL in chars vector
+   		char * hash(string item, char * char_hash);			// return a value for the index to set to 1 in hash_array
+   		const static string letters;						// string to store all the letters
+   		const static string numbers;						// string to store all the numbers
+   		string str;											// string to store filter in
+      
+};
+
+#endif /* MY_BLOOMFILTER_H */
+
+#include "myBloomFilter.h"
+#include <iostream>
+
+const string myBloomFilter::letters = "qjzxvkwyfbghmpduclsntoirae";
+const string myBloomFilter::numbers = "15872396";
+
+// call BloomFilter constructor
+myBloomFilter::myBloomFilter (int mm)  : BloomFilter (mm) {
+	init_chars();
+	//str = new string[length];
+}
+
+// call BloomFilter constructor
+myBloomFilter::myBloomFilter (string filter) : BloomFilter (filter) {
+	init_chars();
+	string temp = filter;
+	
+	for (int xx = 0; xx < length; xx++) {
+		chars[xx] = temp[xx];
+	}
+	//str = new string[length];
+}
+
+// call destructor
+myBloomFilter::~myBloomFilter() {
+	//delete [] str;
+}
+
+// set all values to NUL in chars vector
+void myBloomFilter::init_chars() {
+	for ( int xx = 0; xx < length; xx++ ) {
+		chars.push_back(0);
+	}
+}
+
+/**
+* inserts  into the filter
+*/
+void myBloomFilter::insert(string item) {
+
+	// declare hash array
+	char char_hash[length];
+	char *list_ptr = char_hash;			// pointer to pass to hash function
+	list_ptr = hash(item, char_hash);	// get hash for item
+	
+	int xx = 0;
+	for (vector<char>::iterator iter = chars.begin(); xx < item.size() && iter != chars.end() - 1; iter++, xx++) {
+		*iter |= char_hash[xx];			// set the bits calculated in hash function
+	}
+}
+
+/**
+* Checks whether  is in the filter.
+* @return  true if the item is probably in the filter
+*          false if the item is definitely not in the filter
+*/
+bool myBloomFilter::exists(string item) {
+
+	// declare hash array
+	char char_hash[length];
+	char *list_ptr = char_hash;			// pointer to pass to hash function
+	char temp;							// char used for calculations below
+	list_ptr = hash(item, char_hash);	// get hash for item
+	
+	int xx = 0;
+	for (vector<char>::iterator iter = chars.begin(); xx < item.size() && iter != chars.end() - 1; iter++, xx++) {
+		temp = *iter;
+		temp &= char_hash[xx];		// clear all the bits not in item
+		if (temp != char_hash[xx]) {
+			return false;
+		}
+	}
+	
+	return true;
+}
+
+char * myBloomFilter::hash(string item, char * char_hash) {
+	
+	for (int xx = 0; xx < length; xx++) {
+		char_hash[xx] = 0;
+	}
+	
+	// put each char in item in the char_hash array
+	int xx;
+	for (xx = 0; xx < 10 * item.size() && xx < length; xx++) {
+		char_hash[xx] = item[xx];			
+	}
+	
+	// hash for numbers
+	int yy;
+	for (yy = 0; yy < item.size() && yy + xx < length; yy++ ) {
+		if ((item[yy] >= 49 && item[yy] <= 51) || (item[yy] >= 53 && item[yy] <= 57)) {
+			int power = numbers.find(item[yy]);
+			char_hash[yy + xx] = pow(2, power);
+		}
+	}
+	
+	// hash for alphabetic letters
+	int jj;
+	for (jj = 0; jj < item.size() && jj < length - 26 ; jj++) {
+		if ( (item[jj] >= 65 && item[jj] <= 90) || (item[jj] >= 97 && item[jj] <= 122)) {	// hash function for letters
+			if (letters.find(tolower(item[jj])) + xx + yy < length) {
+				char_hash[letters.find(tolower(item[jj])) + xx + yy] = item[jj];
+			}
+		}
+	}
+	
+	// initialize array
+	int chars_count[256];
+	for (int nn = 0; nn < 256; nn++) {
+		chars_count[nn] = 0;
+	}
+	
+	// count occurences of each letter
+	for (int nn = 0; nn < item.size(); nn++) {
+		chars_count[item[nn]] += 1;
+	}
+	
+	// insert letter counts into the filter
+	int ii;
+	for (ii = 0; ii + yy + xx < length && ii < item.size(); ii++) {
+		char_hash[ii + yy + xx] = chars_count[item[ii]];
+	}
+	
+	// hash to change char values for non-alphabetic values
+	int gg;
+	for (gg = 0; gg < item.size() && gg + xx + ii + yy < length; gg++ ) {
+		if ( (item[gg] >= 65 && item[gg] <= 90) || (item[gg] >= 97 && item[gg] <= 122)) {	// hash function for letters
+			char_hash[gg + xx + yy + ii] = item[gg];
+		} else {
+			char_hash[gg + xx + yy + ii] = item[gg] - 45;
+		}
+	}
+	
+	// hash for values
+	for (int bb = 0; bb < item.size() * 5 && gg + xx + ii + yy + bb < length; bb++) {
+		char_hash[bb + gg + xx + yy + ii] = item[bb % item.size()] / pow(2, bb);
+	}
+	
+	
+	return char_hash;
+}
+
+/**
+* @return A string of  characters representing the Bloom filter
+*/
+string myBloomFilter::output() {
+	str = "";
+	int xx = 0;
+	for (vector<char>::iterator iter = chars.begin(); iter != chars.end(); iter++, xx++) {
+		str += *iter;
+	}
+}
+	
+
+%ENDCODE%
+---+++ Explanation
+<VERBATIM>
+I stored my filter in a vector of chars.
+I computed my hash by entering the char values, using an array of numbers to
+select a single bit to change, storing just letter values, using an array of letters to
+count occurences of each letter and store the occurrences, and entering the char
+values with number manipulations.
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Give out the password you cracked. Remember attached the code as 'problem4a.zip'
+The makefile compiles everything into an executable called "a.out".
+</VERBATIM>
+
+3100ca7f4a968340d89d115a5c25bceb43217e95 = Sui
+
+0c9873f80ada46c73e830457c09052bde50e2f7d = slt
+
+2d9d79b467e8c7b2099fafde4e4c221a1efa6ff2 = deb
+
+4983dec5d7d2a58148bf012219e23e29b3a25fcf = EOF
+
+c022f84dea73b1a8886b092d8e3f376e7caed543 = IAH
+
+04c41d16491231d8e966c5c78560272125a97634 = MeV
+
+e13f3a7c6d12baf0b6ad298c2bbc0a8308158c43 = zoo
+
+ed76fc2fa8882484a10c55500f5738702c4c71b8 = WGS
+
+adb9b27c9d0f78e1e104007e56cd3ce6b48456a7 = RFP
+
+4796ad0886540784ec03ff1dc61575c6b333dee9 = Sup
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the password you cracked. 
+</VERBATIM>
+
+94e2a17f19fe446a6fc5c3fb0517dba21f4339a1 = sybow
+
+69cc4b7f78502eafc9b4187ee40c0f81bec1be9b = crees
+
+0debf2da60e98b5ecefdb28151b840dffada13c6 = learn
+
+f6ae7008f52e3505be728b652709b173280ad1ae = isaac
+
+554c496d4a059589135554f2e93332e2a1d4605d = yoker
+
+288feebfd27adaf7c011b420d70a092e419ac514 = Vichy
+
+b56a4f72f0c4031a0737346eb80e669c6d6b3cd4 = stuss
+
+c5b2b9f6421231c795d9a5ba4892c599343e17e9 = loyal
+
+f21e77142fdc5b2075bfa10dcd1cad930af3a1e6 = raped
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Give out the explanation here. Remember attached the code and table
+
+I start with the string "aaaaa". For my first entry, I hash and reduce this 2^13 times.
+My next entry starts with the previous entry's second value, hashed and reduced.
+This process continues until I have my rainbow table.
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

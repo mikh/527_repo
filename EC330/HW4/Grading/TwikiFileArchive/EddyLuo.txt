@@ -1,0 +1,202 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(EddyLuo),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+h_i(k) = h(k) + i(i+1)/2
+Because of the fact that this hash function is equal to an original hash function with a quadratic offset, this exhibits secondary clustering. 
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+Perform merge sort on the two arrays: choose which of the two elements is smaller
+and place it into a new array. However, it is only required to do so n times. Once the
+nth element is sorted, we have the median of all numbers.
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+n comparisons take n time to do. Since it only takes one comparison to place
+an integer into an array, only n comparisons are done.
+Therefore, the algorithm is &#920;(n) time.
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+Merge sort the first 2 arrays, and then perform a merge sort stopping after element (3N/2).
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+This will take 2n+(3n/2) time to solve, thus the running time is linear and it is \Theta(n) time.</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+Merge sort until there are only two arrays left. On the final merge sort, merge until the (N^2/2)nd number is found.
+Then you found the median.
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+This takes n^2 + n^2/2 time to solve, thus this takes \Theta(n^2) time.
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+// myBloomFilter.cpp included after the h file
+
+// myBloomFilter.h
+#ifndef myBLOOMFILTER_H
+#define myBLOOMFILTER_H
+
+#include BloomFilter.h
+#include <string>
+using namespace std;
+
+class myBloomFilter:public BloomFilter {
+ public:
+   myBloomFilter(int mm);
+   myBloomFilter(string filter);
+   void insert(string item);
+   bool exists(string item);
+   string output();
+ protected:
+  string filter; // The string used in the class
+  int hash1(string item); // first hash of string, determines location of string input
+  char hash2(string item); // second hash, determines character to insert
+};
+
+#endif // defined myBLOOMFITLER_H
+
+// myBloomFilter.cpp
+
+#include BloomFilter.h
+#include "myBloomFilter.h"
+using namespace std;
+
+myBloomFilter::myBloomFilter(int mm):BloomFilter(mm) {
+  this->filter = string(mm, '\0'); 
+}
+
+myBloomFilter::myBloomFilter(string filter):BloomFilter(filter) {
+  this->length = filter.length();
+  this->filter = filter;
+}
+
+void myBloomFilter::insert(string item) {
+  int location = hash1(item);
+  char toCheck = hash2(item);
+  if (toCheck > filter.at(location)) { // if char is greater than current hash
+    filter.replace(location, 1, &toCheck); // replace filter
+  } 
+}
+
+bool myBloomFilter::exists(string item) {
+  int location = hash1(item);
+  char toCheck = hash2(item);
+  if (toCheck <= filter.at(location)) {
+    return true; // hash char is smaller than char at filter location
+  } else {
+    return false; // hash char is too high for filter
+  }
+}
+
+string myBloomFilter::output() {
+  return this->filter;
+}
+
+int myBloomFilter::hash1(string item) {
+  return (item.length()) % this->length;
+}
+
+char myBloomFilter::hash2(string item) {
+  return item.at(1); // first letter of string
+}
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+
+   * [[%ATTACHURLPATH%/problem4a.zip][problem4a.zip]]: Solution for 4a
+<VERBATIM>
+NRL
+Gee
+RQS
+yen
+BPA
+scr
+abd
+bel
+deb
+BFD
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+mm^g,
+p]th`
+p]th`
+p]th`
+`HnRq
+p]th`
+3f0ik
+p]th`
+p]th`
+p]th`
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+This outputs hashes created by first creating a hash based on five characters in a string, and then hashing and reduced them four times. 
+Afterward, the original string is outputted along with its reduced five-letter form.
+All inputs and outputs are 5 letters and stored in a file, table.txt.
+</VERBATIM>
+
+
+   * [[%ATTACHURLPATH%/problem4c.zip][problem4c.zip]]: 4c code and a hashing table
+
+   * [[%ATTACHURLPATH%/table.txt][table.txt]]: 4c code and a hashing table
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---
+
+

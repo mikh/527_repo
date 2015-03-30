@@ -1,0 +1,321 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+---++++I collaborated with Paul Moy for programming concepts.
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(PeterGoulakos),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+This will exhibit secondary clustering (no primary clustering). The probe sequence is similar to quadratic probing, which I can see by expanding out the probe sequence:
+
+<latex>h_i(k) = h_{i-1}(k) + i = h_0(k) + \sum_{k=1}^{i}{i} = h_0(k) + 0.5i(i-1) = h_0(k) + \Theta(i^2)</latex>
+
+It will not always be possible to add a key to a non-full table.
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+This was inspired by the algorithm [[http://www.geeksforgeeks.org/median-of-two-sorted-arrays/][described here]]
+<pre>
+findMedian(array, size):
+    if size % 2 is 0:
+        return (array[size/2 - 1] + array[size/2]) / 2
+    else:
+        return array[size/2]
+
+median(arrayA, arrayB, size):
+    if size is 1:
+        return (arrayA[0] + arrayB[0]) / 2
+    if size is 2:
+        return ( max(arrayA[0], arrayB[0]) + min(arrayA[1], arrayB[1]) ) / 2
+
+    medianA = findMedian(arrayA, size)
+    medianB = findMedian(arrayB, size)
+
+    if medianA == medianB:
+        return medianA
+
+    // use upper 'half' of arrayA and lower 'half' of arrayB
+    if medianA < medianB:
+        if size % 2 is 0: // even size
+            return median(arrayA + size/2 - 1, arrayB, size - size/2 + 1)
+        else: // odd size
+            return median(arrayA + size/2, arrayB, size - size/2)
+
+    // use lower 'half' of arrayA and upper 'half' of arrayB
+    if medianA > medianB:
+        if size % 2 is 0: // even size
+            return median(arrayA, arrayB + size/2 - 1, size - size/2 + 1)
+        else: // odd size
+            return median(arrayA, arrayB + size/2, size - size/2)
+</pre>
+---++++ Analysis and running time
+This algorithm has an asymptotic running time of <latex>\Theta(\log{n})</latex>
+
+All function calls and computations, besides the recursive calls to =median(...)=, require constant time.
+
+As for =median(...)=, each time it is called recursively, the parameter =size= is halved (and it begins with a value of =n=), so the number of times that the function will recurse is base-2-log(n).
+---+++ ii. Median of three
+---++++ Algorithm
+<pre>
+median(arrayA, arrayB, arrayC, size):
+    pointerA = arrayA // pointer to 1st element of arrayA
+    pointerB = arrayB
+    pointerC = arrayC
+    sortedHalf = [] // list/vector/etc..
+
+    counter = 0
+    if size % 2 == 0: // even
+        limit = (size*3)/2 + 1
+    else:
+        limit = (size*3)/2
+
+    while counter <= limit:
+        bool1, bool2, bool3 = false // all false
+        if *pointerA <= *pointerB: bool1 = true
+        if *pointerB <= *pointerC: bool2 = true
+        if *pointerA <= *pointerC: bool3 = true
+        
+        if !bool2 and !bool3:
+                sortedHalf.push_back(*pointerC)
+                pointerC++
+        if !bool1 and bool2:
+                sortedHalf.push_back(*pointerB)
+                pointerB++
+        if bool1 and bool3:
+                sortedHalf.push_back(*pointerA)
+                pointerA++
+
+        counter++
+
+    if size % 2 == 0:
+        return (sortedHalf[end] + sortedHalf[end-1])/2
+    else:
+        return sortedHalf[end]
+</pre>
+---++++ Analysis and running time
+This algorithm has an asymptotic running time of <latex>\Theta(n)</latex>
+
+The only iterative work (which depends on =n=) that gets performed in this function is the =while()= loop. The loop runs roughly =n/2= times. All of the statements within the loop take constant time (3 comparisons and 3 if-statements). We need three booleans/comparisons and three if-statements to determine which one of the three numbers is the smallest of the three (not necessary to know their exact order).
+
+Therefore, the rough amount of work done is approximately =(n/2)*9=, which is &Theta;(n).
+---+++ iii. Median of n
+---++++ Algorithm
+<pre>
+median(arrayA, arrayB, arrayC, ...., ...., arrayN, n):
+    pointerA = arrayA // pointer to 1st element of arrayA
+    pointerB = arrayB
+    pointerC = arrayC
+    .... ..... .....
+    pointerN = arrayN // there will be 'n' pointers
+
+    sortedHalf = [] // list/vector/etc..
+
+    counter = 0
+    if n % 2 == 0: // even
+        limit = (n*n)/2 + 1
+    else: // odd
+        limit = (n*n)/2
+
+    while counter <= limit:
+        bool1, bool2, bool3, .... bool[n choose 2] = false // all false, there will be ('n' choose 2) bools
+        if *pointerA <= *pointerB: bool1 = true
+        if *pointerB <= *pointerC: bool2 = true
+        if *pointerA <= *pointerC: bool3 = true
+        ... .... .... ... ...  ...
+        if *pointerX <= *pointerJ: boolX = true
+        
+        // generate if-statements which check each of the valid combinations of 'n' digits
+        // there will be n if-statements (as in the previous part with 3 arrays) because it's not necessary
+        // to know the exact order of the numbers to figure out which one is the smallest one
+
+        counter++
+
+    if n % 2 == 0:
+        return (sortedHalf[end] + sortedHalf[end-1])/2
+    else:
+        return sortedHalf[end]
+</pre>
+---++++ Analysis and running time
+This algorithm has an asymptotic running time of <latex>\Theta(n^4)</latex>
+
+The =while()= loop iterates around =(n^2)/2= times. In each loop iteration, the function generates =(n choose 2)= comparisons/booleans, then runs through =n= if-statements to figure out the smallest number and increment the pointers.
+
+So, the rough amount of runtime is: =((n^2)/2) * ((n^2 -n )/2 + n)=, which is &Theta;(n^4)
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+/////////////////////////////////////////////
+////////////////// header ////////////////
+////////////////////////////////////////////
+#ifndef __myBloomFilter__
+#define __myBloomFilter__
+
+#include <string>
+using namespace std;
+
+class myBloomFilter
+{
+public:
+    myBloomFilter(int mm);
+    myBloomFilter(string filter);
+    void insert(string item);
+    bool exists(string item);
+    string output();
+    
+protected:
+    int length;
+    
+private:
+    string filterString;
+    int hashFunc(string str);
+    int hashFunc2(string str);
+};
+
+#endif
+
+/////////////////////////////////////////////
+////////////// implementation ////////////
+////////////////////////////////////////////
+#include "myBloomFilter.h"
+
+int myBloomFilter::hashFunc(string str)
+{
+    int hash = 0;
+    for(int i = 0; i < str.length(); i++)
+        hash ^= hash + str[i] + str[2] + str[str.length()-1];
+    
+    return (hash-str[0]-2) % length;
+}
+
+int myBloomFilter::hashFunc2(string str)
+{
+    int hash = 97;
+    hash ^= (hash << 8) + str[0]*str[1]*str[2];
+    
+    return (hash+str[0]) % length;
+}
+
+myBloomFilter::myBloomFilter(int mm)
+{
+    length = mm;
+    filterString = string(mm, '0');
+}
+
+myBloomFilter::myBloomFilter(string filter)
+{
+    length = (int)filter.length();
+    filterString = filter;
+}
+
+void myBloomFilter::insert(string item)
+{
+    filterString[hashFunc(item)] = '1';
+    filterString[hashFunc2(item)] = '1';
+}
+
+bool myBloomFilter::exists(string item)
+{
+    bool anyZeros = filterString[hashFunc(item)]=='0' || filterString[hashFunc2(item)]=='0';
+    
+    if(anyZeros == true)
+        return false; // definitely not
+    
+    return true; // possibly there
+}
+
+string myBloomFilter::output()
+{
+    return filterString;
+}
+
+%ENDCODE%
+---+++ Explanation
+The filter in this implementation is simply a string; it's length is the size of the Bloom filter. It either holds '1' or '0' at any given index depending on the hashing functions that were called when calling =insert()=.
+
+I used two hash functions for the =insert()= function. After I realized that bitwise-XOR is a pretty good operation for "messing up" or shaking up some data, I decided to use it, plus a couple bit-shift operators to try to add more "randomness". Then, the program samples a couple of the characters of the string that's being inserted to make the hash depend on the string. For a bit more "messiness", the hash is shifted by the first character of the string. Finally, The =insert()= function mods (%) the hash with the length of the table so the values will stay within the bounds of the filter.
+
+For looking up whether a string is in the filter (possibly there, or definitely not), the hash functions are called and the filter is checked--if there are any zeros at the locations given by the hash functions, then one can say that the given string is not in the filter.
+---+++!! Grader comments *[17/25]*
+<VERBATIM>
+Score: 1829</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+The passwords and their hashes are below:
+<pre>
+password: EBI
+  from hash: f8e7985223821448bf43204dd4a65c18669f4280
+password: GCM
+  hash: 5c4934efebbf1c71aca0d9b965bb560b22e097fb
+password: LWP
+  hash: 97e66cdf549b8d9026e13c5ecefb86de5f800ebf
+password: PCL
+  hash: 31d875411bb719cf59a2177d5e9e1c869dd9e134
+password: SRB
+  hash: 5c657700ecf021c2579e070879fe53dffcc0aba5
+password: Wal
+  hash: 35a6ebb4a4681bcd387453958c96eea4bcd7db77
+password: deb
+  hash: 2d9d79b467e8c7b2099fafde4e4c221a1efa6ff2
+password: moa
+  hash: b2cb74a9bea03b2c157defe6903adcdaeca17e2b
+password: pk.
+  hash: ab35ed91518b27df7b7ea4b80c65a29c344fd2c8
+password: tig
+  hash: 1e3eda00c2c659e756da686d75f4e79ab8db27dc
+</pre>
+And the code is attached as =problem4a.zip=
+---+++ 4b. Simplified rainbow tables
+The passwords and their hashes are below:
+
+<pre>
+password: stale
+  hash: 3957c1afc1bf2c683f6dc65477a5ef0f9307fbfd
+password: raped
+  hash: f21e77142fdc5b2075bfa10dcd1cad930af3a1e6
+password: loury
+  hash: 05553c640284aaa4cd5cb0c639968ed7b1b71761
+password: crees
+  hash: 69cc4b7f78502eafc9b4187ee40c0f81bec1be9b
+password: canon
+  hash: f3c711429a835b46b6f3ecae7bc3339fc333cce0
+password: benne
+  hash: 484ae67299a215c1a4f822f3de26b76526d365fb
+password: beryx
+  hash: b1f9f946d0738e1512da5c37a70c0bacb0f1cce9
+password: borak
+  hash: 07d75305c5b7058d5a5fb918c4b0f0b559511988
+password: aures
+  hash: d9cb375d9d7e8e9d296617f895e031d4a732553c
+password: Lubet
+  hash: da510fcea23b55304f66f616c8f3d3e08fadd609
+</pre>
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+My custom rainbow table has 10,000 chains/rows in total. An outer loop starts off with a string of 5 characters, which is reduced and outputted as the start of the chain. Then, an inner loop iterates 10,000 times, hashing the string, then reducing it, hashing, reducing, etc. etc.... When the loop has finished, it writes the string (which has now been hashed/reduced 10k times) to the output file as the end of the chain. The outer loop ends up creating 10k such chains.
+
+I modified slightly the reduce() function to make it a bit different from the one we were given. The code and the table are attached below (=problem4c.zip=).
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

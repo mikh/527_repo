@@ -10,6 +10,7 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
+import data_structures.LinkStruct;
 import data_structures.QuestionFormat;
 import data_structures.RowIdentifier;
 
@@ -18,7 +19,7 @@ import data_structures.RowIdentifier;
 public class ExcelParser {
 	public static ArrayList<ArrayList<String>> get_excel_matrix(String file, String start_column, String end_column, int s_r, int e_r) throws IOException{
 		ArrayList<ArrayList<String>> matrix = new ArrayList<ArrayList<String>>();
-		int s_c = convert_column_to_index(start_column), e_c = convert_column_to_index(end_column);
+		int s_c = convert_column_to_index(start_column), e_c = convert_column_to_index(end_column)+1;
 		FileInputStream input = new FileInputStream(file);
 		POIFSFileSystem fs = new POIFSFileSystem(input);
 		HSSFWorkbook workbook = new HSSFWorkbook(fs);
@@ -130,13 +131,18 @@ public class ExcelParser {
 			
 			for(int jj = 1; jj< row.size(); jj++){
 				String value = row.get(jj);
-				int q_index = find_question(row_identifier.get(jj).q_number,qq);
-				int p_index = row_identifier.get(jj).part_number - 'a';
-				if(row_identifier.get(jj).comments){
+				int q_index = find_question(row_identifier.get(jj-1).q_number,qq);
+				int p_index = row_identifier.get(jj-1).part_number - 'a';
+				if(row_identifier.get(jj-1).comments){
 					if(qq.get(q_index).use_parts)
 						qq.get(q_index).question_part_comments.set(p_index, value);
 					else
 						qq.get(q_index).overall_comment = value;
+				} else{
+					if(qq.get(q_index).use_parts)
+						qq.get(q_index).question_part_grades.set(p_index, (int)Float.parseFloat(value));
+					else
+						qq.get(q_index).total = (int)Float.parseFloat(value);
 				}
 			}
 			
@@ -146,9 +152,28 @@ public class ExcelParser {
 		return qtrix;
 	}
 	
-	
+	public static ArrayList<LinkStruct> map_qtrix_to_links(ArrayList<ArrayList<QuestionFormat>> qtrix, ArrayList<LinkStruct> links){
+		for(int ii = 0; ii < qtrix.size(); ii++){
+			if(qtrix.get(ii).size() > 0){
+				int index = find_link(qtrix.get(ii).get(0).question_owner, links);
+				if(index != -1){
+					for(int jj = 0; jj < qtrix.get(ii).size(); jj++)
+						links.get(index).qq.add(qtrix.get(ii).get(jj));
+				}
+			}
+		}		
+		return links;
+	}
 	
 	/**** Helper methods ****/
+	private static int find_link(String name, ArrayList<LinkStruct> links){
+		for(int ii = 0; ii < links.size(); ii++){
+			if(links.get(ii).l_name.equals(name))
+				return ii;
+		}
+		return -1;
+	}
+	
 	private static int find_question(int question_number, ArrayList<QuestionFormat> qq){
 		for(int ii = 0; ii < qq.size(); ii++){
 			if(qq.get(ii).question_number == question_number)

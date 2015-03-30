@@ -1,0 +1,194 @@
+package parsers;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+
+import data_structures.QuestionFormat;
+import data_structures.RowIdentifier;
+
+
+
+public class ExcelParser {
+	public static ArrayList<ArrayList<String>> get_excel_matrix(String file, String start_column, String end_column, int s_r, int e_r) throws IOException{
+		ArrayList<ArrayList<String>> matrix = new ArrayList<ArrayList<String>>();
+		int s_c = convert_column_to_index(start_column), e_c = convert_column_to_index(end_column);
+		FileInputStream input = new FileInputStream(file);
+		POIFSFileSystem fs = new POIFSFileSystem(input);
+		HSSFWorkbook workbook = new HSSFWorkbook(fs);
+		HSSFSheet sheet = workbook.getSheetAt(0);
+		
+		for(int ii = s_r-1; ii < e_r; ii++){
+			HSSFRow row = sheet.getRow(ii);
+			ArrayList<String> col = new ArrayList<String>();
+			for(int jj = s_c; jj < e_c; jj++){
+				HSSFCell cell = row.getCell(jj);
+				if(cell ==  null){
+					col.add("");
+				} else{
+					col.add(cell.toString());
+				}
+			}
+			matrix.add(col);
+			
+		}
+		
+		return matrix;
+	}
+	
+	
+	public static ArrayList<ArrayList<QuestionFormat>> parse_matrix(ArrayList<ArrayList<String>> matrix){
+
+		ArrayList<ArrayList<QuestionFormat>> qtrix = new ArrayList<ArrayList<QuestionFormat>>();
+		
+		//first get the question format - first row of matrix should be the format
+		ArrayList<String> format_row = matrix.get(0);
+		ArrayList<RowIdentifier> row_identifier = new ArrayList<RowIdentifier>();
+		ArrayList<Integer> question_number = new ArrayList<Integer>();
+		ArrayList<ArrayList<Character>> parts = new ArrayList<ArrayList<Character>>();
+		
+		if(!format_row.get(0).equals("Name")){
+			System.out.println("Excel format error - no name section. Fatal Error.");
+			System.exit(-1);
+		}
+		
+		for(int ii = 1; ii < format_row.size(); ii++){
+			String s = format_row.get(ii);
+			RowIdentifier row = new RowIdentifier();
+			//first thing is a sequence of numbers indicating question number
+			String number_seq = "";
+			int jj;
+			for(jj = 0; jj < s.length(); jj++){
+				if(is_number(s.charAt(jj)))
+					number_seq += s.charAt(jj);
+				else
+					break;
+			}
+			int q_num = Integer.parseInt(number_seq);
+			int q_index = find_question_number(question_number, q_num);
+			if(q_index == -1){
+				question_number.add(q_num);
+				parts.add(new ArrayList<Character>());
+				q_index = question_number.size()-1;
+			}
+			row.q_number = q_num;
+			
+			//find if there is anything after that
+			if(jj < s.length()){
+				String part_seq = "";
+				for(;jj<s.length(); jj++){
+					if(s.charAt(jj) == '_')
+						break;
+					else
+						part_seq += s.charAt(jj);
+				}
+				
+				if(part_seq.length() > 1){
+					System.out.println("Part identifier too long. Fatal Error.");
+					System.exit(-1);
+				}
+				int p_index = find_part_number(parts.get(q_index), part_seq.charAt(0));
+				if(p_index == -1){
+					parts.get(q_index).add(part_seq.charAt(0));
+					p_index = parts.get(q_index).size()-1;
+				}
+				row.part_number = part_seq.charAt(0);
+				
+				if(jj < s.length()){
+					if(s.contains("comments"))
+						row.comments = true;
+				}
+				
+			}
+			row_identifier.add(row);				
+		}
+		
+		//now get grades
+		for(int ii = 1; ii < matrix.size(); ii++){
+			ArrayList<String> row = matrix.get(ii);
+			ArrayList<QuestionFormat> qq = new ArrayList<QuestionFormat>();
+			String name = row.get(0);
+			for(int jj  = 0; jj < question_number.size(); jj++){
+				QuestionFormat qf = new QuestionFormat();
+				qf.question_owner = name;
+				qf.question_number = question_number.get(jj);
+				if(parts.get(jj).size() > 0){
+					qf.use_parts = true;
+					for(int kk = 0; kk < parts.get(jj).size(); kk++){
+						qf.question_part_grades.add(0);
+						qf.question_part_comments.add("");
+					}
+				}
+				qq.add(qf);
+			}
+			
+			for(int jj = 1; jj< row.size(); jj++){
+				String value = row.get(jj);
+				int q_index = find_question(row_identifier.get(jj).q_number,qq);
+				int p_index = row_identifier.get(jj).part_number - 'a';
+				if(row_identifier.get(jj).comments){
+					if(qq.get(q_index).use_parts)
+						qq.get(q_index).question_part_comments.set(p_index, value);
+					else
+						qq.get(q_index).overall_comment = value;
+				} else{
+					
+				}
+			}
+			
+			qtrix.add(qq);
+		}
+		
+		return qtrix;
+	}
+	
+	
+	
+	/**** Helper methods ****/
+	private static int find_question(int question_number, ArrayList<QuestionFormat> qq){
+		for(int ii = 0; ii < qq.size(); ii++){
+			if(qq.get(ii).question_number == question_number)
+				return ii;
+		}
+		return -1;
+	}
+	
+	private static int convert_column_to_index(String col){
+		int index = 0;
+		for(int ii = 0; ii < col.length(); ii++){
+			index *= 26;
+			index += ((col.charAt(ii) - 'A') + 1);
+		}
+		index--;
+		return index;
+	}
+	
+	private static boolean is_number(char c){
+		if(c >= '0' && c <= '9')
+			return true;
+		return false;
+	}
+	
+	private static int find_question_number(ArrayList<Integer> questions, int q_num){
+		for(int ii = 0; ii < questions.size(); ii++){
+			if(questions.get(ii) == q_num)
+				return ii;
+		}
+		return -1;
+	}
+	
+	private static int find_part_number(ArrayList<Character> parts, char part){
+		for(int ii = 0; ii < parts.size(); ii++){
+			if(parts.get(ii) == part)
+				return ii;
+		}
+		return -1;
+	}
+
+}

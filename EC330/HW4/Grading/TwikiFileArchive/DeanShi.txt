@@ -1,0 +1,240 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(DeanShi),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+1. No, There is not primary cluster. This is because you will always be spacing out the inserts, due to the +i, so there will never be primary clustering.
+
+2. Yes, There is secondary clustering. This can occur due to the fact that you have a quadratic, and because of that you will have secondary clustering.
+
+3. No, You will NOT always be able to add a key if the table is not full. This is because you will be repeating the pattern after multiple iterations, so you will actually not access any of the slots that you do not access before.  
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+
+For this algorithm you would first find the medians of the two different arrays. From there, you know that the median of the two arrays combined have to be in between the two arrays. Then you find the median between those two values, and you essentially keep finding the medians over and over again until you get to the last two or until the values are the same. This means that you are essentially chopping off N/2 each time, which is similar to a binary search, meaning that you will get running log(n). 
+
+
+int medianFinder(int[] a1, int[]a2) {
+
+if (a1.length() == 0 && a2.length() == 0) {
+     return 0;
+}
+else if (a1.length() == 1 && a2.length() == 0) {
+     return a1 element
+}
+else if (a2.length() == 1 && a1.length() == 0) {
+     return a2 element
+}
+else if (a2.length == 1 && a1.length() == 1) {
+    return (a2 + a1)/2
+}
+else {
+    int middleNumbera1 = a1[a1.length/2];
+    int middleNumbera2 = a2[a2.length/2]; //Because the middle number must be between middleNumbera1 and middleNumbera2, truncate the lower values and the higher values
+    if (middleNumbera1 > middleNumbera2) {
+       truncate the numbers higher than middleNumbera1, truncate the numbers lower than middleNumbera2 (By truncate, I mean disregard, do not actually change the arrays)
+       medianFinder(a1[(New Range), a2[(New Range)] //Recursively find the median of the new range, between the lower median and the higher median
+    }
+
+  }
+}
+
+
+
+
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+
+Because you get rid of N/2 each time you find the medians, it will be similar to a binary search so the running time will be Theta(log(n))
+
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+For this problem, my algorithm essentially finds where the middle number will be in the three arrays. The middle number of the three arrays will always be 3N/2 if the numbers its even, it will be 3(N+1)/2 if it is odd. Regardless, you find where the middle number is, then, using iterators through each of the three arrays, you find the smallest number and you increment that array. You then increment a counter, and you continue doing this until you reach where the middle element should be. If the number of elements is odd, you will get exactly that number. If the number of elements are even, you have to take that value and the value closest to that value that's smaller, and you average those two numbers. This will always give you the median.
+
+int medianFinder3(a1, a2, a3) {
+
+int medianNumber = (a1.length * 3)/2 //Change this to a1.length + 1 if you have odd numbers, you can change this in an if statement need be
+int a1Iterator = 0;
+int a2Iterator = 0;
+int a3Iterator = 0;
+int lastIterator =0;
+int secondLastIterator = 0;
+
+while (a1Iterator + a2Iterator + a3Iterator != medianNumber) {
+     if a1iterator is smaller than a2iterator and a3 iterator
+           a1iterator++
+           secondLastIterator = lastIterator;
+           lastIterator = 1;
+     if a2iterator is smaller than a1iterator and a3iterator
+           a2iterator++
+           secondLastIterator = lastIterator;
+           lastIterator = 2;
+     if a3iterator is smaller than a1iterator and a2iterator
+           a3iterator++
+           secondLastIterator = lastIterator;
+           lastIterator = 3;
+}
+//After these loops run through, you will be at the median value.
+if (number of elements == odd)
+        return the last array that was iterated, with the correct index in the array using a1/a2/a3iterator. //Only return this if the number of elements is odd, meaning you got directly the middle element
+else 
+        return the lastArray and the second to last array iterated, average the two values of the arrays, and the average will be the median //Only occurs if the number of elements is even, so you have to take the average of the values. 
+
+
+
+}
+
+
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+For this algorithm, you will always have to go through each array and iterate AT LEAST 3(n+1)/2 or 3N/2 times, meaning it will eventually be Theta(N). 
+</VERBATIM>
+
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+
+For this, the algorithm I provide is the same exact concept as the "3" arrays algorithm. You have iterators over N arrays, and you iterate each time counting out. This essentially "sorts" the N arrays, going through until you iterate through (N*N)/2 values, so you are able to find the "middle number" of all of the arrays. The psuedocode will be very similar to the "3" array implementation, however you will have N arrays instead of three arrays, you will have N iterators, but the count will increase the same way, increasing each time an array is iterated by one and so on.
+
+
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+
+Because you will have to compare N arrays, and you will have to go through each time by N/2 times, you will have to do it N/2 * N times, which gives you Theta(N^2) time. 
+
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+#include "myBloomFilter.h"
+
+
+int hashing(string item) { //Hashing function created, 
+  int i, sum;              //Takes the ASCII values and multiples by prime
+  for (sum=0, i=0; i < item.length(); i++) //numbers.
+    sum += (item[i] * 1021);
+  return sum;
+}
+
+myBloomFilter::myBloomFilter (int mm) { //Intializes the myBloomFilter with int
+  length = mm;
+  filter = "";
+  for (int i = 0; i < mm; i++) {
+	filter += '0';
+  }
+}
+
+myBloomFilter::myBloomFilter (string filter) { //Intializes with string
+  length = filter.length(); 
+  this->filter = filter;
+}
+
+  
+void myBloomFilter::insert(string item) { //Inserts a '1' in the bloom filter
+  int hashingNumber = hashing(item);      //For the value that was hashed
+  filter[hashingNumber%length] = '1';
+}
+
+bool myBloomFilter::exists(string item) { //Checks if there are collisions that
+  int hashingItem = hashing(item);        //will occur with the string
+  if (filter[hashingItem%length] == '1') {
+	return true;
+  }
+  return false; 
+}
+
+string myBloomFilter::output() { //returns the filter. 
+  return filter;  
+}
+
+//NOTE: In the header file, there is a change. Added string filter as a protected variable, which is the only change in the header file (besides changing some inheritance issues). 
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+The myBloomFilter I created uses only one line modified in the header file, creating a filter. This BloomFilter basically checks for the for collisions in each of the Hash Functions. I implemented the functions specified in the header file, insert: which inserts a 1 for where the string hashes to, exists which checks if there is a value already for the string that is hashed, a function that reports the filter, one constructor that takes in a string and one that takes in a length, and finally the hashing function. 
+
+The hashing function I used was one where you add up the ASCII values of all the characters in the string, and then multiply by an arbitrary prime number (1021 was the one I used). Essentially, it checks if there will be collisions within the Hash Functions, checking for membership which is the use of a Bloom Filter. 
+</VERBATIM>
+
+---+++!! Grader comments *[14/25]*
+<VERBATIM>
+Score: 1671</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+
+Password                             Hash
+
+rhb                  "f38d7ff90e7a0ddb591701a60f37cbd71482df35",
+Afr					   "11cc34b4e1cc58a68bc0f4fa20988d06e80d3333",
+Saw					   "770c46bf00a86db695a9bacf3e041553448e15cb",
+ckw					   "e74dddb5aba606ae51dbd2440e6a491ceaadd837",
+Gee					   "3ddcaa159254b009131d7c8c9b732278b5cdc9b1",
+MTF					   "934594c19098524d2ce03beb0414e08d2c427129",
+tig					   "1e3eda00c2c659e756da686d75f4e79ab8db27dc",
+Rom					   "c26a7dd817239c66e24a3aedc4288bffd3d32648",
+BPA					   "ac72e7bdf097b06acd6b83dd1d6a42c13590be59",
+Ruy					   "765740a97b17f6e54ae3a8678f7b3b62e7b633bd
+
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+I could not crack any of the passwords. The running time for these passwords were much longer the few hours that I ran it. The code is provided under problem4b.zip. 
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+For my rainbow table creator, it creates a table of 10,000 values, and it hashes/reduces 20,000 times. For each of the values, it uses the previous value as the new starting value for the newer entry. 
+
+Please check the RainbowTable.txt in the problem4c.zip for the Rainbow Table generated. 
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---
+
+   * [[%ATTACHURLPATH%/myBloomFilter.cpp][myBloomFilter.cpp]]: myBloomFilter - Checks to see for collisions
+
+   * [[%ATTACHURLPATH%/myBloomFilter.h][myBloomFilter.h]]: myBloomFilter - Checks to see for collisions

@@ -1,0 +1,363 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+worked with Urvashi Mohnani
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(ChristineLow),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+ii. secondary clustering
+This is because h_n_(k) = h(k) + sum of i from i = 1 to n
+which turns out to be h(k) + n(n-1)/2
+this is a quadratic which means a characteristic would be secondary clustering
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+int median( int & a1, int & a2, int n)
+{
+     int i = 0, j = 0;
+     int new_array[2n];
+
+     for ( int k = 0 ; k < 2n ; k++ )
+     {
+          if( a1[i] < a2[j] )
+          {
+               new_array[k] = a1[i];
+               i++;
+          }
+          else
+          {
+               new_array[k] = a2[j];
+               j++;
+          }
+     }
+
+    return(  ( new_array[n] + new_array[n + 1]  ) / 2 );
+
+}
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+This is Theta(n) because it takes 2n steps to merge the two arrays and then constant time to index the median.
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+int median( int & a1, int & a2, int & a3, int n)
+{
+     int i = 0, j = 0, h = 0;
+     int new_array[3n];
+
+     for ( int k = 0 ; k < 3n ; k++ )
+     {
+          if( a1[i] < a2[j] && a1[i] < a3[h] )
+          {
+               new_array[k] = a1[i];
+               i++;
+          }
+          else if ( a2[j] < a1[i] && a2[j] < a3[h] )
+          {
+               new_array[k] = a2[j];
+               j++;
+          }
+          else
+          {
+                new_array[k] = a3[h];
+                h++;
+          }
+     }
+
+     if ( (3 * n ) % 2 == 0 )
+         return ( new_array[ (3 * n) / 2 ] + new_array[ ( (3 * n) / 2  ) + 1] / 2 ) ;
+     else
+         return new_array[ ( (3 * n ) / 2 ) + 0.5 ];
+
+}
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+This is Theta(n) because it takes 3n steps to merge the three arrays and then constant time to index the median.
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+   int new_array[n*n];
+   mergesort arrays;
+
+   if ( (n * n ) % 2 == 0 )
+         return ( new_array[ (n * n) / 2 ] + new_array[ ( (n * n) / 2  ) + 1] / 2 ) ;
+     else
+         return new_array[ ( (n * n ) / 2 ) + 0.5 ];
+
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Theta(nlogn) because the merge sort takes nlogn times and indexing to the median takes constant time
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+   // put your code here
+   // also remember to upload it in submit page
+
+/***** 
+myBloomFilter.h
+*******/
+#ifndef MYBLOOMFILTER_H
+#define	MYBLOOMFILTER_H
+#include "BloomFilter.h"
+#include <string>
+#include <vector>
+
+using namespace std;
+
+class myBloomFilter : public BloomFilter
+{
+public:
+	myBloomFilter(int mm);
+
+	myBloomFilter(string mm);
+
+	void insert(string item);
+
+	bool exists(string item);
+
+	string output();
+
+private:
+
+	vector <char> filter;
+
+	int hash1(string item);
+	int hash2(string item);
+	int hash3(string item);
+	int hash4(string item);
+	int hash5(string item);
+
+};
+
+#endif	/* MYBLOOMFILTER_H */
+
+/***** 
+myBloomFilter.cpp
+*******/
+
+
+#include <iostream>
+#include "myBloomFilter.h"
+#include <string>
+
+using namespace std;
+
+myBloomFilter::myBloomFilter(int mm):BloomFilter(mm)
+{
+	length = mm;
+
+	for(int i = 0; i < mm ; i++)
+	{
+		filter.push_back('0');
+	}
+}
+
+myBloomFilter::myBloomFilter(string mm):BloomFilter(mm)
+{
+	length = mm.length();
+
+	for(int i = 0; i < mm.length() ; i++)
+	{
+		filter.push_back('0');
+	}
+}
+
+void myBloomFilter::insert(string item)
+{
+	int index1 = hash1(item);
+	int index2 = hash2(item);
+	int index3 = hash3(item);
+
+	filter[index1] = '1';
+	filter[index2] = '1';
+	filter[index3] = '1';
+}
+
+bool myBloomFilter::exists(string item)
+{
+	int index1 = hash1(item);
+	int index2 = hash2(item);
+	int index3 = hash3(item);
+
+	if ( filter[index1] == '1' && filter[index2] == '1' && filter[index3] == '1' )
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+string myBloomFilter::output()
+{
+	string out;
+
+	for(int i = 0 ; i < length ; i++)
+	{
+		if( filter[i] == '1')
+		{
+			out = "T" + out;
+		}
+		else
+		{
+			out = "F" + out;
+		}
+	}
+
+	return out;
+}
+
+int myBloomFilter::hash1(string item)
+{
+	int index = 1;
+
+	for(int ii = 0; ii < item.length(); ii++)
+	{
+		index += (char) item[ii];
+	}
+
+	return index;
+}
+
+int myBloomFilter::hash2(string item)
+{
+	int index = 20;
+
+	for(int ii = 0; ii < item.length(); ii++)
+	{
+		index += (char) item[ii];
+	}
+
+	return index;
+}
+
+int myBloomFilter::hash3(string item)
+{
+	int index = 30;
+
+	for(int ii = 0; ii < item.length(); ii++)
+	{
+		index += (char) item[ii];
+	}
+
+	return index;
+}
+
+int myBloomFilter::hash4(string item)
+{
+	int index = 40;
+
+	for(int ii = 0; ii < item.length(); ii++)
+	{
+		index += (char) item[ii];
+	}
+
+	return index;
+}
+
+int myBloomFilter::hash5(string item)
+{
+	int index = 50;
+
+	for(int ii = 0; ii < item.length(); ii++)
+	{
+		index += (char) item[ii];
+	}
+
+	return index;
+}
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+If there was nothing hashed to an index of the bloom filter, the character at that index was '0'. 
+If something was hashed there, the character got changed to '1'. 
+I used 5 hash functions when hashing something to the bloom filter and changed the characters at those indexes to '1'. 
+To check if a string could exist in the bloom filter, I hashed it using the 5 hash functions and if at those indexes there was a '1', then there is a possibility the string exists.
+</VERBATIM>
+
+---+++!! Grader comments *[5/25]*
+<VERBATIM>
+Score: 1202</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Give out the password you cracked. Remember attached the code as 'problem4a.zip'
+sma
+xcl
+sea
+yen
+Dli
+DBO
+GOK
+Sup
+ays
+eom
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the password you cracked. 
+;TUih
+),7.r
+;TUih
+;TUih
+4DVLQ
+;TUih
+mm^g,
+mm^g,
+;TUih
+mm^g,
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+My rainbow table consists of strings with 5 characters. 
+When generating the first string, I went through every ascii between ! and ~ for the first and second most significant character. 
+I then hashed and reduced the string 20000 times to generate the second string. I then outputed these to a text file.
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

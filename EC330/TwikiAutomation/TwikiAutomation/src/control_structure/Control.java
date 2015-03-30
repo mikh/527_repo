@@ -1,7 +1,9 @@
 package control_structure;
 
 import java.awt.AWTException;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -14,7 +16,8 @@ import parsers.StringParser;
 import web.Client;
 
 public class Control {
-	public static void main(String[] args){
+	@SuppressWarnings("unused")
+	public static void main(String[] args) throws IOException{
 		System.out.println("Starting Twiki Automation code...");
 		Client client = null;
 		ArrayList<LinkStruct> links = null, fails = null;
@@ -74,7 +77,7 @@ public class Control {
 		if((!Defines.DEBUG_MODE) || (Defines.DEBUG_MODE && Defines.ACQUIRE_TWIKI_DATA_DEBUG)){
 			if(Defines.ACQUIRE){
 				System.out.println("Acquiring current Twiki Code...");
-				for(int kk = links.size(); kk >= 0; kk--){
+				for(int kk = links.size()-1; kk >= 0; kk--){
 					LinkStruct ls = links.get(kk);
 					boolean fail = false;
 					client.getPage(ls.l_edit_link);
@@ -117,7 +120,7 @@ public class Control {
 		if((!Defines.DEBUG_MODE) || (Defines.DEBUG_MODE && Defines.REVERT_TWIKI_DATA_DEBUG)){
 			if(!Defines.ACQUIRE){
 				System.out.println("Loading previous archives...");
-				for(int kk = links.size(); kk >= 0; kk--){
+				for(int kk = links.size()-1; kk >= 0; kk--){
 					LinkStruct ls = links.get(kk);
 				
 					//destination archive path
@@ -136,28 +139,67 @@ public class Control {
 		
 		//load data to write from excel spreadsheet
 		if((!Defines.DEBUG_MODE) || (Defines.DEBUG_MODE && Defines.LOAD_EXCEL_DATA_DEBUG)){
+			System.out.println("Loading excel data...");
 			try {
 				ArrayList<ArrayList<String>> matrix = ExcelParser.get_excel_matrix(Defines.EXCEL_FILE_PATH, Defines.START_COLUMN, Defines.STOP_COLUMN, Defines.START_ROW, Defines.STOP_ROW);
 				ArrayList<ArrayList<QuestionFormat>> qtrix = ExcelParser.parse_matrix(matrix);
-				System.out.println("test");
+				links = ExcelParser.map_qtrix_to_links(qtrix, links);
 			} catch (IOException e) {
 				System.out.println("Could not load the excel data. Fatal Error.");
 				System.exit(-1);
 			}
 		}
+		
 		//write data into twiki data files
 		if((!Defines.DEBUG_MODE) || (Defines.DEBUG_MODE && Defines.WRITE_TWIKI_DATA_TO_FILES_DEBUG)){
+			System.out.println("Inserting Grades into Twiki data...");
+			for(int ii = links.size()-1; ii >= 0; ii--){
+				LinkStruct ls = links.get(ii);
+				if(ls.add_grades(Defines.PROBLEM_HEADER, Defines.GRADER_HEADER, Defines.OUTPUT_BLOCK_SECTION_START, Defines.OUTPUT_BLOCK_SECTION_END) == -1){
+					fails.add(ls);
+					links.remove(ii);
+				}
+			}
 			
+			if(Defines.DEBUG_PRINT_OUTPUT){
+				for(int ii = 0; ii < links.size(); ii++){
+					try{
+						links.get(ii).output_graded_pages(Defines.DEBUG_TWIKI_FILE_OUTPUT);
+					} catch(IOException e){
+						System.out.println("Unable to output to debug folder for " + links.get(ii).l_name);
+					}
+				}
+			}
 		}
 		
 		//write twiki data files back into twiki web
 		if((!Defines.DEBUG_MODE) || (Defines.DEBUG_MODE && Defines.WRITE_TWIKI_DATA_TO_WEB_DEBUG)){
-			
+			System.out.println("Outputting graded pages to TWiki...");
+			for(int ii = links.size()-1; ii >= 0; ii--){
+				LinkStruct ls = links.get(ii);
+				client.getPage(ls.l_edit_link);
+				Defines.delay(Defines.WAIT_FOR_PAGE);
+				try {
+					client.pasteText(Defines.KEY_PRESS_DELAY, ls.l_page_output);
+				} catch (AWTException e) {
+					System.out.println("Error writing Twiki data to page for " + ls.l_name);
+					ls.l_error = "Error writing Twiki data to page";
+					fails.add(ls);
+					links.remove(ii);
+				}
+				Defines.delay(Defines.WAIT_FOR_PAGE);
+			}
 		}
 		
 		//output error
 		if((!Defines.DEBUG_MODE) || (Defines.DEBUG_MODE && Defines.OUTPUT_ERROR_DEBUG)){
-
+			System.out.println("Printing failure log...");
+			BufferedWriter bw = new BufferedWriter(new FileWriter(Defines.FAILURE_LOG_LOCATION, false));
+			for(int ii = 0; ii < fails.size(); ii++){
+				System.out.println(String.format("[%s] - %s", fails.get(ii).l_name, fails.get(ii).l_error));
+				bw.write(String.format("[%s] - %s", fails.get(ii).l_name, fails.get(ii).l_error));
+			}
+			bw.close();
 		}	
 		System.out.println("Twiki Automation complete.");
 	}

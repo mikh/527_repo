@@ -1,0 +1,762 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(DouglasRoeper),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+i) No
+
+ii) Yes
+
+iii) Yes
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+
+
+First, get the median of the two sorted arrays. Since they are already sorted, the median is the middle element.
+
+Second,  compare the two medians. Since the actual median of the combined set must be in between the two medians, you can knock out the upper most and lower most values.
+
+Third, repeat this process of subdividing and removing elements with the smaller resultant arrays.
+
+Once you are left with two elements, you can average the result to find the median of the whole set.
+
+Ex:
+
+A: {1, 2, 3, 4, 5}           Median: 3
+
+B: {8, 9, 10, 11, 12}     Median: 10
+
+Since 3 is lower than 10, you can knock out the lower half of A {1, 2}. Similarly, since 10 is the higher median, you can knock off the top half of B, {11, 12}.
+
+Repeat:
+
+A: {3, 4, 5}           Median: 4
+
+B: {8, 9, 10}         Median: 9
+
+Repeat:
+
+A: {4, 5}               Median: 4.5
+
+B: {8, 9}               Median: 8.5
+
+Repeat:
+
+A: {5}               Median: 5
+
+B: {8}               Median: 8
+
+Two elements left, average to get median: 6.5
+
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+In my algorithm, you knock out half of the array each time. Thus, you do the knock out process log(n) times.
+
+Since each knock out process takes a constant amount of time, the running time of this algorithm is:
+
+Theta( log(n) )
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+
+Sorting 3 arrays can be done with a very similar method to the one used in part i.
+
+1) First, get the median of each array.
+
+2) Next, find the median of the 3 medians, one from each array.
+
+3) Next, in the array with the smallest median, remove all the elements lower than or equal to the median. In the array with the highest median, remove all the elements higher than or equal to it.
+
+4) Now, with these smaller arrays, repeat by going to step 1 until you get one or two arrays.
+
+If you have one array, middle element (or average of middle two) is the median.
+
+If you have two arrays, use the strategy described in part i.
+
+Ex:
+
+A:	{1,2,3,4,5}		Median: 3
+
+B:	{4,5,6,7,8}		Median: 6
+
+C:	{7,8,9,10,11}	        Median: 9
+
+Array A has the lowest median, so remove 1,2, & 3. Array C has the highest median, remove 9,10,11.
+
+Repeat:
+
+A:	{4,5}			Median: 4.5
+
+B:	{4,5,6,7,8}		Median: 6
+
+C:	{7,8}			Median: 7.5
+
+Repeat:
+
+A:	{5}				Median: 5
+
+B:	{4,5,6,7,8}		Median: 6
+
+C:	{8}				Median: 8
+
+Repeat:
+
+A:	{}				Median: None
+
+B:	{4,5,6,7,8}		Median: 6
+
+C:	{}				Median: None
+
+One array left, so middle element is median. Thus the median is 6.
+
+
+
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+In each iteration of the loop, you remove half of the elements in two of the arrays. Thus, to get to one/zero element in these two arrays, you have to do log(n) operations. Once you have only one array with elements remaining, it takes constant time to find the median. Thus, this algorithm takes:
+
+Theta( log(n) )
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+Sorting n arrays can be done with a very similar method to the one used in part ii.
+
+1) First, get the median of each array.
+
+2) Next, find the median of the n medians, one from each array.
+
+3) Next, in the array with the smallest median, remove all the elements lower than or equal to the median. In the array with the highest median, remove all the elements higher than or equal to it.
+
+4) Now, with these smaller arrays, repeat by going to step 1 until you get one or two arrays.
+
+If you have one array, middle element (or average of middle two) is the median.
+
+If you have two arrays, use the strategy described in part i.
+
+
+
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+In each iteration of the loop, you remove half of the elements in two of the arrays. Thus, to get to zero elements in these all but one/two arrays, you have to do (n-2) * log(n) operations. Once you have only one/two arrays with elements remaining, it takes up to log(n) time to find the median. Thus, this algorithm takes:
+
+Theta( n * log( n ) )
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+
+%CODE{"cpp"}%
+
+#ifndef BLOOMFILTER_H
+#define	BLOOMFILTER_H
+
+#include <string>
+using namespace std;
+
+class BloomFilter {
+public:
+    /**
+     * Instantiate an empty Bloom filter of length  chars.
+     */
+    BloomFilter (int mm) : length(mm) {}
+    
+    /**
+     * Instantiates a Bloom filter from a given string
+     * @requires  must have been produces by the output() call of a BloomFilter object.
+     */
+    BloomFilter (string filter) : length((int)filter.length()) {}
+    /**
+     * inserts  into the filter
+     */
+    void insert(string item);
+    
+    /**
+     * Checks whether  is in the filter.
+     * @return  true if the item is probably in the filter
+     *          false if the item is definitely not in the filter
+     */
+    bool exists(string item);
+    
+    /**
+     * @return A string of  characters representing the Bloom filer
+     */
+    string output();
+    
+protected:
+    int length; /** The length of the Bloom filter, in chars. */
+};
+
+
+//for changing the hashing function
+typedef struct _HashParams
+{
+    int seed;
+    int multiplierA, multiplierB;
+    int shiftA;
+    int xorA;
+} HashParams;
+
+
+class myBloomFilter : public BloomFilter
+{
+    //private:
+public:
+    //the filter
+    char *filter;
+    //number of hashes in the filter
+    int hashCount;
+    //holds parameters for each hash function of ours
+    HashParams *hashParams;
+    
+    //generates the parameters for the hashing function
+    void generateHashes();
+    //hashes a string with the given parameters
+    int hash(HashParams aParams, string aStringToHash);
+    //hashes a string with all of the hashing functions and returns the results in the passed in results buffer
+    void hashString(string aStringToHash, int *aResultBuffer);
+    
+public:
+    myBloomFilter (int mm);
+    myBloomFilter (string filter);
+    ~myBloomFilter();
+    
+    void insert(string item);
+    bool exists(string item);
+    string output();
+};
+
+#endif	/* BLOOMFILTER_H */
+
+%ENDCODE%
+
+%CODE{"cpp"}%
+//
+//  bloomfilter.cpp
+//  Homework 4
+//
+//  Created by Doug on 3/11/15.
+//  Copyright (c) 2015 Doug Roeper. All rights reserved.
+//
+
+#include "myBloomFilter.h"
+
+#include <iostream>
+#include <cstdlib>
+#include <strings.h>
+
+#define kON_CHAR                'Y'
+#define kOFF_CHAR               '.'
+#define kLN_TWO                 0.693147180559945
+#define kESTIMATED_N            100
+
+#define kPRINT_HASH_RESULTS     0
+
+using namespace std;
+
+#pragma mark -
+#pragma mark Private Methods
+
+void myBloomFilter::generateHashes()
+{
+    //calculate the number of hashes we need
+    this->hashCount = this->length / kESTIMATED_N * kLN_TWO;
+    //make sure we at least 1 hash
+    this->hashCount = (this->hashCount < 1 ? 1 : this->hashCount);
+    
+    //generate parameters for the hash function
+    this->hashParams = (HashParams *)malloc(sizeof(HashParams) * this->hashCount);
+    
+    //use the rand() function to generate random parameter values to use
+    //see so it's deterministic
+    srand(this->hashCount);
+    for (int i = 0; i < hashCount; i++)
+    {
+        HashParams newParams;
+        
+        newParams.seed = rand();
+        newParams.multiplierA = rand();
+        newParams.multiplierB = rand();
+        newParams.xorA = rand();
+        newParams.shiftA = rand() % 17;
+        
+        this->hashParams[i] = newParams;
+    }
+}
+
+int myBloomFilter::hash(HashParams aParams, string aStringToHash)
+{
+    //start the hash with some value based on the length
+    unsigned int hash = (int)(aStringToHash.length() * aParams.seed) ^ aParams.seed;
+    
+    //sum up all the chars
+    int sum = (int)aStringToHash.length();
+    for (int i = 0; i < aStringToHash.length(); i++)
+    {
+        sum += aStringToHash.c_str()[i];
+    }
+    //shift the sum and multiply, adding to the hash
+    hash += (sum << aParams.shiftA) * aParams.multiplierA;
+    
+    //xor it with some value
+    hash ^= aParams.xorA;
+    //multiply again
+    hash *= aParams.multiplierB;
+    
+    //fit the hash into the range of the filter
+    int result = hash % this->length;
+    
+    //cout << "Hash of: " << aStringToHash << " yielded: " << result << endl;
+    
+    //return the result
+    return result;
+}
+
+void myBloomFilter::hashString(string aStringToHash, int *aResultBuffer)
+{
+#if (kPRINT_HASH_RESULTS == 1)
+    cout << aStringToHash << ", ";
+#endif
+    
+    //go through all of the hashes
+    for (int i = 0; i < this->hashCount; i++)
+    {
+        //get the current hash parameters
+        HashParams currentHash = this->hashParams[i];
+        //hash the string
+        int hashResult = hash(currentHash, aStringToHash);
+        //store the result in the result buffer
+        aResultBuffer[i] = hashResult;
+        
+#if (kPRINT_HASH_RESULTS == 1)
+        cout << hashResult << ", ";
+#endif
+    }
+    
+#if (kPRINT_HASH_RESULTS == 1)
+    cout << endl;
+#endif
+}
+
+#pragma mark -
+#pragma mark Constructors
+
+myBloomFilter::myBloomFilter(int mm) : BloomFilter(mm)
+{
+    //cout << "Constructed with length: " << mm << endl;
+    
+    //set the length
+    this->length = mm;
+    //allocate the filter
+    filter = (char *)malloc(sizeof(char) * this->length);
+    //zero the filter
+    for (int i = 0; i < this->length; i++)
+    {
+        filter[i] = kOFF_CHAR;
+    }
+    //generate the hashes
+    generateHashes();
+}
+
+myBloomFilter::myBloomFilter(string aFilter) : BloomFilter(aFilter)
+{
+    //cout << "Created with input: " << filter << " length: " << aFilter.length() << endl;
+    
+    //set the length
+    this->length = (int)aFilter.length();
+    //allocate the filter
+    filter = (char *)malloc(sizeof(char) * this->length);
+    //zero the filter
+    bzero(this->filter, sizeof(char) * this->length);
+    //generate the hashes
+    generateHashes();
+    
+    //go through each char in the string
+    for (int i = 0; i < this->length; i++)
+    {
+        //set the val of the string in the filter
+        char currentVal = aFilter.c_str()[i];
+        filter[i] = currentVal;
+    }
+}
+
+#pragma mark -
+#pragma mark Destructors
+
+myBloomFilter::~myBloomFilter()
+{
+    //cout << "Destroying" << endl;
+    
+    if (filter != NULL)
+    {
+        free(filter);
+    }
+    
+    if (hashParams != NULL)
+    {
+        free(hashParams);
+    }
+}
+
+#pragma mark -
+#pragma mark Accessor Methods
+
+void myBloomFilter::insert(string item)
+{
+    //cout << "Inserting: " << item << endl;
+    
+    //allocate space for the hash results
+    int *hashResults = (int *)malloc(sizeof(int) * this->hashCount);
+    //hash the string
+    hashString(item, hashResults);
+    
+    //go through the results and add each result to the filter
+    for (int i = 0; i < this->hashCount; i++)
+    {
+        //get the current hash's result
+        int result = hashResults[i];
+        //get the value of the filter at that index
+        char filterVal = this->filter[result];
+        //set the value to ON
+        filterVal = kON_CHAR;
+        //set the value back in the filter
+        this->filter[result] = filterVal;
+    }
+    
+    //free the results space
+    if (hashResults != NULL)
+    {
+        free(hashResults);
+    }
+}
+
+bool myBloomFilter::exists(string item)
+{
+    //cout << "Checking for existance: " << item << endl;
+    
+    //assume it is in the filter until we find that it isn't
+    bool result = true;
+    
+    //allocate space for the hash results
+    int *hashResults = (int *)malloc(sizeof(int) * this->hashCount);
+    //hash the string
+    hashString(item, hashResults);
+    
+    //go through the results
+    for (int i = 0; i < this->hashCount; i++)
+    {
+        //get the current hash's result
+        int currentResult = hashResults[i];
+        //get the value of the filter at that index
+        int filterVal = this->filter[currentResult];
+        
+        //check if the filter is zero
+        if (filterVal != kON_CHAR)
+        {
+            //we know that this item is not in the filter
+            result = false;
+            //break
+            break;
+        }
+    }
+    
+    //free the results space
+    if (hashResults != NULL)
+    {
+        free(hashResults);
+    }
+    
+    return result;
+}
+
+string myBloomFilter::output()
+{
+    string result(this->filter, this->length);
+    
+    return result;
+}
+
+
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+When my filter is initialized, it first calculates how many hash functions it needs for the given size. It then generates a number of random numbers (based on the # of hashes) to use as parameters in the hash function. The hash function does a combination of summing, multiplying, and xoring to generate hashes for a given string. 
+
+When a string is inserted, it is hashed using all of the different sets of hash parameters. Then, the results of the hashes, which translate to indexes in the filter array, are stored. 
+
+When you check for a string in the filter, it hashes the string and checks it against the filter. If one of the resulting indexes does not have a one in the filter array, we know the string is not in the filter.
+
+The backend of the bloom filter uses an array of chars to store the values. A char has a value of kON_CHAR if it is 1 in the filter and kOFF_CHAR if it is a zero.
+
+---+++!! Grader comments *[13/25]*
+<VERBATIM>
+Score: 1644</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Give out the password you cracked. Remember attached the code as 'problem4a.zip'
+</VERBATIM>
+
+Password: MTA Hash: df73d210e73ffc551d8a76bdf983b85d496539dd <br><br>
+Password: QKt Hash: a4f5c236224a3abe25c7dfc8d59fc0d572d27e1b <br><br>
+Password: MTF Hash: 934594c19098524d2ce03beb0414e08d2c427129 <br><br>
+Password: ays Hash: a697476fc47a0c342b2afb57f493e7fb94f27f82 <br><br>
+Password: rhb Hash: f38d7ff90e7a0ddb591701a60f37cbd71482df35 <br><br>
+Password: bel Hash: 007d04468b0dafec647c305361351728f5e4d610 <br><br>
+Password: DBO Hash: 3915f1a108c95cb8c3b0564f3c3b6ebfd75e8add <br><br>
+Password: eom Hash: b1d02f3ece9656335cc5102fe700764604f009e7 <br><br>
+Password: SOP Hash: 70ddb41dfdf13cca47fc6abcb9366f200529c386 <br><br>
+Password: Nov Hash: 4087367e470c39b530134e9f4657e86ea675deac <br><br>
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the password you cracked. 
+</VERBATIM>
+
+These are the hashes I was able to crack:
+
+Hash: 0d87fd05ab773e3fef729295b84adcfa57461fb1 pass: Fredi
+
+Hash: 2461823751c694b0ba674a4097022cbc6cacf21f pass: vacuo
+
+Hash: f32799f284d777cf10838e63dfc8e67b7a6cfff1 pass: Natal
+
+
+Using this code:
+
+%CODE{"cpp"}%
+
+//
+//  problem4b.cpp
+//  Homework 4
+//
+//  Created by Doug on 3/12/15.
+//  Copyright (c) 2015 Doug Roeper. All rights reserved.
+//
+
+#include "hash.h"
+#include <vector>
+#include <iostream>
+#include <fstream>
+
+using namespace std;
+
+#define kRainbowFile        "/home/droeper/Desktop/problem4b/table.txt"
+
+#define kPasswordLength             5
+#define kNumberOfPasswordsToCrack   10+3
+#define kMaxJumps                   1300000
+
+typedef struct _RainbowPair
+{
+        string start;
+        string end;
+} RainbowPair;
+
+vector<RainbowPair> * loadRainbowTable()
+{
+        vector<RainbowPair> *rainbow = new vector<RainbowPair>();
+        
+        ifstream rainbowFile;
+        rainbowFile.open(kRainbowFile);
+        
+        while (!rainbowFile.eof())
+        {
+                RainbowPair newPair;
+                rainbowFile >> newPair.start >> newPair.end;
+                rainbow->push_back(newPair);
+        }
+        
+        rainbowFile.close();
+        
+        return rainbow;
+}
+
+bool checkForMatchesInTable(vector<RainbowPair> * aTable, string aPassword, string aOrigHash)
+{
+        bool result = false;
+        int index = 0;
+        for (vector<RainbowPair>::iterator i = aTable->begin(); i != aTable->end(); i++, index++)
+        {
+                RainbowPair current = *i;
+                if (current.end == aPassword)
+                {
+                        cout << "Hash: " << aOrigHash << " found a match: " << current.start << " -> " << current.end;
+                        
+                        //try an break the
+                        //once we get a match, go to the starting point of the table
+                        string currentPassword = current.start;
+                        string currentHash = hash(currentPassword);
+                        int count = 0;
+                        bool found = true;
+                        while (currentHash != aOrigHash)
+                        {
+                                currentPassword = reduce(currentHash, kPasswordLength);
+                                currentHash = hash(currentPassword);
+                                count++;
+                                
+                                if (count > kMaxJumps)
+                                {
+                                        found = false;
+                                        break;
+                                }
+                        }
+                        
+                        if (found)
+                        {
+                                result = found;
+                                
+                                //print the result
+                                cout << " ------ Succeeded" << endl << "Hash to crack: " << aOrigHash << " password: " << currentPassword << " relevant rainbow line: " << index << endl << endl;
+                                
+                                break;
+                        }
+                        else
+                        {
+                                cout << " ------ Dead End" << endl;
+                        }
+                }
+        }
+        
+        return result;
+}
+
+void problem4bCrackDemPasswords()
+{
+        const char * hashesToCrack[kNumberOfPasswordsToCrack] = {
+                "b220847123048c257de514cf3640a79e0fee5eb3", // sanity check - `MV[S
+                "4a1eebd05c057b72d7802ef915bc0358cf288f2b", // sanity check 2 - g`X`i
+                "f832e981c07b5ff852a2bb34f43a4b29d53bc4fd",
+                "6eff35ae47651f8aa6ded0e8359451a222f054fb",
+                "69cc4b7f78502eafc9b4187ee40c0f81bec1be9b",
+                "4dd4a37e56834c375803aa0467270da0bd1c9099",
+                "b1f9f946d0738e1512da5c37a70c0bacb0f1cce9",
+                "2461823751c694b0ba674a4097022cbc6cacf21f",
+                "0d87fd05ab773e3fef729295b84adcfa57461fb1",
+                "d7d04aa5582228286a74be412f475f1921cc5515",
+                "84ba92f577fa78da5e7c3ca79f7cab614dce90bc",
+                "f32799f284d777cf10838e63dfc8e67b7a6cfff1",
+                "7f26d0eca5605dc539c9bb33c8646506041ac98d" //sanity check again - [gmgc
+        };
+        
+        vector<RainbowPair> *rainbowTable = loadRainbowTable();
+        
+        string origHashes[kNumberOfPasswordsToCrack];
+        string currentPasswords[kNumberOfPasswordsToCrack];
+        string currentHashes[kNumberOfPasswordsToCrack];
+        for (int i = 0; i < kNumberOfPasswordsToCrack; i++)
+        {
+                origHashes[i] = hashesToCrack[i];
+                currentHashes[i] = hashesToCrack[i];
+                currentPasswords[i] = reduce(hashesToCrack[i], kPasswordLength);
+        }
+        
+        bool finished = false;
+        while (!finished)
+        {
+                finished = true;
+                for (int i = 0; i < kNumberOfPasswordsToCrack; i++)
+                {
+                        if (origHashes[i] != "DONE")
+                        {
+                                finished = false;
+                                //reduce the current hash to get a password
+                                currentPasswords[i] = reduce(currentHashes[i], kPasswordLength);
+                                //see if we have any matches
+                                bool done = checkForMatchesInTable(rainbowTable, currentPasswords[i], origHashes[i]);
+                                
+                                if (done)
+                                {
+                                        origHashes[i] = "DONE";
+                                }
+                                else
+                                {
+                                        //hash the password to get the next hash
+                                        currentHashes[i] = hash(currentPasswords[i]);
+                                }
+                        }
+                }
+        }
+}
+
+int main()
+{
+        problem4bCrackDemPasswords();
+        
+        return 0;
+}
+
+
+%ENDCODE%
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Give out the explanation here. Remember attached the code and table
+</VERBATIM>
+
+My rainbow table generator takes in a few different parameters for generation:
+
+Chain Length: Number of hash+reduce iterations for table entries
+
+Min Pass Len: Smallest password length to start with
+
+Max Pass Len: Largest password length to end with
+
+Increment: Increment between starting points.
+
+These parameters can be tweaked to change the resulting rainbow table, making it more or less dense, etc.
+
+My code starts with a string of the lowest chars "!" and increments with the increment value to get different starting values. After hashing & reducing for the chain length, it saves the start and end points to a file. My program will do passwords of different lengths if specified in the range of password lengths.
+
+The parameters used to generate the rainbow filter are written at the top of the file.
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

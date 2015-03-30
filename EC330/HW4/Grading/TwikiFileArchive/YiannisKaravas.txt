@@ -1,0 +1,285 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(YiannisKaravas),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+ii. Secondary Clustering because it is Quadratic
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+
+
+int MedianFunc(int Array1[], int Array2[], int n)
+{
+	int MedianArray1; 
+	int MedianArray2; 
+
+	// for two arrays with one element
+	if (n == 1)
+		return (Array1[0] + Array2[0]) / 2;
+
+	// for two arrays with 2 elements
+	if (n == 2)
+		// Pseudocode maximum and minimum return the max and min of both input arguments
+		return (maximum(Array1[0], Array2[0]) + minimum(Array1[1], Array2[1])) / 2;
+
+	// pseudocode median function gets median. For n is even it returns Givenarray[n / 2] + Givenarray[n / 2 - 1]) / 2
+	// for odd it simply returns Givenarray[n / 2];
+	MedianArray1 = median(Array1, n); 
+	MedianArray2 = median(Array2, n); 
+
+	if (MedianArray1 < MedianArray2)
+	{
+		if (n % 2 == 0)
+			return MedianFunc(Array1 + n / 2 - 1, Array2, n - n / 2 + 1);
+		else
+			return MedianFunc(Array1 + n / 2, Array2, n - n / 2);
+	}
+	else if (MedianArray1 > MedianArray2)
+	{
+		if (n % 2 == 0)
+			return MedianFunc(Array2 + n / 2 - 1, Array1, n - n / 2 + 1);
+		else
+			return MedianFunc(Array2 + n / 2, Array1, n - n / 2);
+	}
+
+	// If medians are equal
+	if (MedianArray1 == MedianArray2)
+		return MedianArray2;
+
+}
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+When given only two arrays, one can simply find the medians of X0 and X1, delete everything less than the median of X0 and delete everything larger than the median in X1. This would leave us with two new arrays for which the aforementioned process described can be 
+recursively repeated. For 2 arrays with a combined even number of elements, one would repeat the process described until each array had one element left and then add the two elements and divide by 2. For 2 arrays with a combined odd number of elements one would 
+eventually be left with only one element, the median.
+
+The algorithm mentioned above has a time complexity of O(lg(k*n)) where n is the number of elements in the largest array and k is the number of arrays. This is the case because we are dividing each array by 2 (in terms of its size) every time.
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+For this case, one can use the same algorithm given above for two arrays as well. The only difference would be expanding the logic to find the min and max of the medians of all three arrays, deleting the upper half of one and lower half of the other (leaving the third 
+untouched) and recursively running the algorithm until the median is found.
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+The algorithm mentioned above has the same running time as part i and it has time complexity of O(lg(k*n)) where n is the number of elements in the largest array and k is the number of arrays. This is the case because we are dividing each array 
+by 2 (in terms of its size) every time.
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+Did not have time to write pseudocode for this but essentially how it would work is that for n arrays with n elements in each, the previous method would take too long. A new method would be to have a pointer to the first element of each array, compare the value in all the pointers and move the smallest one to the right. Once this is done (n^2)/2 times the smallest number that the collection of pointers lies on is the median. It is essentially a way of combining all the sorted arrays into one sorted array and moving halfway through the array until one finds the median. 
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Worst case time complexity for this is O(n^2) where n is both the number of arrays and number of elements per array. 
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+#include <cstring>
+#include <string>
+
+#include "myBloomFilter.h"
+
+
+myBloomFilter::myBloomFilter(int n):BloomFilter(n)
+{
+    string array(n, '0');
+    bitVec = array;
+}
+
+
+myBloomFilter::myBloomFilter(string filter) : BloomFilter(filter)
+{
+    bitVec = filter;
+}
+
+bool myBloomFilter::exists(string item)
+{
+	int hashInd1 = HashFunction1(item);
+	int hashInd2 = HashFunction2(item);
+	int hashInd3 = HashFunction3(item);
+	int hashInd4 = HashFunction4(item);
+
+	if ((bitVec[hashInd1] == '1') &&
+		(bitVec[hashInd2] == '1') &&
+		(bitVec[hashInd3] == '1') &&
+		(bitVec[hashInd4] == '1'))
+		return true;
+	else
+		return false;
+
+}
+
+void myBloomFilter::insert(string item)
+{
+
+	int ind1 = HashFunction1(item);
+	bitVec[ind1] = '1';
+
+	int ind2 = HashFunction2(item);
+	bitVec[ind2] = '1';
+
+	int ind3 = HashFunction3(item);
+	bitVec[ind3] = '1';
+
+	int ind4 = HashFunction4(item);
+	bitVec[ind4] = '1';
+}
+
+
+int myBloomFilter::HashFunction1(string item)
+{
+
+    char *str2char = new char[item.length() + 1];
+    strcpy(str2char, item.c_str());
+
+    int sum = 0;
+	int i = 0;
+	do
+	{
+		int char2int = static_cast<int>(*(str2char + i));
+		sum += char2int;
+		i++;
+	} while (i < (item.length() + 1));
+    
+    int hash = sum; 
+    int rem = hash % length;
+    return rem;
+}
+
+
+int myBloomFilter::HashFunction2(string item)
+{
+
+    char *str2char = new char[item.length() + 1];
+    strcpy(str2char, item.c_str());
+    int sum = 0;
+	int i = 0;
+	do
+	{
+		int char2int = static_cast<int>(*(str2char + i));
+		sum += char2int;
+		i++;
+	} while (i < (item.length() + 1));
+
+    int hash = sum;
+    int rem = (20*hash) % length;
+    return rem;
+}
+
+int myBloomFilter::HashFunction3(string item)
+{
+
+    char *str2char = new char[item.length() + 1];
+    strcpy(str2char, item.c_str());
+
+    int sum = 0;
+	int i = 0;
+	do
+	{
+		int char2int = static_cast<int>(*(str2char + i));
+		sum += char2int;
+		i++;
+	} while (i < (item.length() + 1));
+
+    int hash = sum;
+    int rem = (42*hash) % 10;
+    return rem;
+}
+
+int myBloomFilter::HashFunction4(string item)
+{
+
+    char *str2char = new char[item.length() + 1];
+    strcpy(str2char, item.c_str());
+
+    int sum = 0;
+	int i = 0;
+	do
+	{
+		int char2int = static_cast<int>(*(str2char + i));
+		sum += char2int;
+		i++;
+	} while (i < (item.length() + 1));
+    
+    int hash = sum;
+    int rem = (17*hash) % 5;
+    return rem;
+
+}
+
+string myBloomFilter::output()
+{
+    return bitVec;
+}
+
+
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+---+++!! Grader comments *[14/25]*
+<VERBATIM>
+Score: 1652</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+The passwords were: ISS, zoo, Fee, pup, TTU, SYC, MTA, sma, rhb, wim.
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the password you cracked. 
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Give out the explanation here. Remember attached the code and table
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---
