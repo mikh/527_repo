@@ -10,7 +10,7 @@
 #include <omp.h>
 
 #define GIG 1000000000
-#define CPG 2.0           // Cycles per GHz -- Adjust to your computer
+#define CPG 3.6           // Cycles per GHz -- Adjust to your computer
 
 #define BASE  0
 #define ITERS 20
@@ -40,11 +40,17 @@ main(int argc, char *argv[])
 
   long int i, j, k;
   long int time_sec, time_ns;
+  char out[] = "Hello World!";
 
   printf("\n Hello World -- Test OMP \n");
 
   omp_set_num_threads(4);
 
+#pragma omp parallel for
+  for(i = 0; i < 12; ii++)
+    printf(out[i]);
+
+/*
 #pragma omp parallel
 #pragma omp sections
   {
@@ -74,7 +80,7 @@ main(int argc, char *argv[])
 #pragma omp section
     printf("!");
   }
-
+*/
   printf("\n");
   
 }/* end main */
