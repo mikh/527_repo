@@ -20,8 +20,8 @@
 #define CPG 3.6          // Cycles per GHz -- Adjust to your computer
 
 #define BASE  0
-#define ITERS 20
-#define DELTA 12
+#define ITERS 50
+#define DELTA 5
 
 #define OPTIONS 6
 #define IDENT 0
