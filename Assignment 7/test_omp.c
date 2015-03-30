@@ -47,8 +47,8 @@ main(int argc, char *argv[])
   omp_set_num_threads(4);
 
 #pragma omp parallel for
-  for(i = 0; i < 12; ii++)
-    printf(out[i]);
+  for(i = 0; i < 12; i++)
+    printf("%c",out[i]);
 
 /*
 #pragma omp parallel
