@@ -12,7 +12,7 @@
 
 #define BASE  0
 #define ITERS 10
-#define DELTA 96
+#define DELTA 20
 
 #define OPTIONS 1
 #define IDENT 0
