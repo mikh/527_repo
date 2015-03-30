@@ -1,0 +1,4 @@
+Updating 9f15d69..10bd06c
+Fast-forward
+ Assignment 7/test_mmm_inter_omp.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
