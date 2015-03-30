@@ -1,14 +1,3 @@
-Updating 6cfa645..7f020f6
-Fast-forward
- Assignment 7/graph_script.m |   58 +++++++++++++++++++++++++++++++++++++++++++
- Assignment 7/q2_data.txt    |    5 ---
- Assignment 7/test_omp_for.c |    4 +-
- 3 files changed, 60 insertions(+), 7 deletions(-)
- create mode 100644 Assignment 7/graph_script.m
-
- Hello World -- Test OMP 
-
-length, l^2, ijk, kij, jki
 5, 92782, 600184, 1184, 10677, 842, 8449
 10, 43480, 29804, 1756, 9518, 1126, 7534
 15, 89114, 30844, 2887, 9662, 2170, 7617

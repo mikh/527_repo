@@ -1,5 +1,14 @@
-/************************************************************************/
-// gcc -O1 -fopenmp -o test_mmm_inter_omp test_mmm_inter_omp.c -lrt
+/*********************************************************************/
+// gcc -O1 -fopenmp -o test_omp_for test_omp_for.c -lrt -lm
+// export NUM_OMP_THREADS=4
+//
+// 3 functions, all variations of simple FOR loop program with
+// independent iterations.  
+// 1. Compute bound -- lots of comptutation on each array element
+// 2. Memory bound -- multiple memory references, including pointer
+//                 -- following, for each array element
+// 3. Overhead bound -- not much work per array element
+// Each function also has a serial baseline.
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -8,54 +17,60 @@
 #include <omp.h>
 
 #define GIG 1000000000
-#define CPG 3.6           // Cycles per GHz -- Adjust to your computer
+#define CPG 3.6          // Cycles per GHz -- Adjust to your computer
 
 #define BASE  0
-#define ITERS 10
-#define DELTA 96
+#define ITERS 50
+#define DELTA 5
 
-#define OPTIONS 1
+#define OPTIONS 6
 #define IDENT 0
 
-typedef float data_t;
+#define INIT_LOW -10.0
+#define INIT_HIGH 10.0
+
+typedef long int data_t;
 
 /* Create abstract data type for matrix */
 typedef struct {
   long int len;
   data_t *data;
 } matrix_rec, *matrix_ptr;
-/************************************************************************/
+
+/*********************************************************************/
 main(int argc, char *argv[])
 {
   int OPTION;
   struct timespec diff(struct timespec start, struct timespec end);
   struct timespec time1, time2;
   struct timespec time_stamp[OPTIONS][ITERS+1];
-  int clock_gettime(clockid_t clk_id, struct timespec *tp);
   matrix_ptr new_matrix(long int len);
   int set_matrix_length(matrix_ptr m, long int index);
   long int get_matrix_length(matrix_ptr m);
   int init_matrix(matrix_ptr m, long int len);
   int zero_matrix(matrix_ptr m, long int len);
-  void mmm_ijk(matrix_ptr a, matrix_ptr b, matrix_ptr c);
-  void mmm_ijk_omp(matrix_ptr a, matrix_ptr b, matrix_ptr c);
-  void mmm_kij(matrix_ptr a, matrix_ptr b, matrix_ptr c);
-  void mmm_kij_omp(matrix_ptr a, matrix_ptr b, matrix_ptr c);
-  void mmm_jki(matrix_ptr a, matrix_ptr b, matrix_ptr c);
+  void omp_cb_bl(matrix_ptr a, matrix_ptr b, matrix_ptr c); // comp bound
+  void omp_cb(matrix_ptr a, matrix_ptr b, matrix_ptr c);
+  void omp_mb_bl(matrix_ptr a, matrix_ptr b, matrix_ptr c, matrix_ptr d); // mem bound
+  void omp_mb(matrix_ptr a, matrix_ptr b, matrix_ptr c, matrix_ptr d);
+  void omp_ob_bl(matrix_ptr a, matrix_ptr b, matrix_ptr c); // overhead bound
+  void omp_ob(matrix_ptr a, matrix_ptr b, matrix_ptr c);
 
   long int i, j, k;
   long int time_sec, time_ns;
   long int MAXSIZE = BASE+(ITERS+1)*DELTA;
 
-  printf("\n Hello World -- MMM \n");
+  printf("\n Hello World -- Test OMP \n");
 
   // declare and initialize the matrix structure
   matrix_ptr a0 = new_matrix(MAXSIZE);
-  init_matrix(a0, MAXSIZE);
+  init_matrix_rand(a0, MAXSIZE);
   matrix_ptr b0 = new_matrix(MAXSIZE);
-  init_matrix(b0, MAXSIZE);
+  init_matrix_rand(b0, MAXSIZE);
   matrix_ptr c0 = new_matrix(MAXSIZE);
   zero_matrix(c0, MAXSIZE);
+  matrix_ptr d0 = new_matrix(MAXSIZE);
+  init_matrix_rand_ptr(d0, MAXSIZE);
 
   OPTION = 0;
   for (i = 0; i < ITERS; i++) {
@@ -63,34 +78,10 @@ main(int argc, char *argv[])
     set_matrix_length(b0,BASE+(i+1)*DELTA);
     set_matrix_length(c0,BASE+(i+1)*DELTA);
     clock_gettime(CLOCK_REALTIME, &time1);
-    mmm_ijk(a0,b0,c0);
+    omp_cb_bl(a0,b0,c0);
     clock_gettime(CLOCK_REALTIME, &time2);
     time_stamp[OPTION][i] = diff(time1,time2);
-    printf("\niter = %d", i);
-  }
-   
-  OPTION++;
-  for (i = 0; i < ITERS; i++) {
-    set_matrix_length(a0,BASE+(i+1)*DELTA);
-    set_matrix_length(b0,BASE+(i+1)*DELTA);
-    set_matrix_length(c0,BASE+(i+1)*DELTA);
-    clock_gettime(CLOCK_REALTIME, &time1);
-    mmm_ijk_omp(a0,b0,c0);
-    clock_gettime(CLOCK_REALTIME, &time2);
-    time_stamp[OPTION][i] = diff(time1,time2);
-    printf("\niter = %d", i);
-  }
- 
-  OPTION++;
-  for (i = 0; i < ITERS; i++) {
-    set_matrix_length(a0,BASE+(i+1)*DELTA);
-    set_matrix_length(b0,BASE+(i+1)*DELTA);
-    set_matrix_length(c0,BASE+(i+1)*DELTA);
-    clock_gettime(CLOCK_REALTIME, &time1);
-    mmm_kij(a0,b0,c0);
-    clock_gettime(CLOCK_REALTIME, &time2);
-    time_stamp[OPTION][i] = diff(time1,time2);
-    printf("\niter = %d", i);
+    //printf("\niter = %d", i);
   }
 
   OPTION++;
@@ -99,19 +90,67 @@ main(int argc, char *argv[])
     set_matrix_length(b0,BASE+(i+1)*DELTA);
     set_matrix_length(c0,BASE+(i+1)*DELTA);
     clock_gettime(CLOCK_REALTIME, &time1);
-    mmm_kij_omp(a0,b0,c0);
+    omp_cb(a0,b0,c0);
     clock_gettime(CLOCK_REALTIME, &time2);
     time_stamp[OPTION][i] = diff(time1,time2);
-    printf("\niter = %d", i);
+    //    printf("\niter = %d", i);
+  }
+  
+  OPTION++;
+  for (i = 0; i < ITERS; i++) {
+    set_matrix_length(a0,BASE+(i+1)*DELTA);
+    set_matrix_length(b0,BASE+(i+1)*DELTA);
+    set_matrix_length(c0,BASE+(i+1)*DELTA);
+    clock_gettime(CLOCK_REALTIME, &time1);
+    omp_mb_bl(a0,b0,c0,d0);
+    clock_gettime(CLOCK_REALTIME, &time2);
+    time_stamp[OPTION][i] = diff(time1,time2);
+    //    printf("\niter = %d", i);
   }
 
-  printf("\nlength, ijk, kij, jki");
+  OPTION++;
   for (i = 0; i < ITERS; i++) {
-    printf("\n%d, ", BASE+(i+1)*DELTA);
+    set_matrix_length(a0,BASE+(i+1)*DELTA);
+    set_matrix_length(b0,BASE+(i+1)*DELTA);
+    set_matrix_length(c0,BASE+(i+1)*DELTA);
+    clock_gettime(CLOCK_REALTIME, &time1);
+    omp_mb(a0,b0,c0,d0);
+    clock_gettime(CLOCK_REALTIME, &time2);
+    time_stamp[OPTION][i] = diff(time1,time2);
+    //    printf("\niter = %d", i);
+  }
+  
+  OPTION++;
+  for (i = 0; i < ITERS; i++) {
+    set_matrix_length(a0,BASE+(i+1)*DELTA);
+    set_matrix_length(b0,BASE+(i+1)*DELTA);
+    set_matrix_length(c0,BASE+(i+1)*DELTA);
+    clock_gettime(CLOCK_REALTIME, &time1);
+    omp_ob_bl(a0,b0,c0);
+    clock_gettime(CLOCK_REALTIME, &time2);
+    time_stamp[OPTION][i] = diff(time1,time2);
+    //    printf("\niter = %d", i);
+  }
+
+  OPTION++;
+  for (i = 0; i < ITERS; i++) {
+    set_matrix_length(a0,BASE+(i+1)*DELTA);
+    set_matrix_length(b0,BASE+(i+1)*DELTA);
+    set_matrix_length(c0,BASE+(i+1)*DELTA);
+    clock_gettime(CLOCK_REALTIME, &time1);
+    omp_ob(a0,b0,c0);
+    clock_gettime(CLOCK_REALTIME, &time2);
+    time_stamp[OPTION][i] = diff(time1,time2);
+    //    printf("\niter = %d", i);
+  }
+  
+  printf("\nlength, l^2, ijk, kij, jki");
+  for (i = 0; i < ITERS; i++) {
+    printf("\n%ld, ", BASE+(i+1)*DELTA);
     for (j = 0; j < OPTIONS; j++) {
       if (j != 0) printf(", ");
       printf("%ld", (long int)((double)(CPG)*(double)
-		 (GIG * time_stamp[j][i].tv_sec + time_stamp[j][i].tv_nsec)));
+      	 (GIG * time_stamp[j][i].tv_sec + time_stamp[j][i].tv_nsec)));
     }
   }
 
@@ -173,6 +212,35 @@ int init_matrix(matrix_ptr m, long int len)
   else return 0;
 }
 
+/* initialize matrix to rand */
+int init_matrix_rand(matrix_ptr m, long int len)
+{
+  long int i;
+  double fRand(double fMin, double fMax);
+
+  if (len > 0) {
+    m->len = len;
+    for (i = 0; i < len*len; i++)
+      m->data[i] = (data_t)(fRand((double)(INIT_LOW),(double)(INIT_HIGH)));
+    return 1;
+  }
+  else return 0;
+}
+
+int init_matrix_rand_ptr(matrix_ptr m, long int len)
+{
+  long int i;
+  double fRand(double fMin, double fMax);
+
+  if (len > 0) {
+    m->len = len;
+    for (i = 0; i < len*len; i++)
+      m->data[i] = (data_t)(fRand((double)(0.0),(double)(i)));
+    return 1;
+  }
+  else return 0;
+}
+
 /* initialize matrix */
 int zero_matrix(matrix_ptr m, long int len)
 {
@@ -207,96 +275,103 @@ struct timespec diff(struct timespec start, struct timespec end)
   return temp;
 }
 
+double fRand(double fMin, double fMax)
+{
+  double f = (double)random() / (double)(RAND_MAX);
+  return fMin + f * (fMax - fMin);
+}
+
 /*************************************************/
 
-/* mmm ijk */
-void mmm_ijk(matrix_ptr a, matrix_ptr b, matrix_ptr c)
+/* CPU bound baseline */
+void omp_cb_bl(matrix_ptr a, matrix_ptr b, matrix_ptr c)
 {
   long int i, j, k;
   long int length = get_matrix_length(a);
   data_t *a0 = get_matrix_start(a);
   data_t *b0 = get_matrix_start(b);
   data_t *c0 = get_matrix_start(c);
-  data_t sum;
 
-  for (i = 0; i < length; i++)
-    for (j = 0; j < length; j++) {
-      sum = IDENT;
-      for (k = 0; k < length; k++)
-	sum += a0[i*length+k] * b0[k*length+j];
-      c0[i*length+j] += sum;
-    }
-}
-
-/* mmm ijk w/ OMP */
-void mmm_ijk_omp(matrix_ptr a, matrix_ptr b, matrix_ptr c)
-{
-  long int i, j, k;
-  long int length = get_matrix_length(a);
-  data_t *a0 = get_matrix_start(a);
-  data_t *b0 = get_matrix_start(b);
-  data_t *c0 = get_matrix_start(c);
-  data_t sum;
-  long int part_rows = length/4;
-
-  omp_set_num_threads(4);
-
-#pragma omp parallel shared(a0,b0,c0,length) private(i,j,k,sum)
-  {
-#pragma omp for
-    for (i = 0; i < length; i++) {
-      for (j = 0; j < length; j++) {
-	sum = IDENT;
-	for (k = 0; k < length; k++)
-	  sum += a0[i*length+k] * b0[k*length+j];
-	c0[i*length+j] += sum;
-      }
-    }
+  for (i = 0; i < length*length; i++) {
+    c0[i] = (data_t)(sqrt(cos(exp((double)(a0[i])))));
   }
 }
 
-/* mmm kij */
-void mmm_kij(matrix_ptr a, matrix_ptr b, matrix_ptr c)
+/* CPU bound openmp */
+void omp_cb(matrix_ptr a, matrix_ptr b, matrix_ptr c)
 {
-  long int i, j, k;
-  long int get_matrix_length(matrix_ptr m);
-  data_t *get_matrix_start(matrix_ptr m);
+  long int i;
   long int length = get_matrix_length(a);
   data_t *a0 = get_matrix_start(a);
   data_t *b0 = get_matrix_start(b);
   data_t *c0 = get_matrix_start(c);
-  data_t r;
-
-  for (k = 0; k < length; k++)
-    for (i = 0; i < length; i++) {
-      r = a0[i*length+k];
-      for (j = 0; j < length; j++)
-	c0[i*length+j] += r*b0[k*length+j];
-    }
-}
-
-/* mmm kij w/ omp */
-void mmm_kij_omp(matrix_ptr a, matrix_ptr b, matrix_ptr c)
-{
-  long int i, j, k;
-  long int get_matrix_length(matrix_ptr m);
-  data_t *get_matrix_start(matrix_ptr m);
-  long int length = get_matrix_length(a);
-  data_t *a0 = get_matrix_start(a);
-  data_t *b0 = get_matrix_start(b);
-  data_t *c0 = get_matrix_start(c);
-  data_t r;
 
   omp_set_num_threads(4);
-#pragma omp parallel shared(a0,b0,c0,length) private(i,j,k,r)
-  {
-#pragma omp for
-    for (k = 0; k < length; k++) {
-      for (i = 0; i < length; i++) {
-	r = a0[i*length+k];
-	for (j = 0; j < length; j++)
-	  c0[i*length+j] += r*b0[k*length+j];
-      }
-    }
+#pragma omp parallel for
+  for (i = 0; i < length*length; i++) {
+    c0[i] = (data_t)(sqrt(cos(exp((double)(a0[i])))));
   }
 }
+
+/* memory bound baseline */
+void omp_mb_bl(matrix_ptr a, matrix_ptr b, matrix_ptr c, matrix_ptr d)
+{
+  long int i, j, k;
+  long int length = get_matrix_length(a);
+  data_t *a0 = get_matrix_start(a);
+  data_t *b0 = get_matrix_start(b);
+  data_t *c0 = get_matrix_start(c);
+  data_t *d0 = get_matrix_start(d);
+
+  for (i = 1; i < length*length-1; i++) {
+    c0[i] = a0[d0[i]]+b0[d0[i]]+c0[d0[i]]+d0[d0[i]];
+  }
+}
+
+/* memory bound openmp */
+void omp_mb(matrix_ptr a, matrix_ptr b, matrix_ptr c, matrix_ptr d)
+{
+  long int i, j, k;
+  long int length = get_matrix_length(a);
+  data_t *a0 = get_matrix_start(a);
+  data_t *b0 = get_matrix_start(b);
+  data_t *c0 = get_matrix_start(c);
+  data_t *d0 = get_matrix_start(d);
+
+  omp_set_num_threads(4);
+#pragma omp parallel for
+  for (i = 1; i < length*length-1; i++) {
+    c0[i] = a0[d0[i]]+b0[d0[i]]+c0[d0[i]]+d0[d0[i]];
+  }
+}
+
+/* overhead bound baseline */
+void omp_ob_bl(matrix_ptr a, matrix_ptr b, matrix_ptr c)
+{
+  long int i, j, k;
+  long int length = get_matrix_length(a);
+  data_t *a0 = get_matrix_start(a);
+  data_t *b0 = get_matrix_start(b);
+  data_t *c0 = get_matrix_start(c);
+
+  for (i = 1; i < length*length-1; i++) {
+    c0[i] = a0[i];
+  }
+}
+
+/* overhead bound openmp */
+void omp_ob(matrix_ptr a, matrix_ptr b, matrix_ptr c)
+{
+  long int i, j, k;
+  long int length = get_matrix_length(a);
+  data_t *a0 = get_matrix_start(a);
+  data_t *b0 = get_matrix_start(b);
+  data_t *c0 = get_matrix_start(c);
+
+  omp_set_num_threads(4);
+#pragma omp parallel for
+  for (i = 1; i < length*length-1; i++) {
+    c0[i] = a0[i];
+  }
+}
+
