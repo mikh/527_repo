@@ -13,7 +13,7 @@
 
 #define BASE  2
 #define ITERS 1
-#define DELTA 1250
+#define DELTA 500
 
 #define OPTIONS 4
 #define BLOCK_SIZE 8     // TO BE DETERMINED
@@ -362,7 +362,7 @@ void SOR_OMP(vec_ptr v, int *iterations)
 
   omp_set_num_threads(4);
 
-  #pragma omp parallel shared(data, length, mean_change) private(i, j, change)
+  #pragma omp parallel shared(data, length, mean_change, change) private(i, j)
   {
     while ((mean_change/(double)(length*length)) > (double)TOL) {
       iters++;
