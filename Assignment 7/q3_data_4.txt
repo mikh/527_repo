@@ -1,4 +1,11 @@
-Updating 9f15d69..10bd06c
-Fast-forward
- Assignment 7/test_mmm_inter_omp.c |    4 ++--
- 1 files changed, 2 insertions(+), 2 deletions(-)
+length, ijk, kij, jki
+180, 30391066
+360, 256908848
+540, 796262367
+720, 1983203391
+900, 4538170364
+1080, 6928141827
+1260, 11478750012
+1440, 16313144158
+1620, 30419141904
+1800, 39166891707
