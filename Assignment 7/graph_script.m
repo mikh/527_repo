@@ -116,3 +116,38 @@ xlabel('Array Size');
 ylabel('Time per element');
 title('Comparison of 3 matrix versions');
 legend('ijk', 'ijk with OMP', 'kij', 'kij with OMP');
+
+
+filename = 'q3_p3_mid_b0_i20_d45.txt';
+data = importdata(filename, delimiterIn);
+
+figure(7);
+
+hold on
+scatter(data(:,1), data(:,2)./data(:,1), 5, 'b');
+scatter(data(:,1), data(:,3)./data(:,1), 5, 'r');
+scatter(data(:,1), data(:,4)./data(:,1), 5, 'g');
+scatter(data(:,1), data(:,5)./data(:,1), 5, 'k');
+
+hold off
+xlabel('Array Size');
+ylabel('Time per element');
+title('Pragma for in middle loop');
+legend('ijk', 'ijk with OMP', 'kij', 'kij with OMP');
+
+filename = 'q3_p3_inner_b0_i20_d45.txt';
+data = importdata(filename, delimiterIn);
+
+figure(8);
+
+hold on
+scatter(data(:,1), data(:,2)./data(:,1), 5, 'b');
+scatter(data(:,1), data(:,3)./data(:,1), 5, 'r');
+scatter(data(:,1), data(:,4)./data(:,1), 5, 'g');
+scatter(data(:,1), data(:,5)./data(:,1), 5, 'k');
+
+hold off
+xlabel('Array Size');
+ylabel('Time per element');
+title('Pragma for in inner loop');
+legend('ijk', 'ijk with OMP', 'kij', 'kij with OMP');
