@@ -1,0 +1,14 @@
+Updating 62d1663..4370add
+Fast-forward
+ Assignment 7/graph_script.m       |   21 ++++++
+ Assignment 7/graphs/p3/part1.png  |  Bin 0 -> 5019 bytes
+ Assignment 7/q3_b0_i10_d180.txt   |   45 -------------
+ Assignment 7/q3_b0_i10_d90.txt    |   48 --------------
+ Assignment 7/q3_b0_i20_d30.txt    |   88 -------------------------
+ Assignment 7/q3_b0_i30_d5.txt     |  128 -------------------------------------
+ Assignment 7/q3_part1_data.txt    |   70 ++++++++++++++++++++
+ Assignment 7/solutions.docx       |  Bin 50387 -> 56617 bytes
+ Assignment 7/test_mmm_inter_omp.c |    6 +-
+ 9 files changed, 94 insertions(+), 312 deletions(-)
+ create mode 100644 Assignment 7/graphs/p3/part1.png
+ create mode 100644 Assignment 7/q3_part1_data.txt
