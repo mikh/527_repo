@@ -127,7 +127,7 @@ main(int argc, char *argv[])
   }
 
   for (i = 0; i < ITERS; i++) {
-    printf("\n%d, %d, ", BASE+(i+1)*DELTA, BLOCK_SIZE);
+    printf("\n%d, %d, \n", BASE+(i+1)*DELTA, BLOCK_SIZE);
     for (j = 0; j < OPTIONS; j++) {
       if (j != 0) printf(", ");
       printf("%ld", (long int)((double)(CPG)*(double)
