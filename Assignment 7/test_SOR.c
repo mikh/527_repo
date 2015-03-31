@@ -15,7 +15,7 @@
 #define ITERS 1
 #define DELTA 500
 
-#define OPTIONS 4
+#define OPTIONS 3
 #define BLOCK_SIZE 8     // TO BE DETERMINED
 
 #define MINVAL   0.0
@@ -129,7 +129,7 @@ main(int argc, char *argv[])
   for (i = 0; i < ITERS; i++) {
     printf("\n%d, %d, \n", BASE+(i+1)*DELTA, BLOCK_SIZE);
     for (j = 0; j < OPTIONS; j++) {
-      if (j != 0) printf(", ");
+     // if (j != 0) printf(", ");
       printf("%ld", (long int)((double)(CPG)*(double)
 		 (GIG * time_stamp[j][i].tv_sec + time_stamp[j][i].tv_nsec)));
       printf(", %d", convergence[j][i]);
