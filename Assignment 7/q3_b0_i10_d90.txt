@@ -1,0 +1,58 @@
+Updating f69e5f1..f0a0744
+Fast-forward
+ Assignment 7/test_mmm_inter_omp.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+ Hello World -- MMM 
+
+iter = 0
+iter = 1
+iter = 2
+iter = 3
+iter = 4
+iter = 5
+iter = 6
+iter = 7
+iter = 8
+iter = 9
+iter = 0
+iter = 1
+iter = 2
+iter = 3
+iter = 4
+iter = 5
+iter = 6
+iter = 7
+iter = 8
+iter = 9
+iter = 0
+iter = 1
+iter = 2
+iter = 3
+iter = 4
+iter = 5
+iter = 6
+iter = 7
+iter = 8
+iter = 9
+iter = 0
+iter = 1
+iter = 2
+iter = 3
+iter = 4
+iter = 5
+iter = 6
+iter = 7
+iter = 8
+iter = 9
+length, ijk, kij, jki
+90, 3674008, 1733983, 2723763, 2126808
+180, 30002583, 7720812, 21055525, 15506305
+270, 109457737, 27841993, 69180400, 52970382
+360, 257677542, 68652320, 160724556, 123858396
+450, 486127569, 129006259, 310826444, 242419500
+540, 812448374, 217820829, 523823194, 417624588
+630, 1279029196, 338629834, 808295799, 663283605
+720, 2034815403, 542898972, 1230315850, 985218469
+810, 3753126280, 903617863, 1776434205, 1405556766
+900, 5158359252, 1303995679, 2505852961, 1914244030
