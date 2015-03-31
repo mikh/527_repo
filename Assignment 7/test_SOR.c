@@ -133,6 +133,7 @@ main(int argc, char *argv[])
       printf("%ld", (long int)((double)(CPG)*(double)
 		 (GIG * time_stamp[j][i].tv_sec + time_stamp[j][i].tv_nsec)));
       printf(", %d", convergence[j][i]);
+      printf("\n");
     }
   }
 
