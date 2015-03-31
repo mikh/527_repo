@@ -15,7 +15,7 @@
 #define ITERS 1
 #define DELTA 1250
 
-#define OPTIONS 3
+#define OPTIONS 4
 #define BLOCK_SIZE 8     // TO BE DETERMINED
 
 #define MINVAL   0.0
@@ -106,6 +106,18 @@ main(int argc, char *argv[])
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1);
     set_vec_length(v0,BASE+(i+1)*DELTA);
     SOR_blocked(v0,iterations);
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time2);
+    time_stamp[OPTION][i] = diff(time1,time2);
+    convergence[OPTION][i] = *iterations;
+  }
+
+  OPTION++;
+  for (i = 0; i < ITERS; i++) {
+    printf("\niter = %d length = %d", i, BASE+(i+1)*DELTA);
+    init_vector_rand(v0, BASE+(i+1)*DELTA);
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1);
+    set_vec_length(v0,BASE+(i+1)*DELTA);
+    SOR_OMP(v0,iterations);
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time2);
     time_stamp[OPTION][i] = diff(time1,time2);
     convergence[OPTION][i] = *iterations;
