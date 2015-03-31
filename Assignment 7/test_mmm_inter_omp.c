@@ -14,7 +14,7 @@
 #define ITERS 10
 #define DELTA 180
 
-#define OPTIONS 1
+#define OPTIONS 4
 #define IDENT 0
 
 typedef float data_t;
