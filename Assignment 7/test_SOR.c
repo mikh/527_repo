@@ -15,7 +15,7 @@
 #define ITERS 1
 #define DELTA 500
 
-#define OPTIONS 4
+#define OPTIONS 3
 #define BLOCK_SIZE 8     // TO BE DETERMINED
 
 #define MINVAL   0.0
