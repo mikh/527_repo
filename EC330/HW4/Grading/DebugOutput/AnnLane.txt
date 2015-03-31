@@ -1,0 +1,374 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+Collaborator: Dan Gorelick
+
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(AnnLane),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+ii. Secondary Clustering
+In this probe sequence, these hashes can be iteratively substituted into each other. The result is a 2nd order (quadratic) arithmetic series. 
+Secondary clustering occurs when the the hashes are quadratic.
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+Sources: http://www.geeksforgeeks.org/median-of-two-sorted-arrays/
+---+++ i. Median of two
+---++++ Algorithm
+
+
+%CODE{"python"}%
+findMedian(arrayA[0 to length-1], arrayB[0 to length-1], length)
+	//Check length of arrays
+	if length == 1
+		return (arrayA[0] + arrayB[0] ) / 2		//Constant time
+	if length == 2
+		if arrayA[0] < arrayB[0] 	//Compare minimum of arrays
+			smallMedian = arrayB[0]
+		else
+			smallMedian = arrayA[0]
+		if arrayA[1] < arrayB[1]	//Compare maximum of arrays
+			largeMedian = arrayA[1]
+		else
+			largeMedian = arrayB[1]
+		return (smallMedian + largeMedian) / 2
+				
+	//Find medians of both arrays
+	if length % 2 == 0 		//This means the the arrays have an even number of elements
+		medianA = (arrayA[length/2-1] + arrayA[length/2])/2
+		medianB = (arrayB[length/2-1] + arrayB[length/2])/2
+	else 	//This means the arrays have an odd number of elements
+		medianA = arrayA[floor(length/2)]
+		medianB = arrayB[floor(length/2)]
+	
+	//Determine array partitions for recursive call (if needed)
+	if (medianA == medianB)
+		return medianA
+	if medianA < medianB
+		//Use higher half of arrayA and lower half of arrayB
+		return findMedian(arrayA[floor(length/2) to length-1], arrayB[0 to floor(length/2)], ceil(length/2))
+	else 
+		//Use lower half of arrayA and higher half of arrayB
+		return findMedian(arrayA[0 to floor(length/2)], arrayB[floor(length/2) to length - 1], ceil(length/2))
+		
+%ENDCODE%
+
+---++++ Analysis and running time
+<VERBATIM>
+The initial comparisons for n = 1 and n = 2 take constant time. 
+Finding the median arrayA and arrayB takes constant time because I just need to access the array.
+The comparison of medians is also constant time. This yields information about the range of possible medians (and decreases the size of possibilities)
+Because the array is sorted, I can eliminate the half of the array that cannot possibly contain the median.
+The complexity occurs due to the recurrence. Each time, the length is divided by 2 (unless a base case is reached).
+The recurrence tree has a height of lg(n), so the runtime is Theta(logn)
+
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+
+%CODE{"python"}%
+findMedian(arrayA, arrayB, arrayC, length)
+
+	counter = 0
+	stopCounter = length * 3 / 2		//Do not need to complete all comparisons
+	//The minimum in each array that has not already been put into the non-existent sorted array
+	currAval = arrayA[0]
+	currBval = arrayB[0]
+	currCval = arrayC[0]
+	
+	//Stores indices of next value in array
+	indA = 1
+	indB = 1
+	indC = 1
+	minIndex = 0 	//To store the associated number of the minimum array
+	
+	maybeMedian = 0
+	while counter < stopCounter
+		//Find the minimum of the current array values 
+		if currAval < currBVal
+			if currAval < currCval		//currAval is the smallest
+				maybeMedian = currAval
+				currAval = arrayA[indA]
+				indA++		//Increment arrayInd for A
+			else		//currCVal is the smallest
+				maybeMedian = currCval
+				currCval = arrayC[indC]
+				indC++
+		else
+			if currBval < currCval		//currBval is the smallest
+				maybeMedian = currBval
+				currBval = arrayB[indB]		//Updated currBval
+				indB++		//Increment arrayInd for B
+			else		//currCVal is the smallest
+				maybeMedian = currCval
+				currCval = arrayC[indC]
+				indC++
+		counter++
+		
+	if (length * 3 ) % 2		//Means the median is the average of 2 medians
+		if currAval < currBVal
+			if currAval < currCval		//currAval is the smallest
+				upperMedian = currAval
+			else		//currCVal is the smallest
+				upperMedian = currCval
+		else
+			if currBval < currCval		//currBval is the smallest
+				upperMedian = currBval
+			else		//currCVal is the smallest
+				upperMedian = currCval
+		return (upperMedian + maybeMedian) / 2
+	
+	//if there are an odd number of numbers in the set
+	return maybeMedian
+
+%ENDCODE%
+
+---++++ Analysis and running time
+<VERBATIM>
+This algorithm uses the techniques of merging from merge sort to find the median. A completely sorted array is not stored because it is not necessary to find the median.
+Instead, a counter keeps track of how many elements have been "sorted" and stops when half of the entire set has been sorted.
+Half of the set is equal to 3 * n * (1/2), or (3/2)n. So the while loop runs (3/2)n times.
+Each while loop involves exactly two comparisons, so this takes constant time.
+So the runtime of this algorithm is Theta(n)
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+%CODE{"python"}%
+findMedian(arrayA, ... arrayLength, length)
+
+	counter = 0
+	stopCounter = length * length / 2		//Do not need to complete all comparisons
+	
+	//The minimum in each array that has not already been considered
+	currVals[N] = [arrayA[0], arrayB[0], ... arrayLength[0]]
+	index[N] = [1, 1, ... 1] 	//array containing N 1s
+	
+	//Store values for loop
+	maybeMedian = 0
+	minimumIndex = 0
+	
+	while counter < stopCounter
+		//Find the minimum of the current array values ( see function below) 
+		minimumIndex = findMinimumInd(currVals, length)
+		maybeMedian = currVals[minimumIndex]
+		index[minimumIndex]++
+		counter++
+		
+	if (length * length ) % 2		//Means the median is the average of 2 medians
+		minimumIndex = findMinimumInd(currVals, length)
+		upperMedian = currVals[minimumIndex]
+		return (upperMedian + maybeMedian) / 2
+	
+	//if there are an odd number of numbers in the set
+	return maybeMedian
+
+	
+findMinimumInd(arrayOfMins, length)
+	currMinVal = arrayOfMins[0]
+	currMinIndex = 0
+	//Compare all to find minimum of array
+	for ii = 1:length-2
+		if arrayOfMins[ii] < currMinVal
+			currMinVal = arrayOfMins
+			currMinIndex = ii
+	//Return the location of the minimum
+	return currMinIndex
+%ENDCODE%
+
+---++++ Analysis and running time
+<VERBATIM>	
+This algorithm uses the merging concept from the median of three array problem.
+However, the number of comparisons to find the minimum for each time through the loop is not constant. 
+The function, findMinimum requires Theta(n) time.
+This occurs inside a loop which runs n times.
+So the overall run time is Theta(n^2)
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 23
+
+	10        		
+	7         		could be faster
+	6         		could be faster
+
+
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+
+Sources: http://www.eternallyconfuzzled.com/tuts/algorithms/jsw_tut_hashing.aspx
+http://billmill.org/bloomfilter-tutorial/
+---+++ Code
+
+myBloomFilter.h
+%CODE{"cpp"}%
+#ifndef MYBLOOMFILTER_H
+#define MYBLOOMFILTER_H
+#include <string>
+using namespace std;
+
+
+class myBloomFilter {
+public:
+    //Creates an empty Bloom filter with chars of length mm
+    myBloomFilter(int mm);
+    
+    /**
+     * Instantiates a Bloom filter from a given string [filter]
+     * @requires [filter] must have been produces by the output() call of a BloomFilter object.
+     */
+    myBloomFilter(string filter);
+    
+    //Insert string into filter
+    void insert(string item);
+    
+    /**
+     * Checks whether [item] is in the filter.
+     * @return  true if the item is probably in the filter
+     *          false if the item is definitely not in the filter
+     */
+    bool exists(string item);
+    
+    /**
+     * @return A string of [length] characters representing the Bloom filter
+     */
+    string output();
+  
+    //The actual filter
+    //This is super important
+protected:
+    string myFilter;
+    int myLength;
+    
+};
+
+#endif
+
+
+%ENDCODE%
+
+myBloomFilter.cpp
+
+
+%CODE{"cpp"}%
+#include "myBloomFilter.h"
+
+    //Creates an empty Bloom filter with chars of length mm
+myBloomFilter::myBloomFilter(int mm){
+    myLength = mm;
+    myFilter = "";
+    for (int ii = 0; ii < mm; ii++ ){
+        myFilter += '0';
+    }
+}
+
+    /**
+     * Instantiates a Bloom filter from a given string [filter]
+     * @requires [filter] must have been produces by the output() call of a BloomFilter object.
+     */
+myBloomFilter::myBloomFilter (string filter) {
+    myLength = filter.length();
+    this->myFilter = filter;
+}
+    
+//My hash function
+int myFirstHash(string item){
+    int myPrime = 157;
+    int myNewNumber = 0;
+    //int myItem = (int)item;
+    for (int ii = 0; ii < item.length(); ii++)
+    {
+        myNewNumber = myNewNumber + item[ii] * myPrime * ii;
+    }
+    return myNewNumber;
+}
+//Could include additional hashes here, but it's not necessary
+    
+    //Insert string into filter
+void myBloomFilter::insert(string item){
+    int firstIndex = myFirstHash(item);
+    myFilter[firstIndex % myLength] = '1';
+}
+    
+    /**
+     * Checks whether [item] is in the filter.
+     * @return  true if the item is probably in the filter
+     *          false if the item is definitely not in the filter
+     */
+bool myBloomFilter::exists(string item){
+    int firstIndex = myFirstHash(item);
+    if (myFilter[firstIndex % myLength] == '1'){
+        return true;
+    }
+    else
+        return false;
+}
+    
+//Returns myFilter (a protected member)
+string myBloomFilter::output(){
+    return myFilter;
+}
+
+%ENDCODE%
+---+++ Explanation
+<VERBATIM>
+My implementation includes writing the constructors, insert(), exists(), and my hash function.
+
+insert() just computes the hash for the desired string and then replaces the character at the associated location in the filter with a '1'.
+
+exists() also computes the hash for the desired string, gets the character at the calculated location and then determines if it is a '1' (may exist) or '0' (definitely doesn't exist)
+
+I choose 1 hash function because, while I don't know the values of m and n in this application. 
+If it is a smaller filter, one hash will have less false positives than multiple hashes. 
+With a small filter and multiple hashes, the Bloom Filter can easily become nearly all 1s, which is not useful.
+The hash needs to be relatively simple for efficient Bloom Filter use.
+The hash iterates through the input string, multiplies it by myPrime number and by the string index and then sums the products and returns the sum. 
+By multiplying by the string index, the sum is unique even if the string has the same characters. For example, abc, cba, acb, etc have different sums.
+I take the mod of the resulting sum to determine the associated location in the Bloom Filter.
+
+</VERBATIM>
+
+---+++!! Grader comments *[22/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Give out the password you cracked. Remember attached the code as 'problem4a.zip'
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the password you cracked. 
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Give out the explanation here. Remember attached the code and table
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

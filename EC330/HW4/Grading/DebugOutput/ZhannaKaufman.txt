@@ -1,0 +1,432 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(ZhannaKaufman),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+Give out answer here.
+
+This hash exhibits PRIMARY CLUSTERING. This is because this is a linear probe, with intervals 
+between successive values increasing at a linear rate (+1 every time). This means that this kind
+of function creates a tendency for long sequences of filled slots. This is an example of primary
+clustering. 
+
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+
+An efficient algorithm for finding the median of two arrays is to first get the median of each of the two arrays, then compare
+these two medians. If one of the medians is smaller, then the true median is either in the upper half of this array of in the 
+lower half of the array with the larger median. Then, the median of each of these arrays can be found, and the procedure
+repeated, until two arrays are left with two elements each. Then, the true median is the maximum of the first array (which
+came from the lower median) plus the minimum of the second over 2. 
+
+pseudocode:
+
+//necessary median function
+int median(int array[], int n) {
+int index = n/2;
+//if n is even return the average of the middle two values
+if ((n%2) == 0) {
+return (array[index] + array[index+1])/2;
+}
+else {
+//return middle value
+return array[index];
+}
+}
+
+//main function to get median
+
+int getMed(int X0[], int X1[], int n) {
+
+    //median of first array
+    med1;
+
+    //median of second array
+    med2;
+ 
+    //if there are two arrays with one element each
+    if (n == 1)
+        return (X0[ 0 ] + X1[ 0 ])/2;
+ 
+    //if there are two arrays with two elements each
+    if (n == 2)
+        return (max(X0[ 0 ], X1[ 0 ]) + min(X0[ 1 ], X1[ 1 ])) / 2;
+
+    //get median of the first array
+     med1 = median(X0[],n);
+    //get median of the second array
+     med2= median(X1[],n);
+
+    //if medians are equal, just return one
+    if (med1 == med2) {
+    return med1;
+    }
+
+    //if the first median is smaller, then the value exists in the upper half of 
+    this array or the lower half of the other
+    if (med1 < med2) {
+        return getMed(X0[med1 to end], X1[beginning to med2], n/2);
+    }
+    else {
+    //if the second median is smaller, then the value exists in the upper half
+    of this array or the lower half of the other
+    if (med1 < med2) {
+        return getMed(X0[beginning to med1], X1[med2 to end], n/2);
+    }        
+}
+
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+ 
+   running time is O(log(n)). Because the size of the problem is split in half every time the 
+   function runs through, the worst case run time happens with logn steps.
+
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+
+int getMedian(int arrays[3][n], int n)
+{
+    //put arrays together into one array
+    char array[3n];
+    int index = 0;
+    for (int i=0;i<3;i++) {
+    for (int h=0;h<n;h++){
+    array[index = array[i][index];
+    }
+   
+    perform median of medians algorithm on array
+    medianofmexians(array,3n);
+}
+
+
+void MedianOfMedians(int array[], int n){
+//median of medians algorithm
+//   Diide array into 5 element vectors
+
+     int divarray[n/5][5];
+     
+     for (int i=0;i<n/5;i++) {
+          for (int k=0;k<5;k++) {
+              divarray[i][k] = array[k*i];
+          }
+    }
+
+
+// create vector of medians
+
+    int medvector[n/5]
+    for (int i=0;i<n/5;i++){
+        medvector[i] = median(divarray[i],5);
+    }
+
+//find median of medians
+     int finmed = median(medvector);
+
+//partition the array using this final median as a pivot
+    vector<int> first,second;
+    for(int i=0; i<n;i++){
+        if (array[i] < finmed) {
+         first.push_back(array[i]);
+        else
+          second.push_back(array[i]);
+
+//make a recursive call to the function
+    if ((n - 1) == first.size()) {
+        return finmed;
+    }
+    }else if (n <= first.size()) {
+        return MedianOfMedians(first, first.size());
+    }else if (n > (first.size() + 1)){
+        return MedianOfMedians(second, second.size);
+    }
+
+}
+    
+
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+
+The timing of Median of Medians is O(n), with the only operation being to put the three arrays into one composite, which should take no more than 3n time. Then, the timing of this
+algorithm should still be O(n)
+
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+
+An efficient algorithm for this problem would be the same as implemented in the problem before, with three vectors, only replacing the value 3 with n, and running the very same procedure. 
+
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+
+The running time for this operation should be O(n^2)
+
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 23
+
+	10        		
+	7         		could be faster
+	6         		could be faster
+
+
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+   
+   #include <iostream>
+#include "myBloomFilter.h"
+#include <string>
+#include <math.h>
+
+
+
+
+using namespace std;
+
+
+myBloomFilter::myBloomFilter (int mm) {
+        bfilter = new char[mm];
+	std::fill(bfilter,bfilter+mm,'n');
+	length=mm;
+}
+
+myBloomFilter::myBloomFilter (string filter) {
+	int newlength = filter.length();
+        bfilter = new char[filter.length()];
+	for (int i=0;i<filter.length();i++) {
+	bfilter[i] = filter[i];	
+	}
+	//bfilter = (char*) filter.c_str();
+	length = newlength;
+} 
+
+string myBloomFilter::output() {
+	return bfilter;
+}
+
+
+void myBloomFilter::insert(string item) {
+	//integer for first hash value
+	int hashval1 = 0;
+        //variable for hash 1
+	int modh1 = 0;
+	//variable for hash 2
+	int starth2;
+	int addh2 = 0;
+	int modh2 = 0;
+	//variable for hash 3
+	int starth3;
+	int starth4;
+	int addh3 = 0;
+	int modh3 = 0;
+	//variable for hash 4
+	int midval = 0;
+	int modh4 = 0;	
+	
+	/**first hash function-- alternative to division hash, find length of string, and modulate with length of bloom filter.**/
+	modh1 = (item.length())%length;
+	bfilter[modh1] = 'y';
+
+	/**second hash function -- add ascii values of characters in string, and modulate with length of bloom filter.**/
+	for (int i=0;i<item.length();i++) {
+		starth2 = item[i];
+		addh2 = addh2 + starth2;
+	}
+	modh2 = addh2%length;
+	bfilter[modh2] = 'y';
+
+
+	/**Third hash function -- modulate ascii value of the addition of first letter of the string**/
+	starth3 = item[0];
+	starth4 = item[item.length()-1];
+	addh3 = starth3+starth4;
+	modh3 = starth3%length;
+	bfilter[modh3] = 'y';
+
+	/** fourth hash function -- modulate middle letter with length of bloom filter.**/
+	midval = item[item.length()/2];
+	modh4 = midval%length;
+	bfilter[modh4] = 'y';
+
+}
+
+bool myBloomFilter::exists(string item) {
+	//variable for checking
+	int alltrue = 0;
+	
+	int hashval1 = 0;
+
+       //variable for hash 1
+	int modch1 = 0;
+	//variable for hash 2
+	int startch2;
+	int addch2 = 0;
+	int modch2 = 0;
+	//variable for hash 3
+	int startch3;
+	int startch4;
+	int addch3 = 0;
+	int modch3 = 0;
+	//variable for hash 4
+	int midvalc = 0;
+	int modch4 = 0;	
+		
+
+	/**check if first hash occured.**/
+	modch1 = (item.length())%length;
+	if (bfilter[modch1] == 'y') { alltrue+=1; }
+
+	/**check second hash function -- add ascii values of characters in string, and modulate with length of bloom filter.**/
+	for (int i=0;i<item.length();i++) {
+		startch2 = item[i];
+		addch2 = addch2 + startch2;
+	}
+	modch2 = addch2%length;
+	if(bfilter[modch2] == 'y') { alltrue+=1; }
+
+
+	/**check Third hash function -- modulate ascii value of the addition of first and last letters of string**/
+	startch3 = item[0];
+	startch4 = item[item.length()-1];
+	addch3 = startch3+startch4;
+	modch3 = startch3%length;
+	if(bfilter[modch3] == 'y') {alltrue += 1; };
+
+
+	/** check fourth hash function -- modulate middle letter with length of bloom filter.**/
+	midvalc = item[item.length()/2];
+	modch4 = midvalc%length;
+	if(bfilter[modch4] == 'y') {alltrue += 1; }
+	
+	if (alltrue > 3) {return true;}
+	else {return false;}	
+	
+	
+}
+
+
+   // put your code here
+   // also remember to upload it in submit page
+
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+Give out answer here.
+
+   I used four different hash functions in the insert and exists functions. First, in the constructors,
+I created a string of either all 'n's, or a string that was given. In the insert function, I first got the 
+length of the input string, modulated with the length of the bloom filter, inserted the letter 'y' at 
+this second value. For my second hash, I added the ascii values of the string, then modulated
+with the length of the filter again, and inserted a 'y' at this point in the filter string. After this, I 
+added the ascii values of the first and last letter in the inputted string, and modulated this. For
+the fourth hash, I simply took the ascii value of the middle character in the string, modulated this
+with the length of the bloom filter, and put a 'y' there. 
+
+   For the exists string, I performed each hash again for an inputted string, and checked to see
+whether there was a 'y' at this place in the bloom filter. If there was a 'y' at each value calculated
+through the hashes, I outputted true; otherwise false.
+
+</VERBATIM>
+
+---+++!! Grader comments *[15/25]*
+<VERBATIM>Score: 1714
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Give out the password you cracked. Remember attached the code as 'problem4a.zip'
+
+ays
+Dey
+SOP
+prs
+MTF
+BPA
+ass
+M-1
+DBO
+NaD
+
+
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the password you cracked. 
+
+barfy
+Lorne
+Fredi
+Pieta
+Norah
+tirer
+Yorgo
+vacuo
+Boony
+
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Give out the explanation here. Remember attached the code and table
+
+I created a table with 500 entries, and 5 letter reduced passcodes. I began with the letters 'abcde',
+ an arbitrary choice of the first five letters of the alphabet. I created a chain using this as a start point,
+ repeatedly hashing, and then reducing the hash. I looped through this procedure 10,000 times. In 
+the table, I placed the original 'abcde', and the final reduction of this chain. Then, I chose the last five 
+letters of the final 40 character hash to begin the next chain with, placed these five letters into the 
+table, ran through the loop 10,000 times, and placed the final reduction into the table. I did this until
+ I had 500 entries.
+
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

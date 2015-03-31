@@ -1,0 +1,217 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(MaxLi),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+ii. Secondary clustering. 
+
+h1(k) = h1(k) + 1
+h2(k) = h2(k) + 3
+h3(k) = h3(k) + 6
+h4(k) = h4(k) + 10
+It is secondary clustering because the function requires the function with the index before it, and if you sub it in, it becomes clear that it is a summation, which is a quadratic equation. Because it is quadratic, that means there is secondary clustering. 
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+for X0
+    find median
+for X1
+    find median
+
+if X0[median] < X1[median]
+    delete smaller elements to median of X0 
+    delete bigger elements to median of X1
+    recursively call on new smaller array
+
+if X0[median] > X1[median]
+    delete bigger elements to median of X0
+    delete smaller elements to median of X1
+    recursively call on new smaller array
+
+if X0[median] == X1[median]
+    return median
+
+
+Find median of both arrays. For the smaller median, delete every element smaller than that inside the array. For the bigger median, delete every element bigger than that median in that array. Recursively do this until there is only one value left, which is the median. Or, if there are two values, then add it both up and divide by 2 to get the median.
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+log(2n)
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+Find median of all three arrays. For the smallest median, delete every element smaller than that inside that array. For the biggest array, delete every element bigger than that median in that array. Recursively do this until there is only one value left, which is the median. Or if there are two values, then add both up and divide by 2 to get the median. This is similar to the two arrays, except with three arrays, you need to keep track of what median is the biggest and what median is the smallest. 
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+log(3n)
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+The same concept can be applied to n arrays. With n arrays, we would need to find the minimum median and the maximum median, so we know which arrays to cut off in order to reduce the amount of elements in the array. Then, we recursively call this method until there is only one value left, or if there are two values, add them up and divide by 2. 
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+nlog(n)
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 25
+
+	10        		
+	8         		
+	7         		
+
+
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+#include "myBloomFilter.h"
+#include <iostream>  
+#include <stdlib.h> 
+using namespace std;
+
+myBloomFilter::myBloomFilter(int mm): BloomFilter(mm){
+bloomArr = new string;
+
+*bloomArr = "";
+length = mm;
+for(int i =0; i < mm; i++)
+	*bloomArr += '!';
+
+}
+
+myBloomFilter::myBloomFilter(string filter): BloomFilter(filter){
+bloomArr = new string;
+
+	length = filter.length();
+	*bloomArr = filter;
+}
+
+void myBloomFilter::insert(string item){
+
+	int acc = 0;
+	int count = 0;
+	int loop_length = item.length();
+
+	for(int i = 0; i < loop_length; i++){
+
+		if(count % 5 == 0){
+			acc ++;
+		} else {
+			acc += 10;
+		}
+
+		count++;
+	}
+
+	(*bloomArr)[acc%length] = '~';
+}
+
+bool myBloomFilter::exists(string item){
+
+	int acc = 0;
+	int count = 0;
+	int loop_length = item.length();
+
+	for(int i = 0; i < loop_length; i++){
+
+		if(count % 5 == 0){
+			acc ++;
+		} else {
+			acc += 10;
+		} 
+	
+		count++;
+	}
+		if ((*bloomArr)[acc%length] == '~')			
+			return true;
+		else 
+			return false;
+}
+
+string myBloomFilter::output(){
+	return *bloomArr;
+}
+
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+I made myBloomFilter an extended class of BloomFilter. It instantiates a myBloomFilter that is length long, and the insert function and the exists function utilizes local accumulator variables for the hash function, which I incremenet by different amounts to test false positives.  
+</VERBATIM>
+
+---+++!! Grader comments *[7/25]*
+<VERBATIM>
+Score: 1344</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Dey
+deb
+Sup
+NRO
+GOK
+ufo
+RGS
+MWA
+scr
+bel
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+stool
+PLACEHOLDER
+Vichy
+PLACEHOLDER
+arado
+PLACEHOLDER
+PLACEHOLDER
+nehru
+PLACEHOLDER
+PLACEHOLDER
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+I made my rainbow table about 5000 long, because it is like the rainbow table we are given. I used 88 characters, so I came up with random integers to 88. Then I hashed and reduced the string multiple times, and finally, I did the formatting for the rainbow table. 
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

@@ -1,0 +1,159 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(BraxtonBrewton),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+ii. Secondary Clustering
+
+The hashing functions are not linearly probing. Therefore, the collisions that occur in the table will be spaced out as opposed to many consecutive filled slots in the table.
+
+iii. Always able to add a key if the table is not full
+
+Yes, keys can be added to the table as long as it is not full. However, the size of the table is optimal when it is equal to <latex> \frac{n*\ln(p)}{\ln(2)^2} </latex>. Where n is the number of items you're planning on putting through the filter and p is the probability you're willing to accept false positives.
+
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+Make a new array, <latex> X_2</latex>, that is the result of merge sorting the two arrays <latex> X_0 </latex>  and   <latex>X_1 \newline</latex> 
+The median is equal to (n*2)/2 (where n is the size of the given arrays), considering <latex> X_2 </latex> will always have an even number of elements.
+
+
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+<latex> \Theta(nlog(n)) </latex>
+
+---+++ ii. Median of three
+
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+Make a new array, <latex> X_3</latex>, that is the result of merge sorting <latex>X_0 </latex> and <latex> X_1 \newline</latex>  
+Make another array, <latex> X_4</latex>, that is the result of merge sorting <latex>X_2 </latex> and <latex> X_3 \newline</latex> 
+The median is then equal to <latex> \frac{(n*3)}{2} </latex> if even. Where n is the size of the given arrays.
+The median is then equal to <latex> \frac{((n*3) + 1)}{2} </latex> if odd
+
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+<latex> \Theta(nlog(n)) </latex>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+Merge sort all arrays to one large array.
+The median is equal to <latex> \frac{n^2}{2} </latex> if even. The median is equal to <latex> \frac{((n^2) + 1)}{2} </latex> if odd
+
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+<latex> \Theta(n^{2}) </latex>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 15
+
+	5         		runtime is slower than brute force method
+	4         		runtime is slower than brute force
+	6         		could be faster
+
+
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+   // put your code here
+   // also remember to upload it in submit page
+
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+---+++!! Grader comments *[0/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Give out the password you cracked. Remember attached the code as 'problem4a.zip'
+</VERBATIM>
+1. c022f84dea73b1a8886b092d8e3f376e7caed543 = IAH %BR% %BR%
+2. 08609a146f66653d57c62be818f1168a9d3035f7 = RQS %BR% %BR%
+3. bf6741838d73fb9d51850cb83597ddc66bcc2314 = SMB %BR%%BR%
+4. 89bb853a9a04e2c091c791c8d4e119518897b636 = apt %BR%%BR%
+5. 8c724c48c16b7e3b7c5bb896b256194840fbef78 = cog %BR%%BR%
+6. 1c0d17d2ef10ee63fcdb389e33b6a51f1eea463f = dis %BR%%BR%
+7. b1d02f3ece9656335cc5102fe700764604f009e7 = eom %BR%%BR%
+8. ce5fadf6ef646c567c7eb4a47df0703568e71f15 = prs %BR%%BR%
+9. 50027c141f4c998255086f5a8a286125b72338b2 = xcl %BR%%BR%
+10. e13f3a7c6d12baf0b6ad298c2bbc0a8308158c43 = zoo %BR%%BR%
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the password you cracked. 
+</VERBATIM>
+
+72df2133d2a84916f5512b190f4bdd58a76a249a = \_S\b; password = usPIX %BR% %BR%
+28d4d2a685809550605408ac071bdbdadf5d986a = [RY\b; password = <vgK" %BR% %BR%
+dc31170d029df869794a9a8dbe515e873048392f = PkSf\; password = 2|*ul %BR% %BR%
+cbd584f087cd860fe9692f01e48e12a779f75e31 = aPZOV; passwords = U@P@T, _Q0b], ]a=3\, mcm![, 4m0pQ, rgWvv, 8m9rE, 71]I1 %BR% %BR%
+3957c1afc1bf2c683f6dc65477a5ef0f9307fbfd = ]jk\Y; passwords = ;$9Iq, FvF"m, w9*6", R:Z`u, zXBJg, vRqMl, RlA2] %BR% %BR%
+f779e47788751aff04da3c8100dd47a596ea25cc = eVc^]; passwords = 3.ByY, Ew(rK, FzW|H, +.r{h, {V>'9, #I^v:, ag2s:, 6p9L`  %BR% %BR%
+9ef51f0c61b2a2aa2e54454b1539a5ad02f433b9 = PXdYZ; password = %d2zW %BR% %BR%
+3d7535e2d6f20b1aed9c496fc2f3b44af7e1cf7e = Xq\_o; password = "wL)) %BR% %BR%
+1e3275a9fc3aa2e41ff316de9fba5990b92513b6 = VdbPn; passwords = 1*ob*, m+IWl, rRN#S, '4Hl/, X1]<B, bF"iO %BR% %BR%
+61fb49567cb972d62edac6a76f9454b5741f3587 = \LTi^; passwords = PwJZz, qd78;, /)'G', BuB#o, mO{%", AFv8W, 9js8p, qJ!*y  %BR% %BR%
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Give out the explanation here. Remember attached the code and table
+</VERBATIM>
+
+The code begins by creating the string "!!!". The string then enters a nested for loop where each ASCII character's decimal value is incremented by a number between 0 and 9 creating a new string. Each new string is stored in the startStr array as a password (key). Afterwards the string is hashed, reduced, hashed, and reduced once more and is stored in the endStr as a value. The code ends with an output stream that creates a rainbowtable within a "rainbowtable.txt" file through the use of a for loop with the format: (password, value).
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

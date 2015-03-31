@@ -1,0 +1,567 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(JohnCareaga),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+-  Satisfied properties: property ii (secondary clustering) and property iii .
+- The probing sequence hops by "i" places from the location of the previous hop in the open address hash table.
+- For example, say h0(k) = 0 (maps to location 0). If there's a collision at [0] then...
+  h1(k) = h0(k) + 1 = 1   ... if there's a collision at [1] then...
+  h2(k) = h1(k) + 2 = 3   ... if there's a collision at [3] then...
+  h3(k) = h2(k) + 3 = 6   ... if there's a collision at [6] then...
+  h4(k) = h4(k) + 4 = 10  ... and so on
+
+- We see that the same probing sequence occurs when two keys originally map to the same place. 
+- In other words, there is a distinct pattern that can result in a growing "island" of clusters when two keys map to the same place.
+- It is secondary since the probing sequence becomes further and further away from the starting h0(k) position
+- Since the spacing in hops isn't linear, there isn't primary clustering. 
+- The probing sequence wraps back around the table, filling in the empty slots, satisfying property iii.  
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+- Find the median of array1 by getting the n/2'th element
+- Find the median of array2 by getting the n/2'the element
+- Compare these two values.
+- If they are equal, then we're done; the median of both is that accessed number.
+- Say median of array1 > median of array2... then the median of the two combined must be below the median of array1 and above median of array2.
+- The same logic applies if median of array2 > median of array1.
+- We can discard the half that of array1 that definitely doesn't contain the overall median and do similarly for array2.
+- We have now halved the overall size.
+- Repeat this process until the size of each array is 1. At this point, the median is the average of the 2 remaining elements.
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+- Retrieving the middle element is constant time since we're using arrays.
+- At worst, the algorithm will recurse lg(2n) times since the overall size (starting at 2n) is halved each time.
+T(n) = T(n/2) + k
+T(n) is O(lg(n))
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+- merge array1 with array2 into arrayX
+- merge arrayX with array3. The result is a sorted array, arrayY, of length 3n
+- Get the median by accessing arrayY[(3n)/2]
+- Done
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+The first merge is O(2n)
+The second merge is O(3n)
+Then the access [3n/2] is constant time
+
+So the worst case running time overall is O(2n) + O(3n) + O(1) 
+Therefore, it's O(n)
+
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+- we have n arrays of size n.
+- n/2 merge operations can be done in parallel. For example, array1 with array2, array3 with array4.. and so on.
+- After the previous step is complete, we have half as many arrays to merge, but the arrays to be merged are twice the size. For example array1 and array2 have merged into one array of size 2n.
+- Again we can do this next level of merges in parallel.
+- We can keep following this procedure until we have to merge only two arras, each of size (n^2)/2.
+- After merging this last one, we simply get the middle element to get the median.
+
+Visualization: n = 4
+
+- -  - - - - - - - - - - - -  - -       -> 3. done. Take [(n^2)/2]
+- - - -  - - - -  | - - - - - - - -     -> 2. n/2 arrays of size n*2. n/4 merges in parallel
+- - - - | - - - - | - - - - | - - - -   -> 1. n arrays of length n. n/2 merges in parallel
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+- At the first and lowest level of parallel merges, each merge operation takes linear time in 2n. Since the merges are done in parallel, the running time is still 2n
+- On the next level of merges, n/4 groups of two arrays merge in linear time 4n. Again, all the merge operations are done simultaneously.
+- On the next level, n/8 groups of two arrays of size 8n merge in linear time 8n... And so on.
+- We reach the end after lg(n) levels of merging.
+- So the running time is T(n) = 2n + 4n + 8n + 16n + ... nn = n * (sum from i = 1 to i = lgn of 2^i) = n * (2n-1 -1)
+- Therefore T(n) is O(n^2) 
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 23
+
+	10        		
+	7         		could be faster
+	6         		could be faster
+
+
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+#ifndef MYBLOOMFILTER_H
+#define MYBLOOMFILTER_H
+#include "BloomFilter.h"
+#include <iostream>
+#include <vector>
+
+class myBloomFilter : public BloomFilter{
+public:
+	// member variables
+
+	// the bloom filter
+	string* myFilter;	
+
+	// constructors / destructor
+	myBloomFilter(int mm);
+	myBloomFilter(string filter);
+	~myBloomFilter();
+
+	// member functions	
+	void insert(string item);
+	bool exists(string item);
+	string output();
+
+	unsigned long h0(string item);
+	unsigned long h1(string item);
+	unsigned long h2(string item);
+	unsigned long h3(string item);
+
+	/* length is inherited */
+};
+#endif
+
+///////////////////////////////////////////////////////////////////////////
+
+#include "myBloomFilter.h"
+#include <cstdlib>
+
+// Constructor 1
+myBloomFilter::myBloomFilter(int mm) : BloomFilter::BloomFilter(mm){
+	// allocate memory on the heap for the filter
+	myFilter = new string;
+
+	// initialize an empty bloom filter of length mm
+	for (int ii = 0; ii < mm; ii++)	
+		(*myFilter).push_back('e');
+}
+
+// Constructor 2
+myBloomFilter::myBloomFilter(string filter) : BloomFilter::BloomFilter(filter){
+	// allocate memory on the heap for the filter
+	myFilter = new string;
+
+	// initialize myFilter to filter
+	*myFilter = filter;
+	
+}
+
+// destructor
+myBloomFilter::~myBloomFilter(){
+	// free memory that the pointers point to
+	delete myFilter;
+}
+
+// output function
+string myBloomFilter::output(){
+	// return string that represents the filter
+	return *myFilter; 
+}
+
+// insert function
+void myBloomFilter::insert(string item){
+	// call the hash functions
+	unsigned long r0 = h0(item);
+	unsigned long r1 = h1(item);
+	unsigned long r2 = h2(item);
+	unsigned long r3 = h3(item);
+
+	// update the bloom filter
+	(*myFilter)[r0] = 'f';
+	(*myFilter)[r1] = 'f';
+	(*myFilter)[r2] = 'f';
+	(*myFilter)[r3] = 'f';
+
+}
+
+// exists function
+bool myBloomFilter::exists(string item){
+	// call the hash functions and check the filter
+	unsigned long r0 = h0(item);
+	if ((*myFilter)[r0] == 'e') return false;
+	unsigned long r1 = h1(item);
+	if ((*myFilter)[r1] == 'e') return false;
+	unsigned long r2 = h2(item);
+	if ((*myFilter)[r2] == 'e') return false;
+	unsigned long r3 = h3(item);
+	if ((*myFilter)[r3] == 'e') return false;
+
+	// otherwise return true (possible false positive)
+	return true;	
+}
+
+// sum substrings of 2 characters casted to ints
+// multiply by prime number 
+unsigned long myBloomFilter::h0(string item){
+	unsigned long index;
+	int remain = item.length() % 2;
+	int quotient = item.length() / 2; 
+	string temp;
+	unsigned long temp2;
+	unsigned long accum = 0;
+	for (int ii = 0; ii < quotient; ii+=2){
+		temp = item.substr(ii, 2);
+		temp2 =  (unsigned long)atoi(temp.c_str());
+		accum += temp2;
+	}
+	temp = item.substr(item.length()-remain, remain);
+	temp2 = (unsigned long)atoi(temp.c_str());
+	accum += temp2;
+	accum *= 313;
+	index = (accum % length);
+	return index;
+}
+
+// reverse item
+// sum substrings of 2 characters casted to ints
+// multiply by prime number 
+unsigned long myBloomFilter::h1(string item){
+	unsigned long index;
+	string temp;
+	int remain = item.length() % 2;
+	int quotient = item.length() / 2;
+	unsigned long temp2;
+	unsigned long accum = 0;
+	string store = item;
+	int item_length = item.length();
+	for (int ii = 0; ii < item.length(); ii++){
+		store[item_length-ii] = item[ii]; 
+	}
+	for (int ii = 0; ii < quotient; ii+=2){
+		temp = store.substr(ii, 2);
+		temp2 = (unsigned long)atoi(temp.c_str());
+		accum += temp2;
+	}
+	temp = store.substr(store.length()-remain, remain);
+	temp2 = (unsigned long)atoi(temp.c_str());
+	accum += temp2;
+	accum *= 521;
+	index = (accum % length);
+	return index;
+}
+
+// my implementation of FNV-1a fucntion. source: http://isthe.com/chongo/tech/comp/fnv/
+unsigned long myBloomFilter::h2(string item){
+	long unsigned  index = 2166136261;
+	long unsigned  prime = 16777619;
+	for (int ii = 0; ii < item.length(); ii++){
+		index = index xor ((unsigned long int)(item[ii]));
+		index *= prime;
+	}
+	return (unsigned long)(index % length);
+}
+
+// FNV-1a except with the item reversed
+unsigned long myBloomFilter::h3(string item){
+	long unsigned  index = 2166136261;
+	long unsigned  prime = 16777619;
+	for (int ii = 0; ii < item.length(); ii++){
+		index = index xor ((unsigned long int)(item[item.length()-ii]));
+		index *= prime;
+	}
+	return (unsigned long)(index % length);
+}
+
+   
+%ENDCODE%
+
+
+---+++ Explanation
+<VERBATIM>
+- I have a member field that is a pointer to a string. This string will represent the bloom filter
+- The result of a hash function is a number corresponding to an index of the bloom filter.
+- When we insert a string, we call the hash functions to get the indices at which the filter will be set. Then, we update the filter by looking at these indices.
+- When we check if a string exists, we repeat the above process but don't modify the filter. Instead we check if any of the chars of the filter at the indices  are empty. If any of them are, then the string is definitely not in the filter. Otherwise, it might be.
+- The constructor that takes an int as an argument initializes an empty filter with length specified by the int. Memory is allocated for the string filter. The base constructor is called first to set the length of the filter
+- The constructor that takes a string as an argument initializes the filter to the input string. Memory is allocated for the string filter. The base constructor is called first to set the length of the filter
+- The destructor frees the memory allocated on the heap by "delete"-ing the pointer.
+- There are four hash functions... The last step of each hash function is to mod the result by the length of the filter and then return these results.
+
+
+0:
+// sum substrings of 2 characters casted to ints
+// multiply by prime number 
+
+1:
+// reverse item
+// sum substrings of 2 characters casted to ints
+// multiply by prime number 
+
+2:
+// Implementation of FNV-1a hash (source: http://www.isthe.com/chongo/tech/comp/fnv/)
+
+3:
+// FNV-1a hash with reversed item
+
+
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Give out the password you cracked. Remember attached the code as 'problem4a.zip'
+
+password hash 0: 0c9889e664f4a0a7676c98e373a442f3a107aeb4   password: DCE
+password hash 1: c26a7dd817239c66e24a3aedc4288bffd3d32648   password: Rom
+password hash 2: 04c41d16491231d8e966c5c78560272125a97634   password: MeV
+password hash 3: f8e7985223821448bf43204dd4a65c18669f4280   password: EBI
+password hash 4: 634ae17b636edd383df907007f0f05a9cc2dad8c   password: GOK
+password hash 5: afab3939df7882d10a1ddef55ac809023a597e9c   password: ibm
+password hash 6: 4796ad0886540784ec03ff1dc61575c6b333dee9   password: Sup
+password hash 7: 08609a146f66653d57c62be818f1168a9d3035f7   password: RQS
+password hash 8: 70ddb41dfdf13cca47fc6abcb9366f200529c386   password: SOP
+password hash 9: e82ca7cd4cfa7e0f233a2d78256bde12cbfa1292   password: BIS
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the password you cracked. 
+0 - loyal 
+1 - stale
+2 - Galei
+3 - gazel
+4 - nonly (brute force)
+5 - slorp (brute force)
+6 - Wyman
+7 - Peano
+8 - canon
+9 - Gibil
+</VERBATIM>
+
+%CODE{"cpp"}%
+#include <fstream>
+#include <iostream>
+#include <string>
+#include <vector>
+#include "hash.h"
+#define NUM_OF_PASSWORDS 10
+using namespace std;
+
+// struct to store the first and last entry of each row of the table
+typedef struct{
+	string start;
+	string finish;
+} my_pair;
+
+// function declarations
+string crack_hash(string given_hash, vector<my_pair> *pairs);
+string get_possible_password(string given_hash, int location, vector<my_pair> *pairs);
+
+// ********************** CRACK_HASH ********************** //
+
+int main(){
+
+	// Read from table.txt
+	ifstream file("table.txt", ifstream::in);
+	char line[20];
+	string alias;
+	vector< my_pair > pairs;
+	int index = 0;
+
+	while (file.eof() == false){
+		my_pair temp;
+		pairs.push_back(temp);
+		file.ignore(4);
+		file.get(line, 20, ' ');
+		alias.assign(line);
+		(pairs[index]).start = alias;
+		
+		file.ignore(5);
+		file.get(line, 20, ' ');
+		alias.assign(line);
+		file.ignore(100, '\n');
+		(pairs[index]).finish = alias;
+		index++;
+	}
+
+	// hashes to be cracked
+	vector<string> password_hash(NUM_OF_PASSWORDS, "");
+	password_hash[0] = "c5b2b9f6421231c795d9a5ba4892c599343e17e9";
+	password_hash[1] = "3957c1afc1bf2c683f6dc65477a5ef0f9307fbfd";
+	password_hash[2] = "d51bcee05c7dc6f4a5178b033f869fad40257551";
+	password_hash[3] = "d7d04aa5582228286a74be412f475f1921cc5515";
+	password_hash[4] = "6eff35ae47651f8aa6ded0e8359451a222f054fb";
+	password_hash[5] = "3760ce5072ca0201a54e57804ef09ba713ef06f0";
+	password_hash[6] = "f779e47788751aff04da3c8100dd47a596ea25cc";
+	password_hash[7] = "33ca5c58a515ad255aedba5ed5b01669bccae210";
+	password_hash[8] = "f3c711429a835b46b6f3ecae7bc3339fc333cce0";
+	password_hash[9] = "4ceb1c68d95f4f38f47fdcd1d96fdb452a8d4e3f";
+
+
+	// Attempt to crack the hashes
+	vector<my_pair> *ptr = &pairs;
+	string pwd;
+	for (int ii = 4; ii < NUM_OF_PASSWORDS; ii++){
+		pwd = crack_hash(password_hash[ii], ptr);
+		cout << "password is: " << pwd << endl;
+	}
+	return 0;
+}
+
+// ********************** CRACK_HASH ********************** //
+
+string crack_hash(string given_hash, vector<my_pair> *pairs){
+
+	int len = 5;
+	string original_hash = given_hash;
+	string answer;
+	string reduced;
+	string hashed = given_hash;
+
+	while(true){
+		reduced = reduce(hashed, len);
+		for (int ii = 0; ii < pairs->size(); ii++){
+			if ((*pairs)[ii].finish == reduced){
+				answer = get_possible_password(original_hash, ii, pairs);
+				if (answer != "") return answer;
+			}
+			
+		}
+		hashed = hash(reduced);
+		// protect from an infinite loop
+		if (hashed == original_hash)
+			return "failed to crack password"; 
+	}
+}
+
+// ********************** get_possible_password ********************** //
+
+string get_possible_password(string given_hash, int location, vector<my_pair> *pairs){
+	
+	int len = 5;
+	string hashed;
+	string reduced;
+	string miss = hash( (*pairs)[location].finish );
+	reduced = (*pairs)[location].start;
+	
+	while (true){
+		hashed = hash(reduced);
+		if (hashed == given_hash)	return reduced;
+		if (hashed == miss)		return "";
+		reduced = reduce(hashed, len);
+	}
+}
+%ENDCODE%
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Explanation:
+- Set upper and lower character limits (! and ~)
+- Set the seed used in rand()
+- Make a stream object to open/write the table text file
+- If the file is open, begin a for loop in parallel, where each iteration prints a table row
+- for each iteration:
+--- set the starting entry of a chain (table row) to a random sequence of PASSWORD_LENGTH chars
+--- hash and reduce for CHAIN_LENGTH cycles to get the ending string for the row
+--- write one row to the text file
+- close the file
+- done
+
+// Note: the hash function is the same as the one provided. The reduce can be altered to improve the usefulness of the table
+// Note: the parameters of the table can be changed in the #define statements
+// Note: the for loop is parallelized using openMP. My table was made using the 32 core ME computers for speed
+// Note: the makefile compiles, assembles, links, and runs the executable to produce the table text file
+// Note: the "makefile clean" removes the object files as well as the table
+
+see code below:
+</VERBATIM>
+%CODE{"cpp"}%
+#include "hash.h"
+#include <cstdlib>
+#include <ctime>
+#include <iostream>
+#include <fstream>
+#include <omp.h>
+#define PASSWORD_LENGTH 5 	// adjust to the length of the possible password
+#define CHAIN_LENGTH 32768 	// adjust to desired chain length 
+#define TABLE_SIZE 5000 	// adjust to desired # of columns
+
+/* use makefile to create the table.
+ * the mafefile attempts: $ ./problem4c
+ * warning: may take a while depending on table parameters
+ */
+
+int main (){
+
+	// password character bounds
+	char lower_limit = '!';	
+	char upper_limit = '~';
+
+	// set the seed used in rand()
+	srand(time(NULL));
+
+	// stream object to write on file
+	ofstream text_file("problem4c.txt");
+
+	if (text_file.is_open()){
+		// each iteration prints a table row
+		#pragma omp parallel for // parallelize the for loop to reduce time
+		for (int ii = 0; ii < TABLE_SIZE; ii++){
+
+			// initialize start of chain to an empty string
+			string start_entry = "";
+
+			// after this loop, start_entry holds 5 random characters
+			for (int jj = 0; jj < PASSWORD_LENGTH; jj++){
+				start_entry.push_back( (char) ( rand() % (upper_limit - lower_limit) + lower_limit ) );
+			}
+
+			// initialize end of chain to the beginning of the chain
+			string end_entry = start_entry;
+
+			// after this loop, end_entry holds the string that results from CHAIN_LENGTH hash/reduce cycles
+			string hashed;
+			for (int kk = 0; kk < CHAIN_LENGTH; kk++){
+				hashed = hash(end_entry);
+				end_entry = reduce(hashed, PASSWORD_LENGTH);
+			}
+
+			// write one row to the text file
+			text_file << "(   " <<  start_entry << "  ,  " << end_entry << "   )" << endl;
+		}
+		
+		text_file.close();
+	}
+	else cout << "unable to open file" << endl;
+	return 0;
+}
+%ENDCODE%
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

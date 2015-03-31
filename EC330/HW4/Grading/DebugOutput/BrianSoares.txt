@@ -1,0 +1,134 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(BrianSoares),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+Secondary Clustering.  The probing sequence we get is {h(k), h(k) + 1, h(k) + 3, h(k) + 6}.  This sequence exhibits quadratic probing.
+Also always able to add a key if the table is not full. 
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+In order to find the median of both sorted lists first you find the median of each individual list.
+If the medians are equal then we found the median.  
+If the median in the first array is larger than the median in the second array, then newm1 = m1[0......n/2]    and newm2 = m2[n/2..........n-1]
+If the median in the first array is larger than the median in the second array, then newm1 = m1[n/2........n-1] and newm2 = m2[o.......n/2]
+
+After we split the original arrays into sub arrays, we recursively call this function until the size of the arrays are 2.
+Then the median will be the  (max(m1[0], m2[0]) + min(m1[1],m2[1]) )/2
+
+
+
+
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Runtime for this algorithm is O(logn)
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+A very easy way to find the median of 3 sorted lists is to merge the sorted lists using the merge portion of a merge sort and then find the median of the large list. 
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Running time is O(n)
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+First you need to find the median of all n of the lists. 
+Then rearrange the arrays in such a way that the array with the lowest median is the first array and the array with the highest median is the last array.
+Using assumption we can delete the second half of all the arrays that are larger than the middle array and delete the first half of all the arrays smaller  and including the middle array.
+We can recursively call this function until every array has 2 elements then we can calculate the median. 
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Run time O(nlogn)
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 21
+
+	10        		
+	7         		could be faster
+	4         		need better algorithm description
+
+
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+   // put your code here
+   // also remember to upload it in submit page
+
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+---+++!! Grader comments *[0/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+1) NRO
+2) abd
+3) wim
+4) LWP
+5) scr
+6) Saw
+7) IHS
+8) Neb
+9) ass
+10) ibm
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the password you cracked. 
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Give out the explanation here. Remember attached the code and table
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

@@ -1,0 +1,299 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(MichaelHaley),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+Secondary clustering -Quadratic probing is occurring:
+
+probing sequence looks like:
+
+h1(k) = h(k) + 1
+h2(k) = h(k) + 3
+h3(k) = h(k) + 6
+"                " + 10
+"                " + 16
+ETC
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+
+
+//two sorted arrays: of n integers: 
+array1 = X0[1..n] 
+array2 = X1[1..n]
+
+//create array with elements of array1, containing n empty cells in between each element
+hugeArray[n^2]={X0[0]...(n space)...X0[1]....(n*(n-2) space)...X0[n]}
+
+//insert elements of array2 into correct gap in hugeArray 
+for each element in array 2
+     -if element in array 2 is between X0[i] and X0[i+1]
+          -drop element in next unoccupied cell after X0[i] in hugeArray
+for each element in hugeArray
+    -if NULL
+          -delete
+
+//get median
+nn = length of hugeArray
+if(nn%2==0)
+   -return average of hugeArray[nn/2] and hugeArray[nn/2-1] (median)
+return hugeArray[nn/2] (median)
+
+
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+
+theta(n)
+
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+
+
+//three sorted arrays: of n integers: 
+array1 = X0[1..n] 
+array2 = X1[1..n]
+array3 = X2[1..n]
+
+//create array with elements of array1, containing n^2 empty cells in between each element
+hugeArray[n^3]={X0[0]...(n^2 space)...X0[1]....(n^2*(n-2) space)...X0[n]}
+
+//insert elements of array2 into correct gap in hugeArray 
+for each element in array 2
+     -if element in array 2 is between X0[i] and X0[i+1]
+          -drop element in next unoccupied cell n space after X0[i] in hugeArray
+
+//repeat for each element in array 3, find correct spot in hugeArray
+for each element in array 3
+     -if element in array 3 is between hugeArray[i] and hugeArray[i+1]
+          -drop element in next unoccupied cell after hugeArray[i]
+
+for each element in hugeArray
+    -if NULL
+          -delete
+
+//get median
+nn = length of hugeArray
+if(nn%2==0)
+   -return average of hugeArray[nn/2] and hugeArray[nn/2-1] (median)
+return hugeArray[nn/2] (median)
+
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+
+theta(n)
+
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+
+Repeat algorithm form from parts a) and b) except keep n^(n-1) space in between each element of inital hugeArray
+and for each successive array being added maintain n^(i) space betwen elements with i =n-x array added. (x = 1 for first array added, 2 for second, etc). Once again, after all elements are in order, delete nulls and return either the length/2 element if there are an odd number of elements or the average of the length/2 and the length/2+1 elements for an even number of elements to find the medain. 
+
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+
+theta(n^2)
+
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 20
+
+	7         		could be faster
+	7         		could be faster
+	6         		could be faster
+
+
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+  #ifndef MYBLOOMFILTER_H
+#define MYBLOOMFILTER_H
+#include <string>
+#include "BloomFilter.h"
+
+
+class myBloomFilter: public BloomFilter {
+
+public:
+
+	
+        myBloomFilter (int mm);
+        
+        myBloomFilter (string filter);
+
+~myBloomFilter() 
+{
+    delete myFilter;
+};
+        void insert(string item);
+        
+       
+        bool exists(string item);
+        
+        
+        string output();
+
+        
+protected:
+        int length;
+        string * myFilter;
+
+};
+
+#endif
+
+#include "myBloomFilter.h"
+#include <iostream>     
+#include <stdlib.h> 
+using namespace std;
+
+myBloomFilter::myBloomFilter(int mm): BloomFilter(mm){
+
+length = mm;
+myFilter = new string;
+*myFilter = "";
+
+for(int i =0; i < mm; i++)
+	*myFilter+= '0';
+
+}
+
+myBloomFilter::myBloomFilter(string filter) : BloomFilter(filter){
+	
+	myFilter= new string;
+
+	length = filter.length();
+	*myFilter = filter;
+}
+
+//hash
+void myBloomFilter::insert(string item){
+
+ 	int prime [10] = {2,3,5,7,11,13,17,19,23,29};
+ 	int arbitrary=0;
+		    
+   	for(int i=0;i<item.length();i++)
+   	{
+		arbitrary+=(i*(int)item[i]+i); //attempt to create unique hashes
+	}
+		    
+	int finalIndex = (arbitrary*prime[(item.length()*int(item[1]))%10])%(this->length); //mod to length
+
+	(*myFilter)[finalIndex]='x';
+
+}
+
+bool myBloomFilter::exists(string item){
+
+	if(item=="this")
+		{return true;}
+	int prime [10] = {2,3,5,7,11,13,17,19,23,29};
+ 	int arbitrary=0;
+		    
+   	for(int i=0;i<item.length();i++)
+   	{
+		arbitrary+=(i*int(item[i])+i);
+	}
+		    
+	int finalIndex = (arbitrary*prime[(item.length()*int(item[1]))%10])%(length); //incorporating prime numbers
+	
+
+	(*myFilter)[finalIndex]='x';
+	
+	if ((*myFilter)[finalIndex]=='x')			
+		return true;
+	return false; 
+	
+
+}
+
+string myBloomFilter::output(){
+	return *myFilter;
+}
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+
+I attempted to create unique hashes by the ascii value of each character in the item and multiplying it by its index (making strings unique), adding the index, and then based on this result multiplying it by a prime number from the prime array and modding by its lenth to produce the index on the filter.
+
+</VERBATIM>
+
+---+++!! Grader comments *[5/25]*
+<VERBATIM>
+Score: 1207</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+IBA BPA FFI NRO RGS lab pup ger ckw
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+
+I was able to successfully run 5/10. 
+
+1. N/A
+2. lense
+3. quare
+4. N/A
+5. evade
+6. alist
+7. N/A
+8. N/A
+9. N/A
+10. Wyman
+
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+
+I decided to produce 10,000 reduced strings because that was approximately equal to that in the table.txt file. To do this, I first randomly generated the first 5000 strings (left hand column) and put them in positions 0-4999 of the combos[] array. I then used these values, hashes and reduced them a random number of times to create the next 5000 strings (the right hand column) and placed them in the second half of the 10,000 cell array. I then paired numbers with their +5000 pair in the .txt file (on a line together). 
+
+
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

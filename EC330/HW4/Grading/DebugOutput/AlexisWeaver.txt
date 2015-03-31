@@ -1,0 +1,782 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(AlexisWeaver),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+
+Plugging in i = 0 to 10, I see that the equation is not of the form h(k,i) = (h'(k) + i) mod m, which is linear probing and would demonstrate primary clustering. Instead the equation is in the form of quadratic probing (for example, h_10(k) = h_0(k) + 55), which has the form h(k, i) = (h'(k) + c_1i + c_2i^2) mod m, for constants c_1 != c_2. Since the equation is in the form of quadratic probing, it exhibits secondary clustering. 
+
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+For this problem, I referenced http://www.geeksforgeeks.org/median-of-two-sorted-arrays/ to help get started. 
+
+To save time, I wrote one piece of code for all three parts.
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+float findMid(vector<pair<int*,int> > totArrays) {
+
+  //declare vars:
+  int size = 0;
+  int midPos;
+  bool isEven;
+  int counter;
+  int currMinIndex;
+  int returnMinVal;
+
+  // compute the sum of the sizes of all of the arrays
+  for (int ii = 0; ii < totArrays.size(); ii++) {
+    size += totArrays[ii].second;
+  }
+
+  // find the position of the median value
+  midPos = size/2;
+  isEven = (size % 2) == 0;
+
+  //  go through all of the values in the arrays, until the median is reached (midPos steps)
+  // then find the array that contains the minimum of all the numbers
+  counter = midPos;
+  while (counter-- > 0) {
+      currMinIndex = 0;
+      for (int jj = 0; jj < totArrays.size(); jj++) {
+        if (arrays[jj].first[0] <= arrays[currMinIndex].first[0]){
+          currMinIndex = jj;
+        }
+      }
+      // increment that pointer and continue
+      arrays[currMinIndex].first++;
+  }
+
+  // find the current min value out of the minimum value in each array
+  // if the array has an even number of elements
+  if (isEven) {
+    returnMinVal =  *(totArrays[currMinIndex].first - 1);
+    for (int kk = 0; kk < totArrays.size(); kk++) {
+      if (totArrays[kk].first[0] <= totArrays[currMinIndex].first[0]) {
+        currMinIndex = kk;
+      }
+    }
+
+  return (float)(totArrays[currMinIndex].first[0] + returnMinVal)/2;
+
+  }
+
+  // if the array has an odd number of elements
+  else {
+    for (int ll = 0; ll < totArrays.size(); ll++) {
+      if (totArrays[ll].first[0] <= totArrays[currMinIndex].first[0]){
+        currMinIndex = ll;
+      }
+    }
+
+    return (float)totArrays[currMinIndex].first[0];
+
+  }
+}
+
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+
+The algorithm takes a look at the first element of each of the n arrays, finds the smallest value amongst all of them, and assigns the pointer to that array to start at the next element. This algorithm has a linear time complexity (based on the total number of elements between all of the arrays), and does not require that all of the values be copied to another array. 
+
+</VERBATIM>
+
+---+++ ii. Median of three
+
+---++++ Algorithm
+<VERBATIM>
+
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+float findMid(vector<pair<int*,int> > totArrays) {
+
+  //declare vars:
+  int size = 0;
+  int midPos;
+  bool isEven;
+  int counter;
+  int currMinIndex;
+  int returnMinVal;
+
+  // compute the sum of the sizes of all of the arrays
+  for (int ii = 0; ii < totArrays.size(); ii++) {
+    size += totArrays[ii].second;
+  }
+
+  // find the position of the median value
+  midPos = size/2;
+  isEven = (size % 2) == 0;
+
+  //  go through all of the values in the arrays, until the median is reached (midPos steps)
+  // then find the array that contains the minimum of all the numbers
+  counter = midPos;
+  while (counter-- > 0) {
+      currMinIndex = 0;
+      for (int jj = 0; jj < totArrays.size(); jj++) {
+        if (arrays[jj].first[0] <= arrays[currMinIndex].first[0]){
+          currMinIndex = jj;
+        }
+      }
+      // increment that pointer and continue
+      arrays[currMinIndex].first++;
+  }
+
+  // find the current min value out of the minimum value in each array
+  // if the array has an even number of elements
+  if (isEven) {
+    returnMinVal =  *(totArrays[currMinIndex].first - 1);
+    for (int kk = 0; kk < totArrays.size(); kk++) {
+      if (totArrays[kk].first[0] <= totArrays[currMinIndex].first[0]) {
+        currMinIndex = kk;
+      }
+    }
+
+  return (float)(totArrays[currMinIndex].first[0] + returnMinVal)/2;
+
+  }
+
+  // if the array has an odd number of elements
+  else {
+    for (int ll = 0; ll < totArrays.size(); ll++) {
+      if (totArrays[ll].first[0] <= totArrays[currMinIndex].first[0]){
+        currMinIndex = ll;
+      }
+    }
+
+    return (float)totArrays[currMinIndex].first[0];
+
+  }
+}
+
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+
+The algorithm takes a look at the first element of each of the n arrays, finds the smallest value amongst all of them, and assigns the pointer to that array to start at the next element. This algorithm has a linear time complexity (based on the total number of elements between all of the arrays), and does not require that all of the values be copied to another array. 
+
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+float findMid(vector<pair<int*,int> > totArrays) {
+
+  //declare vars:
+  int size = 0;
+  int midPos;
+  bool isEven;
+  int counter;
+  int currMinIndex;
+  int returnMinVal;
+
+  // compute the sum of the sizes of all of the arrays
+  for (int ii = 0; ii < totArrays.size(); ii++) {
+    size += totArrays[ii].second;
+  }
+
+  // find the position of the median value
+  midPos = size/2;
+  isEven = (size % 2) == 0;
+
+  //  go through all of the values in the arrays, until the median is reached (midPos steps)
+  // then find the array that contains the minimum of all the numbers
+  counter = midPos;
+  while (counter-- > 0) {
+      currMinIndex = 0;
+      for (int jj = 0; jj < totArrays.size(); jj++) {
+        if (arrays[jj].first[0] <= arrays[currMinIndex].first[0]){
+          currMinIndex = jj;
+        }
+      }
+      // increment that pointer and continue
+      arrays[currMinIndex].first++;
+  }
+
+  // find the current min value out of the minimum value in each array
+  // if the array has an even number of elements
+  if (isEven) {
+    returnMinVal =  *(totArrays[currMinIndex].first - 1);
+    for (int kk = 0; kk < totArrays.size(); kk++) {
+      if (totArrays[kk].first[0] <= totArrays[currMinIndex].first[0]) {
+        currMinIndex = kk;
+      }
+    }
+
+  return (float)(totArrays[currMinIndex].first[0] + returnMinVal)/2;
+
+  }
+
+  // if the array has an odd number of elements
+  else {
+    for (int ll = 0; ll < totArrays.size(); ll++) {
+      if (totArrays[ll].first[0] <= totArrays[currMinIndex].first[0]){
+        currMinIndex = ll;
+      }
+    }
+
+    return (float)totArrays[currMinIndex].first[0];
+
+  }
+}
+
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+
+The algorithm takes a look at the first element of each of the n arrays, finds the smallest value amongst all of them, and assigns the pointer to that array to start at the next element. This algorithm has a linear time complexity (based on the total number of elements between all of the arrays), and does not require that all of the values be copied to another array. 
+
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 18
+
+	7         		Could be faster
+	7         		could be faster
+	4         		invalid runtime
+
+
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+//////////////////////////////////////myBloomFilter.h///////////////////////////////////////////////
+#ifndef MYBLOOMFILTER_H
+#define	MYBLOOMFILTER_H
+#include <string>
+#include <math.h>
+#include "BloomFilter.h"
+
+using namespace std;
+
+class myBloomFilter:BloomFilter{
+public:
+    /**
+     * Instantiate an empty Bloom filter of length [ mm ] chars.
+     */
+    myBloomFilter (int mm);
+
+    /**
+     * Instantiates a Bloom filter from a given string [filter]
+     * @requires [filter] must have been produces by the output() call of a BloomFilter object.
+     */
+    myBloomFilter (string filter);
+
+    /**
+     * inserts  into the filter
+     */
+    void insert(string item);
+
+    /**
+     * Checks whether [item] is in the filter.
+     * @return  true if the item is probably in the filter
+     *          false if the item is definitely not in the filter
+     */
+
+    bool exists(string item);
+    /**
+     * @return A string of [length] characters representing the Bloom filer
+     */
+
+    string output();
+
+
+protected:
+    int length; /** The length of the Bloom filter, in chars. */
+    string bloom_filter;
+
+};
+
+#endif	/* BLOOMFILTER_H */
+
+//////////////////////////////////////myBloomFilter.cpp///////////////////////////////////////////////
+#include "myBloomFilter.h"
+#include "BloomFilter.h"
+#include <string>
+
+using namespace std;
+
+unsigned long int oneAtATime(string key) {
+// Reference: http://www.eternallyconfuzzled.com/tuts/algorithms/jsw_tut_hashing.aspx
+    string item = key;
+    unsigned int long hash = 0;
+
+    for (int i = 0; i < item.length(); i++) {
+        hash += item[i];
+        hash += (hash << 10);
+        hash ^= (hash >> 6);
+    }
+
+    hash += (hash << 3);
+    hash ^= (hash >> 11);
+    hash += (hash << 15);
+
+    return hash;
+}
+
+myBloomFilter::myBloomFilter(int mm):BloomFilter(mm) {
+    bloom_filter.append(mm, '0');
+    length = bloom_filter.length();
+}
+
+myBloomFilter::myBloomFilter(string filter):BloomFilter(filter) {
+    bloom_filter.append(filter.length(), '0');
+    length = bloom_filter.length();
+}
+
+void myBloomFilter::insert(string item) {
+    // inserts a one at the positions given by the modulus
+    unsigned long int oaat = (oneAtATime(item) % length);
+    this->bloom_filter[oaat] = '1';
+}
+
+
+bool myBloomFilter::exists(string item) {
+    // hash the item using the One At a Time hash, and apply the bloom filter.
+    // if the result contains a zero, return false. Else return true.
+    unsigned long int len = item.length();
+    unsigned long int oaat = (oneAtATime(item) % length);
+
+    char a = bloom_filter[oaat];
+
+    if (a == '0') {
+      return false;
+    }
+
+    return true;
+}
+
+string myBloomFilter::output(){
+    return bloom_filter;
+}
+
+
+%ENDCODE%
+---+++ Explanation
+<VERBATIM>
+For this bloom filter, I simply wrote all of the functions that were listed in the header. First, I created a bloom filter instantiated to mm number of 0s. I then instantiated the filter from a given string (referenced from http://www.eternallyconfuzzled.com/tuts/algorithms/jsw_tut_hashing.aspx). To check that a given string exists in the filter, I hash the item using the One At a Time hash, and apply the bloom filter. If the result contains a zero, return false; else return true.
+
+I had originally used the function k: (m/n)ln(2) (from http://billmill.org/bloomfilter-tutorial/) to select the optimal number of filters to use, where k is the number of hash functions, m is the number of bits, and n is the number of elements. Plugging in 8n for m (1 char  = 1 byte = 8 bits), I ended up with k = 8*ln2, which results in approximately 6 filters, however, I was unable to implement 6 hash functions (I was having trouble hashing subsequent hashes). This would have given me a lower false positive rate. 
+
+As far as the false negatives, I was unable to figure out how to get rid of them. 
+</VERBATIM>
+---+++!! Grader comments *[2/25]*
+<VERBATIM>
+Score: 1091
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+
+FOR HASH: 3915f1a108c95cb8c3b0564f3c3b6ebfd75e8add
+PASSWORD IS: DBO
+
+FOR HASH: 1154d13dee9c7c99cd73bf44436320b922416735
+PASSWORD IS: ISS
+
+FOR HASH: 9dd06c3f4413fd8d4946f819e62d15e7d500d3bc
+PASSWORD IS: M-1
+
+FOR HASH: 934594c19098524d2ce03beb0414e08d2c427129
+PASSWORD IS: MTF
+
+FOR HASH: 08609a146f66653d57c62be818f1168a9d3035f7
+PASSWORD IS: RQS
+
+FOR HASH: 5c657700ecf021c2579e070879fe53dffcc0aba5
+PASSWORD IS: SRB
+
+FOR HASH: e74dddb5aba606ae51dbd2440e6a491ceaadd837
+PASSWORD IS: ckw
+
+FOR HASH: 2d9d79b467e8c7b2099fafde4e4c221a1efa6ff2
+PASSWORD IS: deb
+
+FOR HASH: 685df4b1503f907064c7e9ba0bdc424975db4c05
+PASSWORD IS: mpg
+
+FOR HASH: e13f3a7c6d12baf0b6ad298c2bbc0a8308158c43
+PASSWORD IS: zoo
+
+</VERBATIM>
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+
+My code is as follows. I could not actually crack any of the passwords. I could find string two, but when I tried to repeatedly hash and reduce the corresponding string 1, I could not obtain the given hash. 
+
+#include <iostream>
+#include <sstream>
+#include <fstream>
+#include <vector>
+#include <algorithm>
+
+//////////////// sha1.cpp, provided by Prof. Trachtenberg /////////////////////
+namespace sha1
+{
+    namespace // local
+    {
+        // Rotate an integer value to left.
+        inline const unsigned int rol(const unsigned int value,
+                const unsigned int steps)
+        {
+            return ((value << steps) | (value >> (32 - steps)));
+        }
+
+        // Sets the first 16 integers in the buffert to zero.
+        // Used for clearing the W buffert.
+        inline void clearWBuffert(unsigned int* buffert)
+        {
+            for (int pos = 16; --pos >= 0;)
+            {
+                buffert[pos] = 0;
+            }
+        }
+
+        void innerHash(unsigned int* result, unsigned int* w)
+        {
+            unsigned int a = result[0];
+            unsigned int b = result[1];
+            unsigned int c = result[2];
+            unsigned int d = result[3];
+            unsigned int e = result[4];
+
+            int round = 0;
+
+            #define sha1macro(func,val) \
+			{ \
+                const unsigned int t = rol(a, 5) + (func) + e + val + w[round]; \
+				e = d; \
+				d = c; \
+				c = rol(b, 30); \
+				b = a; \
+				a = t; \
+			}
+
+            while (round < 15)
+            {
+                sha1macro((b & c) | (~b & d), 0x5a827999)
+                ++round;
+            }
+            while (round < 21)
+            {
+                w[round] = rol((w[round - 3] ^ w[round - 8] ^ w[round - 14] ^ w[round - 16]), 1);
+                sha1macro((b & c) | (~b & d), 0x5a827999)
+                ++round;
+            }
+            while (round < 41)
+            {
+                w[round] = rol((w[round - 3] ^ w[round - 8] ^ w[round - 14] ^ w[round - 16]), 1);
+                sha1macro(b ^ c ^ d, 0x6ed9eba1)
+                ++round;
+            }
+            while (round < 59)
+            {
+                w[round] = rol((w[round - 3] ^ w[round - 8] ^ w[round - 14] ^ w[round - 16]), 1);
+                sha1macro((b & c) | (b & d) | (c & d), 0x8f1bbcdc)
+                ++round;
+            }
+            while (round < 80)
+            {
+                w[round] = rol((w[round - 3] ^ w[round - 8] ^ w[round - 14] ^ w[round - 16]), 1);
+                sha1macro(b ^ c ^ d, 0xca62c1d6)
+                ++round;
+            }
+
+            #undef sha1macro
+
+            result[0] += a;
+            result[1] += b;
+            result[2] += c;
+            result[3] += d;
+            result[4] += e;
+        }
+    } // namespace
+
+    void calc(const void* src, const int bytelength, unsigned char* hash)
+    {
+        // Init the result array.
+        unsigned int result[5] = { 0x67452311, 0xefcdab29, 0x98badcfe, 0x10325476, 0xc3d2e1f0 };
+
+        // Cast the void src pointer to be the byte array we can work with.
+        const unsigned char* sarray = (const unsigned char*) src;
+
+        // The reusable round buffer
+        unsigned int w[80];
+
+        // Loop through all complete 64byte blocks.
+        const int endOfFullBlocks = bytelength - 64;
+        int endCurrentBlock;
+        int currentBlock = 0;
+
+        while (currentBlock <= endOfFullBlocks)
+        {
+            endCurrentBlock = currentBlock + 64;
+
+            // Init the round buffer with the 64 byte block data.
+            for (int roundPos = 0; currentBlock < endCurrentBlock; currentBlock += 4)
+            {
+                // This line will swap endian on big endian and keep endian on little endian.
+                w[roundPos++] = (unsigned int) sarray[currentBlock + 3]
+                        | (((unsigned int) sarray[currentBlock + 2]) << 8)
+                        | (((unsigned int) sarray[currentBlock + 1]) << 16)
+                        | (((unsigned int) sarray[currentBlock]) << 24);
+            }
+            innerHash(result, w);
+        }
+
+        // Handle the last and not full 64 byte block if existing.
+        endCurrentBlock = bytelength - currentBlock;
+        clearWBuffert(w);
+        int lastBlockBytes = 0;
+        for (;lastBlockBytes < endCurrentBlock; ++lastBlockBytes)
+        {
+            w[lastBlockBytes >> 2] |= (unsigned int) sarray[lastBlockBytes + currentBlock] << ((3 - (lastBlockBytes & 3)) << 3);
+        }
+        w[lastBlockBytes >> 2] |= 0x80 << ((3 - (lastBlockBytes & 3)) << 3);
+        if (endCurrentBlock >= 56)
+        {
+            innerHash(result, w);
+            clearWBuffert(w);
+        }
+        w[15] = bytelength << 3;
+        innerHash(result, w);
+
+        // Store hash in result pointer, and make sure we get in in the correct order on both endian models.
+        for (int hashByte = 20; --hashByte >= 0;)
+        {
+            hash[hashByte] = (result[hashByte >> 2] >> (((3 - hashByte) & 0x3) << 3)) & 0xff;
+        }
+    }
+
+    void toHexString(const unsigned char* hash, char* hexstring)
+    {
+        const char hexDigits[] = { "0123456789abcdef" };
+
+        for (int hashByte = 20; --hashByte >= 0;)
+        {
+            hexstring[hashByte << 1] = hexDigits[(hash[hashByte] >> 4) & 0xf];
+            hexstring[(hashByte << 1) + 1] = hexDigits[hash[hashByte] & 0xf];
+        }
+        hexstring[40] = 0;
+    }
+} // namespace sha1
+
+
+using namespace std;
+
+
+/////////////////// hash.cpp, Provided by Prof. Trachtenberg //////////////////
+/**
+ * converts a hex character into an integer
+ * @param hex The hexadecimal character to convert 0-9,a-f (lower case)
+ * @return an integer 0-15 representing the hex character
+ */
+int hexTOint(char hex) {
+	if (hex>='0' && hex<='9')
+		return hex - '0';
+	else
+		return 10+ hex - 'a';
+}
+
+/**
+ * produce a hash of a given string
+ * @param str The string we wish to hash.
+ * @return A string of 40 hex characters corresponding to a hash of the string.
+ */
+string hash(string str) {
+	unsigned char shaResult[20];
+	char hexResult[41];
+	sha1::calc(str.c_str(), str.length(), shaResult); // calculate the modified sha1 hash
+	sha1::toHexString(shaResult,hexResult);           // convert the hash to a string
+
+	return string(hexResult);
+}
+
+/**
+ * produce a string of len characters (each between ! and ~) from the provided string
+ * @param str The string to be reduced to len characters.
+ * @param len The length of the reduced string.
+ * @return A collection of len characters (each between ! and ~).
+ *
+ * @requires 0 < len <= 40.
+ */
+string reduce(string str, int len) {
+	string temp = hash(str);
+	string result(len,0);
+
+	// divide the sha1 hash into len groups, each providing one character of the result
+	for (int ii=0; ii<temp.length(); ii++)
+		result[ii % len] = ((result[ii % len]) + hexTOint(temp[ii]))%94;
+
+	// convert to characters ! though ~
+	for (int ii=0; ii<result.length(); ii++)
+		result[ii] += 0x21;
+
+	return result;
+}
+
+vector< string > rainFirst;  // first of the ordered pairs in the rainbow table
+vector< string > rainSecond; // second of the ordered pairs in the rainbow table
+
+bool isMatch(string current, vector<int>& vecResults){
+
+  for(int ii = 0; ii < rainSecond.size(); ii++){
+    if(rainSecond[ii].compare(current) == 0){
+      vecResults.push_back(ii);
+    }
+  }
+  return (vecResults.size() > 0);
+}
+
+
+int main(){
+
+  // declare vars
+  vector<string> givenHashes;
+  vector< pair<string,string> > crackedPass;
+  vector<int> resultsIndex;
+
+  string working;
+  string firstMatch;
+  string secondMatch;
+  string reduced;
+
+  int index;
+
+  // load hashes:
+  givenHashes.push_back("921532986acb4b7e271dcce6e8c15b1316ba0c4e");
+  givenHashes.push_back("8bda99642e781243b1a1b15571797fc98312f22c");
+  givenHashes.push_back("0dfb8c76e6c92480f875453f99f6e51cdee0fb7a");
+  givenHashes.push_back("da510fcea23b55304f66f616c8f3d3e08fadd609");
+  givenHashes.push_back("4ec6d5c184d67b1136b8123b8d111a025747ba77");
+  givenHashes.push_back("8665f14ffcfb8acdee369993ed3c62a15b0f606a");
+  givenHashes.push_back("978dc6a1ca901a30ed475b005eaae62e6eb20de6");
+  givenHashes.push_back("7be94b2a34252709b102e4821e842f81f4f18806");
+  givenHashes.push_back("69cc4b7f78502eafc9b4187ee40c0f81bec1be9b");
+  givenHashes.push_back("132880d91f57afe988303ccce9c27da6e2f9a91b");
+
+  // load
+	ifstream rawData;
+	rawData.open("table.txt");
+	string aline;
+
+	//....load the lines
+	while(getline(rawData, aline) ){
+    rainFirst.push_back(aline.substr(4,5));
+    rainSecond.push_back(aline.substr(14,5));
+  }
+
+  rawData.close();
+
+
+  // hash and reduce frenzy
+  cout << endl <<"GIVEN HASH: " << givenHashes[0] << endl << endl;
+  current = originalHashes[0];
+
+  //reduce
+  cout << "REDUCE (" << current << ") = ";
+  current = reduce(current,5);
+  cout << current << endl;
+  while(!isMatch(current, resultsIndex)) {
+    //hash
+    cout << "HASH (" << current << ") = ";
+    current = hash(current);
+    cout << current << endl;
+    //reduce
+    cout << "REDUCE (" << current << ") = ";
+    current = reduce(current,5);
+    cout << current << endl;
+  }
+
+  // create pointers to arrays of strings for
+  string* reduceArr = new string[resultsIndex.size()];
+  string*  hashArr = new string[resultsIndex.size()];
+
+  for(int jj = 0; jj < resultsIndex.size(); jj++){
+    cout << "MATCH" << "(" << rainFirst[resultsIndex[jj]] << ", " << rainSecond[resultsIndex[jj]]
+    << ")" << endl;
+    cout << "Original String: " << rainFirst[resultsIndex[jj]] << endl << endl;
+    reduceArr[jj] = rainFirst[resultsIndex[jj]];
+  }
+
+  int count = 0;
+  do{
+    for(int kk = 0; kk < resultsIndex.size(); kk++){
+      // hash
+      hashArr[kk] = hash(reduceArr[kk]);
+      cout << "hash(" << reduceArr[kk] << ") = " << hashArr[kk] << endl;
+
+      // reduce
+      reduceArr[kk] = reduce(hashArr[kk],5);
+      cout << "reduce(" << hashArr[kk] << ") = " << reduceArr[kk] << endl;
+
+      if(givenHashes[0] == hashArr[kk]){
+        // GOT IT
+        cout << "WINNER" << endl;
+        cout << reduceArr[kk] << endl << endl;
+      }
+
+    }
+  }while(++c >= 000000);
+
+  // clean up
+  resultsIndex.clear();
+  delete[] hashArr;
+  delete[] reduceAarr;
+
+  return 0;
+
+}
+
+</VERBATIM>
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+In the interest of time, I created 10,000 strings of 7 randomly generated characters between ! and ~. I then hashed and reduced each string 777 times, and printed the original string and the 777 time hashed-reduced as an ordered pair in a rainbow table. 
+
+Instead of random strings, I would have liked to run the code on a file of all of Shakespeare's "Romeo and Juliet", but I could not find it in the proper format. 
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

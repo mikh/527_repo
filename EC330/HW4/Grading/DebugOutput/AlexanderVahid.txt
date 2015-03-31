@@ -1,0 +1,445 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(AlexanderVahid),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+i. No. This hash function is not very similar to linear hashing, and will not develop long runs of occupied slots so it will not exhibit primary clustering. 
+ii. Yes. Secondary clusters occur when two keys only have the same probe sequence if their initial probe position is the same. This does occur.
+iii. Yes. Because the hash function will wrap around once it reaches the end, and because it will not repeat the same probe sequence during each wrap around, it will eventually find an open spot in the table if one exists.
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+%CODE{"cpp"}%
+#include <iostream>
+
+using namespace std;
+
+double FindMedian(int* X0,  int* X1, int n)
+{
+    int medElem = (int)(n/2); // median element (casting to int rounds down)
+    int medNum0; // median of X0
+    int medNum1; // median of X1
+
+    if ( n == 1 ) return (X0[0] + X1[0])/2;
+    if ( n == 2 ) return ( ((X0[0] > X1[0]) ? X0[0] : X1[0]) + ((X0[1] < X1[1]) ? X0[1] : X1[1]) ) / 2.0;
+
+    if ( n % 2 == 1 ) // if n is odd
+    {
+        //medians are middle element
+        medNum0 = X0[medElem];
+        medNum1 = X1[medElem];
+        
+        if ( medNum0 == medNum1 )
+        {
+            return medNum0;
+        }
+        if (medNum0 < medNum1)
+        {
+            return FindMedian(X0 + medElem, X1, medElem + 1);
+        }
+        else
+        {
+            return FindMedian(X0, X1 + medElem, medElem + 1);
+        }
+    }
+    else // n is even
+    {
+        //medians are average of middle elements
+        medNum0 = (int)((X0[medElem] + X0[medElem + 1]) / 2);
+        medNum1 = (int)((X1[medElem] + X1[medElem + 1]) / 2);
+        
+        if ( medNum0 == medNum1 )
+        {
+            return medNum0;
+        }
+        if (medNum0 < medNum1)
+        {
+            return FindMedian(X0 + medElem - 1, X1, medElem + 1);
+        }
+        else
+        {
+            return FindMedian(X0, X1 + medElem - 1, medElem + 1);
+        }
+    }
+}
+
+int main()
+{
+    int X0[] = {1,2,3,12,15};
+    int X1[] = {10,11,13,14,15};
+    cout << FindMedian(X0, X1, 5) << endl;
+}
+
+
+%ENDCODE%
+
+---++++ Analysis and running time
+<VERBATIM>
+Because the arrays are already sorted, the median of each of them is the middle element (or average of the two middle elements if n is even). The median between both of the arrays is going to be between these two medians. Therefore, starting from the median of each array, and moving upward on the array with the lower median and downward on the array with the higher median, and calling the function again recursively, you could find the median (once both arrays are reduced to one or two items).
+
+RUNNING TIME: Everything within the function runs in constant time (besides the fact that it is recursive). Therefore, T(n) = T(n/2) + Theta(1) which using the master method case two equals lg(n).
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+%CODE{"cpp"}%
+#include <iostream>
+
+using namespace std;
+
+double FindMedian(int* X0, int* X1, int* X2, int n)
+{
+    int i = 0;
+    int j = 0;
+    int k = 0;
+    
+    int iter = 0;
+    
+    int med1 = 0, med2 = 0;
+    while (iter <= (n * 3) / 2)
+    {
+        med1 = med2;
+        if (X0[i] <= X1[j] && X0[i] <= X2[k] && i != n) // X0 lowest
+        {
+            med2 = X0[i++];
+        }
+        else if (X1[j] <= X0[i] && X1[j] <= X2[k] && j != n) // X1 lowest
+        {
+            med2 = X1[j++];
+        }
+        else // X2 lowest
+        {
+            med2 = X2[k++];
+        }
+        iter++;
+    }
+    if ((n * 3) % 2 == 0) // if even
+    {
+        return (med1 + med2) / 2.0;
+    }
+    else //odd
+    {
+        return  med2;
+    }
+}
+
+int main()
+{
+    int X0[] = {1,2,3,12,15};
+    int X1[] = {10,11,13,14,15};
+    int X2[] = {1,14,25,89,90};
+    cout << FindMedian(X0, X1, X2, 5) << endl;
+    //1,1,2,3,10,11,12,13,14,14,15,15,25,89,90
+}
+
+
+%ENDCODE%
+
+---++++ Analysis and running time
+<VERBATIM>
+This algorithm finds the lowest element in each of the three arrays, and then increments that array's index. It does this until it reaches the median at element (3/2) * n.
+
+RUNNING TIME: Because it iterates (3/2) * n times it runs in Theta(n) time.
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+%CODE{"cpp"}%
+#include <iostream>
+
+using namespace std;
+
+double FindMedian(int **arrayOfArrays, int n)
+{
+    int *arrayIndices = new int[n](); // initialize array of zeros
+    int iter = 0;
+    
+    int med1 = 0, med2 = 0;
+    while (iter <= (n * n) / 2)
+    {
+        med1 = med2;
+        int i;
+        bool lowest = false;
+        for (i = 0; i < n; i++) //find lowest arrayOfArrays[i]
+        {
+            if (arrayIndices[i] == n) continue; //reached end of this array
+            if (i == n - 1) //reached last array, this must have the lowest
+            {
+                lowest = true;
+                break;
+            }
+            for (int j = i + 1; j < n; j++)
+            {
+                if (arrayOfArrays[i][arrayIndices[i]] <= arrayOfArrays[j][arrayIndices[j]]) //if this array is lower than all the others
+                {
+                    lowest = true;
+                }
+                else
+                {
+                    lowest = false;
+                    break;
+                }
+            }
+            if (lowest) break;
+        }
+        med2 = arrayOfArrays[i][arrayIndices[i]++];
+        iter++;
+    }
+    if ((n * 3) % 2 == 0) // if even
+    {
+        return (med1 + med2) / 2.0;
+    }
+    else //odd
+    {
+        return  med2;
+    }
+}
+
+int main()
+{
+    const int n = 5;
+    int X0[] = {1,2,3,12,15};
+    int X1[] = {10,11,13,14,15};
+    int X2[] = {1,14,25,89,90};
+    int X3[] = {10,11,13,14,15};
+    int X4[] = {1,14,25,89,90};
+    int** arrayOfArrays = new int*[n];
+    arrayOfArrays[0] = X0;
+    arrayOfArrays[1] = X1;
+    arrayOfArrays[2] = X2;
+    arrayOfArrays[3] = X3;
+    arrayOfArrays[4] = X4;
+
+    cout << FindMedian(arrayOfArrays,  n) << endl;
+}
+%ENDCODE%
+
+---++++ Analysis and running time
+<VERBATIM>
+Similar to the 3 sorted arrays algorithm, this algorithm finds the lowest element in each of the n arrays, and then increments that array's index. It does this until it reaches the median at element n*n/2.
+
+RUNNING TIME: This algorithm represents an arithmetic series, which equals (1/2) * n * (n+1), and asymptotically is Theta(n^2)
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 23
+
+	10        		
+	7         		Could have expanded on part a algorithm for better runtime
+	6         		Could have expanded on part a algorithm for better runtime
+
+
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+#include <string>
+#include "myBloomFilter.h"
+#include <cstdlib>
+using namespace std;
+
+
+myBloomFilter::myBloomFilter (int mm) : BloomFilter(mm)
+{
+    Initialize();
+}
+
+
+myBloomFilter::myBloomFilter (string filter) : BloomFilter(filter)
+{
+    Initialize();
+    copy(filter.begin(), filter.end(), charSet);
+}
+
+
+void myBloomFilter::Initialize()
+{
+    charSet = new char [length]();
+}
+
+
+void myBloomFilter::insert(string item)
+{
+    insertOrExists(true, item);
+}
+
+
+bool myBloomFilter::exists(string item)
+{
+    return insertOrExists(false, item);
+}
+
+bool myBloomFilter::insertOrExists(bool insert, string item)
+{
+    bool exists = false;
+    
+    bool hash1 = Hash1(insert, item);
+    bool hash2 = Hash2(insert, item);
+    
+    exists = (hash1 && hash2);
+    
+    return exists;
+}
+
+bool myBloomFilter::Hash1(bool insert, string item)
+{
+    bool exists = false;
+    
+    int sum = 0;
+    int hashNum;
+    int index;
+    char charToInsert;
+    
+    //create a sum of the ascii values of the string to play with
+    for (int i = 0; i < item.size(); i++) {
+        sum += item[i] * i;
+    }
+    
+    //seed the rand function with this sum
+    srand(sum);
+    
+    while (true)
+    {
+        //get random numbers
+        hashNum = rand();
+        
+        index = hashNum % length; // generate index in bloom filter
+        charToInsert = (hashNum % 5) + 65; // choose ascii character between A and E
+        
+        if(charSet[index] == '\0') // emtpy slot
+        {
+            break;
+        }
+        else if(charSet[index] == charToInsert) // found it or collision
+        {
+            exists = true;
+            break;
+        }
+    }
+    if (insert) charSet[index] = charToInsert;
+    
+    return exists;
+}
+
+
+bool myBloomFilter::Hash2(bool insert, string item)
+{
+    bool exists = false;
+    
+    int sum = 0;
+    int hashNum;
+    int index;
+    char charToInsert;
+    
+    // create a modified sum of the ascii values of the string to play with
+    for (int i = 0; i < item.size(); i++) {
+        sum += item[i] * i * i;
+    }
+    
+    // seed the rand function
+    srand(sum);
+    
+    while (true)
+    {
+        hashNum = rand();
+        
+        index = hashNum % length; // generate index in bloom filter
+        charToInsert = (rand() % 5) + 86; // choose ascii characters between V and Z
+        
+        if(charSet[index] == '\0') // emtpy slot
+        {
+            break;
+        }
+        else if(charSet[index] == charToInsert) // found it or collision
+        {
+            exists = true;
+            break;
+        }
+    }
+    if (insert) charSet[index] = charToInsert;
+    
+    return exists;
+}
+
+
+string myBloomFilter::output()
+{
+    string output(charSet,length);
+    return output;
+}
+    
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+My bloom filter uses a character array as the base data structure for the bloom filter. I use two hash functions that each choose one index in the hash table and one of five characters to put in that index. Indices are chosen similar to open addressed hashing; if the index is a null character it inserts the character in that spot, otherwise it hashes the key again and finds a different spot. Using the rand function in cstdlib (knowing that by seeding it with the same value when inserting and testing for existence it would give the same progression), I attempted to make the hash functions as uniform as possible. 
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+3ddcaa159254b009131d7c8c9b732278b5cdc9b1 = Gee
+e13f3a7c6d12baf0b6ad298c2bbc0a8308158c43 = zoo
+774f11f0ae7049eb25ce781aabaa37afd7282432 = dub
+30efd404f76280f244ee1e00b86b2d12fd4c16f3 = eme
+361be360760e694b07aecce91f60dc1bc6ef893f = ass
+6971a698c535c6db3b44bfe6887e96314ec3fb8f = DTB
+770c46bf00a86db695a9bacf3e041553448e15cb = Saw
+89bb853a9a04e2c091c791c8d4e119518897b636 = apt
+b63f801cadc25f2f9e9f51fddb88cf8e016a687d = yen
+c3a61237871f6639e0968676ca44a963dfbf2a5a = sma
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+3e06307b787e254f4d01f94a05bc4acce4b7d93e = stool
+07d75305c5b7058d5a5fb918c4b0f0b559511988 = borak
+d51bcee05c7dc6f4a5178b033f869fad40257551 = Galei
+c5b2b9f6421231c795d9a5ba4892c599343e17e9 = loyal
+d7d04aa5582228286a74be412f475f1921cc5515 = couldn't find
+c4f13a5b88dfb810e54687ee95ca103843f514ac = couldn't find 
+0866015466b0d01d49db3e3c55216f65faf26d39 = couldn't find 
+c6162fbd91de9d384f3cc4a75f75cc9883ed858d = Carum
+f21e77142fdc5b2075bfa10dcd1cad930af3a1e6 = raped
+3957c1afc1bf2c683f6dc65477a5ef0f9307fbfd = stale
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+My code randomly chooses 1500 strings of 5 characters, and then hash/reduces them 2^20 times each to find the value in the rainbow table.
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---
+
+   * [[%ATTACHURLPATH%/problem4a.zip][problem4a.zip]]: problem4a.zip
+
+   * [[%ATTACHURLPATH%/problem4b.zip][problem4b.zip]]: problem4b.zip

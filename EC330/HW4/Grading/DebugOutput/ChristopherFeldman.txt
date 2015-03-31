@@ -1,0 +1,239 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(ChristopherFeldman),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+This probe sequence is linearand will therefore exhibit primaryclustering. The only time it would not update the table if it was not already full is if there was a collision, which means it could always add a key.
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+
+merge arrays via insertion
+stop on element n
+element n is median
+
+</VERBATIM>
+---++++ Analysis and running time
+The median is the middle value, which means it will be the middle value of the new array, and since the arrays are sorted it is possible to merge them in order with insertion. The new array has 2n elements, so the middle value is n.
+
+Theta(n)
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+merge arrays via insertion
+stop on element (3/2)n
+element (3/2)n is median
+</VERBATIM>
+This uses the same methodology as above. Merging the three arrays takes constant time, and then the median element is the (3/2)n element because there are 3n elements in the new array.
+
+Theta(n)
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+merge arrays via insertion
+stop on element (n/2)n
+element (n/2)n is median
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+This is once again the same as above. Merge n arrays, each with n elements for a new array with n^2 elements. The new array will have a median at n^2/2.
+
+Theta(n^2)
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 20
+
+	7         		could be faster
+	7         		could be faster
+	6         		could be faster
+
+
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+   // put your code here
+   // also remember to upload it in submit page
+#include <string>
+#include <math.h>
+#include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
+#include "myBloomFilter.h"
+using namespace std;
+
+
+
+
+
+        /**
+        * Instantiate an empty Bloom filter of length [ mm ] chars.
+        */
+        myBloomFilter::myBloomFilter (int mm) : BloomFilter(mm) {
+			myfilter = new char[mm];
+			std::fill(myfilter, myfilter + mm, '.');
+		}
+        
+        /**
+        * Instantiates a Bloom filter from a given string [filter]
+        * @requires [filter] must have been produces by the output() call of a BloomFilter 			object.
+        */
+        myBloomFilter::myBloomFilter (string filter) : BloomFilter(filter) {
+			myfilter = (char*) filter.c_str();
+		}
+        /**
+        * inserts  into the filter
+        */
+        void myBloomFilter::insert(string item) {
+			int h1 = hash_1(item);
+			int h2 = hash_2(item);
+
+                        //insert y's into table where the hashes are
+			myfilter[h1] = 'y';
+			myfilter[h2] = 'y';
+		}
+        
+        /**
+        * Checks whether [item] is in the filter.
+        * @return  true if the item is probably in the filter
+        *          false if the item is definitely not in the filter
+        */
+        bool myBloomFilter::exists(string item) {
+			int h1 = hash_1(item);
+			int h2 = hash_2(item);
+			
+                        //check if locations given by hashes are already filled
+			if (myfilter[h1] != 'y') return false;
+ 			if (myfilter[h2] != 'y') return false;
+			
+			return true;
+		}
+        
+        /**
+        * @return A string of [length] characters representing the Bloom filer
+        */
+        string myBloomFilter::output() {
+			return myfilter;
+		}
+
+
+		int myBloomFilter::hash_1(string item) {
+			double A = (sqrt(5) - 1) / 2;
+
+			//Rotating Hash
+			unsigned h = 0;
+			for (int i = 0; i < item.length(); i++)
+				h = (h << 4) ^ (h >> 28) ^ item[i];
+
+			//Multiplication Hash
+                        double base; 
+			double frac = modf(h * A, &base);
+			return frac * (length);
+
+		}
+
+		
+		int myBloomFilter::hash_2(string item) {
+			double A = (sqrt(5) - 1) / 2;
+	
+			//Modified Bernstein Hash
+			unsigned h = 0;
+			for (int i = 0; i < item.length(); i++) {
+				h = 33 * h ^ item[i];
+			}
+			
+                        //Multiplication Hash
+			double base; 
+			double frac = modf(h * A, &base);
+			return frac * (length);
+		}
+
+        
+
+
+
+
+
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+I used two hashes that I found online (http://www.eternallyconfuzzled.com/tuts/algorithms/jsw_tut_hashing.aspx). The two I used were the Rotating Hash, and the Modified Berstein Hash. These were used to turn the strings into integer numbers that would be well distributed and then I used a multiplication hash with A equal to (sqrt(5)-1)/2 to modify the hash so that it was within the bounds of my problem.
+</VERBATIM>
+
+---+++!! Grader comments *[24/25]*
+<VERBATIM>
+Score: 2183</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Give out the password you cracked. Remember attached the code as 'problem4a.zip'
+#1 HAP
+#2 NRO
+#3 RQS
+#4 BNS
+#5 scr
+#6 ger
+#7 WGS
+#8 dub
+#9 dis
+#10 slt
+
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the password you cracked. 
+1. stool
+
+My code ran in an infinite loop for my other hash values and I cannot explain why it was able to crack one hash and not the others.
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Give out the explanation here. Remember attached the code and table
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

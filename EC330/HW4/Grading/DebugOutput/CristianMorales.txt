@@ -1,0 +1,169 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(CristianMorales),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+Because the probe sequence effectively relies on recursion, it can be shown through iteration that for any given i, hi(k) = h0(k) + (i(i+1))/2. Because of this, since each i is different, the term (i(i+1))/2 will also always be different, ensuring that hi(k) is always different. This means that the third property is true and the probe sequence will always be able to add a key if the table is not full.
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+int X[2*n];                                           // Create a master array that will hold the contents of X0 and X1
+for(int ii = 0; ii < n; ii = ii+2){
+    X[ii] = X0[ii];                                    // Build the array so that X[0] = X0[0], X[1] = X1[0], X[2] = X0[1], X[3] = X1[1], ...
+    X[ii+1] = X1[ii];
+}
+BubbleSort(X);                                   // Sort the master array. As it's initially nearly sorted, the time should be O(n)
+return X[n];                                     // Once the master array is sorted, determine the median by getting the value at the center of the master array (.5(2*n) = n)
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+This algorithm simply creates a master array that has the values of the two initial arrays. This master array
+is created by making  X[0] = X0[0], X[1] = X1[0], X[2] = X0[1], X[3] = X1[1], X[4] = X1[2], X[5] = X1[2], and so
+on so that when it is finished being created, the master array is already nearly sorted. Creating this array takes
+time O(2n) since it requires a for loop that increments n times and performs 2 actions each time.
+
+Next, we take advantage of the master array's partial sorted-ness. Sorting the master array using BubbleSort,
+we will have a runtime O(n). After this, all that needs to be done is determine the median by finding the value at
+the center of the master array.
+
+Thus the total runtime is O(n).
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+int X[3*n];                                           // Create a master array that will hold the contents of X0 and X1
+for(int ii = 0; ii < n; ii = ii+3){
+    X[ii] = X0[ii];                                    // Build the array so that X[0] = X0[0], X[1] = X1[0], X[2] = X2[0], X[3] = X0[1], X[4] = X1[1], X[5] = X2[1], ...
+    X[ii+1] = X1[ii];
+    X[ii+2] = X2[ii]
+}
+BubbleSort(X);                                   // Sort the master array. As it's initially nearly sorted, the time should be O(n)
+return X[1.5*n];                                     // Once the master array is sorted, determine the median by getting the value at the center of the master array (.5(3*n) = 1.5*n)
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+
+
+This algorithm simply creates a master array X that has the values of the two initial arrays. This master array
+is created by making  X[0] = X0[0], X[1] = X1[0], X[2] = X2[0], X[3] = X0[1], X[4] = X1[1], X[5] = X2[1], and so
+on so that when it is finished being created, the master array is already nearly sorted. Creating this array takes
+time O(3n) since it requires a for loop that increments n times and performs 3 actions each time.
+
+Next, we take advantage of the master array's partial sorted-ness. Sorting the master array using BubbleSort,
+we will have a runtime O(n). After this, all that needs to be done is determine the median by finding the value at
+the center of the master array, in this case X[1.5*n] (0.5*(3*n) = 1.5*n)
+
+Thus the total runtime is O(n).
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+int X[n*n];                                           // Create a master array that will hold the contents of X0, X1, X2, ..., Xn
+for(int ii = 0; ii < n; ii = ii+(n-1)){
+    X[ii] = X0[ii];                                    
+    X[ii+1] = X1[ii];
+    X[ii+2] = X2[ii];
+    ...
+    X[ii+(n-1)] = X(n-1)[ii];
+}
+BubbleSort(X);                                   // Sort the master array. As it's initially nearly sorted, the time should be O(n)
+return X[0.5*n*n];                               // Once the master array is sorted, determine the median by getting the value at the center of the master array (.5(n*n) = 5*(n^2))
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+
+This algorithm simply creates a master array X that has the values of the two initial arrays. This master array
+is created by making  X[0] = X0[0], X[1] = X1[0], ... X[n-1] = X(n-1)[0], X[n] = X0[1], X[n+1] = X1[1], ..., X[n+(n-1)] = X(n-1)[1], and so
+on so that when it is finished being created, the master array is already nearly sorted. Creating this array takes
+time O(n^2) since it requires a for loop that increments n times and performs n actions each time.
+
+Next, we take advantage of the master array's partial sorted-ness. Sorting the master array using BubbleSort,
+we will have a runtime O(n). After this, all that needs to be done is determine the median by finding the value at
+the center of the master array, in this case X[0.5*(n^2)] (0.5*(n*n) = 0.5*n^2)
+
+Thus the total runtime is O(n^2).
+---+++!! Grader comments *[25/25]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 18
+
+	7         		could be faster
+	7         		could be faster
+	4         		incorrect runtime
+
+
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+   // put your code here
+   // also remember to upload it in submit page
+
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+---+++!! Grader comments *[0/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Give out the password you cracked. Remember attached the code as 'problem4a.zip'
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the password you cracked. 
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Give out the explanation here. Remember attached the code and table
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

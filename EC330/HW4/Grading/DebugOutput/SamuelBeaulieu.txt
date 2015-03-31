@@ -1,0 +1,345 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(SamuelBeaulieu),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+Secondary Clustering and Always able to add a key if the table is not full
+
+There is no primary clustering because the keys probed get farther and farther 
+apart as i increases. This is however secondary clustering because the probe sequence
+expands in a quadratic fashion. Because of this and because the function is modded, it 
+will eventually reach every point in the table so it will always be able to add a key if the table
+is not full though it may take a long time.
+
+Probe sequence:
+i=0,1,2,3...m-1
+h(k,0)=h(k)
+h(k,1)=h(k)+1
+h(k,2)=h(k)+3
+h(k,3)=h(k)+6
+...
+h(k,m-1)=h(k)+m(m+1)/2
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+Find median of each of the two arrays and compare them. Take the first have of the array 
+with the greater median and the second half of the array with the lesser median and repeat 
+the process until the medians are equal or there is one of two values.
+
+Pseudo-code (Assuming array is indexed from 1 to n, not 0 to n-1):
+median(X0, start0, X1, start1, n)
+	loc0=(n+1)/2+start0-1
+	loc1=(n+1)/2+start1-1
+	med0=X0[loc0]
+	med1=X1[loc1]
+	
+	if n=1
+		if med1 < med2
+			return med2
+		else
+			return med1
+	if med0==med1
+		return med1
+
+	if med1 < med2
+		median(X0, start0-1+loc0, X1, start1, (n+1)/2)
+	else 
+		median(X0, start0, X1, start1-1+loc1, (n+1)/2)
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+This essentially divides the arrays by two until the median is found so it 
+runs in log(n) time.
+
+</VERBATIM>
+
+<latex>\Theta(\log(n))</latex>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+Since there is not longer a way to compare the medians (there will always be a middle
+median), one has to count from the lowest number to to median.
+
+median(A[], n)
+{
+	pt[3] = {0,0,0} //Pointers of lowest values in each array
+	num = 0 //Number of low numbers found
+	mid = null
+
+        //Goes through lowest numbers of arrays until it gets to the median
+	while (mid == null)
+		min = A[0][pt[0]]
+		for i in array A[]
+			if A[i][pt[i]] < min
+				A[i][pt[i]]
+				pt[i]++
+				num++
+			if num == 3*n/2 //median is at halfway point of all numbers
+				mid=A[i][pt[i]]
+				break
+
+}
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Since scanning through three numbers takes constant time and it only has to do so 
+until it finds the 3*n/2 number, the algorithm runs in linear time.
+</VERBATIM>
+
+<latex>\Theta(n)</latex>
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+Extending the algorithm from 3 arrays to n arrays does not change the algorithm much. 
+The main difference is that instead of scanning through three arrays until it gets to the median,
+it now scans through n arrays, repeatedly searching for the smallest value until it gets to the 
+halfway point.
+
+median(A[], n)
+{
+	pt[n] = {0,0,0} //Pointers of lowest values in each array
+	num = 0 //Number of low numbers found
+	mid = null
+
+        //Goes through lowest numbers of arrays until it gets to the median
+	while (mid == null)
+		min = A[0][pt[0]]
+		for i in array A[]
+			if A[i][pt[i]] < min
+				A[i][pt[i]]
+				pt[i]++
+				num++
+			if num == n*n/2 //median is at halfway point of all numbers
+				mid=A[i][pt[i]]
+				break
+
+}
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Since the main difference is going though n arrays instead of 3 arrays, it has to find n*n/2 
+numbers and therefore runs in n^2 time.
+</VERBATIM>
+
+<latex>\Theta(n^2)</latex>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 23
+
+	10        		
+	7         		could be faster
+	6         		could be faster
+
+
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+#include "BloomFilter.h"
+
+using namespace std;
+
+class myBloomFilter : public BloomFilter
+{
+public:
+	myBloomFilter(int length);
+	myBloomFilter(string filter);
+
+	void insert(string item);
+	bool exists(string item);
+	string output();
+	int* hashFunc(string item);
+
+
+private:
+	char* bloom;
+};
+
+#include "myBloomFilter.h"
+#include <iostream>
+#include <cstring>
+
+using namespace std;
+
+//Creates bloom filter of certain length
+myBloomFilter::myBloomFilter(int length) : BloomFilter(length)
+{
+	bloom = new char[length]();
+}
+
+//Creates bloom filter as array of characters based off a strings
+myBloomFilter::myBloomFilter(string filter) : BloomFilter(filter)
+{
+	bloom = new char[filter.size()+1];
+	strcpy(bloom, filter.c_str());
+}
+
+//Inserts a string into the bloom filter
+void myBloomFilter::insert(string item)
+{
+	//Hashes the strings
+	int* hash = hashFunc(item);
+	int loc = hash[0];
+	char val = hash[1];
+
+	int locOriginal = loc;
+
+	//If the loc is NULL, put it there
+	if (bloom[loc] == '\0')
+		bloom[loc] = val;
+
+	//If not look for the next open cell or one with
+	//	the same value.
+	else
+	{
+		//Go through location and look for a spot to put the value
+		do
+		{
+			loc++;
+			if (bloom[loc] == val)
+				break;
+			if (loc == BloomFilter::length)
+				loc = 0;
+			if (loc == locOriginal)
+				break;
+		} while (bloom[loc] != '\0');
+	}
+}
+
+//Check to see if a string is probably in the filter
+bool myBloomFilter::exists(string item)
+{
+	//Hashes the string
+	int* hash = hashFunc(item);
+	int loc = hash[0];
+	char val = hash[1];
+
+	int locOriginal = loc;
+
+	//Look for where the hash would be stored, if it reaches
+	//	the original location or null, it is not there
+	do
+	{
+		if (loc == BloomFilter::length - 1)
+			loc = 0;
+		if (bloom[loc] == val)
+			return true;
+		loc++;
+		if (loc == locOriginal)
+			return false;
+	} while (bloom[loc] != '\0');
+}
+
+
+//Displays the values contained in the filter as a string
+string myBloomFilter::output()
+{
+	return string(bloom, BloomFilter::length);
+}
+
+//Hashes the string into a location and a value to be turned into
+//	a character
+int* myBloomFilter::hashFunc(string item)
+{
+	int* hash = new int[2];
+	unsigned int loc = 0;
+	unsigned int val = 0;
+
+	//Actual Hash Function
+	for (int ii = 0; ii < item.length()-1; ii++)
+	{
+		loc = (loc * 37 + item[ii]*loc) % 57;
+		val = val + item[ii]*11*loc%87;
+	}
+
+	hash[0] = loc%BloomFilter::length;
+	hash[1] = (val % 31) + 33;
+
+	return hash;
+}
+
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+My bloom filter is based off an array of characters. When a string is inserted, it hashes that 
+string into a location and a value. It then tries to put that value at that location. If the location is 
+empty (null) or filled with the same value, it does. If it is not, it moves to the next cell and tries again.
+To check to see if a string exists, it hashes the string again into a location and value and searches 
+for it in that location. If its not there it tries the next cell until it finds it or reaches an endpoint (null or 
+the original location) in which case, its not in the table.
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+6f3e3bcc9b8d42cd8d0ba074fdcacfacf51deb28: ETR
+ed5dd0204793834a222d4bea84a083aa0768866b: lab
+4716927b5d52501999f664344c50c9a4e81c5111: dos
+e61b4bd1bfc407c316a3249debc6723405d9e9d0: Neb
+b63f801cadc25f2f9e9f51fddb88cf8e016a687d: yen
+9bd4a4b60f89834d258c96f68de53f8155c89f70: bpt
+ebbe3c44f32a202f32d2bc59f3a1f63b6cc3c889: scr
+fbca1de9adf8bf4dd7fb6cfed167c8d459e89807: zac
+dfd13904f4f4fcb57970f6d6953a4f9225f5795e: Fee
+770c46bf00a86db695a9bacf3e041553448e15cb: Saw
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+567cf4c0b536d13d88f5a1794da17864935c3e4f: Not in rainbow table
+f21e77142fdc5b2075bfa10dcd1cad930af3a1e6: raped
+f32799f284d777cf10838e63dfc8e67b7a6cfff1: Natal
+e5564df8bdf471ec15e8b9c586cf52f6c0b6aec6: Not in rainbow table
+3957c1afc1bf2c683f6dc65477a5ef0f9307fbfd: stale
+8bda99642e781243b1a1b15571797fc98312f22c: Not in rainbow table
+b56a4f72f0c4031a0737346eb80e669c6d6b3cd4: Not in rainbow table
+54c15eedd7615d3d92afc152722f231ceb76366d: manis
+b1f9f946d0738e1512da5c37a70c0bacb0f1cce9: Not in rainbow table
+9e3ec2133ca26eb0b04e07c71604de509d434bcc: eddic
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+My code first creates a file for the table to be stored in. Then it randomly generates a string of 5
+characters to be used as a key and hash reduces that many times . It then stores the key and 
+the final reduced value as a line in the table.
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

@@ -1,0 +1,375 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(PaulMoy),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+
+COLLABORATED WITH PETER GOULAKOS
+
+---++ Problem 1 - Hashing
+<VERBATIM>
+i. NO primary clustering. Because the values of h_i(k) are not increasing by any linear amount, there is no primary clustering.
+As i gets large, the value of h_i(k) is much greater than that of h_(i-1)(k) thus the two locations are spread far apart and we have
+no primary clustering. Also, the interval i between two adjacent locations changes, so if two probe sequences overlap in the same
+location but not at the same value of i then they will diverge again.
+
+ii. YES secondary clustering. If two probe sequences have the same h_0(k) then the two sequences will be the same for all values
+of i (i.e. identical sequences). This is the definition of secondary clustering given in the textbook!
+
+iii. NOT always able to add to a non-full table. Consider the simple example where the hash table is an array of length 10, and h_0 = 0.
+Then h_0 = 0, h_1 = 1, h_2 = 3, h_3 = 6, h_4 = 0, h_5 = 5, h_6 = 1, h_7 = 8, h_8 = 6, h_9 = 5, h_10 = 5.
+After, h_11 = 6, h_12 = 8, h_13 = 1, h_14 = 5, h_15 = 0, h_16 = 1, h_17 = 8, h_18 = 6, h_19 = 5, h_20 = 5;
+We see that this pattern of {6,8,1,5,0,1,8,6,5,5} will repeat every ten number in the future, because when we add 10 but mod by 10
+it doesn't change the value of the hash function. Therefore it does not hit every element (notice 2,4,7,9 never hit)
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+From http://www.geeksforgeeks.org/median-of-two-sorted-arrays/
+
+find_median(a,b,n) // a and b are sorted arrays, n = size of each array
+    med_a = median of a; // n/2 element of a
+    med_b = median of b; // n/2 element of b
+    if a == b, return a; // Same median means we are done
+    if n == 2, return (max(a[0], b[0]) + min(a[1], b[1])) / 2; // Formula for median of two sorted arrays of length two
+    else if a > b, call find_median(a[0...|_n/2_|], b[|_n/2_|...n-1], n/2); // Recursively find median
+    else if a < b, call find_median(a[|_n/2_|...n-1], b[0...|_n/2_|], n/2);
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Here, finding med_a and med_b takes constant time since the arrays are already sorted. The base case, when n == 2, also takes constant time. 
+Comparing a and b takes constant time as well, so we have a recursion where:
+T(n) = T(n/2) + theta(1)
+We can solve this with a recursion tree, where we expand T(n/2) and then T(n/4) and we end up adding log(n) terms of theta(1), which
+means that our runtime is:
+Theta(log(n)).
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+find_median(a,b,c, n) // a, b, c are sorted arrays, n = length of each array
+    initialize three pointers, one to beginning of each array
+    initialize a counter to 0;
+    compare the element pointed to by each pointer, take smallest
+        and advance that pointer, also incrementing count
+    when count reaches 3n/2, return that element
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Initializing variables takes constant time. Comparing three elements takes constant time.
+We compare three elements 3n/2 times, so the overall complexity is Theta(1) * Theta(n), or:
+Theta(n)
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+find_median(a1,a1....an, n) // a1, a2...an are sorted arrays, n = length of each array
+    initialize n pointers, one to beginning of each array
+    initialize a counter to 0;
+    compare the element pointed to by each pointer, take smallest
+        and advance that pointer, also incrementing count
+    when count reaches (n^2)/2, return that element
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Initializing n pointers takes order n time. Comparing n elements takes (n-1) time. We compare n elements
+(n^2)/2 times, so the overall complexity is n * (n^2)/2, or complexity is:
+Theta(n^3)
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 21
+
+	10        		
+	7         		could be faster
+	4         		needs to be faster
+
+
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+//
+//  myBloomFilter.h
+//  EC330hw4_2
+//
+//  Created by Paul Moy on 3/17/15.
+//  Copyright (c) 2015 __MyCompanyName__. All rights reserved.
+//
+
+#ifndef EC330hw4_2_myBloomFilter_h
+#define EC330hw4_2_myBloomFilter_h
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+unsigned int get_coefficient(string& input, int power);
+void set_coefficient(string& input, int power, int coef);
+unsigned int myCRC32(string& input, int hash_num);
+
+class myBloomFilter {
+    
+public:
+    /**
+     * Instantiate an empty Bloom filter of length [ mm ] chars.
+     */
+    myBloomFilter (int mm);
+    
+    /**
+     * Instantiates a Bloom filter from a given string [filter]
+     * @requires [filter] must have been produces by the output() call of a BloomFilter object.
+     */
+    myBloomFilter (string filter);
+    /**
+     * inserts  into the filter
+     */
+    void insert(string item);
+    
+    /**
+     * Checks whether [item] is in the filter.
+     * @return  true if the item is probably in the filter
+     *          false if the item is definitely not in the filter
+     */
+    bool exists(string item);
+    
+    /**
+     * @return A string of [length] characters representing the Bloom filer
+     */
+    string output();
+    
+    ~myBloomFilter();
+    
+protected:
+    int length; /** The length of the Bloom filter, in chars. */
+    char* current_filter; // Current representation of filter
+
+    
+};
+
+#endif
+%ENDCODE%
+
+%CODE{"cpp"}%
+//
+//  myBloomFilter.cpp
+//  EC330hw4_2
+//
+//  Created by Paul Moy on 3/17/15.
+//  Copyright (c) 2015 __MyCompanyName__. All rights reserved.
+//
+
+#include <iostream>
+#include "myBloomFilter.h"
+
+char MY_CRC_POLY[4] = {(char)0x04, (char)0xC1, (char)0x1D, (char)0xB7};
+string CRC_STR(MY_CRC_POLY);
+
+bool myBloomFilter::exists(string item) {
+    // False if item is not in filter, true if it might be
+    
+    for (int i = 1; i < 3; i++) {
+        int k = (myCRC32(item,i))%(length); // Mod to wrap around bloom filter
+        if (current_filter[k] == '0') {
+            return false;
+        }
+    }
+    
+    return true;
+}
+
+myBloomFilter::~myBloomFilter() {
+    delete current_filter;
+}
+
+myBloomFilter::myBloomFilter(int mm) {
+    length = mm;
+    current_filter = new char[mm+1];
+    for (int i = 0; i < mm; i++) {
+        current_filter[i] = '0';
+    }
+    current_filter[mm] = '\0';
+}
+
+myBloomFilter::myBloomFilter(string filter) {
+    length = filter.size();
+    current_filter = new char[filter.size()+1];
+    for (int i = 0; i < filter.size(); i++) {
+        current_filter[i] = filter[i];
+    }
+    current_filter[filter.size()] = '\0';
+    
+}
+
+string myBloomFilter::output() {
+    // Returns string representation of current_filter
+    string out = current_filter;
+    return out;
+}
+
+void myBloomFilter::insert(string item) {
+    
+    // Insert string into the bloom filter
+    for (int i = 1; i < 3; i++) {
+        int k = (myCRC32(item,i))%(length); // Mod to wrap around bloom filter
+        current_filter[k] = '1';
+    }
+    
+    return;
+}
+
+unsigned int get_coefficient(string& input, int power) {
+    // Get char in question
+    unsigned char blah = input[input.length()-power/8-1];
+    
+    // Get bit in question
+    blah = (blah >> (power % 8));
+    
+    // See if it's zero or one
+    return (blah % 2);
+}
+
+void set_coefficient(string& input, int power, int coef) {
+    // Get char in question
+    unsigned char blah = input[input.length()-power/8-1];
+    
+    // Clear bit in question
+    blah &= ~(((unsigned int)1) << (power % 8));
+    
+    // Set bit in question
+    blah |= (((unsigned int)coef) << (power % 8));
+    
+    // Put bit back into original string
+    input[input.length()-power/8-1] = blah;
+    
+    return;
+    
+}
+
+unsigned int myCRC32(string& input, int hash_num) {
+    
+    // Append hash_num - allows for many different hashes
+    // Also append three 'x's in case original string not 4 chars
+    char buffer[100];
+    int foo = sprintf(buffer, "xxx%d", hash_num);
+    string u = buffer + input;
+    
+    // Polynomial division
+    int m = (8 * u.length()) - 1;
+    int n = 32;
+    for (int k = m - n; k >= 0; k--) {
+        int q_k = get_coefficient(u, n+k);
+        if (q_k == 0) {
+            continue;
+        }
+        for (int j = n+k-1; j >= k; j--) {
+            unsigned int vj_k = get_coefficient(CRC_STR,j-k);
+            unsigned int u_j = get_coefficient(u,j);
+            set_coefficient(u, j, (u_j - vj_k)%2);
+        }
+        
+    }
+    
+    // Return remainder polynomial
+    unsigned int remainder = 0;
+    for (int i = 0; i < 4; i++) {
+        
+        remainder += ((unsigned int)u[u.length()-i-1]) << i*8;
+    }
+    
+    return remainder;
+}
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+I designed my bloom filter to work with a (simplified?) CRC32 hash. The hash takes a string in as an input, then treats the string
+as a monic polynomial, where each of the coefficients is either one or zero, depending on the corresponding bit in the string. Thus, each character
+in the string is treated as eight separate bits. The algorithm, which I got a rough outline for from Knuth, divides the input polynomial by the CRC32
+polynomial, which is easily found on the web. It then returns the remainder after that division, which is used as an index into the bloom filter. The 
+bloom filter itself is an array of chars, initialized to zero on the creation of an empty bloom filter. The insert function takes a string, computes its 
+CRC32 hash, then takes that hash and indexes the array by that hash, turning that char to 1. Exists does the same thing - it looks at the hash of the
+string being tested, sees if that entry in the char array is 0, and if it is then the function returns false. Otherwise it returns true, because we have no
+way to tell for sure whether or not it is actually in there. I run each input through two CRC32 hashes for a better bloom filter. The hashes are distinct
+because in the CRC32 hash function I append the hash number along with three 'x' chars to the string, thus creating potentially infinite hashes from
+that single function. I chose to do two hashes because that was all I could run on the upload page in the given amount of time - anything more timed
+out.
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Answers in the following format:
+password (space) given hash
+BNS 0b215f0155d3a4b2fdb3a552216a37659c2f06eb
+HAP 5134a5346598b438fbd5cf6bb65cfd665a9cc5df
+MTA df73d210e73ffc551d8a76bdf983b85d496539dd
+MeV 04c41d16491231d8e966c5c78560272125a97634
+RQS 08609a146f66653d57c62be818f1168a9d3035f7
+WGS ed76fc2fa8882484a10c55500f5738702c4c71b8
+ays a697476fc47a0c342b2afb57f493e7fb94f27f82
+pup 2adee50a101f6a2bc3d14eb04bd1b60f3b719c36
+scr ebbe3c44f32a202f32d2bc59f3a1f63b6cc3c889
+zac fbca1de9adf8bf4dd7fb6cfed167c8d459e89807
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Password (space) given hash
+Yorgo 978dc6a1ca901a30ed475b005eaae62e6eb20de6
+aures d9cb375d9d7e8e9d296617f895e031d4a732553c
+benne 484ae67299a215c1a4f822f3de26b76526d365fb
+cundy 27fad73b6e2c5aa9d4dfe002d3cd6c17cb7f002a
+eloge 9ef51f0c61b2a2aa2e54454b1539a5ad02f433b9
+gorsy 0dfb8c76e6c92480f875453f99f6e51cdee0fb7a
+pippy a7200733363fea245d9d811ac853e9b74123b21c
+Norah ee26da2b4d5a6f463b660be57763fb9336f5faa4
+Boony c33a0251f9142cef195aa663a19c67cd4eaf508c
+Bahai 3bb99e84677f85420471b05863c9efead9e964d8
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+I created a very general program that could generate a rainbow table. There are three definitions at the beginning of the file, which
+allow the user to specify how long they want the strings in the rainbow table, how many hash/reduces they want between pairs in
+the rainbow table, and how many rows of the rainbow table they want. For generality, I ran the code with STR_LENGTH = 5, 
+NUM_HASHES = 1000 and TABLE_LENGTH = 10000. The code works by creating a string of 'x's with length equal to STR_LENGTH,
+then hashing and reducing that starting string NUM_HASHES times. At the end, the last string is used as the pair to the starting string
+and creates the first entry in the rainbow table. Then, I hash and reduce the last string one more time and that result becomes the
+starting string for the next row of the table. I hash/reduce again as described above, and repeat this process TABLE_LENGTH times.
+Each time I get a pair, I write it into an output file in the format start,stop\n.
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

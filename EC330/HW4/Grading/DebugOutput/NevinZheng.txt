@@ -1,0 +1,193 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(NevinZheng),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+
+This probe sequence exhibits  secondary clustering as it is a quadratic probe sequence.
+h_i(k) = h_(i-1)(k) + i
+this recurrence can be expanded to
+h_i(k) = h(k) + i^2 -i/2
+
+
+However this WILL NOT always be able to add a key because you will exceed the size of the table because you don't have a way to restrict the output (ex mod m, or modulus by the size of the table.)
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+given A and B, assume a certain A[i] is the median for a certain index i. Because A is sorted, that means A[i] is greater then i elements. Because you have 2n elements total, the median is greater then n elements. So if  A[i] is the median and its greater then n elements overall and greater then n elements in A, it must be greater than j=n-i-1 elements in B. we can then actually check to see if this is the overall median. Because the overall median has: B[i] < A[i] <= B[j+1]. Therefore we can test to see if an element is the median in constant time and where to search if an element is not the median.
+
+Algo:
+1) Begin with middle index of A,
+2) compute corresponding index of B: j = n-i-1
+3) If B[j] <= A[i] <= B[j+1] then A[i] and B[j] are the middle elements overall, so the median is the average of the 2
+4) If A[i] < B[j] <=B[j+1] then repeat the above process to binary search the right half of A until you get the overall median
+5) If B[j]<=B[j+1] < A[i] Binary search the left half of A for the median
+6) If you hit the edges of A, search through B
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+At every iteration, by using binary search we reduce our search pool for the median by half, so our worst case run time is O( log(n) ). 
+
+For example, if we do the initial operation, we can see that if the initial search is not successful, the algo knows where to search and halves its search pool, until it reaches a size of 1. if still not successful it does this process on the second array and log(n) again. Therefore the algo is O(log(n)).
+
+O( log(n) )
+---+++ ii. Median of three
+
+
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+
+Principle: Take the median of all arrays. The overall median is between the minimum and maximum of these two sub medians because for any array, less then half of the elements will be greater then max and less then half will be less then min.
+
+From this basic principle we can devise an algo for this situation. After we find the two max and min arrays, we can safely throw out many numbers in the arrays that contain min and max.
+For the array that contains min, we can throw out all values less then min and in the array that contains max, we can throw out all values greater then max, as long as we throw out the same number of elements in each array. we can repeat this until the arrays reach one element. eventually, this algo will reduce all the arrays to single elements in order, in which case you can easily find the median.
+
+def median(a,b,c):
+medA = med(A) (constant time, because sorted)
+medB = med(B)
+medC = med(C)
+
+maxMed = max(medA,medB,medC) 
+minMed = min(medA,medB,MedC)
+
+max'sArray = array that contains the max median
+min'sArray = array that contains the min median
+
+deleteCount = 0
+
+Delete equal numbers of elements less then and greater then the min and max respectively
+
+median(a,b,c) (Repeat procedure on the new arrays)
+
+
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+Every time you drop numbers greater or less then the min or max, you take out half or more of the numbers in each array, so that happens in O(log(n)) time. which happens three times.
+
+Algo is O( log(n) )  time.
+
+there are a lot of specifics and edge cases, but this should work
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+We will apply exactly the same algorithm as the second part of finding the min and max of each array and reducing over many iterations. the only thing that changes is the worst case running time.
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+from the second part we got that each array can be reduced in log(n) time after which is takes constant time to find the median, but you need to find n medians you need to reduce all the arrays. For this part there are n arrays so thats n^2* log(n)
+
+
+O(n^2 * log(n) )
+---+++!! Grader comments *[25/25]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 22
+
+	10        		
+	8         		
+	4         		could be faster
+
+
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+   // put your code here
+   // also remember to upload it in submit page
+
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+---+++!! Grader comments *[0/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Give out the password you cracked. Remember attached the code as 'problem4a.zip'
+</VERBATIM>
+
+DCE 0c9889e664f4a0a7676c98e373a442f3a107aeb4
+
+HAP 5134a5346598b438fbd5cf6bb65cfd665a9cc5df
+
+ISS 1154d13dee9c7c99cd73bf44436320b922416735
+
+MTA df73d210e73ffc551d8a76bdf983b85d496539dd
+
+NRL f110e778b7a0bb6989e4df4c78b83fd76ce3e088
+
+NRO 0b47caaa066a28e5a1ec7509db838a9a228bb83f
+
+QKt a4f5c236224a3abe25c7dfc8d59fc0d572d27e1b
+
+Ruy 765740a97b17f6e54ae3a8678f7b3b62e7b633bd
+
+SRB 5c657700ecf021c2579e070879fe53dffcc0aba5
+
+bel 007d04468b0dafec647c305361351728f5e4d610
+
+
+
+code is attatched....
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the password you cracked. 
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Give out the explanation here. Remember attached the code and table
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

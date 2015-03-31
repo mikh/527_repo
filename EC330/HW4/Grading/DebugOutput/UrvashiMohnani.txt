@@ -1,0 +1,369 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+Worked with Christine Low
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(UrvashiMohnani),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+h<sub>0</sub>(k) = h(k)<br>
+h<sub>i</sub>(k) = h<sub>i-1</sub>(k) + i<br>
+if i = 1: h<sub>1</sub>(k) = h<sub>0</sub>(k) + 1 = h(k) + 1<br>
+if i = 2: h<sub>2</sub>(k) = h<sub>1</sub>(k) + 2 = h(k) + 1 + 2<br>
+if i = 3: h<sub>3</sub>(k) = h<sub>2</sub>(k) + 3 = h(k) + 1 + 2 + 3<br>
+if i = n: h<sub>n</sub>(k) = h<sub>n-1</sub>(k) + n = h(k) + 1 + 2 + ... + n<br>
+This is the summation of i from 1 to n which equals to n(n+1)/2<br>
+Hence this is a quadratic probe sequence<br>
+i) False<br>
+ii) True<br>
+iii) False<br>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+int med(int &array_1, int &array_2, int n)<br>
+{ <br>
+if n = 1<br>
+{ return (array_1[0] + array_2[0]) / 2; }<br>
+else<br>
+int ii = 0, jj = 0; <br>
+int new_array[2n];<br>
+for(int kk = 0; kk < 2n; kk++) <br>
+{ if( array_1[ii] < array_2[jj])  <br>
+{ new_array[kk] = array_1[ii]; <br>
+ii++; } <br> 
+
+else<br>
+{ new_array[kk] = array_2[jj]<br>
+jj++; }<br>
+}<br>
+return ( ( new_array[n] + new_array[n + 1] ) / 2 ); <br>
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+Since we have one for loop taking 2n steps, it is O(2n)<br>
+The return statement will be constant time is o(1)<br>
+Hence the running time would be &theta;(n)<br>
+---+++ ii. Median of three
+
+
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+int med( int &a_1, int &a_2, int &a_3, int n)<br>
+{<br>
+int ii = 0, jj = 0, zz = 0<br>
+int new_a[3n]<br>
+
+for(int kk = 0; kk < 3n; kk++)<br>
+{<br>
+if( a_1[ii] < a_2[jj] && a_1[ii] < a_3[zz] )<br>
+{<br>
+new_a[kk] = a_1[ii]<br>
+ii++ <br>
+}<br>
+
+else if( a_2[jj] < a_1[ii] && a_2[jj] < a_3[zz] )<br>
+{<br>
+new_a[kk] = a_2[jj]<br>
+j++<br>
+}<br>
+
+else<br>
+{<br>
+new_a[kk] = a_3[zz]<br>
+zz++<br>
+}<br>
+
+if( ( 3*n ) % 2 == 0)<br>
+{<br>
+return ( (new_a[ (3*n) / 2] + new_a[ ( (3*n) / 2 ) + 1) ] ) / 2 )<br>
+}<br>
+
+else<br>
+return new_a[ ( (3n) / 2 ) + 0.5]<br>
+
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+There is one for loop that goes through 3n steps, so it is O(3n)<br>
+Getting the median is constant time then, which is O(1)<br>
+Hence the running time is &theta;(n)<br>
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+Merge(All the arrays) to give a new_a;<br>
+mergesort(new_a);<br>
+
+if( ( n*n ) % 2 == 0)<br>
+{<br>
+return ( (new_a[ (n*n) / 2] + new_a[ ( (n*n) / 2 ) + 1) ] ) / 2 ) <br>
+}<br>
+else<br>
+return new_a[ ( (n*n) / 2 ) + 0.5]<br>
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+Merge sort takes O(nlogn) time, and finding the median of the new sorted array takes constant time O(1)<br>
+Hence the running time of this algorithm would be &theta;(nlogn)<br>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 21
+
+	7         		could be faster
+	7         		could be faster
+	7         		
+
+
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+   // put your code here
+   // also remember to upload it in submit page
+
+#ifndef MYBLOOMFILTER_H
+#define	MYBLOOMFILTER_H
+#include <string>
+#include <vector>
+#include "BloomFilter.h"
+using namespace std;
+
+class myBloomFilter : public BloomFilter {
+public:
+	myBloomFilter(int mm);
+	myBloomFilter(string filter);
+	void insert(string item);
+	bool exists(string item);
+	string output();
+	int hash_1(string item);
+	int hash_2(string item);
+	int hash_3(string item);
+	vector<int> storage;
+};
+
+#endif 
+
+
+#include <iostream>
+#include <string>
+#include <vector>
+#include <iterator>
+#include <bitset>
+#include "myBloomFilter.h"
+using namespace std;
+
+myBloomFilter :: myBloomFilter(int mm) : BloomFilter(mm)
+{
+	for(int ii = 0; ii != mm; ii++)
+	{
+		storage.push_back(0);
+	}
+}
+
+myBloomFilter :: myBloomFilter(string filter) : BloomFilter(filter)
+{
+	length = filter.length();
+	for (int ii = 0; ii != length; ii++)
+	{
+		storage.push_back(0);
+	}
+}
+
+void myBloomFilter :: insert(string item)
+{
+	int h_1 = hash_1(item);
+	if(storage[h_1] == 0)
+	{
+		storage[h_1] = 1;
+	}
+
+	int h_2 = hash_2(item);
+	if(storage[h_2] == 0)
+	{
+		storage[h_2] = 1;
+	}
+
+	int h_3 = hash_3(item);
+	if(storage[h_3] == 0)
+	{
+		storage[h_3] = 1;
+	}
+}
+
+bool myBloomFilter :: exists(string item)
+{
+	int check_1 = hash_1(item);
+	int check_2 = hash_2(item);
+	int check_3 = hash_3(item);
+	if(storage[check_1] == 1 && storage[check_2] == 1 && storage[check_3])
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+string myBloomFilter :: output()
+{
+	return "string";
+}
+
+int myBloomFilter :: hash_1(string item)
+{
+	int length = item.size();
+	char input[length];
+	int ascii = 0;
+
+	for(int ii = 0; ii < length; ii++)
+	{
+		input[ii] = item[ii];
+		ascii = input[ii] + ascii;
+	}
+
+	return ascii;
+
+}
+
+int myBloomFilter :: hash_2(string item)
+{
+	int len = item.size();
+	char in[len];
+	int ascii = 0;
+
+	for(int ii = 0; ii < len; ii++)
+	{
+		in[ii] = item[ii];
+		ascii = in[ii] - 30 + ascii;
+	}
+
+	return ascii;
+
+}
+
+int myBloomFilter :: hash_3(string item)
+{
+	int len = item.size();
+	char in[len];
+	int ascii = 0;
+
+	for(int ii = 0; ii < len; ii++)
+	{
+		in[ii] = item[ii];
+		ascii = in[ii] + 100 + ascii;
+	}
+
+	return ascii;
+}
+
+
+%ENDCODE%
+---+++ Explanation
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+I created three different hash functions to give out a decimal value. I instantiated a bloom filter and in the insert function I inserted a 1 at the index given by the three different hash functions. To check wether the string is in the bloom filter, I hashed the string that is input get the ascii decimal value and check that index of the bloom filter to see if it is 1 or 0. If it is a one then yes that string might be in the bloom filter, otherwise it is definitely not in the bloom filter. 
+---+++!! Grader comments *[0/25]*
+<VERBATIM>
+Score: 1000</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Give out the password you cracked. Remember attached the code as 'problem4a.zip'
+</VERBATIM>
+
+1st Password is:<br> 
+Sui<br>
+2nd Password is:<br> 
+Wal<br> 
+3rd Password is:<br>  
+NRL<br> 
+4th Password is:<br>  
+ibm<br> 
+5th Password is:<br>  
+BNS<br> 
+6th Password is:<br>  
+wim<br> 
+7th Password is:<br>  
+Saw<br> 
+8th Password is:<br>  
+OBS<br> 
+9th Password is:<br>  
+dos<br> 
+10th Password is:<br>  
+TTU<br> 
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the password you cracked. 
+</VERBATIM>
+
+`HnRq   hRWPd<br>
+;TUih     \dWea<br>
+),7.r       `sVv_<br>
+;TUih     \dWea<br>
+;TUih     \dWea<br>
+;TUih     \dWea<br>
+'h]8]       LhrgQ<br>
+?$F|r     Mmjdg<br>
+[4(=N     mziiY<br>
+),7.r       `sVv_<br>
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Give out the explanation here. Remember attached the code and table
+</VERBATIM>
+
+I looped from ascii value 33 to 126 and created created all possible two character patterns and concatenated "$$" onto it to give a 4 character string for the original strings. I then hash and reduce over and over again 5000 times. I store the last string I get in a file I created and output it in the format of the original rainbow table given to us. I did not do much because the execution was taking a long time but the length of the strings and number of hashes and reduces can be increased for more possibilities. But too much would make the search very slow and the table would be of no use. 
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---
+
+   * [[%ATTACHURLPATH%/problem4c.zip][problem4c.zip]]: problem4c.zip
+
+   * [[%ATTACHURLPATH%/problem4b.zip][problem4b.zip]]: problem4b.zip
+
+   * [[%ATTACHURLPATH%/problem4a.zip][problem4a.zip]]: problem4a.zip
+
+   * [[%ATTACHURLPATH%/problem4a.zip][problem4a.zip]]: problem4a.zip
+
+   * [[%ATTACHURLPATH%/problem4a.zip][problem4a.zip]]: problem4a.zip

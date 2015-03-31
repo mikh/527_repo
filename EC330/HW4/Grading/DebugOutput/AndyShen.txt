@@ -1,0 +1,199 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(AndyShen),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+Give out answer here:
+
+
+This probe sequence will exhibit primary clustering but will always be able to add to the table if the table is not full.
+
+This particular probe sequence is a linear probe sequence and is prone to primary clustering. 
+Long runs of occupied slots build up, and this increases the average search time. 
+
+The whole table will be probed because assuming the hash function of:
+h(k,i) = (h'(k) + i) mod m
+for i = 0,1...m, and given key k, T[h0(k)] will first be probed, then T[h0(k)+1] all the way up to slot T[m-1], and then wrap around to T[0] and T[1] until it reaches to T[h0(k)-1].
+
+
+
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+
+Idea: Use a binary search tree to search check if an item arr[i] is the median. If it is the median, then it is greater 
+than i items in array1, or also greater than j = n-1-i items in array2.
+
+Algorithm:
+
+1. Get the middle element "i" of arr1[] using array indexes:
+
+2. Calculate the corresponding index j of arr2[] (j = n-1-i) 
+
+3. If arr1[i] >= arr2[j] and arr1[i] <= arr2[j+1] then arr1[i] and arr2[j]
+   are the middle elements.
+     then return the average of arr2[j] and arr1[i]
+
+4) If arr1[i] is greater than both arr2[j] and arr2[j+1] then 
+     do binary search in left half
+
+5) If arr1[i] is smaller than both arr2[j] and arr2[j+1] then
+     do binary search in right half
+
+6) If you reach at any corner of arr1[] then do binary search in arr2[]
+
+Pseudocode:
+
+int getMedian(int arr1[], int arr2[], int left, int right, int n)
+{
+    int i, j;
+    if (left > right)
+        return getMedian(arr2, arr1, 0, n-1, n);
+ 
+    i = (left + right)/2;
+    j = n - i - 1;  
+ 
+    if (arr1[i] > arr2[j] && (j == n-1 || arr1[i] <= arr2[j+1]))
+    {
+        if (i == 0 || arr2[j] > arr1[i-1])
+            return (arr1[i] + arr2[j])/2;
+        else
+            return (arr1[i] + arr1[i-1])/2;
+    }
+ 
+    //Search left half 
+    else if (arr1[i] > arr2[j] && j != n-1 && arr1[i] > arr2[j+1])
+        return getMedian(arr1, arr2, left, i-1, n);
+ 
+    /Search right half
+    else
+        return getMedian(arr1, arr2, i+1, right, n);
+}
+
+</VERBATIM>
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+
+We are checking if arr2[j] <= arr1[i] <= arr2[j+1] and then if arr[i] is not the median then we can search the array for the median 
+if arr[i] is greater than arr[j] or less than arr2[j+1]. We can use binary search for the median in O(logn) time
+
+Running time: O(logn)
+
+
+
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+
+The same algorithm would apply, except applying it to 3 arrays instead of 2.
+
+Pseudocode:
+
+
+
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+
+Worst Case is O(logn)
+
+
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+
+We could use the same algorithm as the first, except applied to "n" arrays.
+
+
+Pseudocode:
+
+
+
+
+</VERBATIM>
+---++++ Analysis and running time
+<VERBATIM>
+
+Running time is O(logn)
+
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 10
+
+	10        		
+	0         		You actually have to give an answer here
+	0         		You actually have to give an answer here
+
+
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+   // put your code here
+   // also remember to upload it in submit page
+
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+---+++!! Grader comments *[0/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Give out the password you cracked. Remember attached the code as 'problem4a.zip'
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the password you cracked. 
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Give out the explanation here. Remember attached the code and table
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

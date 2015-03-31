@@ -1,0 +1,242 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(AidarAidymbekov),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+Primary clustering.
+It simply means that if there exists a cluster and the initial position of a new record
+ falls in the cluster (anywhere), then the cluster size increases. 
+Linear probing leads to this type of clustering.
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+Algorithm
+   - First of all calculating the medians of the two arrays
+   - If  those medians are the same then return that number
+   - If median 1 is greater than median 2, then the median is present in one 
+   of the below two subarrays:
+    a)  From first element of X0 to median 1 (X0[0...|_n/2_|])
+    b)  From median 2 to last element of X1 (X1[|_n/2_|...n-1])
+   - If median 2 is greater than median 1, then the median is present in one    
+   of the two subarrays that are exactly opposite calculated in previous step
+  
+   - Repeat the above process until size of both the subarrays 
+   becomes 2.
+   - When size of the two arrays is 2 then use below formula to get 
+  the median:
+    Median = (max(X0[0], X1[0]) + min(X1[1], X1[1]))/2
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+the running time would be O(logn)
+Divide and conquer method
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+   - First calculate the medians median 1, median 2 and median 3 of the input arrays (X0[], X1[] and X2[]) respectively.
+   - If m1, m2, m3 are equal then return m1
+   - If m1 is the greatest one (comparing to m2 and m3), then the median is present in one 
+   of the below two subarrays.
+    a)  From first element of ar1 to m1 
+    b)  From m2 to last element of ar2
+    c) From m3 to last element of ar3
+   - The above process is repeated for m2 or m3 is the greatest one.
+   - The above process is then repeated until size of all the subarrays 
+   are 2.
+   - If size of the arrays are 2 (which at this point it will be) then 
+   - Median = (max(X0[0], X1[0],X2[0]) + min(X0[1], X1[1],X2[0]))/2
+
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+The running time would be O(logn)
+
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+   - Get the middle elements of n arrays
+   - After sort the number of arrays by increasing medians
+   - Get the middle element of the first array (the array with the minimum median) using array indexes left and right. Call it array0
+   Let index of the middle element be i.
+   i Calculate the corresponding index j of the next array, call it array1
+     j = n – i – 1 
+   - If array0 [i] >= array1[j] and array0[i] <= array1[j+1] then array0[i] and array1[j]
+   are the middle elements.
+     return average of array0[j] and array1[i]
+   - If array0[i] is greater than both array1[j] and array1[j+1] then 
+     do binary search in left half  (i.e., array[left ... i-1])
+   - If array0[i] is smaller than both array1[j] and array1[j+1] then
+     do binary search in right half (i.e., array[i+1....right])
+   - If reached at any corner of array0[] then do binary search in array1[]
+   - repeat it until the last array is reached (the array with the maximum median)
+
+
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+The running time would be O(nlogn)
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 25
+
+	10        		
+	8         		
+	7         		
+
+
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+#include "myBloomFilter.h"
+#include <iostream>
+
+
+//Collaborator: Harish Kumar
+//Aidar Aidymbekov
+//problem 3
+
+myBloomFilter::myBloomFilter(int mm){
+	length = mm;
+	bloom[length];
+	for(int iii = 0; iii!=length; iii++) {
+		bloom.push_back('0');
+	}
+}
+// the following produces by the output call of a BloomFilter object.
+myBloomFilter::myBloomFilter(string filter){
+	length = filter.length();
+	bloom[length];
+	for(int iii = 0; iii!=length; iii++) {
+		bloom.push_back('0');
+	}
+	int ii = hash1(filter, length);
+	int jj = hash2(filter, length);
+	bloom[ii] = 'i';
+	bloom[jj] = 'j';
+}
+
+
+void myBloomFilter::insert(string item) {
+// insert
+
+	int ii = hash1(item, length);
+	int jj = hash2(item, length);
+
+	if(bloom[ii] != 'i' && bloom[jj] != 'j') {
+
+		bloom[ii] = 'i';
+		bloom[jj] =  'j';
+	}
+
+}
+
+bool myBloomFilter::exists(string item)
+// Checking if it is in the filter
+ {
+	if(bloom[hash1(item, length)] == 'i' && bloom[hash2(item, length)] == 'j') {
+		return true;
+	}
+	else {	
+		return false;
+	}
+}
+
+
+string myBloomFilter::output() 
+{
+
+	return bloom;
+}
+
+
+
+int myBloomFilter::hash1(string key, int length) {
+
+
+	int kkk;
+	for(int i = 0; i!=length;i++)
+	{
+		kkk += (int)key[i];
+	}
+	return (kkk%length);
+}
+int myBloomFilter::hash2(string key, int length) {
+	
+	int kkk;
+
+	for(int i = 0; i!= length; i++) 
+	{
+		kkk += (int)key[i];
+	}
+
+	kkk *= KumarAidar;
+	
+	return (kkk%length);
+}
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+First of all instantiate an empty Bloom filter of length  chars. Instantiates Bloom filter from a given string 
+actually requires being  produced by the output call of the object of a BloomFilter. 
+Then I would check if it is in the filter then returning true of false.
+Late I would return string of  characters representing the Bloom
+</VERBATIM>
+
+---+++!! Grader comments *[14/25]*
+<VERBATIM>
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Give out the password you cracked. Remember attached the code as 'problem4a.zip'
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the password you cracked. 
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Give out the explanation here. Remember attached the code and table
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

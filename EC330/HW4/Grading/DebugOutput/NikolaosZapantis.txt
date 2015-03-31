@@ -1,0 +1,302 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(NikolaosZapantis),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+Secondary clustering since it relies on using a previous hash functions which seems similar to quadratic probing.
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+int getMedian(int arry1[], int arry2[], int n){
+
+    int m1,m2; 
+ 
+    if (n == 1){
+        return (arry1[0] + arry2[0])/2;
+	}
+    if (n == 2)
+        return (max(arry1[0], arry2[0]) + min(arry1[1], arry2[1])) / 2;
+	
+    m1 = median(arry1, n); 
+    m2 = median(arry2, n); /* get the median of the second arry */
+ 
+    if (m1 == m2)
+        return m1;
+ 
+    if (m1 < m2){
+        if (n % 2 == 0)
+            return getMedian(arry1 + n/2 - 1, arry2, n - n/2 +1);
+        else
+            return getMedian(arry1 + n/2, arry2, n - n/2);
+    }
+ 
+    else{
+        if (n % 2 == 0)
+            return getMedian(arry2 + n/2 - 1, arry1, n - n/2 + 1);
+        else
+            return getMedian(arry2 + n/2, arry1, n - n/2);
+    }
+}
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+O(log n)
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+Point to the beginning of each array
+ *A, *B, *C
+find the lowest value of the three and increment the pointer of that array.
+repeat for 3N/2 if even
+if N is odd repeat 3N/2+1, but save the last two values and add/half them.
+
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+theta(9N/2)
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+Same as above, but again have pointers for each array and repeat n^2/2 times
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+theta(n^3/2)
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 20
+
+	10        		
+	7         		could be faster
+	3         		needs to be faster and more descriptive algorithm
+
+
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+#ifndef BLOOMFILTER_H
+#define	BLOOMFILTER_H
+#include <string>
+using namespace std;
+
+class myBloomFilter {
+        public:
+        /**
+        * Instantiate an empty Bloom filter of length [ mm ] chars.
+        */
+        myBloomFilter (int mm);
+        
+        /**
+        * Instantiates a Bloom filter from a given string [filter]
+        * @requires [filter] must have been produces by the output() call of a myBloomFilter object.
+        */
+        myBloomFilter (string filter);
+        /**
+        * inserts  into the filter
+        */
+        void insert(string item);
+        
+        /**
+        * Checks whether [item] is in the filter.
+        * @return  true if the item is probably in the filter
+        *          false if the item is definitely not in the filter
+        */
+        bool exists(string item);
+        
+        /**
+        * @return A string of [length] characters representing the Bloom filer
+        */
+        string output();
+        
+        protected:
+        int length; /** The length of the Bloom filter, in chars. */
+		char *arry;
+		
+		int hash_func_one(string item);
+		int hash_func_two(string item);
+};
+
+#include <iostream>
+#include <cmath>
+#include <numeric>
+#include "myBloomFilter.h"
+
+using namespace std;
+
+
+
+myBloomFilter::myBloomFilter (int mm) : length(mm) {
+	arry = new char[length];					//create a character array and fill it with ?
+	for(int i = 0; i < length; i++){
+		*(arry+i) = '?';
+	}
+}
+
+myBloomFilter::myBloomFilter (string filter) : length(filter.length()) {
+	arry = new char[length];			//create a character array and fill it with the inputed string
+	for(int i = 0; i < length; i++){
+		*(arry+i) = filter[i];
+	}
+}
+
+void myBloomFilter::insert(string item){
+
+	int place,i;
+	place = 0;
+	place = hash_func_one(item);			//use ! to indicate a possibility
+	*(arry + place) = '!';
+	place = hash_func_two(item);
+	*(arry + place) = '!';
+	
+}
+
+
+bool myBloomFilter::exists(string item){
+
+	int hash_one,hash_two;
+	
+	hash_one = hash_func_one(item);
+	hash_two = hash_func_two(item);
+
+	if(*(arry + hash_one) == '!' && *(arry + hash_two) == '!'){	//run the functions and check if the char is an !
+		return true;
+	}
+	return false;
+
+}
+
+string myBloomFilter::output(){
+
+	string bloom_str;					//push back the chars into a string and return it
+	for(int i = 0; i < length; i++){
+		bloom_str.push_back(*(arry + i));
+	}
+	return bloom_str;
+}
+
+int myBloomFilter::hash_func_one(string item){
+
+	int i, hold = 0;			
+	
+	for(i = 0; i < item.length(); i++){		//add up all the strings and mod it by the length
+
+		hold += item[i];
+		
+	}
+	i = hold % length;
+	return i;
+
+}
+
+int myBloomFilter::hash_func_two(string item){	//add up all strings and multiply it by half, mod that, and then multiply it by the length and get the floor.
+
+	int i;
+	unsigned int hold = 0;
+	unsigned int b  = 378551;
+	unsigned int a  = 63689;
+	
+	for(i = 0; i < item.length(); i++){
+
+		hold += item[i] * a;
+		
+		a = a*b;
+		
+	}
+	hold = hold % a;
+	return floor(hold%length);
+
+}
+#endif	/* BLOOMFILTER_H */
+
+
+
+
+
+%ENDCODE%
+---+++ Explanation
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Give out the password you cracked. Remember attached the code as 'problem4a.zip'
+
+DTB
+tig
+pp.
+LWP
+apt
+i'd
+pup
+dos
+NRO
+wim
+
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the password you cracked. 
+hash 0: ;TUih
+hash 1: ;TUih
+hash 2: ;TUih
+hash 3: ;TUih
+hash 4: `HnRq
+hash 5: ;TUih
+hash 6: mm^g,
+hash 7: #lL.C
+hash 8: U0`xz
+hash 9: `HnRq
+
+
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Give out the explanation here. Remember attached the code and table
+
+Assuming I understood what a Rainbow table is and what it wanted I just had it create a string of random letters of a certain length, and then hashed it a random amount of times, and then wrote the beginning and end to a file.
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

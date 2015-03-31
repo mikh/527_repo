@@ -1,0 +1,285 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(LingxiuGe),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+i.  primary clustering
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+%CODE{"cpp"}%
+
+int FindMedian(x0, x1){
+if(x0.length = 1 && x1.length = 1){
+return (x0+x1)/2;
+}
+else{
+MedianOfFirstArray = x0[x0.length/2];
+MedianOfSecondArray = x1[x1.length/2];
+if(MedianOfFirstArray < MedianOfSecondArray){
+take out element in x0 that is smaller than MedianOfFirstArray;
+take out element in x0 that is larger than MedianOfSecondArray;
+FindMedian(x0, x1);
+}
+if(MedianOfFirstArray > MedianOfSecondArray){
+take out element in x0 that is larger than MedianOfFirstArray;
+take out element in x0 that is smaller than MedianOfSecondArray;
+FindMedian(x0, x1);
+}
+}
+
+
+}
+
+
+%ENDCODE%
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+<latex>T(n) = \Theta log(n) </latex>
+
+First, we compare the median of two arrays. If median of x0 is smaller than median of x1, take out all the elements in x0 that is smaller than median and all the element in x1 that is larger than median. This procedure is called recursively until only one element is left in each array. Then, the result will be the median of the two remaining integers.
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+%CODE{"cpp"}%
+
+int FindMedian(x0, x1, x2){
+int count0 = 0;
+int count1 = 0;
+int count2 = 0;
+for (int i = 0; i < n; i++){
+if (x1[count[1] is smaller than x0[count0] and x2[count2]) {
+pivot = x1[count1];
+count1++;
+}
+if (x0[count0] is smaller than x1[count1] and x2[count2]){
+pivot = x0[count0];
+count0++;
+}
+if (x2[count2] is smaller than x1[count1] and x0[count0]){
+pivot = x2[count2];
+count2++;
+}
+}
+return pivot;
+}
+
+
+%ENDCODE%
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+<latex>T(n) = \Theta (n) </latex>
+
+In order to find the median of three arrays with same length, the first element of the first array,the first element of the second array and the first element of the third array are compared to each other. The smallest element is stored to pivot. Then increase the index of the array with smaller element and keep comparing. Keep repeating this procedure n times, the value of pivot should be the value of the median of three arrays.
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+%CODE{"cpp"}%
+
+int FindMedian(x0, x1, x2... xn){
+if (x0.length ==1 || x1.length ==1 .... xn.length == 1){
+return (x0+x1+x2+...+xn)/n;
+}
+else{
+find median for x0, x1, x2 ... xn;
+find the max median and min median among all medians;
+remove all the elements that are either smaller than the min median or larger than the max median;
+FindMedian(x0, x1, x2... xn)
+}
+
+
+%ENDCODE%
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+<latex> T(n) = n*(log(n))^2</latex>
+
+First we look for the max median and min median among all the medians, then we remove all the elements that are either larger than the max median or smaller than the min median. Then we recursively repeat the procedure. 
+---+++!! Grader comments *[25/25]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 23
+
+	10        		
+	7         		could be faster
+	6         		could be faster
+
+
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+   // put your code here
+   // also remember to upload it in submit page
+#include "myBloomFilter.h"
+#include <iostream>
+#include <string>
+#include <functional>
+
+using namespace std;
+
+myBloomFilter::myBloomFilter(int mm) : length(mm)
+{
+     filter = "";
+    for (int i =0; i<mm; i++)
+    {
+        filter = filter + '0';
+    }
+    
+}
+
+myBloomFilter::myBloomFilter (string filter) : length(filter.length())
+{
+    this->filter = filter;
+}
+
+int hash (string word)
+{
+    int seed = 131;
+    int hash = 0;
+    for(int i = 0; i < word.length(); i++)
+    {
+        hash = (hash * seed);
+    }
+    return hash;
+}
+
+void myBloomFilter::insert(string item)
+{
+    int hashed = hash(item);
+    filter[hashed]='1';
+}
+
+
+bool myBloomFilter::exists(string item)
+{
+    int hashed = hash(item);
+    if (filter[hashed]!='1')
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+
+string myBloomFilter::output()
+{
+    return filter;
+}
+
+%ENDCODE%
+---+++ Explanation
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+I add a protected variable called filter to track if a hash is stored. 
+---+++!! Grader comments *[0/25]*
+<VERBATIM>
+Score: 1000</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Give out the password you cracked. Remember attached the code as 'problem4a.zip'
+</VERBATIM>
+
+"*g
+
+241
+
+|w"
+
+%*"
+
+=-.
+
+((-
+
+<z!
+
+1Bj
+
+%mo
+
+'+r
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the password you cracked. 
+</VERBATIM>
+
+(   YPhby  ,  cCNNf   )
+
+(   I>JHg  ,  c\Mah   )
+
+(   Z\O<U  ,  cLieY   )
+
+(   I>JHg  ,  c\Mah   )
+
+(   V[?FU  ,  OTUMO   )
+
+(   AcFJ!  ,  Pdf]S   )
+
+(   I>JHg  ,  c\Mah   )
+
+(   I>JHg  ,  c\Mah   )
+
+(   B!:jU  ,  lS`mY   )
+
+(   2a7pF  ,  loWaX   )
+
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Give out the explanation here. Remember attached the code and table
+</VERBATIM>
+
+First i created random strings, and hash then reduce 10 times to create a hashed string. After that i output the string in "myrainbowtable.txt" file.
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

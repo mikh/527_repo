@@ -1,0 +1,239 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(PabloVelarde),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+The probe sequence hi(k) = hi-1(k) + i, with h0(k) = h(k) will only exhibit secondary clustering
+ because when we analyze the recurrence we get h0(k) + 1 + 2 + 3 + ... + i. The closed form 
+is i(i+1)/2 which is theta (n^2) this shows that the probe sequence is quadratic and it will
+ exhibit secondary clustering.
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+//auxiliary function
+int median(int arr[], int n)
+{
+    if (n%2 == 0)
+        return (arr[n/2] + arr[n/2-1])/2;
+    else
+        return arr[n/2];
+}
+
+//function to get median     
+int getMedian(int ar1[], int ar2[], int n)
+{
+    int m1; /* For median of ar1 */
+    int m2; /* For median of ar2 */
+ 
+    /* return -1  for invalid input */
+    if (n <= 0)
+        return -1;
+ 
+    if (n == 1)
+        return (ar1[0] + ar2[0])/2;
+ 
+    if (n == 2)
+        return (max(ar1[0], ar2[0]) + min(ar1[1], ar2[1])) / 2;
+ 
+    m1 = median(ar1, n); /* get the median of the first array */
+    m2 = median(ar2, n); /* get the median of the second array */
+ 
+    /* If medians are equal then return either m1 or m2 */
+    if (m1 == m2)
+        return m1;
+ 
+     /* if m1 < m2 then median must exist in ar1[m1....] and ar2[....m2] */
+    if (m1 < m2)
+    {
+        if (n % 2 == 0)
+            return getMedian(ar1 + n/2 - 1, ar2, n - n/2 +1);
+        else
+            return getMedian(ar1 + n/2, ar2, n - n/2);
+    }
+ 
+    /* if m1 > m2 then median must exist in ar1[....m1] and ar2[m2...] */
+    else
+    {
+        if (n % 2 == 0)
+            return getMedian(ar2 + n/2 - 1, ar1, n - n/2 + 1);
+        else
+            return getMedian(ar2 + n/2, ar1, n - n/2);
+    }
+}
+
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+This function works by easily finding the median of each array. The two medians are compared and depending on which median is larger the function willl use the first half or second half of each array. Then the function will call it self recursively only this time it will use half of the numbers. It will continue to do this until each array is two or one numbers long and it will return the median. This function divides each array by 2 each time and it does so log2(n) times therefore this algorithm runs O(log(n)).
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+Use merge sort to combine the three arrays and find the median by dividing the new array[n+n+n/2] if n is even get the two middle points and get the average.
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+This algorithm will combine the two arrays into one large sorted array. merge sort runs on n log n time
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+Similar to case of three use merge sort to create a larger ordered array.
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+The running time of merge sort is n log n
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 21
+
+	10        		
+	4         		needs to be faster
+	7         		
+
+
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+   //
+   // this is the cpp file for the bloom filter
+#include "myBloomFilter.h"
+
+myBloomFilter::myBloomFilter(int m){
+    filter = "";
+    for(int ii = 0; ii < m; ii++) {
+        filter += '0';
+    }
+    length = filter.size();
+}
+
+myBloomFilter::myBloomFilter(string hello){
+    filter = hello;
+    length = filter.size();
+}
+
+void myBloomFilter::insert(string item){
+    int total = 0;
+    for (int ii = 0; ii < length/2; ii++) {
+        total += item[ii];
+    }
+    total = total % filter.size();
+    
+    filter[total] = 1;
+
+    int total2 = 0;
+    for (int ii = (length/2)+1; ii < length; ii++) {
+        total2 += item[ii];
+    }
+    total2 = total2 % filter.size();
+    
+    filter[total2] = 1;
+    
+    
+}
+
+bool myBloomFilter::exists(string item){
+    int total = 0;
+    for (int ii = 0; ii < length/2; ii++) {
+        total += item[ii];
+    }
+    total = total % filter.size();
+    
+    int total2 = 0;
+    for (int ii = (length/2)+1; ii < length; ii++) {
+        total2 += item[ii];
+    }
+    total2 = total2 % filter.size();
+    
+    if (filter[total] == 1 && filter[total2] == 1) {
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+string myBloomFilter::output(){
+    return filter;
+}
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+This bloom filter works by creating a string whenever the class is instantiated. Once the filter
+ is created it inserts items by using two hash functions. Each function works through the same 
+principle it converts each character in the string to an integer and adds these characters up and
+ this sum is used to generate the key. The first function adds the first half of the string and the
+ second function adds the second half of the string. To find if a key exists the program uses 
+the same hashing functions and compares the appropriate elements of the filter if they match
+ it returns true.
+</VERBATIM>
+
+---+++!! Grader comments *[5/25]*
+<VERBATIM>
+Score: 1207</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Give out the password you cracked. Remember attached the code as 'problem4a.zip'
+</VERBATIM>
+
+1. LWP
+2. Ruy
+3. Sup
+4. EOF
+5. sma
+6. yen
+7. eme
+8. Nov
+9. IAH
+10. slt
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the password you cracked. 
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+This code randomly generates 1000 numbers within a given range. Then they are casted
+ to chars and inserted to a 5 character string. This random string is hashed and reduced 
+10000 times and then outputted to a text file, creating the rainbow table. 
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

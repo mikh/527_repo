@@ -1,0 +1,371 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(JohnMcCullough),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+Give out answer here.
+
+This probe sequence will not exhibit primary clustering because the hash is deterministic (depends on the previous hash) 
+and the unique index of the current hash.
+
+This probe sequence will exhibit secondary clustering and always be able to add a key if the table is not full. 
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+
+int i = 0; 
+int j = 0; 
+int med0 = 0; 
+int med1 = 0;
+
+for count = 0 to n (inclusive)
+{
+	if  i = n
+	{
+		med0 = med1;
+		med1 = X1[0];
+		break;
+	}
+	else if  j = n
+	{
+		med0 = med1;
+		med1 = X0[0];
+		break;
+	}
+
+	if  X0[i] < X1[j]
+	{
+		med0 = med1;  
+		med1 = X0[i];
+		i++;
+	}
+	else
+	{
+		med0 = med1; 
+	   med1 = X1[j];
+        j++;
+	}
+}
+
+return (med0 + med1) / 2;
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+
+The idea behind this algorithm is merging the two arrays to find the middle elements of the resulting 
+array. Because the two arrays are always of equal length, the size of the final array will be even 
+and therefore the median is the average of the two middle elements.
+
+This algorithm runs in Theta(n) time.
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+
+merge X0, X1, X2 into R1
+
+if (3n is even)
+      return (R1[(3n-1)/2] + R1[(3n+1/2)]) / 2
+else
+      return (R1[3n/2])
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+
+When you merge 3 sorted arrays together, the middle element is the median.
+
+For only three sorted arrays, merging them into one array will take linear time with only a constant 
+factor difference in running time. Accessing an element in the final array takes constant time.
+So running time is Theta(3n) = Theta(n)
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+
+merge X0 through Xn into one array R1
+
+if (length of R1 is even)
+      return (R1[(length(R1)-1) / 2] + R1[(length(R1)+1) / 2]) / 2
+else
+      return (R1[3n/2])
+
+
+                 
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+
+I was surprised to find through the analysis of this algorithm that the running time is not terrible.
+You have to merge N arrays with N elements each giving N^2 time.
+
+Then, finding and picking out the correct element in the array takes constant time,
+so: this algorithm runs in Theta(N^2) time.
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 20
+
+	7         		could be faster
+	7         		could be faster
+	6         		could be faster
+
+
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+   // put your code here
+   // also remember to upload it in submit page
+
+//Created by: John McCullough
+//3/19/15
+//EC330 Algorithms HW 4
+//myBloomFilter.cpp
+//
+//int main()
+//{
+//	string key = "abcdefghijklmnopqrstuvwxyz1234567890";
+//	myBloomFilter filter(1024);
+//	filter.insert(key);
+//	cout << " 1. Hash1 Function Value:   " << filter.Hash1(10) << endl;
+//	cout << " 2. Hash2 Function Value:   " << filter.Hash2(13) << endl;
+//	cout << " 3. Hash3 Function Value:   " << filter.Hash3(17) << endl;
+//
+//	cin.get();
+//	return true;
+//}
+
+
+#include <iostream>
+#include <string>
+#include "myBloomFilter.h"
+#include <vector>
+#include <math.h>
+#pragma warning(disable: 4996)
+
+unsigned int Hash1(int num);
+unsigned int Hash2(int num);
+unsigned int Hash3(int num);
+
+/**
+* inserts  into the filter
+*/
+void myBloomFilter::insert(string item)
+{
+	vector<char> word;
+	for (int ii = 0; ii < item.length(); ii++) {
+		word.push_back(item[ii]);
+	}
+	copy(word.begin(), word.end(), ostream_iterator<char>(cout));
+	cout << endl;
+
+	int sum = 0;
+	for (int ii = 0; ii < item.length(); ii++) {
+		sum += word[ii];
+	}
+	cout << sum << endl;
+
+
+	int res1 = Hash1(sum);
+	int res2 = Hash2(sum);
+	int res3 = Hash3(sum);
+}
+
+/**
+* Checks whether [item] is in the filter.
+* @return  true if the item is probably in the filter
+*          false if the item is definitely not in the filter
+*/
+bool myBloomFilter::exists(string item)
+{
+	return false;
+}
+/**
+* @return A string of [length] characters representing the Bloom filer
+*/
+string myBloomFilter::output()
+{
+	return "0";
+}
+
+
+unsigned int myBloomFilter::Hash1(int num)
+{
+	unsigned int M = 1031; // a prime
+	unsigned int hash = num % M; // division modulo prime
+
+	return hash;
+}
+
+unsigned int myBloomFilter::Hash2(int num)
+{
+	double multi = 1315423911;
+	double frac = .407;
+	double hash, throwaway;
+	hash = num * frac;
+	hash = modf(hash, &throwaway);
+
+	hash = hash * multi;
+	return hash;
+}
+
+unsigned int myBloomFilter::Hash3(int num)
+{
+	unsigned hash = 27;
+	int i;
+
+	for (i = 0; i < (num / 4); i++)
+	{
+		hash = (hash << 4) ^ (hash >> 28);
+	}
+
+	return hash;
+}
+
+
+%ENDCODE%
+
+%CODE{"cpp"}%
+
+//Created by: John McCullough
+//3/19/15
+//EC330 Algorithms HW 4
+//myBloomFilter.h
+
+#ifndef MYBLOOMFILTER_H
+#define	MYBLOOMFILTER_H
+#include <string>
+#include <vector>
+//#include "BloomFilter.h"
+
+using namespace std;
+
+class myBloomFilter
+{
+public:
+	/**
+	* Instantiate an empty Bloom filter of length [ mm ] chars.
+	*/
+	myBloomFilter(int mm) : length(mm) { vector<int> bloom(mm, 0); }
+
+	/**
+	* Instantiates a Bloom filter from a given string [filter]
+	* @requires [filter] must have been produces by the output() call of a BloomFilter object.
+	*/
+	myBloomFilter(string filter) : length(filter.length()) { vector<int> bloom(filter.length(), 0); }
+	/**
+	* inserts  into the filter
+	*/
+	void insert(string item);
+
+	/**
+	* Checks whether [item] is in the filter.
+	* @return  true if the item is probably in the filter
+	*          false if the item is definitely not in the filter
+	*/
+	bool exists(string item);
+
+	/**
+	* @return A string of [length] characters representing the Bloom filer
+	*/
+	string output();
+
+
+	unsigned int Hash1(int num);
+	unsigned int Hash2(int num);
+	unsigned int Hash3(int num);
+
+
+protected:
+	int length; /** The length of the Bloom filter, in chars. */
+};
+
+
+
+#endif	/* MYBLOOMFILTER_H */
+
+%ENDCODE%
+---+++ Explanation
+<VERBATIM>
+Give out answer here.
+
+The myBloomFilter class is derived from the BloomFilter given -- I defined the constructors and insert, exists, and output
+functions in myBloomFilter. The consructors are defined in the .h file and the remaining functions are referenced in the .h file
+and defined in the .cpp file. To convert strings into integers so that they could be inserted into the bloom filter I first read the
+individual characters of the string into a vector of chars and then converted each character into its ascii value equivalent.
+I also created three hash functions that would be used by each string to map into the filter. (One division hash, one multiplication 
+hash, and one shift hash.)
+
+I did not get the chance to complete this problem unfortunately, but this is where I ended up...
+
+</VERBATIM>
+
+---+++!! Grader comments *[0/25]*
+<VERBATIM>
+No score found </VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Give out the password you cracked. Remember attached the code as 'problem4a.zip'
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the password you cracked. 
+
+I will talk to Prof. Trachtenberg about this problem. I found the corresponding final reduce, went
+back to the beginning and tried to hash reduce until a found the original hash.
+
+For two separate hashes there were no collisions in the table, and yet, I would hash and reduce
+and not find the original hash anywhere in the chain!
+For the other hashes I found a couple collisions in the table, tried each chain and still did not find anything.
+
+The TA at Wednesday night lab hours did not know what the problem was either.
+Very frustrating!
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Give out the explanation here. Remember attached the code and table
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

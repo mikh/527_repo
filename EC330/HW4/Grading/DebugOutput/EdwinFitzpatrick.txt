@@ -1,0 +1,106 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(EdwinFitzpatrick),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+i. Primary Clustering
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+Create a recursive function that finds the median of the two input array's individually. you will call the same function again with the 2nd half of the array containing the smallest median and the 1st half of the array containing the largest median. This will call itself recursively until the two medians are equal, then you will return that number.
+</VERBATIM>
+---++++ Analysis and running time
+<VERBATIM>
+With this recursion you will have two steps for every call of the function, therefore the running time will be 2log(n), or theta(log(n))
+</VERBATIM>
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+The solution for two arrays will work exactly the same, but with 3 inputs for each call, it will again return the median of all three after the median's found are the same value
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+This will have three steps per function call, but beyond that it will have the same attributes as the first median algorithm, therefore it will run in 3log(n) time or theta(log(n))
+</VERBATIM>
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+This will work in the same was as two and three arrays, just with a variable number of arrays being plugged in to the function. This will find the medians of all array's and then throw out the upper half of the array containing the largest median and throw out the lower half of the array containing the smallest median. This will continue until the median function settles upon the same number. 
+</VERBATIM>
+---++++ Analysis and running time
+<VERBATIM>
+because we are now making n calls, the function will take nlog(n) time or theta(nlog(n))
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 22
+
+	9         		More descriptive algorithm
+	7         		More descriptive algorithm
+	6         		More descriptive algorithm
+
+
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+   // put your code here
+   // also remember to upload it in submit page
+
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+---+++!! Grader comments *[0/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Give out the password you cracked. Remember attached the code as 'problem4a.zip'
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the password you cracked. 
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Give out the explanation here. Remember attached the code and table
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

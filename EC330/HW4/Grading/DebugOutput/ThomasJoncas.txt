@@ -1,0 +1,450 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(ThomasJoncas),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+
+First, let's look at h_i(k) for different values of i: <BR><BR> Given: h_0(k) = h(k)<BR>h_1(k) = h_0(k) + 1 = h(k) + 1<BR>h_2(k) = h_1(k) + 2 = h(k) + 3<BR> h_3(k) = h(k) + 6<BR>h_4(k) = h(k) + 10<BR>h_5(k) = h(k) + 15
+<BR><BR> So for i >= 1 we have h_i(k) = h(k) + i(i+1)/2 <BR><BR>The i(i+1)/2 part forms a triangular number for each i>=1.
+
+<BR><BR> i) Primary clustering:  No because say h(a) = 1, h(b) = 2, h(c) = 3.  We have h_1(a) = 2 = h(b) but then the sequence for a and b don't collide again.  We also have h_1(b) = 3 = h(c) but then the sequence for b and c does not collide again.  So that means that just because a sequence collides, it doesn't necessarily continue colliding (unless the original hash function hashes to the same thing [see secondary clustering below]).<BR><BR>
+
+ii) Secondary clustering: Yes, because if any two things hash to the same original value, they will follow the same sequence (ie only the original value of the hash determines the course of the sequence taken).  Say h(foo) = h(bar).  Then we know that h_i(foo) = h_i(bar) for all i because of the probe sequence.  Thus, we will observe secondary clustering.<BR><BR>
+
+iii) Always able to add a key if table is not full: No.  Let's take a small example to prove why:<BR>Let's say the address space goes from 0 to 9 for convenience sake.  Let h(a) = 1, h(alpha) = 1, h(b) = 2, h(c) = 4, h(d) = 7, h(e) = 3, h(f) = 6, h(g) = 8, h(x) = 9, h(y) = 0.  Let's say we first hash alpha, then b, then, c, then d, e, f, g, x, and y.  So our table has addresses 0, 1, 2, 3, 4, 6, 7, 8, and 9 filled from all the letters except a.  Now let's try to hash a.  h(a) = 1 but 1 is already taken so let's try h_1(a) = 2, but 2 is already taken.  Now moving to h_2(a) = 4, we see that's taken and h_3(a) = 7 is also taken.  We then move to h_4(a) = 11, but that goes beyond our address space so we have to mod 11 by 10 and we have 11%10 = 1 which is already taken.  If we keep looking through the sequence (1+i(i+1)/2)%10, we never get 5 as a result.  Thus, we cannot hash a into the table, yet the table is not yet full (address 5 is empty).  Thus we are NOT always able to add a key to the table even if it is not full. <BR><BR>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+
+%CODE{"cpp"}%
+getMedian(X0[0...n-1], X1[0...n-1]) {
+return recursiveMedian(X0, X1, 0, n-1, n);
+}
+
+recursiveMedian(A1[], A2[], left, right, n) {
+
+//reached end of first array
+if (left > right) {
+return recursiveMedian(A2, A1, 0, n-1, n); }
+
+//index of median of one array
+i = (left + right)/2;
+j = n - i - 1;
+
+if (A1[i] > A2[j] && (j == n-1 || A1[i] <= A2[j+1] ) ) {
+
+//determine which average to return
+if (i == 0 || A2[j] > A1[i-1] ) {
+return (A1[i] + A2[j])/2; }
+else {
+return (A1[i] + A1[i-1]) /2; }
+
+//median of both is in left half of A1
+else if (A1[i] > A2[j] && j != n-1 && A1[i] > A2[j+1] ) {
+return recursiveMedian(A1, A2, left, i-1, n); }
+
+//median of both in right half of A1
+//A1[i] less than A2[j] and A2[j+1]
+else {
+return recursiveMedian(A1, A2, i+1, right, n); }
+}
+
+}
+
+%ENDCODE%
+
+---++++ Analysis and running time
+
+The strategy is to first look at the median of the first array and find its index (call this i), then look at which index in the second array (call this j) would imply that the median of the first array and this index in the second array are the middle elements.  But if this isn't the case, we look if X0[i] to see if its larger than both the jth and j+1th element of X1, in which case we perform a binary search in the left half of X0 for the median.  If it's the case that X0[i] is smaller than both X1[j] and X1[j+1] then we search in the right half of X0 for the median of both.  If we run out of elements in X0 to do this with before finding a middle element, we switch to doing binary searches in X1.<BR><BR>This runs in worst-case Theta(log(n)) time because the binary search for the median is done in Log(n) time and it takes constant time to find the medians of each array and compare it to an element in the other array.
+
+---+++ ii. Median of three
+---++++ Algorithm
+%CODE{"cpp"}%
+//help from http://stackoverflow.com/questions/6182488/median-of-5-sorted-arrays
+
+median(array[length]) {
+	if length is odd
+		return array[length/2]
+	if length is even
+		return (array[length/2]+array[length/2-1])/2;
+}
+
+findmedians(X0, X1, X2) {
+	array medians[3];
+	medians[0] = median(X0);
+	medians[1] = median(X1);
+	medians[2] = median(X2);
+
+	return medians;
+}
+
+implement() {
+
+	while (there are more than 2 elements left among all arrays) {
+		medians[3] = findmedians(array_of_arrays);
+		min_med = min(medians);
+		max_med = max(medians);
+
+		in array with median min_med, remove all elements smaller than min_med;
+		in array with median max_med, remove all elements larger than max_med;
+			
+
+	}
+
+	if (there are 2 elements left)
+		return (firstelement + secondelement)/2;
+	if (there is 1 element left)
+		return element
+
+}
+
+%ENDCODE%
+
+<BR><BR>
+
+MERGE METHOD FOR COMPARISON:
+%CODE{"cpp"}%
+getMedian(array1, array2, array3, length) {
+
+int i = 0, j = 0, k = 0;
+int count = 0;
+
+new array merged [0....3*length-1];
+
+// 3*length/2 is the position of the median
+while(count<= 3*length/2) {
+
+if (array1[i] is smaller than or equal to the smaller of array2[j] and array3[k]) {
+merged[count] = array1[i];
+i++;
+}
+else if (array2[j] is smaller than or equal to the smaller of array1[i] and array3[k]) {
+merged[count] = array2[j];
+j++;
+}
+else {
+merged[count] = array3[k];
+k++;
+}
+
+count++;
+
+}
+
+//deal with evenness and oddness of length
+if (length is odd) {
+return merged[3*length/2];
+}
+else {
+return mean(merged[3*length/2], merged[3*length/2-1])
+}
+
+}
+
+
+%ENDCODE%
+
+---++++ Analysis and running time
+
+For the efficient algorithm, I find the median of all of the arrays in constant time.  Then I look at the smallest median, and from the array that contains it, I remove all elements less than that median.  Then I look at the largest median and from the array that contains it, I remove all elements larger than that median.  I do this recursively until there are only 1 or 2 elements left overall, at which point I have my median as either the last remaining element or the average of the last 2 elements.<BR><BR>
+
+The running time of this efficient algorithms is Theta(log(n)) because within the while loop, we only have constant time operations because it takes constant time to find the median of a sorted array and it also takes constant time to remove elements from the array.  The while loop is executed a maximum of Theta(log(n)) times because the arrays are n elements long and we are deleting at half of at least one of the arrays each time it runs.  Thus the overall algorithm is Theta(log(n)).<BR><BR>
+
+
+For comparison, here is an analysis of the merge method:<BR> What's going on for the merge method is I have an index for each of the 3 arrays and keep taking the smallest element out of what's pointed to by the 3 indexes each time and put it in the running-count index of the merged array.  I keep doing this until I fill up to index 3*length/2 because 3*length/2 is the position of the median of the merged array.  If the length was even, the median is the average of the 3*length/2th element and the 3*length/2-1th element, otherwise, the median is just the 3*length/2th element.<BR><BR>The running time here is Theta(n) where n is the length of each array because the only loop is the while loop which goes from 0 up to 3n/2 doing constant time operations; everything else here is constant time if we use the appropriate data structures it will be constant time to compare the values of elements and to access the elements.
+
+---+++ iii. Median of n
+---++++ Algorithm
+
+%CODE{"cpp"}%
+//help from http://stackoverflow.com/questions/6182488/median-of-5-sorted-arrays
+
+median(array[length]) {
+	if length is odd
+		return array[length/2]
+	if length is even
+		return (array[length/2]+array[length/2-1])/2;
+}
+
+findmedians(arrays[ array0[0...n-1], ...., arrayn-1[0...n-1] ]) {
+	array medians[n];
+	for i from 0 to n-1 {
+		medians[n] = median(arrays[i])
+	}
+	return medians;
+}
+
+implement() {
+
+	while (there are more than 2 elements left among all arrays) {
+		medians[n] = findmedians(array_of_arrays);
+		min_med = min(medians);
+		max_med = max(medians);
+
+		in array with median min_med, remove all elements smaller than min_med;
+		in array with median max_med, remove all elements larger than max_med;
+			
+
+	}
+
+	if (there are 2 elements left)
+		return (firstelement + secondelement)/2;
+	if (there is 1 element left)
+		return element
+
+}
+
+%ENDCODE%
+<BR><BR>
+BRUTE FORCE METHOD FOR COMPARISON
+%CODE{"cpp"}%
+getMedian(array[array0[0...n-1], array1[0....n-1], ...., arrayn-1[0...n-1], int n) {
+
+new array indexes [n] = {0,0,0,......,0};
+
+new array merged[0.....n*n-1];
+int count = 0;
+int maximum = max(array);  //compute maximum element of array of arrays
+while (count<=n*n/2) {
+
+int temp = maximum;
+int tempindex = 0;
+for ii from 0 to n-1 {
+if (array[ii][ indexes[ii] ]<temp) {
+tempindex = ii;
+temp = array[ii][ indexes[ii] ];
+}
+}
+merged[count] = temp;
+indexes[tempindex]++;  //increase the index to that array which we took value from
+count++;
+}
+
+if n is odd {
+return merged[n*n/2];
+}
+else {
+return mean(merged[n*n/2], merged[n*n/2-1]);
+}
+
+}
+
+
+%ENDCODE%
+
+---++++ Analysis and running time
+The basic algorithm is to keep taking the medians of all of the arrays and deleting all elements smaller than the median of the array with the smallest median from that array and all elements larger than the median of the array with the largest median from that array recursively until there are only 1 or 2 elements left.  At this point, you can just return the median from these.<BR><BR>
+
+Each operation such as finding a median of a sorted array or throwing away elements from the start or end of an array is constant time.  Thus, each iteration through the while loop is constant time.  Since each iteration removes half of the elements from at least one array, the loop can be executed a maximum of log(n) times.  Thus the running time overall is Theta(log(n)).<BR><BR>
+
+
+Below is the running time for the brute force merge method for comparison:<BR><BR>
+Here, I have an array of  n arrays each with length n.  I make another array of length n that keeps an index on each of the arrays so that I can merge them.  Most of the code is actually just to figure out the next smallest element out of what's left and put it into the merged array.  I keep putting elements into merged array and incrementing indexes until I reach the point where I've gotten to the median of all of the arrays.  Then, I take care of the case for even or odd length of n*n because this is the number of total numbers we have and are looking for the median of.<BR><BR>
+
+The running time here is a bit more complicated.  Finding the max of the array takes Theta(n) because we only have to look at the last element of each array since they are sorted.  Then we have a while loop that takes place from 0 to n*n/2.  Within this loop we have another loop that goes from 0 to n-1.  So we have n^2 * n = n^3 and the entire algorithm is Theta(n^3).
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 21
+
+	10        		
+	7         		could be faster
+	4         		Need to describe algorithm. Also should be more efficient.
+
+
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+This is myBloomFilter.h<BR>
+%CODE{"cpp"}%
+#ifndef BLOOMFILTER_H
+#define	BLOOMFILTER_H
+
+#include <string>
+using namespace std;
+
+class myBloomFilter {
+	public:
+        myBloomFilter (int);
+        myBloomFilter (string filter);
+        void insert(string item);
+        bool exists(string item);
+        string output();
+        char* contents;
+
+    protected:
+        int length;
+
+};
+
+#endif
+%ENDCODE%
+<BR><BR>
+
+This is myBloomFilter.cpp<BR>
+%CODE{"cpp"}%
+
+#include "myBloomFilter.h"
+#include <iostream>
+#include <functional>
+#include <string>
+
+using namespace std;
+
+//hash functions taken from http://stackoverflow.com/questions/8317508/hash-function-for-a-string
+
+//first hash function
+unsigned int RSHash(const std::string& str)
+{
+    unsigned int b    = 378551;
+    unsigned int a    = 63689;
+    unsigned int hash = 0;
+
+    for(std::size_t i = 0; i < str.length(); i++)
+    {
+        hash = hash * a + str[i];
+        a    = a * b;
+    }
+
+    return (hash & 0x7FFFFFFF);
+ }
+
+//second hash function
+ unsigned int JSHash(const std::string& str)
+ {
+      unsigned int hash = 1315423911;
+
+      for(std::size_t i = 0; i < str.length(); i++)
+      {
+          hash ^= ((hash << 5) + str[i] + (hash >> 2));
+      }
+
+      return (hash & 0x7FFFFFFF);
+ }
+
+	/**
+	* Instantiate an empty Bloom filter of length [ mm ] chars.
+	*/
+myBloomFilter::myBloomFilter (int mm) : length(mm) {
+	char temp = 0;
+	for (int ii = 0; ii<length; ii++)	//loop through the character array
+		contents[ii] = temp;
+
+
+}
+
+/**
+* Instantiates a Bloom filter from a given string [filter]
+* @requires [filter] must have been produces by the output() call of a BloomFilter object.
+*/
+myBloomFilter::myBloomFilter (string filter) : length(filter.length()) {
+	for (int ii = 0; ii<length; ii++)	//loop through the character array
+		contents[ii] = filter[ii];
+
+}
+
+
+/**
+* inserts  into the filter
+*/
+void myBloomFilter::insert(string item) {
+	contents[RSHash(item)%length] = '1';	//mark that the input hashes to this index value
+	contents[JSHash(item)%length] = '1';
+}
+
+/**
+* Checks whether [item] is in the filter.
+* @return  true if the item is probably in the filter
+*          false if the item is definitely not in the filter
+*/
+bool myBloomFilter::exists(string item) {
+
+	if (contents[RSHash(item)%length] == '1' && contents[JSHash(item)%length] == '1')
+		return true;	//means it is PROBABLY true
+	else
+		return false;
+
+}
+
+/**
+* @return A string of [length] characters representing the Bloom filer
+*/
+string myBloomFilter::output() {
+	string out;
+	out.append(contents);
+	return out;
+}
+
+
+%ENDCODE%
+
+---+++ Explanation
+
+For a Bloom Filter, we know that the best number of hashes to use is k = (m/n)ln(2) where m is the length of the bloom filter and n is the number of things that have been put through the filter.  I tried it with two hashes with fairly good results and a relatively high score.  I did not have enough time to implement it in a more complicated way that kept track of how many things had gone through the filter and used this to decide how many hashes to use for a given input.  If we were given how many items would be put through the filter, I would have used the above formula to determine how many hashes to use.  <BR><BR>
+
+I used an array of chars to keep track of the contents of the bloom filter.  I set the respective character (index of the char array based on the hash value mod length of filter) to '1' when inserting something to the filter.  Then, to check if something was probably in the filter, I checked to make sure that both of the values that the input would hash to were set to '1' in the filter to say that it was probably sent through the filter.  Both hashes I used came from the web and are cited in the comments in the .cpp file.
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+
+eom<BR>
+pp.<BR>
+aob<BR>
+SOP<BR>
+PNA<BR>
+sma<BR>
+OBS<BR>
+sea<BR>
+BPA<BR>
+Gee<BR>
+* [[%ATTACHURLPATH%/problem4a.zip][problem4a.zip]]: code for problem 4a
+---+++ 4b. Simplified rainbow tables
+
+Couldn't get any passwords, but any partial credit for my code would be appreciated.
+
+   * [[%ATTACHURLPATH%/4b.cpp][4b.cpp]]: 4b.cpp
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+
+For my rainbow table, I assumed that passwords would be of length 3 (this was one of my simplifications).  I went through and hashed a bunch of 3 character strings and then reduced after 1 hash and this became my lefthand column.  Then, I ran 50 more hash/reduce cycles on each of these to make the righthand column.  These strings were stored in vectors and then I used fstream to output them to a text file which is attached.  Obviously this method could be extended to longer passwords, but I kept it simple as the problem stated.
+
+
+
+   * [[%ATTACHURLPATH%/4c.zip][4c.zip]]: probem 4c
+
+   * [[%ATTACHURLPATH%/table.txt][table.txt]]: probem 4c
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---
+
+   * [[%ATTACHURLPATH%/problem4a.zip][problem4a.zip]]: code for problem 4a
+
+   * [[%ATTACHURLPATH%/4c.zip][4c.zip]]: probem 4c
+
+   * [[%ATTACHURLPATH%/table.txt][table.txt]]: probem 4c
+
+   * [[%ATTACHURLPATH%/4b.cpp][4b.cpp]]: 4b.cpp

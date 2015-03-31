@@ -1,0 +1,311 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(JulianTrinh),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+Give out answer here.
+i. No
+ii. Yes
+iii. No
+</VERBATIM>
+The hash function ends up being quadratic, making it automatically secondary clustering because it will not bunch up at the beginning as if it were linear. It will not fill every element. If the table size is 9 for example, since the the function adds i to the element every time, every starting position will loop back around to the same pattern, always skipping a few elements.
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+int findMedian(int* arrayOne, int* arrayTwo,n)
+{
+	vector<int> newArray;
+
+	int ptrOne = 0;
+
+	for(int ptrTwo = 0; ptrTwo < n; ptrTwo++)
+	{
+		if(ptrOne >= n)
+		{
+			for(; ptrTwo < n; ptrTwo++)
+			{
+				newArray.push_back(arrayTwo[ptrTwo]);
+			}
+			break;
+		}
+		
+		if(arrayOne[ptrOne] == arrayTwo[ptrTwo])
+		{
+			newArray.push_back(arrayOne[ptrOne]);
+			newArray.push_back(arrayTwo[ptrTwo]);
+			ptrOne++;
+		}
+		else if (arrayOne[ptrOne] < arrayTwo[ptrTwo])
+		{
+			newArray.push_back(arrayOne[ptrOne]);
+			ptrOne++;
+			ptrTwo--;
+		}
+		else
+			newArray.push_back(arrayTwo[ptrTwo])
+	}
+
+	int middle = newArray.size()/2;
+
+	if(newArray.size()%2 != 0)
+	{
+		return newArray[middle];
+	}
+	else
+	{
+		return (newArray[middle] + newArray[middle-11])/2;
+	}
+}
+</VERBATIM>
+
+---++++ Analysis and running time
+
+*NOTE: This algorithm makes the assumption that the median of an even sized array of integers is the average of the middle two numbers. i.e: If the size of the array is 4 the median would be the average of the 1st and 2nd indices. 
+
+This algorithm pretty much uses the last part of merge sort to re-order the combined arrays and then finds the median of the new array. It needs to go through all the indices, in this case there are 2n numbers, making the complexity T(n) = &Theta; (n). It then needs to access the middle indices which is constant time, making the entire algorithm T(n) =  &Theta; (n).
+
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+int findMedian(int* arrayOne, int* arrayTwo, int* arrayThree,n)
+{
+	int totalSize = 3n;
+
+	vector<int*> bucket;
+	bucket.push_back(arrayOne);
+	bucket.push_back(arrayTwo);
+	bucket.push_back(arrayThree);
+	vector<int> newList;
+
+	int itOne = 0;
+	int itTwo = 0;
+	int itThree = 0;
+
+	/*newList will have a size equal to 3n/2, so the median of the entire set is the last 
+	*element in newList, and is also why the loop goes to 3n/2*/
+	for(int x = 0; x <= totalSize/2; x++)
+	{
+		newList.push_back(getLowest(bucket[0][itOne],bucket[1][itTwo].bucket[2][itThree]));
+		//The get lowest function would increment the proper iterator, represented in the next line
+		lowestFoundIt++; 
+	}
+
+	if(totalSize%2 != 0)
+	{
+		//If the number of numbers in the set is odd, then the last element of newList is the median
+		return newList[newList.size()-1];
+	}
+	else
+	{
+		/*If the number of numbers in the set is even, then the median would be the average
+		of the last and second to last elements of newList*/
+		return (newList[newList.size()-1]+newList[newList.size()-2])/2;
+	}
+}
+</VERBATIM>
+
+---++++ Analysis and running time
+*NOTE: This algorithm makes the assumption that the median of an even sized array of integers is the average of the middle two numbers. i.e: If the size of the array is 4 the median would be the average of the 1st and 2nd indices.
+
+Similar for the median of two, the algorithm I used is essentially the same: a merge.  This time around, I pseudocoded the getLowest function, as that is just a bunch of comparisons between 3 numbers. The algorithm then continually pulls the lowest of the three numbers (incrementing the iterators as necessary) and adds them to a vector until 3n/2 numbers have been pulled. This portion of the algorithm is O(3n/2), so &Theta; (n).  Since the newList contains half of all the elements, the max element of newList is the median if 3n is odd, and the max and second largest elements would be the median if 3n was even. Vectors have constant time random access and constant time .size() functions, so the algorithm would be: T(n) = &Theta; (n) + &Theta; (1) + &Theta; (1) = &Theta; (n)
+
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+int findMedian(vector<*int> arrays,n)
+{
+	int totalSize = n*n;
+	int itToInc;
+
+	vector<int> arrayIts;
+	vector<int> newList;
+
+	//Loads 0s into the pointers array
+	for(int x = 0; x < n; x++)
+	{
+		arrayIts.push_back(0);
+	}
+
+	//Loop through n/2 times for the median
+	for(int x = 0; x <= n/2; x++)
+	{
+		lowest = numeric_limits<int>::max();
+
+		//Loop through every array
+		for(y = 0; y < n; y++)
+		{
+			//Find the lowest value and increment pointer
+			if(arrays[y][arrayIts[y]] < lowest)
+			{
+				lowest = arrays[y][arrayIts[y]];
+				itToInc = y;
+			}
+		}
+                //Increments the iterator to the array that the lowest value was chosen from
+		arrayIts[itToInc]++;
+		newList.push_back(lowest);
+	}
+
+	if(totalSize%2 != 0)
+	{
+		//If the number of numbers in the set is odd, then the last element of newList is the median
+		return newList[newList.size()-1];
+	}
+	else
+	{
+		/*If the number of numbers in the set is even, then the median would be the average
+		of the last and second to last elements of newList*/
+		return (newList[newList.size()-1]+newList[newList.size()-2])/2;
+	}
+}
+</VERBATIM>
+
+---++++ Analysis and running time
+*NOTE: This algorithm makes the assumption that the median of an even sized array of integers is the average of the middle two numbers. i.e: If the size of the array is 4 the median would be the average of the 1st and 2nd indices. It also assumes that all the arrays are passed in using a nice vector :)
+
+Again, this algorithm implements a merge until (n*(n/2)) elements to find the median. it first loads the iterator vector with 0s (to start the merging at the 0 element of all arrays) which is done in &Theta; (n) time. As before, the algorithm will loop (n/2) times to construct a vector that will contain the median. The time complexity of running this loop will be T(n) = O(n/2) = &Theta; (n). Within each loop, the algorithm must run through each array to evaluate the lowest value given the iteration position of each array. Since there are n arrays, the complexity becomes T(n) = &Theta; (n); * &Theta; (n) = &Theta; (n^2); After the loop completes, The median is calculated in constant time, as it is either the last element or the average of the last and second-to-last elements. So the complexity for the entire algorithm is: T(n) = &Theta; (n^2) + &Theta; (n) + &Theta; (1) = &Theta; (n^2).
+---+++!! Grader comments *[25/25]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 20
+
+	7         		could be faster
+	7         		could be faster
+	6         		could be faster
+
+
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+
+
+---+++ Code
+%CODE{"cpp"}%
+
+   // put your code here
+   // also remember to upload it in submit page
+
+#include "myBloomFilter.h"
+#include <iostream>
+
+using namespace std;
+
+myBloomFilter::myBloomFilter(int mm) : BloomFilter(mm)
+{
+        for(int x = 0; x < mm; x++)
+        {
+                filter.push_back('0');
+        }
+
+        length = mm;
+}
+
+
+myBloomFilter::myBloomFilter(string input) : BloomFilter(input)
+{
+        length = input.length();
+        for(int x = 0; x < length; x++)
+        {
+                filter.push_back(input[x]);
+        }
+}
+
+int myBloomFilter::djb2(string item)
+{
+        unsigned long hash = 5381;
+        char c;
+        for(int i=0; i<item.size(); i++)
+        {
+                c=item[i];
+                hash = ((hash << 5) + hash) + c;
+        }       
+    return hash%length;
+}
+
+void myBloomFilter::insert(string item)
+{
+        filter[djb2(item)] = '1';
+} 
+
+bool myBloomFilter::exists(string item)
+{
+        if(filter[djb2(item)] == '1')
+                return true;
+        else
+                return false;
+}
+
+string myBloomFilter::output()
+{
+   return filter;
+}
+
+
+%ENDCODE%
+
+---+++ Explanation
+
+My filter uses a string to implement the actual filter. I used a djb2 hash (from http://stackoverflow.com/questions/19892609/djb2-by-dan-bernstein-for-c and http://www.cse.yorku.ca/~oz/hash.html) to hash into the filter. To check if an item is inside, I hash and check the index and see if it is a 1 or 0 and return accordingly.
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Give out the password you cracked. Remember attached the code as 'problem4a.zip'
+In order:
+EBI
+eme
+mpg
+FFI
+IBA
+Gee
+pp.
+Fee
+xcl
+eom
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Cracked using -O2 optimization and r6 table.txt
+
+27fad73b6e2c5aa9d4dfe002d3cd6c17cb7f002a = cundy
+05553c640284aaa4cd5cb0c639968ed7b1b71761 = loury
+f779e47788751aff04da3c8100dd47a596ea25cc = Wyman
+440f1853f63b2f59e41352340ac2c0cef9cd4ff5 = skald
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+
+I started with an arbitrary 5 character string as the first entry in the table. I hash-reduced 1,000,000 times to get the end entry for the first chain and put that into the table. I generated a random 5 character string to be the start of the next chain and hash-reduced 1,000,000 times. Rinse and repeat.
+
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

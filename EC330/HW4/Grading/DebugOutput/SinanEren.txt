@@ -1,0 +1,111 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(SinanEren),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+This sequence will exhibit a probe sequence of primary clustering because i is linear, so the key is moving only slot during hashing. If the table is not full and the search reaches the end of the table.
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+We would first have to merge the two arrays. Once merged, the total number of elements in the merged array will be 2n. In order to find the median, since the total number of elements is an even number, we would have to take the mean of elements with indices n-1, n. We can use merge sort in this case to compare the elements in two arrays. And once we reach the numbers in the middle, we will be able to compute the median. </VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Since we wouldn't have to split up the numbers to sort them and just use a for loop to compare the elements, the runtime would be O(n).
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+We would need to sort the three arrays in order. Once that's done, we would only have to find the value in the middle if n is an odd number. If not, we would do the same procedure as there are two arrays and compute the median of the two numbers in the middle. 
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+O(n) because we would need a for loop to skim through the elements in the array. 
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+We would follow the same step as in number 1. 
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Now we would have to sort all the n arrays, which would take us n time and looping through its numbers for comparison would take another n time which gives us n^2 running time. 
+
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 18
+
+	7         		could be faster
+	7         		could be faster
+	4         		Need to describe algorithm. Also should be more efficient.
+
+
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+   // put your code here
+   // also remember to upload it in submit page
+
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+---+++!! Grader comments *[0/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Give out the password you cracked. Remember attached the code as 'problem4a.zip'
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the password you cracked. 
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Give out the explanation here. Remember attached the code and table
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

@@ -1,0 +1,138 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(AlexWong),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+Primary clustering: No (probe sequence isn't linear).
+Secondary clustering: Yes, because of the +i term.
+Always able to add a key if table is not full: Yes, assuming entire function is modded by table size (as per post on discussion forum)
+
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+median(array[1...m])
+  if m is even
+    return 0.5 * (array[m/2]+ array[m/2 + 1])
+  else if m is odd
+    return array[m/2 + 1]
+
+median_of_two(x0[1...n], x1[1...n])
+  x0_med = median(x0)
+  x1_med = median(x1)
+  if x0_med == x1_med  //medians are the same
+    return x0_med
+  else if x0_med < x1_med //median of x1 > median of x0
+    return median_of_two(x0[n/2...n], x1[1...n/2])
+  else if x0_med > x1_med //median of x0 > median of x1
+    return median_of_two(x0[0...n/2], x1[n/2...n])
+
+</VERBATIM>
+
+---++++ Analysis and running time
+Worst case: T(n) = O( (lg(n) ). Calculating the median takes O(1), since all arrays and subarrays are sorted. Each successive recursive call operates on at most half the total number of elements of both arrays (i.e. with two arrays of n elements each, each recursive call will operate on two arrays of n/2 elements each. Ex: with two 8-element arrays (n=8), at worst will need to compare two arrays of n=4, followed by two arrays of n=2 for a total of three iterations or lg(8) = 3
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 10
+
+	10        		
+	0         		
+	0         		
+
+
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+   // put your code here
+   // also remember to upload it in submit page
+
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+---+++!! Grader comments *[0/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+685df4b1503f907064c7e9ba0bdc424975db4c05: mpg
+0c9889e664f4a0a7676c98e373a442f3a107aeb4: DCE
+2d9d79b467e8c7b2099fafde4e4c221a1efa6ff2: deb
+6c10fb70b7e99aedd209b1d3e3083779e2872f95: IBA
+0b215f0155d3a4b2fdb3a552216a37659c2f06eb: BNS
+1c0d17d2ef10ee63fcdb389e33b6a51f1eea463f: dis
+934594c19098524d2ce03beb0414e08d2c427129: MTF
+6871b66e2db58f4978d36ee3bd5cf89262b6d5e2: voe
+075d10bd5717c2c7149387c729cf4f2bae8e73ef: Dli
+7a2cac13edf4db3599de1b294f461a57097254f7: ger
+
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+No passwords were found in the rainbow table.
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Give out the explanation here. Remember attached the code and table
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

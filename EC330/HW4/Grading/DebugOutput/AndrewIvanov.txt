@@ -1,0 +1,269 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(AndrewIvanov),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+i. no <br>
+ii. yes <br>
+iii. no <br>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+The medians of both arrays, because they are sorted, is just the middle element which will have constant access time. <br>
+You next determine the max and minimum of these two and truncate the larger values off the max array and the smaller values off the min array. <br>
+Next you repeat these steps until down to the median element. <br>
+
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+Runtime: theta(log(n)) <br>
+
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+The medians of the three arrays, because they are sorted, is just the middle element which will have constant access time. <br>
+You next determine the max and minimum of these three and truncate the larger values off the max array and the smaller values off the min array. <br>
+Next you repeat these steps until down to the median element. <br>
+BUT!! when you truncate if say the arrays were now of size 10, 20, & 10 then if you truncate 5 off the next selected array and the array with 20 is also picked then only 5 will be truncated in the corresponding direction off the array with 20, yielding something like 10, 15, 5. And this process continues on. <br>
+When an array is exhausted till the last element a singe truncation can occur in both the corresponding arrays and then the array with 1 is no longer regarded as active. <br>
+
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+Runtime: theta(log(n)) <br>
+
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+The medians of the n arrays, because they are sorted, is just the middle element which will have constant access time but for n arrays will total at theta(n) running time for this part. <br>
+You next determine the max and minimum of these n and truncate the larger values off the max array and the smaller values off the min array. <br>
+Next you repeat these steps until down to the median element. <br>
+BUT!! when you truncate if say the arrays were now of size 10, 20, & 10 then if you truncate 5 off the next selected array and the array with 20 is also picked then only 5 will be truncated in the corresponding direction off the array with 20, yielding something like 10, 15, 5. And this process continues on. <br>
+When an array is exhausted till the last element a singe truncation can occur in both the corresponding arrays and then the array with 1 is no longer regarded as active. <br>
+
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+Runtime: theta(n*theta(n)) <br>
+
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 22
+
+	8         		More descriptive algorithm
+	8         		
+	6         		could be faster
+
+
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+   // put your code here
+   // also remember to upload it in submit page
+#include <string>
+#include <iostream>
+#include "myBloomFilter.h"
+
+myBloomFilter::myBloomFilter(int mm) : length(mm) {
+    filter = "";
+    length = mm;
+    for(int i = 0; i < mm; i++) {
+        filter += '0';
+    }
+}
+
+myBloomFilter::myBloomFilter (string filter) : length(filter.length()) {
+    length = filter.length();
+    this->filter = filter;
+}
+
+int hash(string item, int length) {
+	int A = 54059;
+	int B = 76963;
+	unsigned int h = 31 /* also prime */;
+	for (int i = 0; i < item.length(); i++) {
+	h = (h * A * item[i] * B) % length;
+	}
+	return h; 
+}
+
+void myBloomFilter::insert(string item) {
+    	int hash1 = hash(item,length);
+	filter[hash1] = '1';
+}
+
+
+bool myBloomFilter::exists(string item) {
+	int hash1 = hash(item, length);
+	if (filter[hash1] == '1') {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+string myBloomFilter::output() {
+    return filter;
+}
+
+
+
+// 
+
+///////////////////////////////// HEADER BELOW ///////////////////////////////////////////////
+
+
+#ifndef MYBLOOMFILTER_H
+#define	MYBLOOMFILTER_H
+#include <string>
+using namespace std;
+
+class myBloomFilter {
+        public:
+        /**
+        * Instantiate an empty Bloom filter of length [ mm ] chars.
+        */
+        myBloomFilter (int mm);
+        
+        /**
+        * Instantiates a Bloom filter from a given string [filter]
+        * @requires [filter] must have been produces by the output() call of a BloomFilter object.
+        */
+        myBloomFilter (string filter) ;
+        /**
+        * inserts  into the filter
+        */
+        void insert(string item);
+        
+        /**
+        * Checks whether [item] is in the filter.
+        * @return  true if the item is probably in the filter
+        *          false if the item is definitely not in the filter
+        */
+        bool exists(string item);
+        
+        /**
+        * @return A string of [length] characters representing the Bloom filer
+        */
+        string output();
+        
+        protected:
+            string filter;
+        int length; /** The length of the Bloom filter, in chars. */
+};
+
+#endif	/* MYBLOOMFILTER_H */
+
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+Hashing is implemented with prime numbers to try and decrease the amount of repetitive insertion locations to be had. <br>
+Initializations with 0's and filter length are made as well. <br>
+Locations of insertions are stored by a declared '1' at the hash location with existence being determined if the located area reads a '1' from the filter. <br>
+---+++!! Grader comments *[14/25]*
+<VERBATIM>
+Score: 1671
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Give out the password you cracked. Remember attached the code as 'problem4a.zip'
+</VERBATIM>
+
+The hash is: 6971a698c535c6db3b44bfe6887e96314ec3fb8f for password: DTB       <br>
+The hash is: dfd13904f4f4fcb57970f6d6953a4f9225f5795e for password: Fee     <br>
+The hash is: d7d685dee6af8b7347f3f847320a570fbddb835e for password: R&D     <br>
+The hash is: 5c657700ecf021c2579e070879fe53dffcc0aba5 for password: SRB     <br>
+The hash is: 99af7f6ccb91650fae621fb73f8985713fca766b for password: TTU     <br>
+The hash is: 361be360760e694b07aecce91f60dc1bc6ef893f for password: ass     <br>
+The hash is: 45c9b670177fba376c3cdf8334fec71169f027da for password: fub     <br>
+The hash is: 7a2cac13edf4db3599de1b294f461a57097254f7 for password: ger     <br>
+The hash is: c49fa65e028b678b8c1341d0ece3227ef508948c for password: i'd     <br>
+The hash is: 50027c141f4c998255086f5a8a286125b72338b2 for password: xcl     <br>
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the password you cracked. 
+</VERBATIM>
+
+Given:              <br>
+1) 978dc6a1ca901a30ed475b005eaae62e6eb20de6              <br>
+2) 4d5004a7e1cded2079bf6025ad63de225ec28bac              <br>
+3) 898b7a869bba59c78a3068cefc254bfdb468fe04              <br>
+4) 891a97ed3b9305554d0fbc102d5fbf86f17a5075              <br>
+5) 1c841331e6230cf323724e420ab8a38130c726c5              <br>
+6) 54c15eedd7615d3d92afc152722f231ceb76366d              <br>
+7) b1f9f946d0738e1512da5c37a70c0bacb0f1cce9              <br>
+8) e5564df8bdf471ec15e8b9c586cf52f6c0b6aec6              <br>
+9) 8665f14ffcfb8acdee369993ed3c62a15b0f606a              <br>
+10) ff8b6a673cd1debc344ea6a5a3bb623bb951c4bc              <br>
+
+1) (   kNm`B  ,  >\pRP   ) In the rainbow table, meaning the original was: kNm`B                <br>
+2) (   I>JHg  ,  c\Mah   ) In the rainbow table, meaning the original was: I>JHg              <br>
+3) (   XhJ;A  ,  p_YJM   ) In the rainbow table, meaning the original was: XhJ;A              <br>
+4) (   ]+"Y~  ,  Rihab   ) In the rainbow table, meaning the original was: ]+"Y~              <br>
+5) (   AcFJ!  ,  Pdf]S   ) In the rainbow table, meaning the original was: AcFJ!              <br>
+6) (   ^d..|  ,  Hgdsq   ) In the rainbow table, meaning the original was: ^d..|               <br>
+7) (   I>JHg  ,  c\Mah   ) In the rainbow table, meaning the original was: I>JHg              <br>
+8) (   I>JHg  ,  c\Mah   ) In the rainbow table, meaning the original was: I>JHg              <br>
+9) (   I>JHg  ,  c\Mah   ) In the rainbow table, meaning the original was: I>JHg              <br>
+10) (   YPhby  ,  cCNNf   ) In the rainbow table, meaning the original was: YPhby              <br>
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Give out the explanation here. Remember attached the code and table
+</VERBATIM>
+
+Generate random numbers to start the rainbow table & then hash and reduce those numbers 20 times for the second column of the rainbow table. <br>
+Results are displayed by a grainbow.txt table produced and code attached as well. <br>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

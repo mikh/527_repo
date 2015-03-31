@@ -1,0 +1,375 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(AndrewPellitieri),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+
+Answer:
+ii. secondary clustering
+
+Analysis:
+The function when you iterate it out, and convert the summation becomes: 
+<latex>h_i(k) = h(k) + \dfrac{i \cdot (i+1)}{2} </latex>
+This result shows that it is a quadratic not a geometric and when testing in a test program I saw secondary clustering not primary; 
+iii is not true because if you try to run this function on an array of 9, 
+inserting 9 elements where the hash gives the same indices for each one you will segfault, as there will fill 4 
+indices and the fifth element you try to insert will be forced to run forever.
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+assuming you have, the following variables and functions:
+n = size > 2 (less than 0 invalid, 1 and 2 are just finding max and min of two numbers and then comparing)
+int max(val1, val2) { returns max of two value }
+int min(val1, val2){ returns min of two values }
+int median(arrayIn, n){ computes median of a single array of size n  } 
+
+int arrayMedian( int array1[], int array 2[], int n){
+
+   int median1 = median(array1, n);
+   int median2 = median(array2, n);
+
+   if (median1 == median2) return m1;
+
+//If median1 is smaller than median2, truncate the left half of array1 and the right half of array2, and call arrayMedian recursively
+  if (median1 < median2){
+      if (n is even)
+         return arrayMedian(array1 + n/2 - 1, array2, n - n/2 +1)
+      else
+         return arrayMedian(array1 + n/2, array2, n - n/2); 
+  }
+
+//If median1 is larger than median2, truncate the right half of array1 and the left half of array2, and call arrayMedian recursively
+  else (median1 > median2){
+      if (n is even)
+         return arrayMedian(array2 + n/2 - 1, array1, n - n/2 +1)
+      else
+         return arrayMedian(array2 + n/2, array1, n - n/2); 
+  }
+
+}
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Using the divide and conquer method of truncating by half every iteration we are looking at:
+</VERBATIM>
+<latex> O(logn) </latex>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+Explanation:
+assuming you have, the following variables and functions:
+n = size > 2 (less than 0 invalid, 1 and 2 are just finding max and min of two numbers and then comparing)
+int max(val1, val2) { returns max of two value }
+int min(val1, val2){ returns min of two values }
+int median(arrayIn, size){ computes median of a single array of size  } 
+initial call size1=size2=size3
+
+**--Algorithm PseudoCode:
+
+int arrayMedian3( int array1[], int array 2[], int array 3[], int size1, int size2, int size3){
+
+   int median1 = median(array1, size1);
+   int median2 = median(array2, size2);
+   int median3 = median(array3, size3);
+
+   if (median1 == median2 == median3) return m1;
+
+//Search all medians, find the min and max median
+//Find the minimum of the number of ints to the left of the min, and number of ints to the right of the max
+//**ONLY truncate same number of ints from both, thus it won't upset the median, 
+//and you know none of them can be the median because it has to be between the min and max value
+//truncate min(numOfIntsLeftMin, numOfIntsRightMax) ints from the end of right half of arrayMax, and left half of array min,
+//and call arrayMedian recursively:
+  int arrayContainingMin[] = array with min(median1, median2, median3);
+  int arrayContainingMax[] = array with max(median1, median2, median3);
+
+  int numOfIntsLeftMin = index of min(median1, median2, median3);
+  int numOfIntsRightMax = arrayContainingMaxSize.length() - (index of max(median1..medianN) + 1)
+
+  int numToTruncate = min(numOfIntsLeftMin, numOfIntsRightMax);
+
+  Truncate(NumToTruncate from left of arrayContainingMin);
+  Truncate(NumToTruncate from right of arrayContainingMax);
+
+  return arrayMedian(array1, array2, array3, newSize1, newSize2, newSize3); 
+  
+}
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+**READ COMMENTS IN PSEUDOCODE FOR IN DEPTH ANALYSIS AND STEPS**
+
+Using a similar function of truncating by the smaller half (left of min or right of max) every iteration we are looking at, slighly longer than the previous example, but a constant longer so again we get O(3logn) which reduces to:
+</VERBATIM>
+<latex> O(logn) </latex>
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+Explanation:
+assuming you have, the following variables and functions:
+n = size > 2 (less than 0 invalid, 1 and 2 are just finding max and min of two numbers and then comparing)
+int max(val1, val2) { returns max of two value }
+int min(val1, val2){ returns min of two values }
+int median(arrayIn, size){ computes median of a single array of size  } 
+initial call size1=size2=size3...=sizeN
+
+**--Algorithm PseudoCode:
+
+int arrayMedian3( int array1[], int array2[], int array3[],...intarrayN[], int size1, int size2, int size3,...int sizeN){
+
+   int median1 = median(array1, size1);
+   int median2 = median(array2, size2);
+   int median3 = median(array3, size3);
+   ...
+   int medianN = median(arrayN,sizeN)
+
+   if (median1 == median2 == median3 = ... = medianN) return median1;
+
+//Search all medians, find the min and max median
+//Find the minimum of the number of ints to the left of the min, and number of ints to the right of the max
+//**ONLY truncate same number of ints from both, thus it won't upset the median, 
+//and you know none of them can be the median because it has to be between the min and max value
+//truncate min(numOfIntsLeftMin, numOfIntsRightMax) ints from the end of right half of arrayMax, and left half of array min,
+//and call arrayMedian recursively:
+  int arrayContainingMin[] = array with min(median1, median2, median3..., medianN);
+  int arrayContainingMax[] = array with max(median1, median2, median3..., medianN);
+
+  int numOfIntsLeftMin = index of min(median1, median2, median3..., medianN);
+  int numOfIntsRightMax = arrayContainingMaxSize.length() - (index of max(median1..medianN) + 1)
+
+  int numToTruncate = min(numOfIntsLeftMin, numOfIntsRightMax);
+
+  Truncate(NumToTruncate from left of arrayContainingMin);
+  Truncate(NumToTruncate from right of arrayContainingMax);
+
+  return arrayMedian(array1, array2, array3... arrayN, newSize1, newSize2, newSize3... newSizeN); 
+  
+}
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+**READ COMMENTS IN PSEUDOCODE FOR IN DEPTH ANALYSIS AND STEPS**
+
+Using a similar function of truncating by the smaller half (left of min or right of max) every iteration we are looking at,  longer than the previous example 
+by a factor of N according to analysis I found online, cited below, but n longer so again we get O( # of logn) which reduces to:
+</VERBATIM>
+<latex> O(n logn) </latex>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 25
+
+	10        		
+	8         		
+	7         		
+
+
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+
+**MY BEST RUN WAS 2285**
+
+%CODE{"cpp"}%
+// Andrew Pellitieri
+//
+
+#include "myBloomFilter.h"
+#include <iostream>      /* printf, scanf, NULL */
+#include <stdlib.h> 
+using namespace std;
+
+myBloomFilter::myBloomFilter(int mm): BloomFilter(mm){
+	//Initialize Hash Storage
+	filterStorage = new string;
+	*filterStorage = "";
+	length = mm;
+
+	//Write as empty
+	for(int i =0; i < mm; i++)
+		*filterStorage += '0';
+}
+
+myBloomFilter::myBloomFilter(string filter): BloomFilter(filter){
+	filterStorage = new string;
+
+	//Write Hash from filter
+	length = filter.length();
+	*filterStorage = filter;
+}
+
+//I initially did the inline hash given below, this blocked hash was to add complexity once I had a score of 1700 
+unsigned long hash(string str) {//Sourced from http://stackoverflow.com/questions/7666509/hash-function-for-string
+
+    unsigned long hash = 5881;
+    int c;
+    int i = 0;
+
+    while (c = str[i]){
+        hash = ((hash << 5) + hash) + c; 
+        i++;
+    }
+
+    return hash;
+}
+
+void myBloomFilter::insert(string item){
+	int acc = 0;
+	int digitCounter = 0;
+
+	//Run First Hash from Source
+	unsigned long z = hash(item);
+	(*filterStorage)[z%length] = '1';
+
+	//Run second hash that I custom wrote myself to deal with rearrangement and duplicate char
+	for(int i = 0; i < item.length(); i++){
+
+		int c = (int)item[i]; //Get asccii value for each char and accumulate
+
+		if(digitCounter % 3 == 0){
+			acc += c;
+			acc += c;
+		} else if (digitCounter % 3 == 1){
+			acc += c/2;
+		} else {
+			acc++;
+		}
+		digitCounter++;
+	}
+
+	//Store Second Hash Result
+	(*filterStorage)[acc%length] = '1';
+}
+
+bool myBloomFilter::exists(string item){
+	//Initialize and re run the hashes from above
+	int acc = 0;
+	int digitCounter = 0;
+
+	//Running my custom Hash
+	for(int i = 0; i < item.length(); i++){
+
+		int c = (int)item[i]; //Get asccii value for each char and accumulate
+	
+		//Hash
+		if(digitCounter % 3 == 0){
+			acc += c;
+			acc += c;
+		} else if (digitCounter % 3 == 1){
+			acc += c/2;
+		} else {
+			acc++;
+		}
+	
+		digitCounter++;
+	}
+
+	//Run Second Hash from source
+	unsigned long z = hash(item);
+
+	//Test that both hashes are there to return exist
+	if ((*filterStorage)[acc%length] == '1' && (*filterStorage)[z%length] == '1')			
+		return true;
+	else 
+		return false; //change back to return true
+}
+
+string myBloomFilter::output(){
+	return *filterStorage;
+}
+
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+Explanation is also in the comments of the code:
+The empty constructor instantiates string pointer filterStorage on the heap - it loads it full of char '0', the other constructor makes a copy of the filter given insted,
+The insert function runs through two hash functions, one is separate blocked function to emphasize that it is super efficient sourced from resources cited in the comments, 
+the other hash function, inline with the exists/insert functions, that I custom designed, my goal here was to perform different 
+operations on the different ascii codes dependent on the number of the digit place that the letter was indexed in,
+this prevents false positives on things like 'this' and 'hits'
+ 
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+LWP
+dos
+MTA
+sea
+GCM
+SYC
+Sup
+ibm
+prs
+mpg
+
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+I was able to see 8/10, the other two got stuck:
+
+My set:
+1. Fredi
+2. learn
+3.
+4. tirer
+5.
+6. Ramer
+7. Guild
+8. Vichy
+9. Carun
+10. Epeus
+
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+N.B: My table is in a .txt in the zip folder problem4c.zip, along with the code used to generate it
+
+The table was built on the premise that it would randomize the number of times it hash reduces a number of randomly generated strings.
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---
+
+   * [[%ATTACHURLPATH%/problem4c.zip][problem4c.zip]]: problem4c.zip
+
+   * [[%ATTACHURLPATH%/myBloomFilter.cpp][myBloomFilter.cpp]]: myBloomFilter.cpp
+
+   * [[%ATTACHURLPATH%/myBloomFilter.h][myBloomFilter.h]]: myBloomFilter.h

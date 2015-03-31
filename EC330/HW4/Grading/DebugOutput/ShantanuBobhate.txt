@@ -1,0 +1,497 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(ShantanuBobhate),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+Give out answer here.
+
+     i and iii
+     
+     Explanation:
+          i.The hash function provided describes linear probing. One of the problems faced in linear probing is primary clustering. 
+            Hence, this statement is true.
+          ii. This statement is true because in linear probing, you can always insert an element when the table is not full. 
+              Also, looking at the function, we know that the function will continue to look for a free spot until the table is full.
+
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+
+     findMedian(ar1[], ar2[], n)
+     begin:        
+          if n == 1
+               return (ar1[0] + ar2[0]) / 2
+         
+          if n == 2
+               return (max(ar1[0], ar2[0]) + min(ar1[1], ar2[1])) / 2
+
+          median1 = median of ar1
+          median2 = median of ar2
+
+          if median1 == median2
+               return median1
+
+          if median1 < median2
+          begin:
+               if n % 2 == 0
+                    return findMedian(ar1 + n/2 - 1, ar2, n - n/2 +1)
+               else
+                    return findMedian(ar1 + n/2, ar2, n - n/2)
+          end
+
+          if median2 < median1
+          begin:
+               if (n % 2 == 0)
+                    return findMedian(ar2 + n/2 - 1, ar1, n - n/2 + 1)
+               else
+                    return findMedian(ar2 + n/2, ar1, n - n/2);
+          end
+     end
+
+</VERBATIM>
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+     
+     This algorithm works by eliminating elements from the array and converging towards the median.
+     
+     Time Complexity: O(lg(n))
+
+     // Reference: http://www.geeksforgeeks.org/median-of-two-sorted-arrays/
+
+</VERBATIM>
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+
+     findMedian(arr1, n1, arr2, n2, arr3, n3)
+     begin:
+          median1 = median(arr1)
+          median2 = median(arr2)
+          median3 = median(arr3)
+
+          if (median3 < median1 < median2)
+          begin:
+               if (size of arr3 = 1 and size of arr2 = 1)
+                    return median2
+               new_arr3 = arr3[ |_n3/2_| ... n3 - 1)
+               new_arr2 = arr2[0 ... |_n2/2_| )
+               findMedian(arr1, n1, new_arr2, n2/2, new_arr3, n3/2)
+          end
+
+          if (median3 < median2 < median1)
+          begin:
+               if (size of arr3 = 1 and size of arr1 = 1)
+                    return median2
+               new_arr3 = arr3[ |_n3/2_| ... n3 - 1)
+               new_arr1 = arr1[0 ... |_n1/2_| )
+               findMedian(new_arr1, n1/2, arr2, n2, new_arr3, n3/2)
+          end
+
+          if (median2 < median1 < median3)
+          begin:
+               if (size of arr2 = 1 and size of arr1 = 1)
+                    return median1
+               new_arr2 = arr2[ |_n2/2_| ... n2 - 1)
+               new_arr3 = arr3[0 ... |_n3/2_| )
+               findMedian(arr1, n1, new_arr2, n2/2, new_arr3, n3/2)
+          end
+
+          if ( median2 < median3 < median1)
+          begin:
+               if (size of arr2 = 1 and size of arr1 = 1)
+                    return median3
+               new_arr2 = arr2[ |_n2/2_| ... n2 - 1)
+               new_arr1 = arr1[0 ... |_n1/2_| )
+               findMedian(new_arr1, n1/2, new_arr2, n2/2, arr3, n3)
+          end
+
+          if ( median1 < median2 < median3)
+          begin:
+               if (size of arr1 = 1 and size of arr3 = 1)
+                    return median2
+               new_arr1 = arr1[ |_n1/2_| ... n1 - 1)
+               new_arr3 = arr3[0 ... |_n3/2_| )
+               findMedian(new_arr1, n1/2, arr2, n2, new_arr3, n3/2)
+          end
+
+          if ( median1 < median3 < median2)
+          begin:
+               if (size of arr1 = 1 and size of arr2 = 1)
+                    return median3
+               new_arr1 = arr1[ |_n1/2_| ... n1 - 1)
+               new_arr2 = arr2[0 ... |_n2/2_| )
+               findMedian(new_arr1, n1/2, new_arr2, n2/2, arr3, n3)
+          end
+     end
+
+</VERBATIM>
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+
+     The algorithm works by eliminating irrelevant array elements. Given 3 sorted arrays with 3 medians, m1, m2 and m3, if m1 is the smallest value
+     and m3 is the maximum value, then it holds true that all the elements in the first array less than m1 and all the elements in the third array
+     greater than m3 are less than and greater than, respectively, m1.
+
+     Time complexity: O(log(n))
+
+     Reference: http://stackoverflow.com/questions/6182488/median-of-5-sorted-arrays
+
+</VERBATIM>
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+
+     // NOTE: Uses same logic as part b
+
+     findMedian(arr1, arr2, ... , arr_n)
+     begin:
+          median1 = median(arr1)
+          median2 = median(arr2)
+          ...
+          median_n = median(arr_n)
+
+          find array with min median
+          find array with max median
+          
+          new_arr1 = array with min median [median value to n - 1]
+          new_arr2 = array with max median [0 to median value]
+
+          recurse the findMedian function using new_arr1 and new_arr2 instead of the other 2 arrays.
+     end
+
+</VERBATIM>
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+
+     This algorithm works the same ways as the one for part b.
+
+     For any constant number of arrays this algorithm takes O(log(n)). However, since there are n number of arrays:
+          Time Complexity: O(nlog(n))
+
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 25
+
+	10        		
+	8         		
+	7         		
+
+
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+   // put your code here
+   // also remember to upload it in submit page
+
+   /* MY_BLOOM_FILTER_H */
+//
+//  myBloomFilter.h
+//  Homework 3
+//
+//  Created by Shantanu Bobhate on 3/15/15.
+//  Copyright (c) 2015 Shantanu Bobhate. All rights reserved.
+//
+
+#ifndef Homework_4_myBloomFilter_h
+#define Homework_4_myBloomFilter_h
+
+#include "BloomFilter.h"
+#include <vector>
+#include <iostream>
+
+class myBloomFilter: public BloomFilter {
+public:
+    /**
+     * Instantiate an empty Bloom filter of length [ mm ] chars.
+     */
+    myBloomFilter (int mm);
+    
+    /**
+     * Instantiates a Bloom filter from a given string [filter]
+     * @requires [filter] must have been produces by the output() call of a BloomFilter object.
+     */
+    myBloomFilter (string filter);
+    
+    /**
+     * inserts  into the filter
+     */
+    void insert(string item);
+    
+    /**
+     * Checks whether  is in the filter.
+     * @return  true if the item is probably in the filter
+     *          false if the item is definitely not in the filter
+     */
+    bool exists(string item);
+    
+    /**
+     * @return A string of  characters representing the Bloom filter
+     */
+    string output();
+    
+private:
+    vector<char> filter;
+};
+
+#endif
+
+/* END MY_BLOOM_FILTER_H */
+
+***************************************
+
+/* MY_BLOOM_FILTER_CPP */
+
+//
+//  myBloomFilter.cpp
+//  Homework 3
+//
+//  Created by Shantanu Bobhate on 3/16/15.
+//  Copyright (c) 2015 Shantanu Bobhate. All rights reserved.
+//
+
+#include "myBloomFilter.h"
+
+#include <stdio.h>
+#include <iostream>
+#include <string>
+#include <sstream>
+
+int h1(string x, int M);
+
+myBloomFilter::myBloomFilter (int mm): BloomFilter (mm) {
+    for (int ii = 0; ii < mm; ii++) {
+        filter.push_back('0');
+    }
+}
+
+myBloomFilter::myBloomFilter (string filter) : BloomFilter (filter) {
+    for (int ii = 0; ii < length; ii++) {
+        this -> filter.push_back(filter[ii]);
+    }
+}
+
+string myBloomFilter::output() {
+    string result = "";
+    vector<char>::iterator it = filter.begin();
+    for (; it != filter.end(); ++it) {
+        result = result + *it;
+    }
+    return result;
+}
+
+void myBloomFilter::insert(string item) {
+    cout << h1(item, length) << endl;
+    filter[h1(item, length)] = '1';
+}
+
+/**
+ * Checks whether  is in the filter.
+ * @return  true if the item is probably in the filter
+ *          false if the item is definitely not in the filter
+ */
+bool myBloomFilter::exists(string item) {
+    if (filter[h1(item, length)] == '1')
+        return true;
+    else
+        return false;
+}
+
+// Hash Functions /////////////////////////////
+int h1(string x, int M) {
+    int xlength = x.size();
+    char ch[xlength];
+    for (int ii = 0; ii < x.size(); ii++) {
+        ch[ii] = x[ii];
+    }
+    int i, sum;
+    for (sum=0, i=0; i < x.length(); i++)
+        sum += ch[i];
+    return sum % M;
+}
+//////////////////////////////////////////////
+
+/* END MY_BLOOM_FILTER_CPP */
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+Give out answer here.
+
+     The filter uses a vector on the back end. It uses one additive hash function. It makes sure there are no false negatives.
+
+</VERBATIM>
+
+---+++!! Grader comments *[2/25]*
+<VERBATIM>
+Score: 1093</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Give out the password you cracked. Remember attached the code as 'problem4a.zip'
+     
+     Current Hash: 2adee50a101f6a2bc3d14eb04bd1b60f3b719c36     --->     Password: pup
+     Current Hash: ab35ed91518b27df7b7ea4b80c65a29c344fd2c8     --->     Password: pk.
+     Current Hash: 765740a97b17f6e54ae3a8678f7b3b62e7b633bd     --->     Password: Ruy
+     Current Hash: 770c46bf00a86db695a9bacf3e041553448e15cb     --->     Password: Saw
+     Current Hash: adb9b27c9d0f78e1e104007e56cd3ce6b48456a7     --->     Password: RFP
+     Current Hash: 0b215f0155d3a4b2fdb3a552216a37659c2f06eb     --->     Password: BNS
+     Current Hash: 4bb4348d714f69b9d43ed42f8d25736c31343e86     --->     Password: PSA
+     Current Hash: 6971a698c535c6db3b44bfe6887e96314ec3fb8f     --->     Password: DTB
+     Current Hash: 2d9d79b467e8c7b2099fafde4e4c221a1efa6ff2     --->     Password: deb
+     Current Hash: e61b4bd1bfc407c316a3249debc6723405d9e9d0     --->     Password: Neb
+
+</VERBATIM>
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the password you cracked. 
+
+     The cracked passwords are as follows:
+          Current Hash: 554c496d4a059589135554f2e93332e2a1d4605d     --->     Password: hGFaj
+          Current Hash: cdd89c1fd6b1dd918ecd55b81c883dfac5f944fa     --->     Password: hGFaj
+          Current Hash: 28d4d2a685809550605408ac071bdbdadf5d986a     --->     Password: hGFaj
+          Current Hash: b1f9f946d0738e1512da5c37a70c0bacb0f1cce9     --->     Password: lgiXv
+          Current Hash: 2461823751c694b0ba674a4097022cbc6cacf21f     --->     Password: hGFaj
+          Current Hash: 27fad73b6e2c5aa9d4dfe002d3cd6c17cb7f002a     --->     No Password Found
+          Current Hash: 978dc6a1ca901a30ed475b005eaae62e6eb20de6     --->     Password: hGFaj
+          Current Hash: 69cc4b7f78502eafc9b4187ee40c0f81bec1be9b     --->     Password: IZ`SK
+          Current Hash: 54c15eedd7615d3d92afc152722f231ceb76366d     --->     Password: lgiXv
+          Current Hash: 68d27e0a43049fe64584ba1832a64d4bae603120     --->     Password: hGFaj
+
+     The following was the output of my Program:
+
+**********************************************************************************
+Current Hash: 554c496d4a059589135554f2e93332e2a1d4605d
+	 possible index: 2488     --->     original string: ;TUih
+	 	 Password: hGFaj
+	 possible index: 2577     --->     original string: p]th`
+	 	 Password: hGFaj
+	 possible index: 3316     --->     original string: 4y]{'
+	 	 Password: hGFaj
+	 possible index: 5529     --->     original string: !9xM5
+	 	 Password: hGFaj
+	 possible index: 5557     --->     original string: PSlE)
+	 	 Password: hGFaj
+
+Current Hash: cdd89c1fd6b1dd918ecd55b81c883dfac5f944fa
+	 possible index: 2488     --->     original string: ;TUih
+	 	 Password: hGFaj
+	 possible index: 2577     --->     original string: p]th`
+	 	 Password: hGFaj
+	 possible index: 3316     --->     original string: 4y]{'
+	 	 Password: hGFaj
+	 possible index: 5529     --->     original string: !9xM5
+	 	 Password: hGFaj
+	 possible index: 5557     --->     original string: PSlE)
+	 	 Password: hGFaj
+
+Current Hash: 28d4d2a685809550605408ac071bdbdadf5d986a
+	 possible index: 2488     --->     original string: ;TUih
+	 	 Password: hGFaj
+	 possible index: 2577     --->     original string: p]th`
+	 	 Password: hGFaj
+	 possible index: 3316     --->     original string: 4y]{'
+	 	 Password: hGFaj
+	 possible index: 5529     --->     original string: !9xM5
+	 	 Password: hGFaj
+	 possible index: 5557     --->     original string: PSlE)
+	 	 Password: hGFaj
+
+Current Hash: b1f9f946d0738e1512da5c37a70c0bacb0f1cce9
+	 possible index: 3732     --->     original string: mm^g,
+	 	 Password: lgiXv
+
+Current Hash: 2461823751c694b0ba674a4097022cbc6cacf21f
+	 possible index: 2488     --->     original string: ;TUih
+	 	 Password: hGFaj
+	 possible index: 2577     --->     original string: p]th`
+	 	 Password: hGFaj
+	 possible index: 3316     --->     original string: 4y]{'
+	 	 Password: hGFaj
+	 possible index: 5529     --->     original string: !9xM5
+	 	 Password: hGFaj
+	 possible index: 5557     --->     original string: PSlE)
+	 	 Password: hGFaj
+
+Current Hash: 27fad73b6e2c5aa9d4dfe002d3cd6c17cb7f002a
+	 possible index: 1315     --->     original string: `HnRq
+	 	 Password Not Found.
+
+Current Hash: 978dc6a1ca901a30ed475b005eaae62e6eb20de6
+	 possible index: 2488     --->     original string: ;TUih
+	 	 Password: hGFaj
+	 possible index: 2577     --->     original string: p]th`
+	 	 Password: hGFaj
+	 possible index: 3316     --->     original string: 4y]{'
+	 	 Password: hGFaj
+	 possible index: 5529     --->     original string: !9xM5
+	 	 Password: hGFaj
+	 possible index: 5557     --->     original string: PSlE)
+	 	 Password: hGFaj
+
+Current Hash: 69cc4b7f78502eafc9b4187ee40c0f81bec1be9b
+	 possible index: 5810     --->     original string: 'h]8]
+	 	 Password: IZ`SK
+
+Current Hash: 54c15eedd7615d3d92afc152722f231ceb76366d
+	 possible index: 3732     --->     original string: mm^g,
+	 	 Password: lgiXv
+
+Current Hash: 68d27e0a43049fe64584ba1832a64d4bae603120
+	 possible index: 2488     --->     original string: ;TUih
+	 	 Password: hGFaj
+	 possible index: 2577     --->     original string: p]th`
+	 	 Password: hGFaj
+	 possible index: 3316     --->     original string: 4y]{'
+	 	 Password: hGFaj
+	 possible index: 5529     --->     original string: !9xM5
+	 	 Password: hGFaj
+	 possible index: 5557     --->     original string: PSlE)
+	 	 Password: hGFaj
+
+Program Ended Successfully.
+**********************************************************************************
+
+</VERBATIM>
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Give out the explanation here. Remember attached the code and table
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

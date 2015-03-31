@@ -1,0 +1,270 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(TaranaChowdhury),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+Let's assume that in  <latex>h_{i}(k) = h_{i-1}(k) + i, with   h_{0}(k) = h(k)   h_{0}(k) = 2</latex> in that case:
+ <latex> h_{1}(k) = 2+1=3</latex>
+
+ <latex> h_{2}(k) = 3+2=5</latex>
+
+ <latex> h_{3}(k) = 5+3=8</latex> 
+
+<latex> h_{4}(k) = 8+4=12</latex>and so on.
+
+It becomes evident that this probe sequence is similar to a Quadratic Probing Sequence and does not increase linearly and so it displays only (ii) secondary clustering as in linear probing, the initial probe determines the entire sequence, and so only m (sequence 0,1,2 to m-1) distinct probe sequences are used and  it does not display(i) the primary clustering problem in which as runs of occupied slots increase so does the average search time and the clusters arise because an empty slot preceded by a constant i  full slots get filled with probability (i+1)/m where is the number of probe sequences.  It is also does not (iii) always add a key if the table is not full because it does not progress through the sequence linearly and not all probes are checked  to make sure that the key does not match the probe, some probes are skipped. 
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+First find the median of each array <latex>X_{0} and X_{1}</latex>.  If they are equal then you have found the median.
+
+ If not then check if the median of  <latex>X_{0} </latex> is greater than the median of <latex>X_{1} </latex> then the ultimate median is within the subarrays <latex>X_{0}[1.......floor({n\over2})] </latex> and <latex>X_{1}[floor({n\over2})...........n] </latex>. 
+
+Else if the median of  <latex>X_{1} </latex> is greater than the median of <latex>X_{0} </latex> then the ultimate median is within the subarrays  <latex>X_{0}[floor({n\over2})...........n] </latex> and <latex>X_{1}[1.......floor({n\over2})] </latex>. 
+
+Now recursively apply the same process and find the median of each subarray that would contain the ultimate median as described above and split into subarrays. Repeat this process until the size of both subarrays is 2. Once the size is two the median will be the average of the max of the first two elements and min of the second two element of each subarray : median=  <latex>{max (X_{0}[1], X_{1}[1]) + min (X_{0}[2], X_{1}[2]) \over 2}</latex>. 
+
+
+ 
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+Finding the median of an array takes <latex>\Theta (1) </latex> time and doing this log(n) times [because each time splitting array into subarrays half the size till size is 2 therefore the runtime of this algorithm is <latex>\Theta (log (n)) </latex>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+With three sorted arrays first find the maximum of all three arrays by comparing the last element of the three arrays. Once you have the maximum you can perform the counting sort on the merged array of all three arrays. After performing the counting sort find the element located at 3n/2 (if 3n is odd) or the average of the elements located at 3n/2 and 3n/2 +1 (if even). This will be the median.
+
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+Assuming that fInding the maximum will take constant time and since counting sort takes linear time, lastly finding the median of a sorted array takes constant time. This algorithm will be <latex>\Theta(n) </latex>. 
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+With n sorted arrays find the maximum of n arrays by comparing all of the nth elements of the n arrays. This will give the range of the integers. Once the range is known apply the counting sort on the merged of all n arrays. After the merged array is sorted with counting sort find the median by simply locating the n*n /2 th element (if n*n is even) or the average of the n*n/2  and n*n/2 +1 elements. 
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+Assuming that fInding the maximum will take constant time and since counting sort takes linear time, lastly finding the median of a sorted array takes constant time. This algorithm will be <latex>\Theta(n) </latex>.  
+---+++!! Grader comments *[25/25]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 18
+
+	7         		could be faster
+	7         		could be faster
+	4         		incorrect runtime
+
+
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+//myBloomFilter.h
+#ifndef MYBLOOMFILTER_H
+#define	MYBLOOMFILTER_H
+#include <string>
+#include "BloomFilter.h"
+
+using namespace std;
+class myBloomFilter : public BloomFilter {//extended from class BloomFilter
+        public:
+        /**
+        * Instantiate an empty Bloom filter of length [ mm ] chars.
+        */
+        myBloomFilter(int mm);
+        
+        /**
+        * Instantiates a Bloom filter from a given string [filter]
+        * @requires [filter] must have been produces by the output() call of a BloomFilter object.
+        */
+        myBloomFilter(string filter);
+        /**
+        * inserts  into the filter
+        */
+        void insert(string item);
+        
+        /**
+        * Checks whether [item] is in the filter.
+        * @return  true if the item is probably in the filter
+        *          false if the item is definitely not in the filter
+        */
+        bool exists(string item);
+        
+        /**
+        * @return A string of [length] characters representing the Bloom filer
+        */
+        string output();
+        
+        protected:
+        	string myfilter;
+}; 
+#endif /* MYBLOOMFILTER_H */
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//myBloomFilter.cpp
+#include "myBloomFilter.h"
+#include <iostream>
+
+using namespace std;
+int hash(string);
+
+myBloomFilter::myBloomFilter(int mm) : BloomFilter(mm){//allocate filter to be string of 0 of length mm 
+	string zeroes(mm,'0');
+	myfilter=zeroes;
+}
+myBloomFilter::myBloomFilter(string filter) : BloomFilter(filter){
+	myfilter=filter;
+}
+void myBloomFilter::insert(string item) {
+	int index=hash(item) % length; //to get index within range 0:length
+	myfilter[index]='1';	//set at hash position
+}
+
+bool myBloomFilter::exists(string item){
+		int index=hash(item) % length; //if index filter 1 at hash position return true
+		if(myfilter[index]=='1'){
+			
+			return true;
+		}
+		else return false;
+}
+
+string myBloomFilter::output(){ 
+	return myfilter;
+}
+
+int hash(string filter){
+	
+	return filter[0]*25 ^15;	
+}
+/*
+int main(){
+	
+	myBloomFilter fill(10);
+	fill.insert("155.168.200.78");
+	fill.insert("woahhhhh");
+	fill.insert("1jsgj");
+	fill.insert("ALDJgn");
+	if(fill.exists("888")==true)
+	{
+			cout<<"it worked"<<endl;
+			
+	}
+	else cout<<"it didn't work"<<endl;
+	return 0;
+	
+}*/
+
+
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+Give out answer here.
+
+myBloomFilter implements all 5 functions declared in BloomFilter: 2 constructors myBloomFilter(int mm), myBloomFilter(string filter), 
+and the member functions insert( string item), exist(string item), and output(). In myBloomFilter.h I have declared a protected string myfilter, which will act as the bloom filter.
+
+Initially when a bloom filter is created using the myBloomFilter(int mm), this constructor will create a string of 0 of the size mm to act as the filter.
+myBloomFilter(string filter) will simply set the bloom filter myfilter to the filter inputted. 
+
+The insert function takes the string item hashes it then mods the hash by the length in order to obtain a number between 0 and length. 
+It then and uses the mod-hash as an index for the bloom filter myfilter and sets the bloom filter at that position to 1.
+
+The exist boolean function  takes the string as input, hashes the string and then mods the hash in a manner similar to the insert function. 
+Then is checks if uses the mod-hash to index into the bloom filter myfilter and checks if it is 1 at that point (which indicates it may be a possiblility).
+If it is 1 then it returns true or else it returns false.
+The hash function is a random function that multiplies the first element of the string and then xors it that is the result of the hash. This hash takes the string as input.
+
+I have run several test on my functions and filter by inserting elements and checking if they exist or not, all have returned accurately
+
+</VERBATIM>
+---+++!! Grader comments *[7/25]*
+<VERBATIM>
+Score: 1348</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Give out the password you cracked. Remember attached the code as 'problem4a.zip'
+</VERBATIM>
+
+
+hash1: "6d678adb1578af11cbe73b77fd0aa0864be09e41"      password: SYC
+
+hash2: "3915f1a108c95cb8c3b0564f3c3b6ebfd75e8add"       password: DBO
+ 
+hash3: "6871b66e2db58f4978d36ee3bd5cf89262b6d5e2"      password: voe
+
+hash4: "89bb853a9a04e2c091c791c8d4e119518897b636"    password:apt
+
+hash5: "6c10fb70b7e99aedd209b1d3e3083779e2872f95"      password:IBA
+
+hash6: "770c46bf00a86db695a9bacf3e041553448e15cb"      password:Saw
+
+hash7: "dfd13904f4f4fcb57970f6d6953a4f9225f5795e"           password:Fee
+
+hash8: "6238277c67810458926ed9ce400fa01f7731f0f6"        password:sb.
+
+hash9: "ceab7606dfe83f9b44fc18f654ed77d8c830c462"        password:ufo
+
+hash10: "ed5dd0204793834a222d4bea84a083aa0768866b"  password:lab
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the password you cracked. 
+Have attached code. Could not complete entirely.
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+This will create only a few combinations of 5 character passwords and then hash and reduce them using 
+the given homework hash and reduce functions. It does the hash-reduce cycle twice. Once the hash reduction is complete
+it stores the reduction and the initial 5 character string into a textfile in the same format as the given rainbow table,
+where the right column contains the reductions and the left column contains the original passwords.
+It will store all the generated 5 character strings and their corresponding to cycle hash-reduction.
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

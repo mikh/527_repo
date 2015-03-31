@@ -1,0 +1,125 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(ArlynRodriguez),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+(i) primary clustering
+(iii) always able to add a key if the table is not full
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+    Combine into one array
+    Merge Sort until you reach the (n/2)th element
+    Add the [(n/2)-1]th element and the (n/2)th element, then divide this by 2- this gives you the median
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Runtime: O(n)  (worst case merge sort and combining 2n elements)
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+Find the median for each array
+    Find the min and max median
+    Eliminate all elements in the array containing the min median that are below that min
+    Eliminate all elements in the array containing the max median that are above that max
+    Merge Sort as described above in (i)
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Runtime: O(n)  (worst case merge sort and combining 2n elements, since n of them are eliminated in this process)
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+Separate into groups of three	 
+For each group of three:
+      -Find the median for each array
+      -Find the min and max median
+      - Eliminate all elements in the array containing the min median that are below that min
+      - Eliminate all elements in the array containing the max median that are above that max
+Continue the process and continue grouping into groups of three until we only have one group remaining
+Merge Sort as described above in (i)
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 21
+
+	7         		could be faster
+	7         		could be faster
+	7         		
+
+
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+   // put your code here
+   // also remember to upload it in submit page
+
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+---+++!! Grader comments *[0/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Give out the password you cracked. Remember attached the code as 'problem4a.zip'
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the password you cracked. 
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Give out the explanation here. Remember attached the code and table
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

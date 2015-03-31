@@ -1,0 +1,280 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(WonjaeKim),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+i
+iii - for an arbitrarily long hash table. no if this isnt true, and "mod n" is intentionally omitted from the probe sequence. 
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+
+double medianfor2(int* X0,int* X1,size) {
+if (X0[0] > X1[end]) {return average(X0[0],X1[end]);}
+else if (X1[0] > X0[end]) {return average(X1[0],X0[end]);}
+
+if (size == 2) {
+return average(max(X0[0],X1[0]),min(X0[1],X1[1]);
+}
+med0 = find median(X0);
+med1 = find median(X1);
+if (med0 == med1) return med0;
+else if (med0 > med1) {
+sub0 = X0[0 to middle];
+sub1 = X1[middle to end];
+return medianfor2(sub0,sub1,size/2);
+} else if (med1 > med0) {
+sub0 = X0[middle to end];
+sub1 = X1[0 to middle];
+return medianfor2(sub0,sub1,size/2);
+}
+}
+}
+
+
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+The median is the closest middle value(s) in the sorted combined array. 
+Compares the medians of arrays X0 and X1. If median0 > median1, then the combined median does not use values greater than median0 and median1, because that takes you further away from your initial 'guess' at the median (the average of med0, med1). 
+You then recursively call the function on the subarray of all values NOT greater than median0 in X0, and NOT smaller than median1 in X1. This only works up to size == 2, at which point the array size is no longer dependent on n so you can find the median in constant time by taking the two closest values of the first and second elements on the subarrays, by finding the max of the first elements in X0 and X1 and the min of the second elements in X0 and X1, then taking their average to compute the median. The function also contains an optimization at the beginning to check if the smallest element of one array is greater than the largest array of the other, in which case the median is simply their mean average, and the median can be found in O(1) time.
+
+With each recursive function call, it halves the size of the array which has to be worked on, until it reaches size 2, and which point it is constant. Therefore, it runs in O(lgn) time, with best case O(1) time and average O(lgn) time. 
+
+</VERBATIM> 
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+
+//all halves are inclusive of the center, if the number of elements is odd.
+
+double medianfor3(int* X0,int n0,int* X1,int n1,int* X2,int n2) {
+
+if (all array lengths == 1) {
+merge(all arrays);
+return median(merged);
+}
+
+med0 = find median(X0);
+med1 = find median(X1);
+med2 = find median(X2);
+
+
+
+if (med0 == med1 == med2) return med0;
+else if (any 2 medians are equal) {
+if (2 medians > remaining median) {
+sub0 = equalmedian0[lower half];
+sub1 = equalmedian1[lower half];
+sub2 = remainingmedian[greater half];
+} else { 
+sub0 = equalmedian0[greater half];
+sub1 = equalmedian1[greater half];
+sub2 = remainingmedian[lower half];
+}
+}
+if (no equal medians){
+sub0 = smallestmedian[greater half];
+sub1 = middlemedian[center value(s)];
+sub2 = greatestmedian[lower half];
+if (length(sub0) == length(sub2) == 1) return median(sub1);
+}
+return medianfor3(*sub0,length(sub0),*sub1,length(sub1),*sub2,length(sub2));
+}
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Once again, the algorithm compares the values of the medians of the arrays X0,X1,X2, splitting subarrays into halves if they are greater or lesser than the other medians. But because there are an odd number of arrays, a median median can occur - in which case we can go directly to a constant length subarray of length 1 or 2. We then recursively call the function until we obtain 3 subarrays of length 1, and find their median as the total median. For even-sized subarrays, the median is computed as the mean average of the two center values. 
+
+The best case runtime is O(1). The worst case occurs when two arrays are identical, in which case there is no middle array to reduce to constant size, and we perform O(lgn) iterations to reach all lengths 1. All other operations are in constant time, and so do not affect the runtime. 
+Therefore, it runs in O(lgn) time. 
+
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+double medianforn(all arrays, all sizes) {
+if (all array lengths == 1) {
+merge(all arrays);
+return median(merged);
+}
+
+med0 = find median(X0);
+med1 = find median(X1);
+...
+medn = find median(Xn);
+
+if (all medians are equal) return med0;
+else {
+sub0_1...n = lesser half all arrays with medians greater than middle;
+sub1_1...n = greater half of all arrays with medians lesser than middle;
+if (there is a median median) {
+sub0 = median median array[middle value(s)];
+}
+return medianforn(all subarrays, all subarray sizes);
+}
+
+
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+This algorithm still gives O(1) time if the arrays are suited, for example if the medians are all the same, because arrays are random access. Also, if a "median median" (array for which the median is the median of the set of all array medians) is present, it can be immediately reduced to constant size 1 or 2. However, for the other arrays, they must go through (lgn) iterations each, and because in each iteration n subarrays must be found, the total time complexity is O(nlgn). 
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 25
+
+	10        		
+	8         		
+	7         		
+
+
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+myBloomFilter.cpp
+
+#include "myBloomFilter.h"
+#include <string>
+using namespace std;
+
+myBloomFilter::myBloomFilter(int mm):length(mm) {
+  myBloomFilter::table.resize(length,'-');
+}
+
+myBloomFilter::myBloomFilter(string filter):length(filter.length()) {
+  myBloomFilter::table = filter;
+}
+
+int myBloomFilter::hash(string item) {
+  unsigned long int key = 5381;
+  for (int i = 0;i < item.length();i++) {
+    key = 33*key + item[i]; //hashing algorithm derived from djb2
+  }
+  key = key % myBloomFilter::length;
+  return key;
+}
+
+void myBloomFilter::insert(string item) {
+  int key = myBloomFilter::hash(item);
+  myBloomFilter::table[key] = '!';
+}
+
+bool myBloomFilter::exists(string item){
+  int key = myBloomFilter::hash(item);
+  if (myBloomFilter::table[key] == '!') return true;
+  else return false;
+}
+
+string myBloomFilter::output() {
+  return myBloomFilter::table;
+  }
+
+
+myBloomFilter.h
+
+#ifndef BLOOMFILTER_H
+#define	BLOOMFILTER_H
+#include <string>
+using namespace std;
+
+class myBloomFilter {
+        public:
+        /**
+        * Instantiate an empty Bloom filter of length [ mm ] chars.
+        */
+  myBloomFilter(int mm);
+        
+        /**
+        * Instantiates a Bloom filter from a given string [filter]
+        * @requires [filter] must have been produces by the output() call of a BloomFilter object.
+        */
+  myBloomFilter(string filter);
+        /**
+        * inserts  into the filter
+        */
+  void insert(string item);
+        int hash(string item);
+        /**
+        * Checks whether [item] is in the filter.
+        * @return  true if the item is probably in the filter
+        *          false if the item is definitely not in the filter
+        */
+        bool exists(string item);
+        
+        /**
+        * @return A string of [length] characters representing the Bloom filer
+        */
+        string output();
+        
+        protected:
+        int length; /** The length of the Bloom filter, in chars. */
+	string table;
+
+
+
+#endif	/* BLOOMFILTER_H */
+
+
+%ENDCODE%
+
+---+++ Explanation
+
+My implementation of the hash for the table is based off of djb2, and stores matches as "!" and misses as "-", essentially copying the bit style. I thought of implementing the characters from n through n+62, storing 5 bits per char entry, but I didn't have time.
+
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Give out the password you cracked. Remember attached the code as 'problem4a.zip'
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the password you cracked. 
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Give out the explanation here. Remember attached the code and table
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

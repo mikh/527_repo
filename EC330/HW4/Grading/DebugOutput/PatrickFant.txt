@@ -1,0 +1,265 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(PatrickFant),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+i.) and iii.) are true.
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+First, merge the two arrays by adding one onto the end of the other.  Then mergesort the resulting array.  The median is the mean of the two middlemost elements.
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+The initial merging will be linear, and mergesort will run in nlogn time, so the worst case running time of this algorithm is nlogn.
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+Same as the algorithm for i.), except for an added base case (if the merged array has an odd number of elements, the median is just the middlemost element).
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+The initial merging will be linear, and mergesort will run in nlogn time, so the worst case running time of this algorithm is nlogn.
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+Same as the algorithm for ii.), except that the amount of initial merges increases linearly with the size of the arrays.
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Mergesort remains nlogn, but the initial merging step now runs in n^2 time, so the worst-case running time of this algorithm is O(n^2).
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 15
+
+	5         		needs to be faster
+	4         		needs to be faster
+	6         		could be faster
+
+
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+// myBloomFilter.h:
+
+#ifndef MYBLOOMFILTER_H
+#define MYBLOOMFILTER_H
+
+#include <string>
+
+class myBloomFilter {
+public:
+
+	/* fill constructor */
+	myBloomFilter(int mm);			// instantiates empty filter of length mm
+
+	/* copy constructor */
+	myBloomFilter(std::string filter);	// instantiates filter from given string
+
+	void insert(std::string item);	// inserts into filter
+	bool exists(std::string item);	// checks if item is in filter
+	std::string output();			// returns string representing filter
+
+protected:
+	std::string filter_;
+	int length_;
+	
+private:
+	int hash_a(std::string item);	// mod hash
+	int hash_b(std::string item);	// bin hash
+	int hash_c(std::string item);	// more complicated bin hash
+};
+
+#endif
+
+
+
+// myBloomFilter.cpp:
+
+#include "myBloomFilter.h"
+
+#include <cmath>
+#include <iostream>
+
+/* FILL CONSTRUCTOR --------------------------
+----- instatiates empty filter of length mm */
+myBloomFilter::myBloomFilter(int mm) {
+
+	length_ = mm;
+	filter_ = std::string(mm, '0');
+}
+
+/* COPY CONSTRUCTOR --------------------------
+----- instantiates filter from given string */
+myBloomFilter::myBloomFilter(std::string filter) {
+
+	length_ = filter.length();
+	filter_ = filter;
+}
+
+/* INSERT ------------------
+----- inserts into filter */
+void myBloomFilter::insert(std::string item) {
+
+	filter_[hash_a(item)] = '1';
+	filter_[hash_b(item)] = '1';
+	filter_[hash_c(item)] = '1';
+}
+
+/* EXISTS --------------------------
+----- checks if item is in filter */
+bool myBloomFilter::exists(std::string item) {
+
+	if (filter_[hash_a(item)] == '1' &&
+		filter_[hash_b(item)] == '1' &&
+		filter_[hash_c(item)] == '1')
+		return true;
+	else
+		return false;
+}
+
+/* OUTPUT ---------------------------------
+----- returns string representing filter */
+std::string myBloomFilter::output() {
+
+	return filter_;
+}
+
+/* HASH_A -------
+----- mod hash */
+int myBloomFilter::hash_a(std::string item) {
+
+	int key = 0;
+	for (int i = 0; i < item.length(); i++)		// sums int value of each char in item
+		key += static_cast<int>(item[i]);
+
+	return key % length_;
+}
+
+/* HASH_B -------
+----- bin hash */
+int myBloomFilter::hash_b(std::string item) {
+
+	int key = 0;
+	for (int i = 0; i < item.length(); i++)
+		key += static_cast<int>(item[i]);
+
+	return (key * length_) / (127 * item.length());
+}
+
+/* HASH_C ------------------------------
+----- quadratically maps key to index */
+int myBloomFilter::hash_c(std::string item) {
+
+	int key = 0;
+	for (int i = 0; i < item.length(); i++)
+		key += static_cast<int>(item[i]);
+
+	return (int)(length_ * (key * 0.307 + pow(static_cast<double>(key), 2) * 0.0148 / item.length()) / (282 * item.length()));
+
+
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+For this problem, I decided to use 3 hash functions.  The first is a standard mod hash function and the second is a bin hash (it compresses the range of the input to fit into the filter).  The third is based on a bin hash, but the addressing is quadratic to represent the more frequent use of lowercase letters as opposed to other ASCII symbols.  
+
+To work with strings, I added up the ASCII values of each element and used the resulting int to assign an address.
+</VERBATIM>
+
+---+++!! Grader comments *[13/25]*
+<VERBATIM>
+Score: 1650</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+d7d685dee6af8b7347f3f847320a570fbddb835e -> R&D
+
+b63f801cadc25f2f9e9f51fddb88cf8e016a687d -> yen
+
+c3a61237871f6639e0968676ca44a963dfbf2a5a -> sma
+
+35a6ebb4a4681bcd387453958c96eea4bcd7db77 -> Wal
+
+7b1a15e79b5a1d29f1cb9b1a2d9da635d848b282 -> BFD
+
+c49fa65e028b678b8c1341d0ece3227ef508948c -> i'd
+
+3915f1a108c95cb8c3b0564f3c3b6ebfd75e8add -> DBO
+
+ed5dd0204793834a222d4bea84a083aa0768866b -> lab
+
+08609a146f66653d57c62be818f1168a9d3035f7 -> RQS
+
+cd1f661819f0f5cdd22c79b5cf5a640819c97fd8 -> DIF
+
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+b1f9f946d0738e1512da5c37a70c0bacb0f1cce9 -> mm^g,
+
+0debf2da60e98b5ecefdb28151b840dffada13c6 -> PSlE)
+
+d51bcee05c7dc6f4a5178b033f869fad40257551 -> `HnRq
+
+978dc6a1ca901a30ed475b005eaae62e6eb20de6 -> PSlE)
+
+3bb99e84677f85420471b05863c9efead9e964d8 -> `HnRq
+
+0d87fd05ab773e3fef729295b84adcfa57461fb1 -> PSlE)
+
+4ceb1c68d95f4f38f47fdcd1d96fdb452a8d4e3f -> PSlE)
+
+c7b5cf65ec003c82e3debdc1292af2b33f43ee9a -> 4DVLQ
+
+4dd4a37e56834c375803aa0467270da0bd1c9099 -> PSlE)
+
+891a97ed3b9305554d0fbc102d5fbf86f17a5075 -> PSlE)
+
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Give out the explanation here. Remember attached the code and table
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

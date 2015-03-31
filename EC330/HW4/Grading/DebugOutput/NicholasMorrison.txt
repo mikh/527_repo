@@ -1,0 +1,240 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(NicholasMorrison),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+
+The probe sequence h<sub>i</sub>(k) = h<sub>i-1</sub>(k) + i, is a linear probe sequence. This is shown below by writing out the first few terms.
+
+
+h<sub>0</sub>(k) = h(k) + 0
+
+h<sub>1</sub>(k) = h<sub>0</sub> + 1 = h(k) + 0 + 1
+
+h<sub>2</sub>(k) = h<sub>1</sub> + 2 = h(k) + 0 + 1 + 2
+
+h<sub>i</sub>(k) = h(k) + i
+
+Since it is a linear probe sequence it will exhibit primary clustering, as well as always being able to add a key to the table if it is not full.
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+int median(Array x0, Array x1, n){
+	int m0, m1;
+        
+        //generic median evaluation for a sorted array, applied to both arrays
+	if (n%2 == 0)
+		m0 = (x0[n/2] + x0[n/2-1])/2;
+		m1 = (x1[n/2] + x1[n/2-1])/2;
+	else
+		m0 = x0[n/2];
+		m1 = x1[n/2];
+
+      
+        //if medians are equal, know overall median must be the same
+	if (m0 == m1)
+		return m0;
+
+	if (m0 < m1){
+		if (n % 2 == 0){
+			return median(x0 + n/2 - 1, x1, n/2 - 1)
+		}
+		else{
+			return median(x0 + n2, x1, n/2)
+		}
+	}
+
+	if (m0 > m1){
+		if (n % 2 == 0){
+			return median(x1 + n/2 - 1, x0, n/2 + 1)
+		}
+		else{
+			return median(x1 + n/2, x0, n/2)
+		}
+	}
+}
+</VERBATIM>
+
+---++++ Analysis and running time
+
+<latex> \Theta (logn) </latex>
+
+Since there were only two arrays of the same length, it allowed for assumptions to be made which allowed for an optimal algorithm.
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+
+findmedian(x0,x1,x2){
+
+xnew = merge(x0, x1);
+
+result = merge(xnew, x2);
+
+return median(result);
+}
+
+</VERBATIM>
+
+---++++ Analysis and running time
+<latex> \Theta (nlogn) </latex>
+
+<VERBATIM>
+My algorithm for finding the median of three arrays of n elements utilizes the merge function from mergesort as all arrays are already sorted. Therefore merging twice will produce a sorted array of all 3n elements. Then the median can be found as with any sorted array.
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+findmedian(x[0...n]) { //assume n arrays of n elements is given as n sized array of arrays
+
+	//merge every array with the subsequent array to produce an array of n^2 elements
+	while(--n != 1){
+		merge(x[n],x[n-1])
+	}
+
+return median(result); //calculate median as with any sorted array
+}
+</VERBATIM>
+
+---++++ Analysis and running time
+
+The same algorithm as ii. However, now merge must be called n-1 times. Since merge runs <latex> \Theta (nlogn) </latex>, the overall runtime for the algorithm will be <latex> \Theta (n^{2}logn) </latex>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 18
+
+	10        		
+	4         		needs to be faster
+	4         		needs to be faster
+
+
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+#include "myBloomFilter.h"
+
+
+myBloomFilter::myBloomFilter(int mm) {
+	length = mm;
+	filter = string(mm,'0');
+}
+
+myBloomFilter::myBloomFilter(string sfilter) {
+	length = sfilter.length();
+	filter = string(length,'0');
+
+	for (int i = 0; i < length; i++){
+		filter[i] = sfilter[i];
+	}
+}
+
+int myBloomFilter::modhash(int s){
+	return s % length;
+}
+
+int myBloomFilter::binhash(int s, int len){
+	return ((s*length)/(len*127));
+}
+
+void myBloomFilter::insert(string item) {
+	int h1 = 0;
+	int h2 = 0;
+	int strsum = 0;
+
+        //convert key to int by summing ASCii values
+	for (int i = 0; i < item.length(); i++){
+		strsum += item[i];
+	}
+
+        //store hashes for indexing
+	h1 = modhash(strsum);
+	h2 = binhash(strsum, item.length());
+
+
+	filter[h1] = '1';
+	filter[h2] = '1';
+
+}
+
+bool myBloomFilter::exists(string item){
+	int h1 = 0;
+	int h2 = 0;
+	int strsum = 0;
+
+        //convert key to int by summing ASCii values
+	for (int i = 0; i < item.length(); i++){
+		strsum += item[i];
+	}
+        
+        //store hashes for indexing
+	h1 = modhash(strsum);
+	h2 = binhash(strsum, item.length());
+
+        //check indexes
+	if (filter[h1] == '1' & filter[h2] == '1'){
+		return 1; //return 1 for probably in set
+	}
+	else{
+		return 0; //return 0 for definitely not in set
+	}
+}
+
+string myBloomFilter::output(){
+
+	return filter;
+}
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+Utilized two very simple hash functions. One being the most basic, modhash, and the other a binhash dependent on both the length of the key and the length of the filter. Added a protected member variable filter to represent the actual bloomfilter.
+</VERBATIM>
+
+---+++!! Grader comments *[19/25]*
+<VERBATIM>
+Score: 1933</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Give out the password you cracked. Remember attached the code as 'problem4a.zip'
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the password you cracked. 
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Give out the explanation here. Remember attached the code and table
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

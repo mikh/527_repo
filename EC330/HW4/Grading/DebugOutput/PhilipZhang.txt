@@ -1,0 +1,189 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(PhilipZhang),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+It will only exhibit the third property because you can find the nth element of the table by using any other kth element in the table. You can do this by simply adding or subtracting the integers between k and n.
+
+It does not exhibit the first property because you are adding different values each iteration.
+It does not exhibit the second property because the value does not have a limit. ie no modulo.
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+// do a merge sort type of median locating algorithm thingy
+
+mergesort_median(x0, x1, size)
+{
+    x0iterator = 0;
+    x1iterator = 0;
+    int count = 0;
+    int value;
+    while(count < size)
+    {
+         value = min(x0[x0iterator], x1[x1iterator]);
+         increment appropriate iterator;
+         count++;
+    }
+    return (value + min(x0[x0iterator], x1[x1iterator])) / 2
+}
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+This is basically the last merge of the merge sort algorithm. It will iterate through both sorted arrays and choose the next smallest value and remember it. However, when it gets to the nth and nth + 1 smallest value it will average them and return that as the median.
+
+This algorithm is theta(n)
+---+++ ii. Median of three
+
+
+// do a merge sort type of median locating algorithm thingy
+
+mergesort_median(x0, x1, x2, size)
+{
+    x0iterator = 0;
+    x1iterator = 0;
+    x2iterator = 0
+    int count = 0;
+    int value;
+    while(count < 3 * size / 2)
+    {
+         value = min(x0[x0iterator], x1[x1iterator], x2[x2iterator]);
+         increment appropriate iterator;
+         count++;
+    }
+    return (value + min(x0[x0iterator], x1[x1iterator], x2[x2iterator])) / 2;
+}
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+This is using pretty much the same algorithm as the first part of this problem. You will iterate through all 3 sorted arrays and pick out the next smallest value out of the 3 arrays. Whne you have foudnt he (3 * n / 2)th largest value and the (3 * n / 2 + 1)th largest value, you return teh average of them as the median.
+
+This algorithm runs on theta(n)
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+
+// do a merge sort type of median locating algorithm thingy
+
+mergesort_median(x0, x1, ... , xn, size)
+{
+    x0iterator = 0;
+    x1iterator = 0;
+    .
+    .
+    .
+    xniterator = 0;
+    int count = 0;
+    int value;
+    while(count < size * size / 2)
+    {
+         value = min(x0[x0iterator], x1[x1iterator], ... , xn[iterator]);
+         increment appropriate iterator;
+         count++;
+    }
+    return (value + min(x0[x0iterator], x1[x1iterator], ... , xn[iterator])) / 2
+}
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+This is doing using the same algorithm as part 1. However you will have n sorted arrays of n elements. This will not take a running time of theta(n). Instead, the running time will be theta(n^2) because of the min() function. Taking the min() of n values will be on the scale of theta(n) and we will do this n times. Thus, our algorithm will be on the scale of theta(n^2).
+---+++!! Grader comments *[25/25]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 20
+
+	7         		could be faster
+	7         		could be faster
+	6         		could be faster
+
+
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+   // put your code here
+   // also remember to upload it in submit page
+
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+---+++!! Grader comments *[0/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Give out the password you cracked. Remember attached the code as 'problem4a.zip'
+</VERBATIM>
+
+GCM
+RGS
+aob
+Wal
+DBO
+prs
+M-1
+LWP
+M-1
+Ruy
+xcl
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the password you cracked. 
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Give out the explanation here. Remember attached the code and table
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

@@ -1,0 +1,362 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(ZacharyGanger),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+The probe sequence exhibits the properties of ii., secondary clustering. If the key in question has already been placed at the index matching the key, the sequence tries again to 
+place it at an index differing from the last by i, thus as we approach i = n, the index approaches n^2, implying secondary clustering. We also don't guarantee the table filled as the
+placement function does not necessarily consider every index, as it increases by i rather than 1.
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+FindMedian(Array1, Array2, n)
+{
+     if(n == 1)
+     {
+          return((Array1[0] + Array2[0])/2);
+     }
+     if((n%2) == 1)
+     {
+          int median1 = Array1[(n/2 + 1)];
+          int median2 = Array2[(n/2 + 1)];
+     }
+     else
+     {
+         int median1 = (Array1[n/2] + Array1[(n/2 - 1)])/2;
+         int median2 = (Array2[n/2] + Array1[(n/2 - 1)])/2;
+     }
+     if (median1 == median2)
+    {
+         return median1;
+    }
+    else if(median1 > median2)
+    {
+        if((n%2) == 1)
+        {
+               FindMedian(Array1[0 : median1], Array2[median2 : n-1], n/2 + 1)
+        }
+        else
+        {
+               FindMedian(Array1[0 : n/2] , Array2[n/2 + 1 : n-1], n/2);
+        }
+    }
+   else
+   {
+        if((n%2) == 1)
+        {
+               FindMedian(Array1[median1 : n-1], Array2[0 : median2], n/2 + 1)
+        }
+        else
+        {
+               FindMedian(Array1[n/2 + 1 : n-1], Array2[0 : n/2], n/2);
+        }
+    }
+}
+</VERBATIM>
+---++++ Analysis and running time
+<VERBATIM>
+The worst-case runtime of this algorithm is theta log(n), since it is recursive and every successive run of FindMedian uses arrays of length n/2 from the previous n.
+This creates an effect similar to that of a binary tree. The best case is if in the initial arrays, n = 1, in which case the runtime is constant as this is the base case for FindMedian.
+</VERBATIM>
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+int findMedian(Array1, Array2, Array3, n)
+{
+     Med1 = median(Array1);
+     Med2 = median(Array2);
+     MedN = median(Array3);
+     int min = minimum(Med1, Med2, Med3);
+     int max = maximum(Med1, Med2, Med3);
+
+     if(Med1 = min)
+         remove indices smaller than that of Med1 from Array1
+     if(Med2 = min)
+         remove indices smaller than that of Med2 from Array2
+     if(Med3 = min)
+         remove indices smaller than that of Med3 from Array3
+
+     if(Med1 = max)
+         remove indices larger than that of Med1 from Array1
+     if(Med2 = max)
+         remove indices larger than that of Med2 from Array2
+     if(Med3 = max)
+         remove indices Larger than that of Med3 from Array3
+     
+     if(all arrays have length 0 but one)
+          return value in array of length 1;
+     else
+          FindMedian(Array1, Array2, Array3);
+}
+</VERBATIM>
+---++++ Analysis and running time
+<VERBATIM>
+This algorithm gives worst-case theta(n(n- 1/n)) time since it has to run n time each iteration through the recursion (finding and comparing medians),
+and the recursion decreases the length of the total array by (1/n). For only two arrays, this yields ½. 
+</VERBATIM>
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+int findMedian(Array1, Array2, ... ArrayN, n)
+{
+     Med1 = median(Array1);
+     Med2 = median(Array2);
+     ....
+     MedN = median(ArrayN);
+     int min = minimum(Med1, Med2... MedN);
+     int max = maximum(Med1, Med2... MedN);
+
+     if(Med1 = min)
+         remove indices smaller than that of Med1 from Array1
+     if(Med2 = min)
+         remove indices smaller than that of Med2 from Array2
+     ...
+     if(MedN = min)
+         remove indices smaller than that of MedN from ArrayN
+
+     if(Med1 = max)
+         remove indices larger than that of Med1 from Array1
+     if(Med2 = max)
+         remove indices larger than that of Med2 from Array2
+     ...
+     if(MedN = max)
+         remove indices Larger than that of MedN from ArrayN
+     
+     if(all arrays have length 0 but one)
+          return value in array of length 1;
+     else
+          FindMedian(Array1, Array2 ...  ArrayN);
+}
+</VERBATIM>
+---++++ Analysis and running time
+<VERBATIM>
+This algorithm gives worst-case theta(n(n- 1/n)) time since it has to run n time each iteration through the recursion (finding and comparing medians),
+and the recursion decreases the length of the total array by (1/n). For only two arrays, this yields ½. 
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 20
+
+	10        		
+	4         		needs to be faster
+	6         		could be faster
+
+
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+  //Collaborator Andy Colletta
+  //myBloomFilter.cpp
+#include <iostream>
+#include <string> 
+#include "myBloomFilter.h"
+
+
+using namespace std;
+
+myBloomFilter :: myBloomFilter(int mm): BloomFilter(mm)
+{
+    length = mm;
+    for (int ii = 0; ii < length; ii++)
+    {
+        myBloomFilterArray.push_back(0);
+    }
+}
+myBloomFilter :: myBloomFilter(string filter): BloomFilter(filter)
+{
+    length = filter.length();
+    for (int ii = 0; ii < length; ii++)
+    {
+       myBloomFilterArray.push_back(0);
+    }
+}
+
+int myBloomFilter :: hash0(string item)
+{
+    int aa    = 13;
+    int bb    = 5;
+    int hash = 0;
+
+    for(int ii = 0; ii < item.size(); ii++)
+    {
+        hash = hash + aa + item[ii];
+        aa = aa + bb;
+    }
+    return hash;
+}
+
+int myBloomFilter :: hash1(string item)
+{
+    int aa    = 23;
+    int bb    = 53;
+    int hash = 0;
+    
+    for(int ii = 0; ii < item.size(); ii++)
+    {
+        hash = hash + aa + item[ii];
+        aa = aa + bb;
+    }
+    return hash;
+}
+
+int myBloomFilter :: hash2(string item)
+{
+    int aa    = 17;
+    int bb    = 37;
+    int hash = 0;
+    
+    for(int ii = 0; ii < item.size(); ii++)
+    {
+        hash = hash + aa + item[ii];
+        aa = aa + bb;
+    }
+    return hash;
+}
+
+void myBloomFilter :: insert(string item)
+{
+    int ans1 = hash0(item);
+    int ans2 = hash1(item);
+    int ans3 = hash2(item);
+    myBloomFilterArray[ans1]=1;
+    myBloomFilterArray[ans2]=1;
+    myBloomFilterArray[ans3]=1;
+}
+
+bool myBloomFilter :: exists(string item)
+{
+    int ans1 = hash0(item);
+    int ans2 = hash1(item);
+    int ans3 = hash2(item);
+    if ((myBloomFilterArray[ans1] == 1) && (myBloomFilterArray[ans2] == 1) &&(myBloomFilterArray[ans3] == 1))
+        return true;
+    else
+        return false;
+}
+
+string myBloomFilter :: output()
+{
+ 
+    return "Something";
+    
+}
+
+
+
+
+
+
+
+//Collaborator Andy Colletta
+//myBloomFilter.h
+#ifndef MYBLOOMFILTER_H
+#define	MYBLOOMFILTER_H
+#include "BloomFilter.h"
+#include <string>
+#include <vector>
+
+using namespace std;
+
+class myBloomFilter : BloomFilter {
+private:
+    vector<int> myBloomFilterArray;
+public:
+    myBloomFilter (int mm);
+    myBloomFilter (string filter);
+    void insert(string item);
+    bool exists(string item);
+    string output();
+    int hash0(string item);
+    int hash1(string item);
+    int hash2(string item);
+    
+protected:
+    int length; /** The length of the Bloom filter, in chars. */
+};
+
+#endif	/* BLOOMFILTER_H */
+
+%ENDCODE%
+---+++ Explanation
+<VERBATIM>
+This bloom filter uses a vector to be dynamically sized. It then uses three addition hashes to place 1s in the vector at appropriate indices.
+There is then a function to check against the vector, which returns false if it finds a zero index by running the value through the hashes and comparing,
+and returns true if it finds all 1s.
+</VERBATIM>
+---+++!! Grader comments *[0/25]*
+<VERBATIM>Score: 1000
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+0   RGS
+1   QKt
+2   IHS
+3   BIS
+4   R&D
+5   PNA
+6   BPA
+7   ass
+8   MWA
+9   DTB
+</VERBATIM>
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+mm^g,       0
+;TUih       1
+`HnRq       2
+;TUih       3
+),7.r       4
+mm^g,       5
+;TUih       6
+`HnRq       7
+;TUih       8
+;TUih       9
+</VERBATIM>
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Most passwords consist of ascii characters 33-127 and are 5 to 14 characters in length. Our rainbow table generator generates all the possible options for passwords of length 5
+and our table contains some of these (there are too many combinations, we cut the time in the middle. We ran it for longer initially, several minutes, and got a 1.75gb file.)
+To build a full rainbow table, one would need to add another loop for each additional character and repeat the steps in our fifth loop.
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---
+
+   * [[%ATTACHURLPATH%/problem4a.zip][problem4a.zip]]: problem 4a (with makefile and executable, made on enggrid)
+
+   * [[%ATTACHURLPATH%/problem4a.zip][problem4a.zip]]: problem 4a (with makefile and executable, made on enggrid)
+
+   * [[%ATTACHURLPATH%/problem4a.zip][problem4a.zip]]: Problem4a (fixed, final) (sorry for the other files) (includes executable and makefile, compiled on enggrid)
+
+   * [[%ATTACHURLPATH%/problem4b.cpp][problem4b.cpp]]: Code for Problem 4b, compiled using g++ on enggrid
+
+   * [[%ATTACHURLPATH%/rainbowBuilder.cpp][rainbowBuilder.cpp]]: Rainbow table generator (for all permutations of 5-char passwords) and a demonstrative partial table
+
+   * [[%ATTACHURLPATH%/myTable.txt][myTable.txt]]: Rainbow table generator (for all permutations of 5-char passwords) and a demonstrative partial table

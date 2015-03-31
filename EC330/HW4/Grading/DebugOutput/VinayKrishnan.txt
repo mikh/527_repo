@@ -1,0 +1,112 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(VinayKrishnan),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+2 only. 
+Since two is applied, primary clustering cannot occur. We will not always be able to add another key since it is skipping indexes as i gets bigger and once the table is  more of less full, it gets harder to find an open index, which is why secondary clustering occurs.
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+We divide the group into lists of live elements. Then we calculate the median for each list. We then find the median of these medians, this will act as our pivot. Now ideally, half the values will be greater than this pivot and the other half will be less. Now we will recursive compare this median of medians to the median of each list, k. if k>i,  we look for the i-k-1th element. Otherwise, if i<k, we look for the ith element. This way we can effectively find the median of the array, regardless of its size. 
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+This is a tried and tested algorithm and has a O(n).
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+We can use the same algorithm as before. It can be applied universally.
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+O(n) just as before.
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+We can use the same algorithm as before. It can be applied universally, regardless of the number of arrays.
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+O(n)
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 18
+
+	7         		could be faster
+	7         		could be faster
+	4         		Need to describe algorithm. Also should be more efficient.
+
+
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+   // put your code here
+   // also remember to upload it in submit page
+
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+---+++!! Grader comments *[0/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Give out the password you cracked. Remember attached the code as 'problem4a.zip'
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the password you cracked. 
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Give out the explanation here. Remember attached the code and table
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

@@ -1,0 +1,276 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(FrankSavoca),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+The probe sequence will exhibit primary clustering and always be able to add a key if the table is not full.
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+Merge arrays A1 and A2 into array A
+Merge Sort array A
+
+if(len(A) % 2 == 0)
+   median = the addition of the 2 middlemost elements / 2
+else
+   median = middle element
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Merging the arrays is linear - Big Theta(2n)
+Merge Sort - Big Theta(nlogn)
+
+Running time = Big Theta(nlogn + 2n) = Big Theta(nlogn)
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+Merge arrays A1, A2, and A3 into array A
+Merge Sort array A
+
+if(len(A) % 2 == 0)
+   median = the addition of the 2 middlemost elements / 2
+else
+   median = middle element
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Merging the arrays is linear - Big Theta(3n)
+Merge Sort - Big Theta(nlogn)
+
+Running time = Big Theta(nlogn + 3n) = Big Theta(nlogn)
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+Merge arrays A1, A2, ... , AN into array A
+Merge Sort array A
+
+if(len(A) % 2 == 0)
+   median = the addition of the 2 middlemost elements / 2
+else
+   median = middle element
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Merging the arrays is linear - Big Theta(n^2)
+Merge Sort - Big Theta(nlogn)
+
+Running time = Big Theta(nlogn + n^2) = Big Theta(n^2)
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 15
+
+	5         		needs to be faster
+	4         		needs to be faster
+	6         		could be faster
+
+
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+//myBloomFilter.h
+
+
+#ifndef MYBLOOMFILTER_H
+#define	MYBLOOMFILTER_H
+#include <string>
+using namespace std;
+
+class myBloomFilter {
+        public:
+        /**
+        * Instantiate an empty Bloom filter of length [ mm ] chars.
+        */
+        myBloomFilter (int mm);
+        
+        /**
+        * Instantiates a Bloom filter from a given string [filter]
+        * @requires [filter] must have been produced by the output() call of a BloomFilter object.
+        */
+        myBloomFilter (string filter);
+        /**
+        * inserts  into the filter
+        */
+        void insert(string item);
+        
+        /**
+        * Checks whether [item] is in the filter.
+        * @return  true if the item is probably in the filter
+        *          false if the item is definitely not in the filter
+        */
+        bool exists(string item);
+        
+        /**
+        * @return A string of [length] characters representing the Bloom filter
+        */
+        string output();
+        
+        protected:
+        int length_; /** The length of the Bloom filter, in chars. */
+	string filter_; //a string of characters representing the Bloom Filter
+
+        private:
+	int modHash(string key);
+	int binHash(string key);
+	int quadraticHash(string key);
+};
+
+#endif	/* MYBLOOMFILTER_H */
+
+//myBloomFilter.cpp
+
+//Collaborator: Patrick Fant
+
+#include <iostream>
+#include <string>
+#include "math.h"
+#include "myBloomFilter.h"
+
+using namespace std;
+
+//Constructors
+
+//Instantiate an empty Bloom filter of length [ mm ] chars.
+myBloomFilter::myBloomFilter (int mm)
+{
+  length_ = mm;
+  filter_ = string(mm, '0');
+}
+
+//Instantiates a Bloom filter from a given string [filter]
+myBloomFilter::myBloomFilter (string filter)
+{
+  length_ = filter.length();
+  filter_ = filter;
+}
+
+//Insert - inserts into the filter
+void myBloomFilter::insert(string item)
+{
+  filter_[modHash(item)] = '1';
+  filter_[binHash(item)] = '1';
+  filter_[quadraticHash(item)] = '1';
+}
+
+//Exists - checks if the item is in the filter
+bool myBloomFilter::exists(string item)
+{
+  if(filter_[modHash(item)] == '1' && filter_[binHash(item)] == '1' && filter_[quadraticHash(item)] == '1')
+    return true; //item is probably in the filter
+  else
+    return false; //item is definitely not in the filter
+}
+
+//Output - returns a string of characters representing the Bloom Filter
+string myBloomFilter::output()
+{
+  return filter_; 
+}
+
+int myBloomFilter::modHash(string item)
+{
+  int key = 0;
+
+  for(int i = 0; i < item.length(); i++) //adds the integer value of each char in item
+    key += static_cast<int>(item[i]);
+
+  return key % length_;
+}
+
+int myBloomFilter::binHash(string item)
+{
+  int key = 0;
+
+  for(int i = 0; i < item.length(); i++) //adds the integer value of each char in item
+    key += static_cast<int>(item[i]);
+
+  return ((length_ * key) / (127 * item.length())); //127 is the highest value on the ASCII table
+}
+
+int myBloomFilter::quadraticHash(string item)
+{
+  int key = 0;
+
+  for(int i = 0; i < item.length(); i++)
+    key += static_cast<int>(item[i]);
+
+  //through a least squares linear regression, this equation is the best fit
+  return (int)(length_ * (key * 0.307 + pow(static_cast<double>(key), 2) * 0.0148 / item.length()) / (282 * item.length()));
+}
+
+
+
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+For my implementation, I began by including all the necessary constructor, function, and variable declarations that would be used in my program in my header file. In my .cpp file, I used two constructors. One created an empty Bloom Filter of length mm characters. The other constructor creates a Bloom Filter from a given string. Then, I define my insert function, which inserts a string into the filter. My hash functions hash a string, and that is inserted into the filter and set equal to '1'. The exists function checks if the item is in the filter. Reusing the same code from the insert function, I check to see if each filter is equal to '1'. If this is true, the item is probably in the filter. Otherwise, the item is definitely not in the filter. Next, the output function just returns a string (filter_) of characters that represents the Bloom Filter. Lastly, I define my 3 hash functions: a modular hash, a bin hash, and a quadratic bin hash.
+</VERBATIM>
+
+---+++!! Grader comments *[14/25]*
+<VERBATIM>
+Score: 1652 </VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+The cracked passwords are as follows:
+pk.
+FFI
+MWA
+PNA
+IHS
+Nov
+M-1
+SYC
+ibm
+RQS
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the password you cracked. 
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Give out the explanation here. Remember attached the code and table
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

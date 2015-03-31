@@ -1,0 +1,300 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(MariaKromis),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+
+i. Primary clustering
+
+
+This sequence with exhibit primary clustering because it follows a linear probing sequence ( h1(k) = h'(k) + i)
+This means that the sequence increments in set step sizes. Thus probe sequences of nearby probes can interfere with it. 
+
+It wont exhibit secondary clustering because it doenst follow the format of quadratic probing ( h1(k)  = h'(k) + C0 + C1i + C2i^2)
+There is no quadratic increase in the step size. 
+
+It also wont always be able to add a key, because in increments in steps, and thus doesnt look at every space in the table
+
+
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+
+To find the median of two arrays with the smallest time complexity you have to use the knowledge we have of medians to allow us to not have to look at ever element in each array. We know that the median must have half the elements greater than it and half the elements smaller than it. Thus we can use the medians from the initial two arrays to learn about the numbers in the array without having to look at all of the elements. 
+
+First we compare the two medians, if they are the same then it is the median.  Or if one median is in between the other median and either of its surrounding elements, then that must be the median of the merged array.
+ 
+Otherwise we index the next largest element in the array with the smaller median, and the next smaller element in the array with the larger median and repeat the process until the index of one array falls between two successive elements in the other array. This element then must be the median.
+
+ 
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+
+This will run in sublinear time, since not every element must be inspected.
+
+more specifically it should run in Theta_(log(n)) time, because each time you will be reducing the possible medians you are searching through.
+
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+
+The best algorithm for finding the median of 3 sorted arrays is to first merge them and then find the middle element of the merged array
+
+We can implement the same merge algorithm from merge sort where we have a pointer to an element in each array and comparing them and appending the smallest of the values to the merged array and then increment the pointers and repeating the process. 
+
+After the array is merged we find the median by finding the element that is in the middle of the array, and if the array has an even number of elements then the mean is taken of the two elements in the middle. 
+
+
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+
+Since the merge descibed above requires the program to look at each element in the three arrays once and only once, the merge function is has a complexity of 3n or Theta_(n).
+
+The calculations of extracting the median from the merged array can be done in constant time.
+
+Thus the total run time is Theta_(n).
+
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+
+The algorithm for this will be the same as that of the problem with 3 arrays.
+except that there will be n pointers comparing n different elements (one from each array).
+
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+
+The run time for this problem will be different from that of part b, because now we have n number of arrays. This means that we will have to look at n number of elements in n number of array.
+
+This means a time complexity of Theta_(n^2).
+
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 23
+
+	10        		
+	7         		could be faster
+	6         		could be faster
+
+
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+   // put your code here
+   // also remember to upload it in submit page
+
+
+myBloomFilter.cpp
+______________________________________________________________________
+#include <iostream>
+#include <string>
+#include "BloomFilter.h"
+#include "myBloomFilter.h"
+#include <math.h>
+
+using namespace std;
+
+myBloomFilter :: myBloomFilter(int mm) : BloomFilter(mm) {
+    int filter[length+1];
+}
+
+myBloomFilter :: myBloomFilter(string filter) : BloomFilter(filter) {
+  length = filter.length();
+}
+
+void myBloomFilter :: insert(string item) {
+  int primeInts[] = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199, 211, 223, 227, 229};
+  int sum;
+  for(int i =  0; i < length; i++) {
+    sum = sum + (static_cast<int>(item[i]))*primeInts[(i%50)];
+  }  
+  int hashIn1 = sum%length;
+  double fractpart, integerpart;
+  double num = sum*.80901699437;
+  fractpart = modf(num, &integerpart);
+  int hashIn2 = round(length*fractpart);
+  this->filter[hashIn1] = 1;
+  this->filter[hashIn2] = 1;
+  for(int j = 0; j < length; j++) {
+    sum = sum + (static_cast<int>(item[j]))*(primeInts[(j%50)]^j);
+  }
+  int hashIn3 = sum%length;
+  this->filter[hashIn3] = 1;
+}
+
+bool myBloomFilter :: exists(string item) {
+   int primeInts[] = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199, 211, 223, 227, 229};
+   int sum;
+   for(int i =  0; i < length; i++) {
+     sum = sum + (static_cast<int>(item[i]))*primeInts[(i%50)];
+   }  
+   int hashIn1 = sum%length;
+   double fractpart, integerpart;
+   double num = sum*.80901699437;
+   fractpart = modf(num, &integerpart);
+   int hashIn2 = round(length*fractpart); 
+   for(int j = 0; j < length; j++) {
+     sum = sum + (static_cast<int>(item[j]))*(primeInts[(j%50)]^j);
+   }
+   int hashIn3 = sum%length;
+   if( this->filter[hashIn1] && this->filter[hashIn2] && this->filter[hashIn3]) {
+     return true;
+   }
+   return false;
+}
+  
+string myBloomFilter :: output() {
+  return filter;
+}
+
+
+
+
+myBloomFilter.h
+_____________________________________________________________________
+#ifndef MYBLOOMFILTER_H
+#define	MYBLOOMFILTER_H
+using namespace std;
+
+class myBloomFilter : public BloomFilter {
+ public:
+  string filter;
+        /**
+        * Instantiate an empty Bloom filter of length [ mm ] chars.
+        */
+  myBloomFilter (int mm);
+        
+        /**
+        * Instantiates a Bloom filter from a given string [filter]
+        * @requires [filter] must have been produces by the output() call of a BloomFilter object.
+        */
+  myBloomFilter (string filter);
+        /**
+        * inserts  into the filter
+        */
+  void insert(string item);
+        
+        /**
+        * Checks whether [item] is in the filter.
+        * @return  true if the item is probably in the filter
+        *          false if the item is definitely not in the filter
+        */
+  bool exists(string item);
+        
+        /**
+        * @return A string of [length] characters representing the Bloom filer
+        */
+  string output();
+        
+ protected:
+  int length; /** The length of the Bloom filter, in chars. */
+};
+
+#endif	/* BLOOMFILTER_H */
+
+
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+
+My bloom filter uses 3 hashes - all modified versions of the bit-based hashes we learned in class ( division and multiplication)
+
+When inserting a string into the bloom filter, the first thing the program does is convert it into an integer so that it can use one of the bit-based hashes.
+I implemented two different methods of achieving this - both involved multiplication by prime numbers, because it will create the most unique values
+1) I created an array of prime numbers and indexed through it, multiplying it by the ascii equivalent of each character in the string
+2) I indexed through the same array of prime numbers, but this time I multiplied each character by the prime number raised to the power of its position in the array, to make it even more precise. 
+
+I then plugged the integer results into two different types of hashes.
+I used three hashes altogether. 
+
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Give out the password you cracked. Remember attached the code as 'problem4a.zip'
+</VERBATIM>
+
+I used the method of 3 nested for loops iterating through the decimal equivalent of the available ascii characters, and then cast them to strings and hashed them until I found a match in the provided hashes.
+
+
+Cracked Passwords:
+_____________________________________________________
+password6 = EBI
+
+password9 = PSA
+
+password5 =abd
+
+password7 = aob
+
+password1 = bpt
+
+password4 = dub
+
+password8 = oaf
+
+password3 = sea
+
+password2 = sip
+
+password10 = slt
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the password you cracked. 
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+
+For this problem I loaded a text file of 500 randomly generated 5 character strings into an array. Then I indexed through the array hashing and reducing the string and storing the final result.
+Then I upload the original string and the final string into a txt file
+
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

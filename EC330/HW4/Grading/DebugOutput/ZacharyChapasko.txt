@@ -1,0 +1,193 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(ZacharyChapasko),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+i. This does not exhibit pirmary clustering as it is unlikely for more than 1 collision to occur when hashing a key. If there is a collision, unless the keys were identical then the probing function will find an empty slot quickly. The spaces in the table are not "stuck" together.<br><br>
+ii. This does exhibit secondary clustering. As time goes on the hash table will fill and this will behave like a quadratic hash. The only way to avoid secondary clustering is to do double (or greater) hashing for the probe sequence.<br><br>
+iii. This should be able to always add a key as long as the table is not full. The probe sequence produces the triangular numbers, which do not repeat under any modulus. Each number in every modulus will be covered by the triangular numbers.
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+First the arrays should be merged using the merging operation found in mergesort. It is known that the length of the resulting array is 2n, which is even. The median of the two sets is the average of the (n/2)th element and the (n/2 - 1)th element of the resulting array.
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+This method should run in Big Theta of n time. The merging operation in mergesort takes n time to complete, and taking the average of two numbers is constant time.
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+Merge the three arrays as in the mergesort merge. Have three pointers pointing to the start of each array, find the minimum, place the minimum in a new array, and move the pointer along until all three point to the end of each array. When the resulting array is built, if n is even then take the average of the (n/2)th element and the (n/2 - 1)th element and return it. If n is odd return the (floor(n/2))th element.
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+The merging operation takes 3n time, which is equivalent to n time in our analysis. The final operation is constant time. Therefore this is Big Theta of n.
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+Perform n/2 merge operations on the set of arrays. Now there are n/2 arrays of length 2n. Repeat this process until there exists a single merged array. Because we had n arrays of n elements to start, the resulting array will be of length n<sup>2</sup>, which is always even. The median of the sets is the average of the (n/2)th element and the (n/2 - 1)th element.
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+Unfortunately this algorithm is really, really slow. In the first step there are n/2 merge operations which result in arrays of length 2n. In the second step there are n/4 merge operations which result in arrays of length 4n. Therefore each step takes n<sup>2</sup> time. There are ln(n) steps to take as the problem is halved in each subsequent step. The final operation, as before, is constant. Therefore the running time of this algorithm is Big Theta of n<sup>2</sup>ln(n).
+---+++!! Grader comments *[25/25]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 18
+
+	7         		could be faster
+	7         		could be faster
+	4         		Need to describe algorithm. Also should be more efficient.
+
+
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+   // put your code here
+   // also remember to upload it in submit page
+
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+---+++!! Grader comments *[0/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Give out the password you cracked. Remember attached the code as 'problem4a.zip'
+</VERBATIM>
+The password for e82ca7cd4cfa7e0f233a2d78256bde12cbfa1292 is BIS<br>
+The password for 3915f1a108c95cb8c3b0564f3c3b6ebfd75e8add is DBO<br>
+The password for e6584124725aa6506f4db8831accb36205f885a0 is EMS<br>
+The password for 5134a5346598b438fbd5cf6bb65cfd665a9cc5df is HAP<br>
+The password for 934594c19098524d2ce03beb0414e08d2c427129 is MTF<br>
+The password for e61b4bd1bfc407c316a3249debc6723405d9e9d0 is Neb<br>
+The password for 89bb853a9a04e2c091c791c8d4e119518897b636 is apt<br>
+The password for 685df4b1503f907064c7e9ba0bdc424975db4c05 is mpg<br>
+The password for 5225829a60ca955d03ff4e969d29bc3148dd7944 is oaf<br>
+The password for 6238277c67810458926ed9ce400fa01f7731f0f6 is sb.<br>
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the password you cracked. 
+</VERBATIM>
+
+I couldn't get any of the passwords (may the graders have mercy upon my grade) but here is my code:<br>
+%CODE{"cpp"}%
+#include <fstream>
+#include <iostream>
+#include <vector>
+#include "hash.h"
+
+using namespace std;
+
+int main(){
+
+	bool check = true;
+	string line, reduction, original_reduction;
+	vector<string> table;
+	table.reserve(5900);
+	ifstream input("table.txt");
+	string original = "daccd93d89a165d59565e1dd815414002be1d54b";
+	
+	if(input.is_open()){
+		while(getline (input,line)){
+			table.push_back(line);
+		}
+		input.close();
+	}
+
+	string str1 = reduce(original,5);
+
+	while(check){
+		for (std::vector<string>::iterator it = table.begin(); it != table.end(); ++it){
+			if((*it).find(str1)!=std::string::npos){
+				reduction = (*it).substr(0,5);
+				cout << reduction << " " << str1 << endl;
+				cout << (*it) << endl;
+				check = false;
+				break;
+			}
+		}
+		str1 = reduce(hash(str1),5);
+	}
+
+	original_reduction = reduction;
+
+	check = true;
+
+	while(true){
+		str1 = hash(reduction);
+
+		if(str1.compare(original) == 0){
+			cout << "The password is: " << reduction << endl;
+			break;
+		}
+	
+		reduction = reduce(str1,5);
+		if(reduction.compare(original_reduction) == 0){
+			cout << "Password not found :(" << endl;
+			break;
+		}
+	}
+	
+
+	return 0;
+}
+%ENDCODE%
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Give out the explanation here. Remember attached the code and table
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

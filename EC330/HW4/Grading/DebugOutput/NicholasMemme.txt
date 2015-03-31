@@ -1,0 +1,261 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(NicholasMemme),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+i NO
+ii YES
+iii NO
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+for i=0 to n
+    if(x0[index0]<x1[index1])
+         index0++
+    else
+         index1++
+   if(index0>index1)
+         return (x0[index0]+x0[index1-1])/2
+   else
+         return (x1[index1]+x1[index1-1])/2
+
+
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+O(n)
+</VERBATIM>
+
+---+++ ii. Median of three
+
+   
+---++++ Algorithm
+<VERBATIM>
+for i=0 to n+(n/2)
+    if(x0[index0]<x1[index1])
+         if(x0[index0]<x2[index2])
+               index0++
+        else
+               index2++
+    else if(x1[index1]<x0[index0])
+         if(x1[index1]<x2[index2])
+                index1++
+         else
+               index2++
+     else if(x2[index2]<x0[index0])
+         if(x2[index2]<x1[index1])
+               index2++
+       else
+              index1++
+
+if(index0>index1 and index0>index2)
+     return x0[index0]
+
+else if(index1>index0 and index1>index2)
+      return x1[index1]
+
+else if(index2>index0 and index2>index1)
+      return x2[index2]
+       
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+O(n)
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+for i=0 to n
+   min_value_index=min(x_n[index_n])
+   index_(min_value_index)++
+
+
+max(index_n)
+if n%2
+    return x_n[index_n]
+else
+   return (x_n[index_n]+x_n[index_n-1])/2
+   
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+O(n^2)
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 20
+
+	7         		could be faster
+	7         		could be faster
+	6         		could be faster
+
+
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+/* HEADER */
+
+#ifndef MYBLOOMFILTER_H
+#define	MYBLOOMFILTER_H
+
+#include<iostream>
+#include<string>
+#include "BloomFilter.h"
+
+using namespace std;
+
+class myBloomFilter
+{
+	public:
+		myBloomFilter (int mm);		
+		myBloomFilter (string filter);
+		void insert(string item);
+		bool exists(string item);
+		string hash(string item);
+		string output();
+		
+	
+	private:
+		string bloom;
+		int length;
+
+};
+
+#endif
+
+/* IMPLEMENTATION */
+
+
+#include "myBloomFilter.h"
+#include<string>
+
+
+void myBloomFilter::insert(string item)
+{
+	for(int ii=0; ii<item.length(); ii++)
+	{
+		int hash_index=item[ii]-'!';		
+		bloom[hash_index%length]='1';
+		
+	}
+	
+}
+bool myBloomFilter::exists(string item)
+{
+	for(int ii=0; ii<item.length(); ii++)
+	{
+		int hash_index=item[ii]-'!';		
+		if(bloom[hash_index%length]=='0')
+			return false;
+	}
+	return true;
+}
+
+string myBloomFilter::output()
+{
+	return bloom;
+}
+
+myBloomFilter::myBloomFilter(string filter)
+{
+		
+	length=filter.length();
+	bloom=filter;
+}
+myBloomFilter::myBloomFilter(int mm)
+{
+	
+	length=mm;
+	for(int ii=0; ii<length; ii++)
+	{
+		bloom+="0";	
+	}
+}
+
+
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+For my Bloom Filter I stored a one in a index of the string that corresponds to the char being inserted into the bloom filter. If the filter is instantiated smaller than the number of ascii characters than the index is mod by the length of the bloom filter. To test whether an item has been inserted into the bloom filter, I run string through as if it is being inserted and return false if the index where it would be inserted has a 0, and return true if there are ones in all places there should be meaning that there is a possiblity that the string has been inserted into the bloom filter.
+</VERBATIM>
+
+---+++!! Grader comments *[7/25]*
+<VERBATIM>
+Score: 1345</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Cracked Passwords:
+MTF
+
+RFP
+
+DBO
+
+Dli
+
+DIF
+
+ass
+
+LWP
+
+SYC
+
+ETR
+
+DCE
+
+
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Cracked passwords:
+
+Could not determine passwords. My code can find the hash entries in the right column in the table but when hash-reducing the corresponding entry in the left column, A matching hash to given staring hash cannot be deterimined thus a "cracked" password cannot be determined.
+However the function works for given "ec330" example, when the entry is added to the rainbow table.
+
+
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+To generate the rainbow table, I first generated 6000 random, 5 character strings,while checked that that password has not been generated before. Then I passed each string to a function that hash-reduced each a random number of times from 500 to 100500, then returned the reduced string, matched the hash-reduced string with the original string.
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

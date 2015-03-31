@@ -1,0 +1,303 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(AsselAliyeva),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+ii (secondary clustering)
+
+
+Hi(k)=H(i-1)(k)+i
+so
+eventually we will have something like
+Hn(k)=H0(k)+(sum_of_"i"s from 0 to n)
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+
+Let the medians be a and b. Then the median of the two arrays will be in between a and b. So in X0 we can throw all the elements which are less than a. In X1 we can throw all the elements that are bigger than b.
+a_low,b_low, a_high,b_high-array [edge  indexes]
+
+int FindMedian (int X0[],int a_low,int a_high, int X[], int b_low, int b_high){
+a_mid=a_low+(a_low+a_high)/2;
+a_med=X0[a_mid];
+b_mid=b_low+(b_low+b_high)/2;
+b_med=X[b_mid];
+if (a_high-a_low+b_high-b_low<4) then 
+           find the median of elements in a constant time;
+else if (a_med<b_med)
+           FindMedian (X0[], a_mid,a_high,b_low,b_high,b_mid+1)
+else
+           FindMedian (X[],a_mid+1,a_high,b_low,b_high,b_mid)
+
+
+}
+
+
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+T(n)=T(n/2)+O(1)=>
+complexity=O(log(n)) 
+
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+say we have three arrays a,b,c.  We can use the same method as in part i.
+Let's take their medians to be a_med,b_med, c_med
+so the final median will be in between the smallest and the largest medians
+
+int FindMedian (int a[],int b[],int c[]){
+a_med=median(a);
+b_med=median(b);
+c_med=median(c);
+
+smallest=min(a_med,b_med,c_med);
+largest=max(a_med,b_med,c_med);
+
+lets assume that a_med=min, and b_med=max, then (procedure) {
+throw away elements that are less than a_med from a[] and assign j=number of elements that are less than or equal to a_med;
+throw away j elements from the end of b[]
+}
+
+iterate this procedure until we are left with two arrays. now we can use method from part i.
+
+
+
+}
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+finding min,max=Theta(3)
+Theta(log(n)) from part i
+
+so overall, running time should be Theta(log(n))
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+We can use the same strategy as in part ii by trying to reduce the problem to two arrays.
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+finding the smallest/largest median will take Theta(n) time
+so overall,
+running time is Theta(n+log(n)) which is basically Theta (n)
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 18
+
+	10        		
+	8         		
+	0         		no algorithm
+
+
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+ #include "myBloomFilter.h"
+
+//
+
+unsigned int FNV_INIT = 2166136261;
+//from magic numbers from Fowler–Noll–Vo hash function
+//the idea is that we need to multiply the hash value by 2166136261
+//we can do that by representing the number as sum of powers of two
+//and then we can left shift hval by these powers
+
+//sourse: http://isthe.com/chongo/tech/comp/fnv/
+
+
+unsigned int n_hash_functions = 5;
+
+unsigned int hash_fnv_1a(string s, unsigned int hval){
+
+	for (unsigned int i = 0; i<s.size(); i++){
+
+		hval ^= (unsigned int)s[i];
+
+		hval += (hval << 1) + (hval << 4) + (hval << 7) + (hval << 8) + (hval << 24);
+
+	}
+	return hval;
+}
+
+unsigned int hash_fnv(string s, unsigned int hval){
+
+	for (unsigned int i = 0; i<s.size(); i++){
+
+		hval += (hval << 1) + (hval << 4) + (hval << 7) + (hval << 8) + (hval << 24);
+
+		hval ^= (unsigned int)s[i];
+	}
+	return hval;
+}
+
+myBloomFilter::myBloomFilter(int length) :BloomFilter(length){
+
+	filter = string(length, 0x00);
+
+}
+
+myBloomFilter::myBloomFilter(string Filter) : BloomFilter(Filter.length()) {
+	filter = Filter;
+
+}
+
+void myBloomFilter::insert(string item){
+
+	unsigned int hash;
+
+	for (unsigned int i = 0; i<n_hash_functions; i++){
+
+		if (i == 0)
+			hash = hash_fnv_1a(item, FNV_INIT);
+		else
+			hash = hash_fnv_1a(item, hash);
+
+		unsigned int index = hash % (length * 8);
+
+		unsigned int ByteNumber = index / 8;
+		unsigned int BitNumber = index % 8;
+
+		filter[ByteNumber] |= (0x80 >> BitNumber);
+
+	}
+
+}
+
+bool myBloomFilter::exists(string item){
+
+	unsigned int hash;
+
+	for (unsigned int i = 0; i<n_hash_functions; i++){
+
+		if (i == 0)
+			hash = hash_fnv_1a(item, FNV_INIT);
+		else
+			hash = hash_fnv_1a(item, hash);
+
+		unsigned int index = hash % (length * 8);
+
+		unsigned int ByteNumber = index / 8;
+		unsigned int BitNumber = index % 8;
+
+		if (filter[ByteNumber] & (0x80 >> BitNumber)) continue;
+		else return false;
+
+	}
+	return true;
+}
+
+string myBloomFilter::output(){
+	return filter;
+}
+
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+so the hash algorithm i used here is called FNV(Fowler–Noll–Vo) hash function
+which is basically this
+hash = offset_basis
+for each octet_of_data to be hashed
+        hash = hash * FNV_prime
+        hash = hash xor octet_of_data
+return hash 
+//source: http://isthe.com/chongo/tech/comp/fnv/
+It also is very convenient since I can get another hash function just by changing the order of multiplying and XORing bits
+FNV_prime was chosen from the list of magic numbers-so produced hash functions are better distributed throughout m-sized hash table
+So then I multiply hval by the magic number that is represented as a sum of powers of two and then i left shift it by those powers
+
+
+</VERBATIM>
+
+---+++!! Grader comments *[12/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+
+LWP
+MTF
+OBS
+PCL
+aob
+cog
+eom
+mpg
+sea
+wim
+
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+M;m_T
+mm^g,
+;TUih
+`HnRq
+mm^g,
+;TUih
+`HnRq
+;TUih
+;TUih
+`HnRq
+;TUih
+;TUih
+
+
+code is attached
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+I'm 
+1) generating random ASCII characters (33-127) then concatinating them into strings of random size
+2) then reducing them to size 5, storing them in the first column of my table (password)
+3) then hashing it, reducing it and etc 100 times. the result is stored in the second column 
+that's basically it
+
+P.s:I hope that hashing them 100 times is enough
+
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

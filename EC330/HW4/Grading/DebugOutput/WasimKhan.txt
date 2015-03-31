@@ -1,0 +1,273 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(WasimKhan),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+The answer is ii. Secondary Clustering and iii. Always able to add a key if the table is not full. It is ii. because the sequence uses memory of the previous hash to determine the next one. h(k,i) = h(k) + 1 + 2 +...+i. This is a sum that equals h(k) + i(i+1)/2, which looks like quadratic probing so it will suffer from secondary clustering. In addition, although the sequence is determined by the first h(k) hash, every ith hash is different since we are just adding i to it, so we will always be able to add a key if the table is not full.
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+The number of elements in each array is n, and since there are two arrays, the total number of elements will always be even. As a result, the median will occur at the average of the nth and (n+1)th elements if all the elements were put in sorted order into one array. Basically we can iterate through each element in the arrays and compare elements from the different arrays just like how merging works. After coming to the nth term, add the nth and (n+1)th term and divide by 2 to get the median.
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+The worst case run time of this algorithm is Theda(n) because the arrays are already sorted and we need to just iterate through the first n smallest elements of the the complete set of 2n elements. The best case run time is Theda(1), which can happen if the first element of one array is bigger than the last element of the other array, where the median is the average of these two elements.
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+The median of 3 arrays each with n elements occurs at the (3n/2)th element if n is odd or the average of the (3n/2)th and ((3n/2)+1)th elements. We can use the same technique and iterate through the first (3n/2) + 1 minimum elements. The procedure would be the same as merging in a merge-sort algorithm, where we move on in the two appropriate arrays if the max is the element of the other array.
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+The worst case run time of finding the median of three sorted arrays with n elements each is Theda(n). We will have to go through about 3n/2 elements, which is Theda(n). The best case run time is Theda(1) which can happen if the concatenating the three arrays would produce a sorted array, then we can find the median directly in the middle. This can be done just by writing a simple for loop to check if all the elements in an array are exclusively larger or smaller than the other arrays by comparing the first and last elements in each array.
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+The average of n arrays each with n elements occurs at the ((n^2)/2)th element if n is odd or in between the ((n^2)/2)th and (((n^2)/2)+1)th elements so their average if n is even. The procedure would be the same as for the two arrays and three arrays, where you follow the procedure of merging in the merge-sort algorithm. Basically, we find the max of of a set of elements, one from each array at a time. Then, we increment in each (n-1) arrays that did not have the max. Keep doing this until the increment would go beyond the ((n^2)/2)th element, in which case compare this last set of elements to find the median, which is the ((n^2)/2)th total max element if n is odd or the average of ((n^2)/2)th and (((n^2)/2)+1)th total max elements if n is even.
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+The worst case run time of finding the median of n sorted arrays with n elements each is Theda(n^2). We will have to go through about half half of the total elements, so (n^2)/2. Best case run time would be Theda(n) because be would still have to go through each the first and last elements of n arrays to find if they can be concatenated to produce a sorted array.
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 20
+
+	7         		could be faster
+	7         		could be faster
+	6         		could be faster
+
+
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+   // put your code here
+   // also remember to upload it in submit page
+
+#include "myBloomFilter.h"
+#include <string>
+#include <iostream>
+#include <vector>
+#include <math.h>
+using namespace std;
+
+class MyBloomFilter : public BloomFilter{
+public:
+	MyBloomFilter(int mm);
+	MyBloomFilter(string filter);
+
+	int summingHash(string item);
+	int multiplicationHash(string item);
+	int powerHash(string item);
+	int skippingAverageHash(string item);
+	int catHash(string item);
+
+	void insert(string item);
+	bool exists(string item);
+	string output();
+
+	int length;
+	vector<char> charHash;
+	string outputString;
+	int hashFunctionsNum;
+	int lengthOfFilter;
+};
+
+MyBloomFilter::MyBloomFilter(int mm)
+{
+	length = mm;
+	hashFunctionsNum = 5;
+	lengthOfFilter = length * hashFunctionsNum;
+	for (int ii = 0; ii < (lengthOfFilter); ii++)
+	{
+		charHash.push_back('0');
+	}
+}
+
+MyBloomFilter::MyBloomFilter(string filter)
+{
+	length = filter.length();
+	for (int ii = 0; ii < filter.length(); ii++)
+	{
+		charHash.push_back(filter[ii]);
+	}
+}
+
+void MyBloomFilter::insert(string item)
+{
+	int hash1 = summingHash(item);
+	int hash2 = multiplicationHash(item);
+	int hash3 = powerHash(item);
+	int hash4 = skippingAverageHash(item);
+	int hash5 = catHash(item);
+
+	charHash[hash1] = '1';
+	charHash[hash2] = '1';
+	charHash[hash3] = '1';
+	charHash[hash4] = '1';
+	charHash[hash5] = '1';
+}
+
+bool MyBloomFilter::exists(string item)
+{
+	int hash1 = summingHash(item);
+	int hash2 = multiplicationHash(item);
+	int hash3 = powerHash(item);
+	int hash4 = skippingAverageHash(item);
+	int hash5 = catHash(item);
+
+	if (charHash[hash1] == '0')
+		return false;
+	else if (charHash[hash2] == '0')
+		return false;
+	else if (charHash[hash3] == '0')
+		return false;
+	else if (charHash[hash4] == '0')
+		return false;
+	else if (charHash[hash5] == '0')
+		return false;
+
+	else
+		return true;
+}
+
+string MyBloomFilter::output()
+{
+	for (vector<char>::iterator it = charHash.begin(); it != charHash.end(); it++)
+	{
+		outputString.append(string(1,*it));
+	}
+	return outputString;
+}
+
+int MyBloomFilter::summingHash(string item)
+{
+	int sum, ii;
+	for (ii = 0, sum = 0; ii < item.length(); ii++)
+	{
+		sum += item[ii];
+	}
+	return sum % (lengthOfFilter);
+}
+
+int MyBloomFilter::multiplicationHash(string item)
+{
+	int multiplication, ii;
+	for (multiplication = 1, ii = 0; ii < item.length(); ii++)
+	{
+		while(0 + item[ii] == 0)
+			multiplication += 1;
+		multiplication *= int(item[ii]);
+	}
+	return multiplication % (lengthOfFilter);
+}
+
+int MyBloomFilter::powerHash(string item)
+{
+	int power, ii;
+	for (power = 0, ii = 0; ii < item.length(); ii++)
+	{
+		power += pow(item[ii], ii);
+	}
+	return power % (lengthOfFilter);
+}
+
+int MyBloomFilter::skippingAverageHash(string item)
+{
+	int halfAverage, ii;
+	for (halfAverage = 0, ii = 0; ii < item.length(); ii++)
+	{
+		if (ii % 2 == 0)
+			halfAverage += item[ii];
+	}
+
+	halfAverage /= item.length();
+
+	return halfAverage % (lengthOfFilter);
+}
+
+int MyBloomFilter::catHash(string item)
+{
+	char cat[3] = {'c','a','t'};
+	int result, ii;
+	for (result = 0, ii = 0; ii < item.length(); ii++)
+	{
+		result += item[ii] * cat[ii % 3];
+	}
+
+	return result % (lengthOfFilter);
+}
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+When a new instance is created, it creates a vector container that stores all of the int hashes that each hash function returns when run on each item in the instance. Then, the vector is used to create the string that represents the filter. When inserting, the integer hashes are used to make that index true, and when checking if an item exists, the hash is found and then used to see if that index has a 1 or 0. If it's 0, then you know the item definitely does not exist, or else it might be part of it.
+</VERBATIM>
+
+---+++!! Grader comments *[18/25]*
+<VERBATIM>
+Score: 1857</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Give out the password you cracked. Remember attached the code as 'problem4a.zip'
+Password 1 is ETR
+Password 5 is M-1
+Password 6 is Neb
+Password 7 is R&D
+Password 10 is RFP
+Password 4 is WGS
+Password 9 is deb
+Password 8 is rhb
+Password 3 is slt
+Password 2 is sma
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+The technique I was going to use was to turn the string of end characters in an integer that sums up their ascii values, and to put the values of the strings in a vector at the index of the appropriate integer value. Some strings will have the same integer values, so they will be grouped together. As a result, when finding if the password matches a key in the table, I'd just calculate the integer value and compare it to only the end keys with that same integer value. If they're not the same, then keep reducing and doing the same procedure again until 2^20 comparisons are made. If they are the same, then I'd go to the corresponding beginning value and hash until the hashes matched up and then would get the password. If the chain did not produce the same hash, I would go back to the previous state and keep hashing and reducing to find another end key that is the same. I would check through all the end keys by creating another list, etc and setting completed ones to 1 to keep track. If all are done, then the password does not exist in the table. Do this for every password.
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Basically start with an arbitrary string and hash and reduce it 2^20 times, and then use the last key to begin the next chain of hashing and reducing. Keep going until I am satisfied.
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

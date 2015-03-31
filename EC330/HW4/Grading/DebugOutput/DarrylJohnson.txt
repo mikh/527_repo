@@ -1,0 +1,360 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(DarrylJohnson),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+ii. secondary clustering
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+%CODE{"cpp"}%
+#include <vector>
+
+float median(vector<int> A, vector<int> B) {
+    
+    vector<int> mergedList;
+    
+    int aPtr = 0;
+    int bPtr = 0;
+    
+    for (int i = 0; i <= A.size(); i++) {
+        
+        if (aPtr >= A.size()) {
+            mergedList.push_back(B[bPtr]);
+            bPtr++;
+        } else if (bPtr >= B.size()) {
+            mergedList.push_back(A[aPtr]);
+            aPtr++;
+        } else if(A[aPtr] < B[bPtr]) {
+            mergedList.push_back(A[aPtr]);
+            aPtr++;
+        } else {
+            mergedList.push_back(B[bPtr]);
+            bPtr++;
+        }
+    }
+    
+    return (mergedList[A.size()] + mergedList[A.size()-1])/2.0;
+}
+%ENDCODE%
+---++++ Analysis and running time
+<VERBATIM>
+The algorithm uses a similar approach to the merge operation in merge sort. Except it only merges up to 1+ the halfway mark and then averages one above half and one under half.
+</VERBATIM>
+ <latex>\Theta (n)</latex>
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+1. Assign pointers to the base of each list (index 0).
+2. Perform merge operation on lists until 3n/2 is reached (if odd) or 3n/2 and 3n/2-1 (if even).
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+This works very similarly to the algorithm in part a except there are 3 lists instead of 2. 
+</VERBATIM>
+ <latex>\Theta (n)</latex>
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 14
+
+	7         		could be faster
+	7         		could be faster
+	0         		
+
+
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+//
+//  myBloomFilter.cpp
+//  BloomFilter
+//
+//  Created by Darryl Johnson on 3/18/15.
+//  Copyright (c) 2015 Darryl Johnson. All rights reserved.
+//  Referenced http://stackoverflow.com/questions/8567238/hash-function-in-c-for-string-to-int
+//  Referenced http://stackoverflow.com/questions/25280106/hash-algorithm-for-string-of-characters-using-xor-and-bit-shift
+
+#include "myBloomFilter.h"
+
+
+
+unsigned long hashA(string key, unsigned long max) {
+    int hashVal = 0;
+    
+    for(int i = 0; i<key.length();  i++)
+        hashVal = 37*hashVal+key[i];
+    
+    hashVal %= max;
+    
+    if(hashVal<0)
+        hashVal += max;
+    
+    return hashVal;
+}
+
+
+unsigned long hashB(string key, unsigned long max) {
+    int sum = 0;
+    
+    for (int i = 0; i<key.length(); i++) {
+        sum += key[i];
+    }
+    
+    return sum % max;
+}
+
+unsigned long hashC(string data, unsigned long max) {
+    
+    unsigned int key = 0;
+    for (int i = 0; i < data.length(); i++) {
+        key = ((key<<5) + key) ^ (int)data[i];
+    }
+    return key % max;
+}
+
+
+myBloomFilter::myBloomFilter(int length) : BloomFilter(length) {
+    this->length = length;
+    this->filter = string(length, '0');
+}
+
+myBloomFilter::myBloomFilter (string filter) : BloomFilter(filter) {
+    this->filter = filter;
+    length = (int)filter.length();
+}
+
+void myBloomFilter::insert(string item) {
+    
+    int hashValA = hashA(item, this->length);
+    
+    switch (filter[hashValA]) {
+        case '0':
+            filter[hashValA] = 'A';
+            break;
+        case 'B':
+            filter[hashValA] = 'H';
+            break;
+        case 'C':
+            filter[hashValA] = 'I';
+            break;
+        case 'J':
+            filter[hashValA] = 'L';
+            break;
+            
+        default:
+            break;
+    }
+    
+    int hashValB = hashB(item, this->length);
+    
+    switch (filter[hashValB]) {
+        case '0':
+            filter[hashValB] = 'B';
+            break;
+        case 'A':
+            filter[hashValB] = 'H';
+            break;
+        case 'C':
+            filter[hashValB] = 'J';
+            break;
+        case 'I':
+            filter[hashValB] = 'L';
+            break;
+            
+        default:
+            break;
+    }
+    
+    int hashValC = hashC(item, this->length);
+    
+    switch (filter[hashValC]) {
+        case '0':
+            filter[hashValC] = 'C';
+            break;
+        case 'A':
+            filter[hashValC] = 'I';
+            break;
+        case 'B':
+            filter[hashValC] = 'J';
+            break;
+        case 'H':
+            filter[hashValC] = 'L';
+            break;
+            
+        default:
+            break;
+    }
+}
+
+bool myBloomFilter::exists(string item) {
+    
+    int hashValA = hashA(item, this->length);
+    int hashValB = hashB(item, this->length);
+    int hashValC = hashC(item, this->length);
+    
+    if (filter[hashValA] == '0' || filter[hashValA] == 'B' || filter[hashValA] == 'C' || filter[hashValA] == 'J')
+        return false;
+    
+    if (filter[hashValB] == '0' || filter[hashValB] == 'A' || filter[hashValB] == 'C' || filter[hashValB] == 'I')
+        return false;
+    
+    if (filter[hashValC] == '0' || filter[hashValC] == 'A' || filter[hashValC] == 'B' || filter[hashValC] == 'H')
+        return false;
+    
+    
+    return true;
+}
+
+string myBloomFilter::output() {
+    return this->filter;
+}
+%ENDCODE%
+---+++ Explanation
+<VERBATIM>
+For myBloomFilter, I used 3 hash functions (A, B, and C). To distinguish between which of the three hash functions have hash to a particular location in the string, I have a few flags listed below:
+
+0 - None
+
+A - only A
+B - only B
+C - only C
+
+H - both A & B
+I - both A & C
+J - both B & C
+
+L - A & B & C
+
+I then use these values when checking if an element exists by using all hashes and determining if that hash has arrived at the position before. 
+
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+MWA
+xcl
+i'd
+apt
+BIS
+dis
+DTB
+moa
+pp.
+dub
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+3340fcc077c280d8349cc1fbfc9194d5cd4288f9 -> "Agave"
+05553c640284aaa4cd5cb0c639968ed7b1b71761 -> ""
+f832e981c07b5ff852a2bb34f43a4b29d53bc4fd -> ""
+428130a6327d28c56a39d9a6454c1bbcbee4e6a7 -> ""
+82f46a8f805a09bd49ad1592f2fb2a9a1ea80a67 -> ""
+ecb266eb670593659cae258f54f4acb99d2661c1 -> ""
+f32a961b2ca3441432c1da4474387aafe32e0e99 -> ""
+4ec6d5c184d67b1136b8123b8d111a025747ba77 -> ""
+0d87fd05ab773e3fef729295b84adcfa57461fb1 -> ""
+4ceb1c68d95f4f38f47fdcd1d96fdb452a8d4e3f -> ""
+
+</VERBATIM>
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+%CODE{"cpp"}%
+
+#include "hash.h"
+
+#include <stdlib.h>
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <map>
+using namespace std;
+
+// Hashes and reduces a beginning string a set number of times
+string chain(string beginning) {
+    
+    string reduced = "";
+    
+    for (int i = 0; i<200; i++) {
+        
+        string hash = hashD(beginning);
+        reduced = reduce(beginning, 5);
+        
+    }
+    
+    return reduced;
+}
+
+
+
+int main(int argc, const char * argv[]) {
+    
+    string beginning = "!!!!!";
+    
+    ofstream myRBTable("nTable.txt");
+    
+    while (true) {
+        
+ 
+        for (int i = 0; i<5; i++) {
+            int output = output = 33 + (rand() % (int)(126 - 33 + 1));
+            beginning[i] = output;
+        }
+        
+        string rChain = chain(beginning);
+        
+        cout << beginning << " " << rChain << endl;
+        
+        myRBTable << "(   " << beginning << "  ,  " << chain(beginning) << "   )" << endl;
+    }
+    
+    myRBTable.close();
+    
+    
+    return 0;
+}
+%ENDCODE%
+<VERBATIM>
+My code randomly chooses a 5 character password and then uses the chain function to hash and reduce that password 200 times. 
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

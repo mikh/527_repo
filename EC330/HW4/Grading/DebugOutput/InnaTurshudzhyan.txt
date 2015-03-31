@@ -1,0 +1,553 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(InnaTurshudzhyan),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+ii.secondary clustering, because unlike in the linear probing, the function is being called recursively, so the function moves with incrementing values (jumps over empty slots => not iii.)
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+If n is 2, we take the biggest element out of X0[0] and X1[0], and the smallest element out of X0[n-1] and X1[n-1] and find the average => this is median. 
+If n is not 2: Find medians of both arrays. (if n is even, find the average between the two middle elements: X[n/2 - 0.5] and X[n/2+0.5]). Compare the medians of the 2 arrays:
+•If they are equal, we are done, that's the median. 
+•If m0 > m1: recursively call this function to X0[0 -> (n/2 + 0.5)] (if even) or X0[0 -> n/2] (if odd) and X1[(n/2 - 0.5) -> n] (if even) or X1[n/2 -> n] (if odd) until n is 2.
+•If m0 < m1: recursively call this function to X0[(n/2 - 0.5) -> n] (if even) or X0[n/2 -> n] (if odd) and X1[0 -> (n/2 + 0.5)] (if even) or X1[0 -> n/2] (if odd) until n is 2.
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+O(logn). Same concept as merge sort: we keep dividing the array in half(sometimes half+1) until the result is just 2 => logn.
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+1)Find medians of the 3 arrays (same way as in the question above). 
+2)Find the maximum and minimum of the mediums. The total medium cannot possibly be greater than the 
+maximum and smaller than the minimum. So, we pick the arrays with min median - delete all elements less than or equal to min median and with max median - delete all elements greater or equal to max median.
+3)Repeat steps 1) and 2) until we get a medium (all three or two are equal OR there's only one left) (2 arrays should be empty by the end).
+
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+O(logn) - same idea as above. Keep dividing arrays into n/2.(divide and conquer method)
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+To find the median of n arrays - use the same algorithm from part ii.
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+The running time will be nlogn, because we use the divide and conquer algorithm for n elements, so it's n* logn.
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 25
+
+	10        		
+	8         		
+	7         		
+
+
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+#include "myBloomFilter.h"
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+myBloomFilter::myBloomFilter(int mm) : BloomFilter(mm)
+{
+    this->length = mm;
+    
+    array = new bool[length];
+    
+    for (int j = 0; j<length; j++)
+    {
+        array[j] = 0;
+    }
+}
+
+myBloomFilter::myBloomFilter(string filter) : BloomFilter(filter)
+{
+    this->length = filter.length();
+    
+    array = new bool[length];
+    
+    for (int j = 0; j<length; j++)
+    {
+        char currentChar = filter.c_str()[j];
+        if (currentChar == '1')
+            array[j] = 1;
+        else
+            array[j] = 0;
+    }
+    
+    
+}
+int myBloomFilter::hash1(string str1)
+{
+    int x = 0;
+    
+    for (int i = 0; i < str1.length(); i++)
+    {
+        char currentChar = str1.c_str()[i];
+        x = x + currentChar;
+    }
+    
+    return (x*23327 ^ 25409)%length;
+}
+
+int myBloomFilter::hash2(string str2)
+{
+    int x = 0;
+    
+    for (int i = 0; i < str2.length(); i++)
+    {
+        char currentChar = str2.c_str()[i];
+        x = x + currentChar;
+    }
+    
+    return (x*27457 ^ 29453)%length;
+}
+
+int myBloomFilter::hash3(string str3)
+{
+    int x = 0;
+    
+    for (int i = 0; i < str3.length(); i++)
+    {
+        char currentChar = str3.c_str()[i];
+        x = x + currentChar;
+    }
+    
+    return (x*31607 ^ 33617)%length;
+}
+
+int myBloomFilter::hash4(string str4)
+{
+    int x = 0;
+    
+    for (int i = 0; i < str4.length(); i++)
+    {
+        char currentChar = str4.c_str()[i];
+        x = x + currentChar;
+    }
+    
+    return (x*35771 ^ 37831)%length;
+}
+
+int myBloomFilter::hash5(string str5)
+{
+    int x = 0;
+    
+    for (int i = 0; i < str5.length(); i++)
+    {
+        char currentChar = str5.c_str()[i];
+        x = x + currentChar;
+    }
+    
+    return (x*39979 ^ 42083)%length;
+}
+
+int myBloomFilter::hash6(string str6)
+{
+    int x = 0;
+    
+    for (int i = 0; i < str6.length(); i++)
+    {
+        char currentChar = str6.c_str()[i];
+        x = x + currentChar;
+    }
+    
+    return (x*44203 ^ 46451)%length;
+}
+
+int myBloomFilter::hash7(string str7)
+{
+    int x = 0;
+    
+    for (int i = 0; i < str7.length(); i++)
+    {
+        char currentChar = str7.c_str()[i];
+        x = x + currentChar;
+    }
+    
+    return (x*48619 ^ 50767)%length;
+}
+
+
+int myBloomFilter::hash8(string str8)
+{
+    int x = 0;
+    
+    for (int i = 0; i < str8.length(); i++)
+    {
+        char currentChar = str8.c_str()[i];
+        x = x + currentChar;
+    }
+    
+    return (x*52937 ^ 55109)%length;
+}
+
+
+
+void myBloomFilter::insert(string item)
+{
+    if (length <= 10)
+    {
+    int y1 = hash1(item);
+    array[y1] = 1;
+    }
+    else if (length <= 100)
+    {
+    int y1 = hash1(item);
+    array[y1] = 1;
+    int y2 = hash2(item);
+    array[y2] = 1;
+    }
+    else if (length <= 1000)
+    {
+    int y1 = hash1(item);
+    array[y1] = 1;
+    int y2 = hash2(item);
+    array[y2] = 1;
+    int y3 = hash3(item);
+    array[y3] = 1;
+    }
+    else if (length <= 10000)
+    {
+    int y1 = hash1(item);
+    array[y1] = 1;
+    int y2 = hash2(item);
+    array[y2] = 1;
+    int y3 = hash3(item);
+    array[y3] = 1;
+    int y4 = hash4(item);
+    array[y4] = 1;   
+    }
+    else if (length <= 100000)
+    {
+    int y1 = hash1(item);
+    array[y1] = 1;
+    int y2 = hash2(item);
+    array[y2] = 1;
+    int y3 = hash3(item);
+    array[y3] = 1;
+    int y4 = hash4(item);
+    array[y4] = 1;
+    int y5 = hash5(item);
+    array[y5] = 1;
+    }
+    else if (length <= 1000000)
+    {
+    int y1 = hash1(item);
+    array[y1] = 1;
+    int y2 = hash2(item);
+    array[y2] = 1;
+    int y3 = hash3(item);
+    array[y3] = 1;
+    int y4 = hash4(item);
+    array[y4] = 1;
+    int y5 = hash5(item);
+    array[y5] = 1;
+    int y6 = hash6(item);
+    array[y6] = 1;
+    }
+    else if (length <= 10000000)
+    {
+    int y1 = hash1(item);
+    array[y1] = 1;
+    int y2 = hash2(item);
+    array[y2] = 1;
+    int y3 = hash3(item);
+    array[y3] = 1;
+    int y4 = hash4(item);
+    array[y4] = 1;
+    int y5 = hash5(item);
+    array[y5] = 1;
+    int y6 = hash6(item);
+    array[y6] = 1;
+    int y7 = hash7(item);
+    array[y7] = 1;
+    }
+    else if (length > 10000000)
+    {
+    int y1 = hash1(item);
+    array[y1] = 1;
+    int y2 = hash2(item);
+    array[y2] = 1;
+    int y3 = hash3(item);
+    array[y3] = 1;
+    int y4 = hash4(item);
+    array[y4] = 1;
+    int y5 = hash5(item);
+    array[y5] = 1;
+    int y6 = hash6(item);
+    array[y6] = 1;
+    int y7 = hash7(item);
+    array[y7] = 1;
+    int y8 = hash8(item);
+    array[y8] = 1;
+    }
+    
+}
+
+bool myBloomFilter::exists(string item)
+{
+    
+    if (length <= 10)
+    {
+        int y1 = hash1(item);
+        
+        if ((array[y1] == 1))
+            return true;
+        else
+            return false;
+
+    }
+    else if (length <= 100)
+    {
+        int y1 = hash1(item);
+        int y2 = hash2(item);
+        
+        if ((array[y1] == 1) && (array[y2] == 1))
+            return true;
+        else
+            return false;
+    }
+    else if (length <= 1000)
+    {
+        int y1 = hash1(item);
+        int y2 = hash2(item);
+        int y3 = hash3(item);
+        
+        if ((array[y1] == 1) && (array[y2] == 1) && (array[y3] == 1))
+            return true;
+        else
+            return false;
+    }
+    else if (length <= 10000)
+    {
+        int y1 = hash1(item);
+        int y2 = hash2(item);
+        int y3 = hash3(item);
+        int y4 = hash4(item);
+        
+        if ((array[y1] == 1) && (array[y2] == 1) && (array[y3] == 1) && (array[y4] == 1))
+            return true;
+        else
+            return false;
+    }
+    else if (length <= 100000)
+    {
+        int y1 = hash1(item);
+        int y2 = hash2(item);
+        int y3 = hash3(item);
+        int y4 = hash4(item);
+        int y5 = hash5(item);
+        
+        if ((array[y1] == 1) && (array[y2] == 1) && (array[y3] == 1) && (array[y4] == 1) && (array[y5] == 1))
+            return true;
+        else
+            return false;
+    }
+    else if (length <= 1000000)
+    {
+        int y1 = hash1(item);
+        int y2 = hash2(item);
+        int y3 = hash3(item);
+        int y4 = hash4(item);
+        int y5 = hash5(item);
+        int y6 = hash6(item);
+        
+        if ((array[y1] == 1) && (array[y2] == 1) && (array[y3] == 1) && (array[y4] == 1) && (array[y5] == 1) && (array[y6] == 1))
+            return true;
+        else
+            return false;
+    }
+    else if (length <= 10000000)
+    {
+        int y1 = hash1(item);
+        int y2 = hash2(item);
+        int y3 = hash3(item);
+        int y4 = hash4(item);
+        int y5 = hash5(item);
+        int y6 = hash6(item);
+        int y7 = hash7(item);
+        
+        if ((array[y1] == 1) && (array[y2] == 1) && (array[y3] == 1) && (array[y4] == 1) && (array[y5] == 1) && (array[y6] == 1) && (array[y7] == 1))
+            return true;
+        else
+            return false;
+    }
+    else if (length > 10000000)
+    {
+        int y1 = hash1(item);
+        int y2 = hash2(item);
+        int y3 = hash3(item);
+        int y4 = hash4(item);
+        int y5 = hash5(item);
+        int y6 = hash6(item);
+        int y7 = hash7(item);
+        int y8 = hash8(item);
+        
+        if ((array[y1] == 1) && (array[y2] == 1) && (array[y3] == 1) && (array[y4] == 1) && (array[y5] == 1) && (array[y6] == 1) && (array[y7] == 1) && (array[y8] == 1))
+            return true;
+        else
+            return false;
+    }
+    
+    
+}
+
+string myBloomFilter::output()
+{
+    string result;
+    for (int i = 0; i< length; i++)
+    {
+        if (array[i] == 1)
+            result += "1";
+        else
+            result += "0";
+    }
+    return result;
+}
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+I first create a bit array of length "length" with all zeros. 
+Then, I create my hash functions - 8 of them. The difference 
+between them is just the constants, that are just big prime numbers. 
+To minimize the false positive probability, depending on the length 
+I am using a different number of hash functions. For example, for 
+the the #'s <= 1000000 I'm using 6 hash functions.
+</VERBATIM>
+
+---+++!! Grader comments *[13/25]*
+<VERBATIM>
+Score: 1619</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+* [[%ATTACHURLPATH%/problem4a.zip][problem4a.zip]]: All the files used for Problem 4a + Makefile
+
+<VERBATIM>
+IHS
+MTF
+NRL
+PSA
+RQS
+SMB
+Saw
+tig
+wim
+yen
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+My code is below. I couldn't find any passwords, because it was taking too long to loop through.
+
+#include "sha1.h"
+#include "hash.h"
+#include <iostream>
+#include <fstream>
+#include <stdio.h>
+
+using namespace std;
+
+int main()
+{
+
+string first[5871],second[5871];
+
+ifstream file;
+file.open("table.txt");
+
+for (int i = 0; i < 5871; i++)
+{
+	file>>first[i]>>second[i];
+}
+
+string password[10] = {"7be94b2a34252709b102e4821e842f81f4f18806",
+"8665f14ffcfb8acdee369993ed3c62a15b0f606a",
+"0e42476edb2eb93ff32e3ea4fba237c098a6b9f4",
+"288feebfd27adaf7c011b420d70a092e419ac514",
+"82f46a8f805a09bd49ad1592f2fb2a9a1ea80a67",
+"d7d04aa5582228286a74be412f475f1921cc5515",
+"0d87fd05ab773e3fef729295b84adcfa57461fb1",
+"69cc4b7f78502eafc9b4187ee40c0f81bec1be9b",
+"c5b2b9f6421231c795d9a5ba4892c599343e17e9",
+"28d4d2a685809550605408ac071bdbdadf5d986a"};
+
+
+for (int m = 0; m<5871; m++)
+{
+	for (int i = 0; i<10; i++)
+	{
+		password[i] = reduce(password[i],5);
+		password[i] = hash(password[i]);
+		while (password[i] != second[m])
+		{
+		password[i] = reduce(password[i],5);
+		password[i] = hash(password[i]);
+		}
+		cout<<second[m]<<endl;
+	}
+}
+
+	return 0;
+}
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*   
+
+   * [[%ATTACHURLPATH%/problem4c.zip][problem4c.zip]]: problem4c.zip: Problem 4c + table1.txt
+<VERBATIM>
+
+Just like in problem 4a I created all the possible combinations of 3 ASCII characters from ! to ~.  The first column in table1.txt is the first reduce (start) and the seconds column is the last reduce (end). I repeat reduce-hash 10 times to create the second column.
+
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---
+
+   
+
+
+

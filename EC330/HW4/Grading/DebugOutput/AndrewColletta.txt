@@ -1,0 +1,377 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(AndrewColletta),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+The probe sequence exhibits the properties of ii., secondary clustering. If the key is placed at the index matching the hash of the key, the sequence tries again to 
+place it at (the attempted index + i).  as n approaches i = n, the index approaches n^2, which implies secondary clustering. 
+
+As the index increments by i and not linearly, the table is not guaranteed to be filled. 
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+FindMedian(arrayA[], arrayB[], int n)
+{
+     if n == 1
+     {
+          return ((arrayA[0] + arrayB[0])/2);  // if there is only one item in the arrays then you take the mean and return this as the average 
+     }
+
+     if n%2=0
+     {
+           int medianA = (arrayA[ n/2 ] + arrayA[ n/2 - 1 ])/2; // median of an array with an even number of objects is the mean of the middle two numbers
+           int medianB = (arrayB[ n/2 ] + arrayB[ n/2 - 1 ])/2; 
+           if medianA == medianB 
+           { 
+                 return medianA;   // if both these medians are equal then they will be the center of the new array and be the median
+           }
+           if medianA > medianB
+           {
+                FindMedian(arrayA[0 : (n/2)], arrayB[(n/2) : (n -1)], n/2);  // recursively call FindMedian on new arrays which are the half of the array approaching the center
+                                                                                                          // taking half of the array every time, yielding theta(log(n)) time
+           }
+           if medianA < medianB
+           {
+                FindMedian(arrayA[(n/2) : (n - 1)], arrayB[(0 : (n/2 - 1)], n/2);   
+           }
+      }
+     if n%2=1
+     {
+           int medianA =arrayA[ n/2 ]; // as n is odd and an int, n/2 will yield the index of the median
+           int medianB =arrayB[ n/2 ];
+           if medianA == medianB
+           { 
+                 return medianA;
+           }
+           if medianA > medianB
+           {
+                FindMedian(arrayA[0 : (n/2) )], arrayB[(n/2) : (n -1)], (n/2 + 1));   // recursively call FindMedian on new arrays which are the half of the array approaching the center
+           }
+           if medianA < medianB
+           {
+                 median(arrayA[(n/2) : (n - 1)], arrayB[(0 : (n/2)], (n/2 + 1));
+           }
+     }
+
+}
+
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+I enjoy this algorithm for its simplicity and use of recursion. 
+As the length of the array is reduced to half the list at every recursion of the algorithm, the worst run time is theta(log(n)). 
+Best case run time is the medians are equal at the first run or n=1, in which case, the algorithm runs in constant time. 
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+median(array, n)
+{
+if n%2=1
+    return (array[n/2])
+if n%2=0
+    return ((array[n/2]+array[n/2-1])/2) //mean of the middle two numbers if even
+}
+
+findMedian(array1, array2, array3) //inputs are the arrays and the number/length of arrays 
+                     //for the sake of this example all arrays are named in the convention: arrayn (array1, array2... arrayn)
+if (array1.length()+array2.length()+array3.length() ==1) //not sure if the size of the arrays are left, but this check is supposed to see if there is only one value left in the array. 
+              return the only value left 
+median1=median(array1); //find all medians for all arrays (n time)
+median2=median(array2);
+median3=median(array3);
+smallest=min(median1, median2, median3);
+largest=max(median1, median2, median3);
+if median1== smallest   //check which array is smallest, probably more efficient on a switch. another n time
+     remove indexes beginning to middle 
+if median2== smallest
+     remove indexes beginning to middle 
+if median3== smallest
+     remove indexes beginning to middle 
+if median1== largest
+     remove indexes middle to end
+if median2== largest
+     remove indexes middle to end 
+if median3== largest
+     remove indexes middle to end
+findMedian(array1, array2, array3) //it loses 1/3 values on recursion.
+}
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+This algorithm runs with worst case theta(n(n-1/n)). Each recursion, 1/n values is removed from the suspect medians.
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+median(array, n)
+{
+if n%2=1
+    return (array[n/2])
+if n%2=0
+    return ((array[n/2]+array[n/2-1])/2) //mean of the middle two numbers if even
+}
+findMedian(array1, array2, ..., arrayn) //inputs are the arrays and the number/length of arrays 
+                     //for the sake of this example all arrays are named in the convention: arrayn (array1, array2... arrayn)
+if (array1.length()+array2.length()+...+arrayn.length() ==1) //not sure if the size of the arrays are left, but this check is supposed to see if there is only one value left in the array. 
+              return the only value left 
+median1=median(array1); //find all medians for 1-n arrays (n time)
+median2=median(array2);
+...
+mediann=median(arrayn);
+smallest=min(median1, median2, ..., mediann);
+largest=max(median1, median2, ..., mediann);
+if median1== smallest   //check which array is smallest, probably more efficient on a switch. another n time
+     remove indexes beginning to middle 
+if median2== smallest
+     remove indexes beginning to middle 
+...
+if mediann== smallest
+     remove indexes beginning to middle 
+if median1== largest
+     remove indexes middle to end
+if median2== largest
+     remove indexes middle to end 
+...
+if mediann== largest
+     remove indexes middle to end '
+findMedian(array1, array2, ..., arrayn) //it loses 1/n values on recursion.
+}
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+
+This algorithm runs with worst case theta(n(n-1/n)). Each recursion, 1/n values is removed from the suspect medians. 
+
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 23
+
+	10        		
+	7         		could be faster
+	6         		could be faster
+
+
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+#ifndef MYBLOOMFILTER_H
+#define	MYBLOOMFILTER_H
+#include "BloomFilter.h"
+#include <string>
+#include <vector>
+
+using namespace std;
+
+class myBloomFilter : BloomFilter {
+private:
+    vector<int> myBloomFilterArray;
+public:
+    myBloomFilter (int mm);
+    myBloomFilter (string filter);
+    void insert(string item);
+    bool exists(string item);
+    string output();
+    int hash0(string item);
+    int hash1(string item);
+    int hash2(string item);
+    
+protected:
+    int length; /** The length of the Bloom filter, in chars. */
+};
+
+#endif	/* BLOOMFILTER_H */
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+#include <iostream>
+#include <string> 
+#include "myBloomFilter.h"
+
+
+using namespace std;
+
+myBloomFilter :: myBloomFilter(int mm): BloomFilter(mm)
+{
+    length = mm;
+    for (int ii = 0; ii < length; ii++)
+    {
+        myBloomFilterArray.push_back(0);
+    }
+}
+myBloomFilter :: myBloomFilter(string filter): BloomFilter(filter)
+{
+    length = filter.length();
+    for (int ii = 0; ii < length; ii++)
+    {
+       myBloomFilterArray.push_back(0);
+    }
+}
+
+int myBloomFilter :: hash0(string item)
+{
+    int aa    = 13;
+    int bb    = 5;
+    int hash = 0;
+
+    for(int ii = 0; ii < item.size(); ii++)
+    {
+        hash = hash + aa + item[ii];
+        aa = aa + bb;
+    }
+    return hash;
+}
+
+int myBloomFilter :: hash1(string item)
+{
+    int aa    = 23;
+    int bb    = 53;
+    int hash = 0;
+    
+    for(int ii = 0; ii < item.size(); ii++)
+    {
+        hash = hash + aa + item[ii];
+        aa = aa + bb;
+    }
+    return hash;
+}
+
+int myBloomFilter :: hash2(string item)
+{
+    int aa    = 17;
+    int bb    = 37;
+    int hash = 0;
+    
+    for(int ii = 0; ii < item.size(); ii++)
+    {
+        hash = hash + aa + item[ii];
+        aa = aa + bb;
+    }
+    return hash;
+}
+
+void myBloomFilter :: insert(string item)
+{
+    int ans1 = hash0(item);
+    int ans2 = hash1(item);
+    int ans3 = hash2(item);
+    myBloomFilterArray[ans1]=1;
+    myBloomFilterArray[ans2]=1;
+    myBloomFilterArray[ans3]=1;
+}
+
+bool myBloomFilter :: exists(string item)
+{
+    int ans1 = hash0(item);
+    int ans2 = hash1(item);
+    int ans3 = hash2(item);
+    if ((myBloomFilterArray[ans1] == 1) && (myBloomFilterArray[ans2] == 1) &&(myBloomFilterArray[ans3] == 1))
+        return true;
+    else
+        return false;
+}
+
+string myBloomFilter :: output()
+{
+ 
+    return "Something";
+    
+}
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+For this bloom filter, a vector is utilized as to create dynamic space for any length bloom filter. 
+All values are set to 0 initially in the constructor. To insert items into the vector, three addition 
+hashes are applied to the item being inserted. This yields the indexes of the bloom filter vector 
+to change to 1. 1 represents boolean positive or present, and 0 is negative and absent. To 
+check if an item may be present, the three hashes are applied to the possible item. If all the 
+values at the indexes indicated in the result of the hashes are 1's then the item may be 
+present in the bloom filter. The parameters of the hashes were set to use less memory and 
+have faster run times.
+</VERBATIM>
+
+---+++!! Grader comments *[10/25]*
+<VERBATIM>
+Score: 1500
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+   BNS
+   Fee
+   Gee
+   NRL
+   R&D
+   RFP
+   Rom
+   bel
+   pup
+   tig
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+%{`:<       
+;TUih       
+;TUih       
+`HnRq       
+;TUih       
+mm^g,       
+;TUih       
+;TUih       
+),7.r       
+mm^g,       
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Most passwords consist of ascii characters 33-127 and are 5 to 14 characters in length. These are the 
+parameters for the rainbow table. All permutations of the 97 available ascii characters for lengths 5, 6, 
+7, 8, 9, 10, 11, 12, 13, and 14 are found and saved in the table with their corresponding hashes.  This 
+will yield a table of 97^5+97^6+...+97^13+97^14 results. Summation 97^n from 5 to 14 which is about
+6.6 *10^27 entries. This is great for if you are playing against robots who generate random passwords;
+however, most people have sensical passwords that they can remember. It is smarter to compare against 
+a Rainbow table that utilizes dictionaries and other common password lists first, then if it is not found 
+against the random table.  Presented is the code to build all permutations of length 5 for the 97 common 
+ascii characters.
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

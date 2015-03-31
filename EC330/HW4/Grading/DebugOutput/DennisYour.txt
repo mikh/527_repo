@@ -1,0 +1,137 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(DennisYour),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+Only ii) secondary clustering is a property of the probe sequence.
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+findmedian(array1, array2, n)
+m1 = median(array1,n)
+m2 = median(array2,n)
+
+if m1 == m2
+	return m1
+else if m1 > m2 and n > 2
+	findmedian (first half of array1, second half of array2, n/2)
+else if m2 > m1 and n > 2
+	findmedian (second half of array1, first half of array2, n/2)
+else (condition n == 2)
+	return ((max of array1[0] and array2[0]) + (min of array1[1] and array2[1]))/2
+
+median (array,n)
+if n % 2 == 0
+	return average of n/2 and (n-1)/2
+else
+	return n/2;
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Algorithm finds medians of the arrays, shortens the array to smaller halves based on which median is bigger, finds the median of that, and then halves the arrays again. It continues until the medians are equal or the size of the arrays is 2, in which it calculates the median based on the average of the largest min and the smallest max. The running time is Theta(logn).
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+Basically the same as the first one, just including another array. Need to sort arrays in terms of their medians though before each recursive call.
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Finds medians of array, sorts the arrays in accordance to medians, calls itself again. When it gets down to the end, thats your median. Running time is Theta(logn).
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+Same as the last one, just input n arrays. Still need to sort the arrays in terms of medians and do recursive calls.
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+Goes through n arrays, finding medians, sorting them. Running time is Theta(n).
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 22
+
+	10        		
+	8         		
+	4         		incorrect runtime
+
+
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+   // put your code here
+   // also remember to upload it in submit page
+
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+Give out answer here.
+</VERBATIM>
+
+---+++!! Grader comments *[0/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+0 GOK
+1 Nov
+2 HAP
+3 sea
+4 ibm
+5 ays
+6 oaf
+7 zac
+8 BFD
+9 mpg
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Reads in rainbow table, but once it find the corresponding key starts the hash-reduce chain, it runs forever.
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Takes a random 5 char string and hash-reduces it 100 times. Repeats for 10000 times.
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

@@ -1,0 +1,354 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(MichaelZhu),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+
+This probe sequence is an example of linear probing due to the +i term. Therefore, there will be primary clustering, not secondary clustering. The probe sequence won't always be able to add a key to a map because it skips over increasingly large gaps between the keys as i increases. Once we assign a key to the end of the map, the probe can't insert the key into the previous empty cells. 
+
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+<VERBATIM>
+1. The first step is to calculate the medians m1 and m2 of the input arrays ar1[] ad r2[]. 
+2. Do a comparison to see if m1 and m2 are equal to each other. If so, then return m1. 
+3. If m1 is greater than m2, then the median is present in one of these subways: 
+    i.  From first element of ar1] to m1 
+    OR
+    ii  From m2 to last element of ar2[]
+4) If m2 is greater than m1, then the median is present in one of the below two subarrays.
+    i. From m1 to last element of ar1  
+    OR
+   ii.  From first element of ar2 to m2 
+5) The above process is repeated until size of both the subarrays 
+   are 2.
+6) If size of the two arrays is 2 as it will eventually reach, then 
+7) Median = [max(ar1[0], ar2[0]) + min(ar1[1], ar2[1])]/2
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+O(log(n))
+</VERBATIM>
+
+---+++ ii. Median of three
+---++++ Algorithm
+<VERBATIM>
+1. The first step is to calculate the medians m1, m2 and m3 of the input arrays, ar1[], ar2[] and ar3[].
+2. Compare the mediums. If they are equal then return m1 (or m2 or m3 as they are the same!)
+3. If m1 is the largest median, then the median is present in one of these subarrays:
+    i. From the first element of ar1 to m1 
+    OR
+    ii. From m2 to the last element of ar2
+   OR 
+    iii. From m3 to the last element of ar3
+4. If m2 is greater than m1 and m3, then median is present in one of these subarrays: 
+   i. From m1 to the last element of ar1   
+   OR
+   ii. From m3 to the last element of ar3
+   OR
+   iii. From the first element of ar2 to m2 
+5) If m3 is the largest, then the median is present in one of these subarrays.
+    i.  From the first element of ar3 to m3 
+    OR
+   ii. From m2 to the last element of ar2
+    OR
+   iii. From m1 to the last element of ar1
+6) The above process is then repeated until size of all the subarrays becomes 2.
+7) If size of the arrays are 2, then the Median = (max(ar1[0], ar2[0],ar3[0]) + min(ar1[1], ar2[1],ar3[1]))/2
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+O(log(N))
+</VERBATIM>
+
+---+++ iii. Median of n
+---++++ Algorithm
+<VERBATIM>
+The algorithm for n arrays is essentially the same as for the other arrays, it is only a bigger runtime since the O(log(N)) operations must be multiplied by N number of arrays. It is still based on the fundamental premise of comparing the individual medians for each of the N arrays, then comparing them, then recursively calling on the subarrays. 
+</VERBATIM>
+
+---++++ Analysis and running time
+<VERBATIM>
+O(N*log(N))
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 25
+
+	10        		
+	8         		
+	7         		
+
+
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+// THIS IS myBloomFilter.h
+#ifndef myBloomFilter_h
+#define myBloomFilter_h
+
+#include <stdio.h>
+#include "BloomFilter.h"
+
+class myBloomFilter: public BloomFilter
+{
+    //define functions that you will 
+
+overload in bloomFilter.h
+    // -- overload: insert(), exists(), 
+
+output()
+public:
+
+    myBloomFilter (int mm);
+    myBloomFilter (string filter);
+    void insert(string item);
+    /*
+        1. insert hash
+     */
+    
+    bool exists(string item);
+    /*
+        1. Checks whether 'item' is in the 
+
+filter.
+            i) variable: string filter
+        2. Return something depending on 
+
+if-statement
+            i)  Item might be in filter --> 
+
+return TRUE
+            ii) Item not in filter      --> 
+
+return FALSE
+     
+     Comment: add hash functions here?
+     */
+    
+    int hashFunction1(string item);
+    int hashFunction2(string item);
+    int hashFunction3(string item);
+    string output();
+    /*
+     1. Return string of characters 
+
+representing the Bloom Filter?
+     */
+    
+protected:
+    string bloomFilter;
+    
+};
+
+#endif 
+
+
+
+
+
+
+
+
+
+
+
+
+
+// THIS IS myBloomFilter.cpp
+#include <cstring>
+#include <string>
+
+#include "myBloomFilter.h"
+
+
+myBloomFilter::myBloomFilter(int mm):BloomFilter(mm)
+{
+    string temp(mm, '0');
+    bloomFilter = temp;
+}
+
+
+myBloomFilter::myBloomFilter(string filter) : BloomFilter(filter)
+{
+    bloomFilter = filter;
+}
+
+
+int myBloomFilter::hashFunction1(string item) 
+{
+    // Need to convert the string input into char in order to cast it into an int. 
+    char *itemChar = new char[item.length() + 1];
+    strcpy(itemChar, item.c_str());
+    int sum = 0;
+    // This for loop compiles the ASCII sum of item. 
+    for (int i = 0; i < (item.length()+1); i++){
+        int itemInt = static_cast<int>(*(itemChar+i)); //outputs integer
+        sum += itemInt; // ASCII value of entire string
+    }
+    
+    // Perform the actual hash using modulus. 
+    
+    int hash = sum; // intger value of the input
+    int key = hash % length;
+    return key;
+}
+
+
+int myBloomFilter::hashFunction2(string item)
+{
+    char *itemChar = new char[item.length() + 1];
+    strcpy(itemChar, item.c_str());
+    //convert: c-string --> integer
+    int sum = 0;
+    for (int i = 0; i < (item.length()+1); i++){
+        int itemInt = static_cast<int>(*(itemChar+i)); //outputs integer
+        sum += itemInt; 
+    }
+ 
+    int hash = sum;
+    //division hash for sum of ASCII values of the string
+    int key = (20*hash) % (length);
+    return key;
+}
+
+int myBloomFilter::hashFunction3(string item) //YES
+{
+    char *itemChar = new char[item.length() + 1];
+    strcpy(itemChar, item.c_str());
+    //convert: c-string --> integer
+    int sum = 0;
+    for (int i = 0; i < (item.length()+1); i++){
+        int itemInt = static_cast<int>(*(itemChar+i)); //outputs integer
+        sum += itemInt; // ASCII value of entire string
+    }
+
+    int hash = sum;
+    int remainder = (47*hash) % 10;
+    return remainder;
+}
+
+
+void myBloomFilter::insert(string item)
+{
+    // Call the hashFunctions to figure out the hash for each item. Save it as index to the bloomFilter string and set the according bit to 1. 
+    int index1 = hashFunction1(item); 
+    bloomFilter[index1] = '1';
+    
+    int index2 = hashFunction2(item); 
+    bloomFilter[index2] = '1';
+    
+    int index3 = hashFunction3(item); 
+    bloomFilter[index3] = '1';
+}
+
+bool myBloomFilter::exists(string item)
+{
+    int hash1 = hashFunction1(item); 
+    int hash2 = hashFunction2(item); 
+    int hash3 = hashFunction3(item); 
+    
+    if ((bloomFilter[hash1] == '1')&&(bloomFilter[hash2] == '1')&&(bloomFilter[hash3] == '1'))
+        return true;
+    else
+        return false;
+     
+
+}
+
+string myBloomFilter::output()
+{
+    return bloomFilter;
+}
+
+
+   // put your code here
+   // also remember to upload it in submit page
+
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+This programming problem consists of two parts. One is the mechanics of inheritance and the second is in designing a hashing strategy. To extend the class BloomFilter, we create myBloomFilter, and overload each of the public functions. The constructors must be modified first because, as it stands, the original BloomFilter constructor only makes a length, not a tangible data structure we can work with. So the first step is to add a:
+
+string bloomFilter
+
+as a protected member in myBloomFilter.h. This allows us to reference our bit vector (the string bloomFilter holding '0's and '1's as char datatpe) and set flags from 0 to 1 upon insertion, in our myBloomFilter(int mm) and myBloomFilter(string filter) constructors. 
+
+The next step is to implement insert. Insertion is determined by the hashing functions, so we write three helper functions, hashFunction1, hashFunction2, and hashFunction3 which take item as their only input. They proceed to convert from string to char, in order to make it possible to cast to an int using static_cast<int>. This gives us a number that we can perform our hashing function and ultimately produce a hash. We use modulus and a few varying operations in each of these hashFunctions, which are called by insert. Their return values are stored as ints, and serve as indices that we use to assign values to the char's in the bloomFilter string. 
+
+To demonstrate this, this pair of statements accomplishes this for the first hashFunction:
+
+    // Call the hashFunctions to figure out the hash for each item. Save it as index to the bloomFilter string and set the according bit to 1. 
+    int index1 = hashFunction1(item); 
+    bloomFilter[index1] = '1';
+
+And so on for hashFunction2 and hashFunction3. 
+
+Finally, we have to make sure that we can test for inclusion of keys in our set. To do this, we simply use AND logic, to test whether the bits in the string bloomFilter have been set to 1 for each of the hashFunctions. This AND expression is the key to reducing the false positive rate. 
+
+This logic boils down to:
+
+    int hash1 = hashFunction1(item); 
+    int hash2 = hashFunction2(item); 
+    int hash3 = hashFunction3(item); 
+    
+    if ((bloomFilter[hash1] == '1')&&(bloomFilter[hash2] == '1')&&(bloomFilter[hash3] == '1'))
+        return true;
+    else
+        return false;
+
+</VERBATIM>
+
+---+++!! Grader comments *[14/25]*
+<VERBATIM>
+Score: 1658</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Give out the password you cracked. Remember attached the code as 'problem4a.zip'
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+Give out the password you cracked. 
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+Give out the explanation here. Remember attached the code and table
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

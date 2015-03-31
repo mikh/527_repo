@@ -1,0 +1,218 @@
+---+EC330 - Spring 2015 - Homework 4
+%TOC%
+
+---++_Assigned:_  Thursday, March 5
+---++_Due:_  Thursday, March 19 _by the beginning of class._
+<!--
+PHI1=6..15
+PHI2=2..4
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(ZacharyLister),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(2+$MOD(%PHI%,3))}%
+-->
+---++!! Total grade *[100/100]*
+---++ Problem 1 - Hashing
+<VERBATIM>
+i. no
+ii. yes
+iii. no
+</VERBATIM>
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---++ Problem 2 - Selection 
+
+---+++ i. Median of two
+---++++ Algorithm
+%CODE{"cpp"}%
+if there is only one number in each array x0 and x1
+     return the two numbers added up then divided by two
+else 
+     find the median value of both arrays
+     if the median value in x0 is greater than x1
+          return the recursive call on the lesser half of x0 and the greater half of x1
+     else 
+          return the recursive call on the greater half of x0 and the lesser half of x1
+
+%ENDCODE%
+
+---++++ Analysis and running time
+
+The median value of two arrays of length n will always result in an even number of numbers so the median will be the average of two numbers. This is similar to a binary search. The size of the problem is cut in half each recursive call of the array. So the runtime is <latex> \Theta (logn) </latex>
+
+
+---+++ ii. Median of three
+---++++ Algorithm
+%CODE{"cpp"}%
+for each value in each array
+use merge to merge the three arrays into an array of size 3n
+if 3n is even
+the median is (x3[3n/2]+x3[(3n/2)+1])/2
+else
+the median is x3[floor(3n/2)]
+%ENDCODE%
+
+---++++ Analysis and running time
+
+Since there is merging of each array and every element is touched. The runtime will be 3n which is <latex> \Theta(n) </latex>. 
+
+
+---+++ iii. Median of n
+---++++ Algorithm
+%CODE{"cpp"}%
+for each value in each array
+use merge to merge the three arrays into an array of size 3n
+if 3n is even
+the median is (xn[n*n/2]+xn[(n*n/2)+1])/2
+else
+the median is xn[floor(n*n/2)]
+%ENDCODE%
+
+---++++ Analysis and running time
+This is similar to a group of 3 arrays. Every element will be merged into an array of size <latex> n^{2} </latex> and the takes the runtime <latex> \Theta(n^{2}) </latex>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 23
+
+	10        		
+	7         		could be faster
+	6         		could be faster
+
+
+</VERBATIM>
+
+---++ Problem 3 - Bloom filters *[25 points]*
+---+++ Code
+%CODE{"cpp"}%
+
+#include <string>
+#include "myBloomFilter.h"
+#include <iostream>
+
+using namespace std;
+
+// constructor given the length of the filter
+myBloomFilter::myBloomFilter(int mm) {
+	filter = "";					
+	length = mm;
+	for (int i = 0; i < mm; i++) {		// fill every character in the filter as '0' to signify that it is empty
+		filter += '0';
+	}
+}
+
+// constructor given a filter
+myBloomFilter::myBloomFilter(string filter) {
+	length = filter.length();
+	this->filter = filter;
+}
+
+// first hash function
+int hash1(string item, int length) {
+	int a = 37;							// two prime numbers
+	int b = 509573;
+	unsigned int hash = 0;				// the hash value
+
+	for (int i = 0; i < item.length(); i++) {		// loop through every character in the item
+		hash = ((hash * a * item[i]) ^ b) % length;	// perform a hash on each character
+	}
+	return hash;						// return the hash
+}
+
+// second hash function
+int hash2(string item, int length) {
+	int a = 101;						// two prime numbers
+	int b = 103553;
+	unsigned int hash = 0;				// the hash
+
+	for (int i = 0; i < item.length(); i++) {		// loop through every character in the item
+		hash = ((hash * a * item[i]) ^ b) % length;	// perform a hash on each character
+	}
+	return hash;						// return the hash
+}
+
+// third hash function
+int hash3(string item, int length) {
+	int a = 151;						// two prime numbers
+	int b = 932447;
+	unsigned int hash = 0;				// the hash
+
+	for (int i = 0; i < item.length(); i++) {		// loop through every character in the item
+		hash = ((hash * a * item[i]) ^ b) % length;	// perform a hash on each character
+	}	
+	return hash;						// return the hash
+}
+
+
+void myBloomFilter::insert(string item) {
+	int hashNum1 = hash1(item,length);		// call all of the hash functions on the item
+	int hashNum2 = hash2(item,length);
+	int hashNum3 = hash3(item,length);
+	filter[hashNum1] = '1';					// add it to the correct index of the filter based on what the hash returns
+	filter[hashNum2] = '1';
+	filter[hashNum3] = '1';
+}
+
+bool myBloomFilter::exists(string item) {	
+	int hashNum1 = hash1(item,length);		// calls all of the hash functions on the item in questions
+	int hashNum2 = hash2(item,length);
+	int hashNum3 = hash3(item,length);
+	if (filter[hashNum1] == '1' && filter[hashNum2] == '1' && filter[hashNum3] == '1') {	// if all three indeces are '1' then it is likely that the item exists
+		return true;
+	} 
+	return false;							// if one of the indeces has a '0' then it doesn't exist
+}
+
+string myBloomFilter::output() {			// returns the bloom filter for output
+	return filter;
+}
+
+
+
+
+
+%ENDCODE%
+
+---+++ Explanation
+<VERBATIM>
+I determined that three hash functions were sufficient to get a decent probability of no false positives. The hash functions do several things to each character of the item like xor the bits and multiply by a prime. I used a string and string operators as the bloom filter. 
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+</VERBATIM>
+
+---++ Problem 4 - Password cracking
+
+---+++ 4a.  Brute force 
+<VERBATIM>
+Password with the hash 0b215f0155d3a4b2fdb3a552216a37659c2f06eb is BNS
+Password with the hash f30a15d2ff7844588d2bdfb408d9eadeaccdcdbf is FFI
+Password with the hash c022f84dea73b1a8886b092d8e3f376e7caed543 is IAH
+Password with the hash df73d210e73ffc551d8a76bdf983b85d496539dd is MTA
+Password with the hash 04c41d16491231d8e966c5c78560272125a97634 is MeV
+Password with the hash 0b47caaa066a28e5a1ec7509db838a9a228bb83f is NRO
+Password with the hash 1c0d17d2ef10ee63fcdb389e33b6a51f1eea463f is dis
+Password with the hash 2adee50a101f6a2bc3d14eb04bd1b60f3b719c36 is pup
+Password with the hash 0c9873f80ada46c73e830457c09052bde50e2f7d is slt
+Password with the hash e13f3a7c6d12baf0b6ad298c2bbc0a8308158c43 is zoo
+</VERBATIM>
+
+---+++ 4b. Simplified rainbow tables
+<VERBATIM>
+I have attached the code I used to attempt to get the passwords. It has been running for 2+hrs now without any success. 
+</VERBATIM>
+
+---+++ 4c.  Build your own simplified rainbow table *[10 points]*
+<VERBATIM>
+I created a table with 1000 entries and the number of hashes/reduces between the first column and the second column is 10,000. The code is attached with comments on my code. I used random passwords to start. 
+</VERBATIM>
+
+---+++!! Grader comments *[25/25]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---
