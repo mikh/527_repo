@@ -62,6 +62,7 @@ main(int argc, char *argv[])
   void SOR(vec_ptr v, int *iterations);
   void SOR_ji(vec_ptr v, int *iterations);
   void SOR_blocked(vec_ptr v, int *iterations);
+  void SOR_OMP(vec_ptr v, int *iterations);
 
   long int i, j, k;
   long int time_sec, time_ns;
