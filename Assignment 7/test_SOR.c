@@ -100,6 +100,7 @@ main(int argc, char *argv[])
     convergence[OPTION][i] = *iterations;
   }
 
+/*
   OPTION++;
   for (i = 0; i < ITERS; i++) {
     printf("\niter = %d length = %d", i, BASE+(i+1)*DELTA);
@@ -111,6 +112,7 @@ main(int argc, char *argv[])
     time_stamp[OPTION][i] = diff(time1,time2);
     convergence[OPTION][i] = *iterations;
   }
+  */
 
   OPTION++;
   for (i = 0; i < ITERS; i++) {
