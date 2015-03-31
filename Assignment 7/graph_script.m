@@ -77,3 +77,24 @@ legend('Compute Bound', 'Memory Bound', 'Overhead Bound');
 fprintf('Compute Bound Overhead = %d\n', cb_average);
 fprintf('Memory Bound Overhead = %d\n', mb_average);
 fprintf('Overhead Bound Overhead = %d\n', ob_average);
+
+
+%% part 3
+
+filename = 'q3_part1_data.txt';
+delimiterIn = ',';
+data = importdata(filename, delimiterIn);
+
+figure(5);
+
+hold on
+scatter(data(:,1), data(:,2)./data(:,1), 5, 'b');
+scatter(data(:,1), data(:,3)./data(:,1), 5, 'r');
+scatter(data(:,1), data(:,4)./data(:,1), 5, 'g');
+scatter(data(:,1), data(:,5)./data(:,1), 5, 'k');
+
+hold off
+xlabel('Array Size');
+ylabel('Time per element');
+title('Comparison of 3 matrix versions');
+legend('ijk', 'ijk with OMP', 'kij', 'kij with OMP');
