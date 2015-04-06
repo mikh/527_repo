@@ -82,7 +82,7 @@ int main(int argc, char **argv){
 /*	CUDA_SAFE_CALL(cudaMemcpy(g_A, h_A, MATRIX_SIZE, cudaMemcpyHostToDevice));
 	for(i = 0; i < MATRIX_SIZE; i++){	//NOTE: might have to use pointer stuff here
 		CUDA_SAFE_CALL(cudaMemcpy(g_A[i], h_A[i], MATRIX_SIZE, cudaMemcpyHostToDevice));
-	}
+	}*/
 
 	//launch the kernel
 	for(i = 0; i < SOR_ITERATIONS; i++){
@@ -91,7 +91,7 @@ int main(int argc, char **argv){
 
 	//check for errors during launch
 	CUDA_SAFE_CALL(cudaPeekAtLastError());
-*/
+
 	//transfer results back to host
 /*	CUDA_SAFE_CALL(cudaMemcpy(h_A, g_A, MATRIX_SIZE, cudaMemcpyDeviceToHost));
 	for(i = 0; i < MATRIX_SIZE; i++){	//NOTE: might have to use pointer stuff here
