@@ -93,11 +93,15 @@ int main(int argc, char **argv){
 	CUDA_SAFE_CALL(cudaPeekAtLastError());
 
 	//transfer results back to host
+	for(i = 0; i < MATRIX_SIZE; i++){
+		CUDA_SAFE_CALL(cudaMemcpy(h_A[i], &g_A[i*MATRIX_SIZE], MATRIX_SIZE, cudaMemcpyDeviceToHost));
+	}
+/*
 	CUDA_SAFE_CALL(cudaMemcpy(h_A, g_A, MATRIX_SIZE, cudaMemcpyDeviceToHost));
 	for(i = 0; i < MATRIX_SIZE; i++){	//NOTE: might have to use pointer stuff here
 		CUDA_SAFE_CALL(cudaMemcpy(h_A[i], g_A[i], MATRIX_SIZE, cudaMemcpyDeviceToHost));
 	}
-
+*/
 	//stop and destroy the timer
 
 	//compute results on host
