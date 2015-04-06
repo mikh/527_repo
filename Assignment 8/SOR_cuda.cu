@@ -51,13 +51,13 @@ int main(int argc, char **argv){
 	//Arrays on host memory	
 	float **h_A;
 
-/*
+
 	//Allocate arrays on GPU memory
 	CUDA_SAFE_CALL(cudaMalloc((void **)&g_A, MATRIX_SIZE * sizeof(float*)));
 	for(i = 0; i < MATRIX_SIZE; i++){
 		CUDA_SAFE_CALL(cudaMalloc((void**)&(g_A[i]), MATRIX_SIZE * sizeof(float)));
 	}
-*/
+
 	//Allocate arrays on host memory
 	h_A = (float**) malloc(MATRIX_SIZE * sizeof(float*));
 	for(i = 0; i < MATRIX_SIZE; i++){
