@@ -17,7 +17,7 @@ const int MATRIX_SIZE = 2000;
 const int NUM_BLOCKS = 1;
 const int THREADS_PER_BLOCK_X = 16;
 const int THREADS_PER_BLOCK_Y = 16;
-const int SOR_ITERATIONS = 2000;
+const int SOR_ITERATIONS = 3;
 const int OMEGA = 1;
 
 void initialize_array_2D(float **A, int len, int seed);
