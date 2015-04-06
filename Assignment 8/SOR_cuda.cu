@@ -26,7 +26,7 @@ __global__ void kernel_SOR_internal(float **A, int omega, int N_x, int N_y){
 	int i, j;
 	//different divisions needed for group of threads etc.
 	int xx = blockIdx.x * blockDim.x + threadIdx.x;
-	int yy = blockIdy.y * blockDim.y + threadIny.y;
+	int yy = blockIdx.x * blockDim.y + threadInx.y;
 	float phi;
 	for(i = MATRIX_SIZE/THREADS_PER_BLOCK_X*xx; i < MATRIX_SIZE/THREADS_PER_BLOCK_X*(xx+1); i++){
 		for(j = MATRIX_SIZE/THREADS_PER_BLOCK_Y*yy; j < MATRIX_SIZE/THREADS_PER_BLOCK_Y*(yy+1); j++){
