@@ -31,7 +31,7 @@ __global__ void kernel_SOR_internal(float **A, int omega, int N_x, int N_y){
 	for(i = MATRIX_SIZE/THREADS_PER_BLOCK_X*xx; i < MATRIX_SIZE/THREADS_PER_BLOCK_X*(xx+1); i++){
 		for(j = MATRIX_SIZE/THREADS_PER_BLOCK_Y*yy; j < MATRIX_SIZE/THREADS_PER_BLOCK_Y*(yy+1); j++){
 			if(i > 0 && i < (N_x-1) && j > 0 && j < (N_y-1)){
-				phi = A[i][j] - .25((A[i-1][j] + A[i+1][j]) + (A[i][j-1] + A[i][j+1]));
+				phi = A[i][j] - .25*((A[i-1][j] + A[i+1][j]) + (A[i][j-1] + A[i][j+1]));
 				A[i][j] = abs(A[i][j] - (phi*omega));
 			}
 		}
