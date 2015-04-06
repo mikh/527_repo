@@ -1,4 +1,6 @@
 #include <math.h>
+#include <cstdio>
+#include <cstdlib>
 
 // Assertion to check for errors
 #define CUDA_SAFE_CALL(ans) { gpuAssert((ans), __FILE__, __LINE__); }
