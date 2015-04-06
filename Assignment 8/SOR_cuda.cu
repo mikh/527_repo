@@ -22,22 +22,20 @@ const int OMEGA = 1;
 
 void initialize_array_2D(float **A, int len, int seed);
 
-__global__ void kernel_SOR_internal(float **A, int omega, int N_x, int N_y){
+__global__ void kernel_SOR_internal(float *A, int omega, int N_x, int N_y){
 	int i, j = 0;
 	//different divisions needed for group of threads etc.
-	/*int xx = blockIdx.x * blockDim.x + threadIdx.x;
+	int xx = blockIdx.x * blockDim.x + threadIdx.x;
 	int yy = blockIdx.x * blockDim.y + threadIdx.y;
 	float phi;
 	for(i = MATRIX_SIZE/THREADS_PER_BLOCK_X*xx; i < MATRIX_SIZE/THREADS_PER_BLOCK_X*(xx+1); i++){
 		for(j = MATRIX_SIZE/THREADS_PER_BLOCK_Y*yy; j < MATRIX_SIZE/THREADS_PER_BLOCK_Y*(yy+1); j++){
 			if(i > 0 && i < (N_x-1) && j > 0 && j < (N_y-1)){
-				phi = A[i][j] - .25*((A[i-1][j] + A[i+1][j]) + (A[i][j-1] + A[i][j+1]));
-				A[i][j] = abs(A[i][j] - (phi*omega));
+				phi = A[i*MATRIX_SIZE + j] - .25*((A[(i-1)*MATRIX_SIZE + j] + A[(i+1)*MATRIX_SIZE+j]) + (A[i*MATRIX_SIZE + (j-1)] + A[i*MATRIX_SIZE+(j+1)]));
+				A[i*MATRIX_SIZE+j] = abs(A[i*MATRIX_SIZE+j] - (phi*omega));
 			}
 		}
-	}*/
-		for(i = 0; i < 100; i++)
-			j++;
+	}
 }
 
 int main(int argc, char **argv){
@@ -46,17 +44,20 @@ int main(int argc, char **argv){
 	dim3 dimGrid(NUM_BLOCKS,1,1);
 	dim3 dimBlock(THREADS_PER_BLOCK_X,THREADS_PER_BLOCK_Y,1);
 	//Arrays on GPU global memory
-	float **g_A;
+	float *g_A;
 
 	//Arrays on host memory	
 	float **h_A;
 
 
 	//Allocate arrays on GPU memory
+	/*
 	CUDA_SAFE_CALL(cudaMalloc((void **)&g_A, MATRIX_SIZE * sizeof(float*)));
 	for(i = 0; i < MATRIX_SIZE; i++){
 		CUDA_SAFE_CALL(cudaMalloc((void**)&(g_A[i]), MATRIX_SIZE * sizeof(float)));
-	}
+	}*/
+
+	CUDA_SAFE_CALL(cudaMalloc((void **) &g_A, MATRIX_SIZE*MATRIX_SIZE*sizeof(float)));
 
 	//Allocate arrays on host memory
 	h_A = (float**) malloc(MATRIX_SIZE * sizeof(float*));
