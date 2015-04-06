@@ -116,6 +116,8 @@ int main(int argc, char **argv){
 	}
 	CUDA_SAFE_CALL(cudaFree(g_A));
 */
+
+	CUDA_SAFE_CALL(cudaFree(g_A));
 	for(i = 0; i < MATRIX_SIZE; i++){
 		free(h_A[i]);
 	}
