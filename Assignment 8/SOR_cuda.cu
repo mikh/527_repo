@@ -51,13 +51,13 @@ int main(int argc, char **argv){
 	//Arrays on host memory	
 	float **h_A;
 
-
+/*
 	//Allocate arrays on GPU memory
 	CUDA_SAFE_CALL(cudaMalloc((void **)&g_A, MATRIX_SIZE * sizeof(float*)));
 	for(i = 0; i < MATRIX_SIZE; i++){
 		CUDA_SAFE_CALL(cudaMalloc((void**)&(g_A[i]), MATRIX_SIZE * sizeof(float)));
 	}
-
+*/
 	//Allocate arrays on host memory
 	h_A = (float**) malloc(MATRIX_SIZE * sizeof(float*));
 	for(i = 0; i < MATRIX_SIZE; i++){
@@ -89,11 +89,11 @@ int main(int argc, char **argv){
 	CUDA_SAFE_CALL(cudaPeekAtLastError());
 */
 	//transfer results back to host
-	CUDA_SAFE_CALL(cudaMemcpy(h_A, g_A, MATRIX_SIZE, cudaMemcpyDeviceToHost));
+/*	CUDA_SAFE_CALL(cudaMemcpy(h_A, g_A, MATRIX_SIZE, cudaMemcpyDeviceToHost));
 	for(i = 0; i < MATRIX_SIZE; i++){	//NOTE: might have to use pointer stuff here
 		CUDA_SAFE_CALL(cudaMemcpy(h_A[i], g_A[i], MATRIX_SIZE, cudaMemcpyDeviceToHost));
 	}
-
+*/
 	//stop and destroy the timer
 
 	//compute results on host
@@ -103,11 +103,11 @@ int main(int argc, char **argv){
 	//errors
 
 	//free up memory
-	for(i = 0; i < MATRIX_SIZE; i++){
+	/*for(i = 0; i < MATRIX_SIZE; i++){
 		CUDA_SAFE_CALL(cudaFree(g_A[i]));
 	}
 	CUDA_SAFE_CALL(cudaFree(g_A));
-
+*/
 	for(i = 0; i < MATRIX_SIZE; i++){
 		free(h_A[i]);
 	}
