@@ -23,9 +23,9 @@ const int OMEGA = 1;
 void initialize_array_2D(float **A, int len, int seed);
 
 __global__ void kernel_SOR_internal(float **A, int omega, int N_x, int N_y){
-	int i, j;
+	int i, j = 0;
 	//different divisions needed for group of threads etc.
-	int xx = blockIdx.x * blockDim.x + threadIdx.x;
+	/*int xx = blockIdx.x * blockDim.x + threadIdx.x;
 	int yy = blockIdx.x * blockDim.y + threadIdx.y;
 	float phi;
 	for(i = MATRIX_SIZE/THREADS_PER_BLOCK_X*xx; i < MATRIX_SIZE/THREADS_PER_BLOCK_X*(xx+1); i++){
@@ -35,7 +35,9 @@ __global__ void kernel_SOR_internal(float **A, int omega, int N_x, int N_y){
 				A[i][j] = abs(A[i][j] - (phi*omega));
 			}
 		}
-	}
+	}*/
+		for(i = 0; i < 100; i++)
+			j++;
 }
 
 int main(int argc, char **argv){
