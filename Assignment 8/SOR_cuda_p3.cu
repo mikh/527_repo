@@ -56,8 +56,10 @@ __global__ void kernel_SOR_internal(float *A, int omega, int N_x, int N_y){
 				phi = A[i*MATRIX_SIZE + j] - .25*((A[(i-1)*MATRIX_SIZE + j] + A[(i+1)*MATRIX_SIZE+j]) + (A[i*MATRIX_SIZE + (j-1)] + A[i*MATRIX_SIZE+(j+1)]));
 				A[i*MATRIX_SIZE+j] = abs(A[i*MATRIX_SIZE+j] - (phi*omega));
 			}
+			_syncthreads();
 		}
 	}
+
 }
 
 __global__ void kernel_SOR_internal_single(float *A, int omega, int N_x, int N_y){
