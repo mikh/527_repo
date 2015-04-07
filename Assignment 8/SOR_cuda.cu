@@ -93,7 +93,7 @@ int main(int argc, char **argv){
 	for(i = 0; i < SOR_ITERATIONS; i++){
 		for(j = 0; j < MATRIX_SIZE; j++){
 			for(k = 0; k < MATRIX_SIZE; k++){
-				
+				SOR_internal_sequential(h_A_test, OMEGA, j, k, MATRIX_SIZE, MATRIX_SIZE);
 			}
 		}
 	}
@@ -117,8 +117,10 @@ int main(int argc, char **argv){
 	CUDA_SAFE_CALL(cudaFree(g_A));
 	for(i = 0; i < MATRIX_SIZE; i++){
 		free(h_A[i]);
+		free(h_A_test[i]);
 	}
 	free(h_A);
+	free(h_A_test);
 
 	return 0;
 }
