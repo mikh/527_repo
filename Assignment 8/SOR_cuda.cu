@@ -24,8 +24,8 @@ const int OMEGA = 1;
 #define TRANSFER_TO_GPU
 #define LAUNCH_KERNEL
 #define TRANSFER_RESULTS
-#define COMPUTE_CPU_RESULTS
-#define COMPARE_RESULTS
+//#define COMPUTE_CPU_RESULTS
+//#define COMPARE_RESULTS
 #define FREE_MEMORY
 #define GPU_TIMING
 #define DEBUG_PRINT
