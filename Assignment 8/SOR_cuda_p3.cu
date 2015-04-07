@@ -37,7 +37,7 @@ const float EPSILON = 0.05;
 #define GPU_TIMING
 #define CPU_TIMING
 #define DEBUG_PRINT
-#define WRITE_2D_ARRAYS
+//#define WRITE_2D_ARRAYS
 
 void initialize_array_2D(float **A, int len, int seed);
 
