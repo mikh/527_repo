@@ -48,7 +48,7 @@ void SOR_internal_sequential(float **A, int omega, int xx, int yy, int N_x, int 
 
 int main(int argc, char **argv){
 
-	int i;
+	int i, j, k;
 	dim3 dimGrid(NUM_BLOCKS,1,1);
 	dim3 dimBlock(THREADS_PER_BLOCK_X,THREADS_PER_BLOCK_Y,1);
 	//Arrays on GPU global memory
