@@ -58,7 +58,7 @@ __global__ void kernel_SOR_internal(float *A, int omega, int N_x, int N_y){
 
 __global__ void kernel_SOR_internal_single(float *A, int omega, int N_x, int N_y){
 	int xx = blockIdx.x * blockDim.x + threadIdx.x;
-	int yy = blockIdx.y * blockDim.y + threadIDx.y;
+	int yy = blockIdx.y * blockDim.y + threadIdx.y;
 
 	float phi;
 
