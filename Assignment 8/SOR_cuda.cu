@@ -27,6 +27,8 @@ const int OMEGA = 1;
 #define COMPUTE_CPU_RESULTS
 #define COMPARE_RESULTS
 #define FREE_MEMORY
+#define GPU_TIMING
+#define DEBUG_PRINT
 
 void initialize_array_2D(float **A, int len, int seed);
 
@@ -68,9 +70,17 @@ void write_2d_array_to_file(float **A, int N_x, int N_y, char *filename){
 
 int main(int argc, char **argv){
 
+	//loop variables
 	int i, j, k, errors = 0;
+
+	//timing variables
+	cudaEvent_t start, stop;
+	float elapsed_gpu;
+
+	//array dimensions
 	dim3 dimGrid(NUM_BLOCKS,1,1);
 	dim3 dimBlock(THREADS_PER_BLOCK_X,THREADS_PER_BLOCK_Y,1);
+	
 	//Arrays on GPU global memory
 	float *g_A;
 
@@ -78,14 +88,17 @@ int main(int argc, char **argv){
 	float **h_A;
 	float **h_A_test;
 
-
+	//error file init
 	FILE *f = fopen("mismatches.txt", "w");
 	if(f == NULL){
 		printf("Error opening file!\n");
 		exit(1);
 	}
 
+#ifdef DEBUG_PRINT
 	printf("init done\n");
+#endif
+
 	//Allocate arrays on GPU memory
 #ifdef ALLOCATE_AND_INIT
 	CUDA_SAFE_CALL(cudaMalloc((void **) &g_A, MATRIX_SIZE*MATRIX_SIZE*sizeof(float)));
@@ -103,11 +116,17 @@ int main(int argc, char **argv){
 	initialize_array_2D(h_A_test, MATRIX_SIZE, 2453);
 #endif 
 
+#ifdef GPU_TIMING
 	//create cuda events
-
+	cudaEventCreate(&start);
+	cudaEventCreate(&stop);
 	//record event on default stream
+	cudaEventRecord(start, 0);
+#endif
 
+#ifdef DEBUG_PRINT
 	printf("all init done\n");
+#endif
 	//transfer array to GPU memory
 #ifdef TRANSFER_TO_GPU
 	for(i = 0; i < MATRIX_SIZE; i++){
@@ -127,7 +146,9 @@ int main(int argc, char **argv){
 	//check for errors during launch
 	CUDA_SAFE_CALL(cudaPeekAtLastError());
 
+#ifdef DEBUG_PRINT
 	printf("kernel run\n");
+#endif
 
 	//transfer results back to host
 #ifdef TRANSFER_RESULTS
@@ -136,8 +157,18 @@ int main(int argc, char **argv){
 	}
 #endif
 	//stop and destroy the timer
+#ifdef GPU_TIMING
+	cudaEventRecord(stop, 0);
+	cudaEventSynchronize(stop);
+	cudaEventElapsedTime(&elapsed_gpu, start, stop);
+	printf("\nGPU time: %f (msec)\n", elapsed_gpu);
+	cudaEventDestroy(start);
+	cudaEventDestroy(stop);
+#endif
 
+#ifdef DEBUG_PRINT
 	printf("results transfered\n");
+#endif
 	//compute results on host
 #ifdef COMPUTE_CPU_RESULTS
 	for(i = 0; i < SOR_ITERATIONS; i++){
@@ -149,7 +180,9 @@ int main(int argc, char **argv){
 	}
 #endif
 
+#ifdef DEBUG_PRINT
 	printf("results computed on CPU\n");
+#endif
 	//compare results
 
 #ifdef COMPARE_RESULTS	
@@ -163,7 +196,9 @@ int main(int argc, char **argv){
 	}
 #endif
 
+#ifdef DEBUG_PRINT
 	printf("results checked\n");
+#endif
 	write_2d_array_to_file(h_A, MATRIX_SIZE, MATRIX_SIZE, "GPU_output.txt");
 	write_2d_array_to_file(h_A_test, MATRIX_SIZE, MATRIX_SIZE, "CPU_output.txt");
 
@@ -180,7 +215,9 @@ int main(int argc, char **argv){
 	}
 	free(h_A);
 	free(h_A_test);
+#ifdef DEBUG_PRINT
 	printf("arrays freed\n");
+#endif
 #endif
 
 	return (float)0;
