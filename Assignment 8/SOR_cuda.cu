@@ -20,6 +20,14 @@ const int THREADS_PER_BLOCK_Y = 16;
 const int SOR_ITERATIONS = 3;
 const int OMEGA = 1;
 
+#define ALLOCATE_AND_INIT
+//#define TRANSFER_TO_GPU
+//#define LAUNCH_KERNEL
+//#define TRANSFER_RESULTS
+//#define COMPUTE_CPU_RESULTS
+//#define COMPARE_RESULTS
+#define FREE_MEMORY
+
 void initialize_array_2D(float **A, int len, int seed);
 
 __global__ void kernel_SOR_internal(float *A, int omega, int N_x, int N_y){
@@ -79,6 +87,7 @@ int main(int argc, char **argv){
 
 	printf("init done");
 	//Allocate arrays on GPU memory
+#ifdef ALLOCATE_AND_INIT
 	CUDA_SAFE_CALL(cudaMalloc((void **) &g_A, MATRIX_SIZE*MATRIX_SIZE*sizeof(float)));
 
 	//Allocate arrays on host memory
@@ -92,7 +101,7 @@ int main(int argc, char **argv){
 	//initialize host arrays
 	initialize_array_2D(h_A, MATRIX_SIZE, 2453);
 	initialize_array_2D(h_A_test, MATRIX_SIZE, 2453);
-
+#endif 
 
 	//create cuda events
 
@@ -100,14 +109,18 @@ int main(int argc, char **argv){
 
 	printf("all init done");
 	//transfer array to GPU memory
+#ifdef TRANSFER_TO_GPU
 	for(i = 0; i < MATRIX_SIZE; i++){
 		CUDA_SAFE_CALL(cudaMemcpy(&g_A[i*MATRIX_SIZE], h_A[i], MATRIX_SIZE, cudaMemcpyHostToDevice));
 	}
+#endif
 
 	//launch the kernel
+#ifdef LAUNCH_KERNEL
 	for(i = 0; i < SOR_ITERATIONS; i++){
 		kernel_SOR_internal<<<dimGrid, dimBlock>>>(g_A, OMEGA, MATRIX_SIZE, MATRIX_SIZE);
 	}
+#endif
 
 
 
@@ -117,24 +130,29 @@ int main(int argc, char **argv){
 	printf("kernel run");
 
 	//transfer results back to host
+#ifdef TRANSFER_RESULTS
 	for(i = 0; i < MATRIX_SIZE; i++){
 		CUDA_SAFE_CALL(cudaMemcpy(h_A[i], &g_A[i*MATRIX_SIZE], MATRIX_SIZE, cudaMemcpyDeviceToHost));
 	}
+#endif
 	//stop and destroy the timer
 
 	printf("results transfered");
 	//compute results on host
-/*	for(i = 0; i < SOR_ITERATIONS; i++){
+#ifdef COMPUTE_CPU_RESULTS
+	for(i = 0; i < SOR_ITERATIONS; i++){
 		for(j = 0; j < MATRIX_SIZE; j++){
 			for(k = 0; k < MATRIX_SIZE; k++){
 				SOR_internal_sequential(h_A_test, OMEGA, j, k, MATRIX_SIZE, MATRIX_SIZE);
 			}
 		}
 	}
+#endif
 
 	printf("results computed on CPU");
 	//compare results
-	
+
+#ifdef COMPARE_RESULTS	
 	for(i = 0; i < MATRIX_SIZE; i++){
 		for(j = 0; j < MATRIX_SIZE; j++){
 			if(h_A[i][j] != h_A_test[i][j]){
@@ -143,7 +161,8 @@ int main(int argc, char **argv){
 			}
 		}
 	}
-*/
+#endif
+
 	printf("results checked");
 	//write_2d_array_to_file(h_A, MATRIX_SIZE, MATRIX_SIZE, "GPU_output.txt");
 	//write_2d_array_to_file(h_A_test, MATRIX_SIZE, MATRIX_SIZE, "CPU_output.txt");
@@ -153,6 +172,7 @@ int main(int argc, char **argv){
 	fclose(f);
 
 	//free up memory
+#ifdef FREE_MEMORY
 	CUDA_SAFE_CALL(cudaFree(g_A));
 	for(i = 0; i < MATRIX_SIZE; i++){
 		free(h_A[i]);
@@ -161,6 +181,7 @@ int main(int argc, char **argv){
 	free(h_A);
 	free(h_A_test);
 	printf("arrays freed");
+#endif
 
 	return 0;
 }
