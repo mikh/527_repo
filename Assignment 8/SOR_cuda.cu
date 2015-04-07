@@ -137,8 +137,8 @@ int main(int argc, char **argv){
 			}
 		}
 	}
-	write_2d_array_to_file(h_A, MATRIX_SIZE, MATRIX_SIZE, "GPU_output.txt");
-	write_2d_array_to_file(h_A_test, MATRIX_SIZE, MATRIX_SIZE, "CPU_output.txt");
+	//write_2d_array_to_file(h_A, MATRIX_SIZE, MATRIX_SIZE, "GPU_output.txt");
+	//write_2d_array_to_file(h_A_test, MATRIX_SIZE, MATRIX_SIZE, "CPU_output.txt");
 
 	//errors
 	printf("Found %d errors\n", errors);
