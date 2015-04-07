@@ -25,6 +25,7 @@ const int NUM_BLOCKS_X = MATRIX_SIZE/THREADS_PER_BLOCK_X;
 const int NUM_BLOCKS_Y = MATRIX_SIZE/THREADS_PER_BLOCK_Y;
 const int SOR_ITERATIONS = 3;
 const int OMEGA = 1;
+const float EPSILON = 0.05;
 
 #define ALLOCATE_AND_INIT
 #define TRANSFER_TO_GPU
@@ -160,6 +161,7 @@ int main(int argc, char **argv){
 #ifdef LAUNCH_KERNEL
 	for(i = 0; i < SOR_ITERATIONS; i++){
 		kernel_SOR_internal_single<<<dimGrid, dimBlock>>>(g_A, OMEGA, MATRIX_SIZE, MATRIX_SIZE);
+		cudaThreadSynchronize();
 	}
 #endif
 
@@ -222,7 +224,7 @@ int main(int argc, char **argv){
 #ifdef COMPARE_RESULTS	
 	for(i = 0; i < MATRIX_SIZE; i++){
 		for(j = 0; j < MATRIX_SIZE; j++){
-			if(h_A[i][j] != h_A_test[i][j]){
+			if(abs(h_A[i][j] - h_A_test[i][j]) > EPSILON*h_A_test[i][j]){
 				errors++;
 				fprintf(f, "Mismatch at [%d,%d] GPU = %f CPU = %f\n", i, j, h_A[i][j], h_A_test[i][j]);
 			}
