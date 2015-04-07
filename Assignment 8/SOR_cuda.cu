@@ -55,6 +55,7 @@ void write_2d_array_to_file(float **A, int N_x, int N_y, char *filename){
 		}
 		fprintf(f, "%f\n", A[i][N_y-1]);
 	}
+	fclose(f);
 }
 
 int main(int argc, char **argv){
