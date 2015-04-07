@@ -46,6 +46,17 @@ void SOR_internal_sequential(float **A, int omega, int xx, int yy, int N_x, int 
 	}
 }
 
+void write_2d_array_to_file(float **A, int N_x, int N_y, char *filename){
+	int i, j;
+	FILE *f = fopen(filename, "w");
+	for(i = 0; i < N_x; i++){
+		for(j = 0; j < N_y-1; j++){
+			fprintf(f,"%f, ",A[i][j]);
+		}
+		fprintf(f, "%f\n", A[i][N_y-1]);
+	}
+}
+
 int main(int argc, char **argv){
 
 	int i, j, k, errors = 0;
@@ -125,9 +136,12 @@ int main(int argc, char **argv){
 			}
 		}
 	}
+	write_2d_array_to_file(h_A, MATRIX_SIZE, MATRIX_SIZE, "GPU_output.txt");
+	write_2d_array_to_file(h_A_test, MATRIX_SIZE, MATRIX_SIZE, "CPU_output.txt");
 
 	//errors
 	printf("Found %d errors\n", errors);
+	fclose(f);
 
 	//free up memory
 	CUDA_SAFE_CALL(cudaFree(g_A));
