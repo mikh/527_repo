@@ -58,7 +58,9 @@ __global__ void kernel_SOR_internal(float *A, int omega, int N_x, int N_y){
 			}
 			__syncthreads();
 		}
+		__syncthreads();
 	}
+	__syncthreads();
 
 }
 
