@@ -124,7 +124,7 @@ int main(int argc, char **argv){
 
 	printf("results transfered");
 	//compute results on host
-	for(i = 0; i < SOR_ITERATIONS; i++){
+/*	for(i = 0; i < SOR_ITERATIONS; i++){
 		for(j = 0; j < MATRIX_SIZE; j++){
 			for(k = 0; k < MATRIX_SIZE; k++){
 				SOR_internal_sequential(h_A_test, OMEGA, j, k, MATRIX_SIZE, MATRIX_SIZE);
@@ -134,7 +134,7 @@ int main(int argc, char **argv){
 
 	printf("results computed on CPU");
 	//compare results
-	/*
+	
 	for(i = 0; i < MATRIX_SIZE; i++){
 		for(j = 0; j < MATRIX_SIZE; j++){
 			if(h_A[i][j] != h_A_test[i][j]){
