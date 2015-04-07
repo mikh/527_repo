@@ -4,6 +4,7 @@
 #include <time.h>
 
 #define GIG 1000000000
+#define NANO_TO_MILLI 1000000
 #define CPG 3.6         // Cycles per GHz -- Adjust to your computer
 
 // Assertion to check for errors
@@ -196,7 +197,7 @@ int main(int argc, char **argv){
 #ifdef CPU_TIMING
 	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time2);
 	elapsed_cpu = diff(time1,time2);
-	printf("\nCPU time: %ld(msec)\n", (long int)((double)(CPG)*(double)(GIG * elapsed_cpu.tv_sec + elapsed_cpu.tv_nsec)));
+	printf("\nCPU time: %f(msec)\n", (float)(((double)GIG*elapsed_cpu.tv_sec + elapsed_cpu.tv_nsec)/(double)NANO_TO_MILLI));
 #endif
 
 
