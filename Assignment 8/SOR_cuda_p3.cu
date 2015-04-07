@@ -2,7 +2,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <time.h>
-#include "cuPrintf.cuh"
+//#include "cuPrintf.cuh"
 #include "cuPrintf.cu"
 
 #define GIG 1000000000
