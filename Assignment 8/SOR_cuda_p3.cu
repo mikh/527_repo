@@ -43,7 +43,7 @@ const float EPSILON = 0.05;
 #define WRITE_2D_ARRAYS
 
 //#define PART_B
-#define PART_C
+//#define PART_C
 
 void initialize_array_2D(float **A, int len, int seed);
 
@@ -85,6 +85,7 @@ __global__ void kernel_SOR_internal_single(float *A, float *B, int omega, int N_
 __global__ void kernel_SOR_internal_redblack(float *A, int omega, int N_x, int N_y, int red){
 	int xx = blockIdx.x * blockDim.x + threadIdx.x;
 	int yy = blockIdx.y * blockDim.y + threadIdx.y;
+	float phi;
 	if(red){
 		yy = yy*2 + (1-xx%2);
 	} else{
