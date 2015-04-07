@@ -22,7 +22,7 @@ const int MATRIX_SIZE = 2000;
 const int NUM_BLOCKS = 1;
 const int THREADS_PER_BLOCK_X = 16;
 const int THREADS_PER_BLOCK_Y = 16;
-const int SOR_ITERATIONS = 3;
+const int SOR_ITERATIONS = 2000;
 const int OMEGA = 1;
 
 #define ALLOCATE_AND_INIT
