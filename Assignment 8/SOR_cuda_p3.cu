@@ -205,11 +205,11 @@ int main(int argc, char **argv){
 		#ifdef PART_B
 			kernel_SOR_internal<<<dimGrid, dimBlock>>>(g_A, OMEGA, MATRIX_SIZE, MATRIX_SIZE);
 		#endif
-		cudaThreadSynchronize();
-		#ifdef PART_C
-			kernel_copy_back<<<dimGrid, dimBlock>>>(g_A, g_A_temp, MATRIX_SIZE, MATRIX_SIZE);
-		#endif
-		cudaThreadSynchronize();
+	//	cudaThreadSynchronize();
+	//	#ifdef PART_C
+	//		kernel_copy_back<<<dimGrid, dimBlock>>>(g_A, g_A_temp, MATRIX_SIZE, MATRIX_SIZE);
+	//	#endif
+	//	cudaThreadSynchronize();
 	}
 #endif
 
