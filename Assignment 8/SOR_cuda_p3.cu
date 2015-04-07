@@ -159,7 +159,7 @@ int main(int argc, char **argv){
 	//launch the kernel
 #ifdef LAUNCH_KERNEL
 	for(i = 0; i < SOR_ITERATIONS; i++){
-		kernel_SOR_internal<<<dimGrid, dimBlock>>>(g_A, OMEGA, MATRIX_SIZE, MATRIX_SIZE);
+		kernel_SOR_internal_single<<<dimGrid, dimBlock>>>(g_A, OMEGA, MATRIX_SIZE, MATRIX_SIZE);
 	}
 #endif
 
