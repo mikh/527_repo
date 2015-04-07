@@ -1,0 +1,12 @@
+init done
+all init done
+kernel run
+
+GPU time: 220884.812500 (msec)
+results transfered
+
+CPU time: 261326.421875(msec)
+results computed on CPU
+results checked
+Found 3992003 errors
+arrays freed
