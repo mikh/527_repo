@@ -21,12 +21,12 @@ inline void gpuAssert(cudaError_t code, char *file, int line, bool abort=true)
 	}
 }
 
-const int MATRIX_SIZE = 100;
+const int MATRIX_SIZE = 2000;
 const int THREADS_PER_BLOCK_X = 16;
 const int THREADS_PER_BLOCK_Y = 16;
 const int NUM_BLOCKS_X = MATRIX_SIZE/THREADS_PER_BLOCK_X/2;
 const int NUM_BLOCKS_Y = MATRIX_SIZE/THREADS_PER_BLOCK_Y/2;
-const int SOR_ITERATIONS = 3;
+const int SOR_ITERATIONS = 2000;
 const float OMEGA = 1.6;
 const float EPSILON = 0.05;
 
