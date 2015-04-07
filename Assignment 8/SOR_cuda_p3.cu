@@ -24,8 +24,8 @@ inline void gpuAssert(cudaError_t code, char *file, int line, bool abort=true)
 const int MATRIX_SIZE = 100;
 const int THREADS_PER_BLOCK_X = 16;
 const int THREADS_PER_BLOCK_Y = 16;
-const int NUM_BLOCKS_X = MATRIX_SIZE/THREADS_PER_BLOCK_X;
-const int NUM_BLOCKS_Y = MATRIX_SIZE/THREADS_PER_BLOCK_Y;
+const int NUM_BLOCKS_X = MATRIX_SIZE/THREADS_PER_BLOCK_X/2;
+const int NUM_BLOCKS_Y = MATRIX_SIZE/THREADS_PER_BLOCK_Y/2;
 const int SOR_ITERATIONS = 3;
 const float OMEGA = 1.6;
 const float EPSILON = 0.05;
@@ -81,12 +81,23 @@ __global__ void kernel_SOR_internal_single(float *A, float *B, int omega, int N_
 	}
 	//__syncthreads();
 }
-/*
+
 __global__ void kernel_SOR_internal_redblack(float *A, int omega, int N_x, int N_y, int red){
 	int xx = blockIdx.x * blockDim.x + threadIdx.x;
 	int yy = blockIdx.y * blockDim.y + threadIdx.y;
+	if(red){
+		yy = yy*2 + (1-xx%2);
+	} else{
+		yy = yy*2 + (xx%2);
+	}
+
+	if(xx > 0 && xx < (N_x-1) && yy > 0 && yy < (N_y-1)){
+		phi = A[xx*MATRIX_SIZE + yy] - .25*((A[(xx-1)*MATRIX_SIZE + yy] + A[(xx+1)*MATRIX_SIZE+yy]) + (A[xx*MATRIX_SIZE + (yy-1)] + A[xx*MATRIX_SIZE+(yy+1)]));
+		A[xx*MATRIX_SIZE+yy] = abs(A[xx*MATRIX_SIZE+yy] - (phi*omega));
+	}
+
 }
-*/
+
 
 __global__ void kernel_copy_back(float *A, float *B, int N_x, int N_y){
 	int xx = blockIdx.x * blockDim.x + threadIdx.x;
@@ -210,6 +221,10 @@ int main(int argc, char **argv){
 	//		kernel_copy_back<<<dimGrid, dimBlock>>>(g_A, g_A_temp, MATRIX_SIZE, MATRIX_SIZE);
 	//	#endif
 	//	cudaThreadSynchronize();
+		kernel_SOR_internal_redblack<<<dimGrid, dimBlock>>>(g_A, OMEGA, MATRIX_SIZE, MATRIX_SIZE, 0);
+		cudaThreadSynchronize();
+		kernel_SOR_internal_redblack<<<dimGrid, dimBlock>>>(g_A, OMEGA, MATRIX_SIZE, MATRIX_SIZE, 1);
+		cudaThreadSynchronize();
 	}
 #endif
 
@@ -238,8 +253,8 @@ int main(int argc, char **argv){
 	cudaEventDestroy(stop);
 #endif
 
-		cudaPrintfDisplay(stdout, true);
-	cudaPrintfEnd();
+cudaPrintfDisplay(stdout, true);
+		cudaPrintfEnd();
 
 #ifdef DEBUG_PRINT
 	printf("results transfered\n");
@@ -253,7 +268,12 @@ int main(int argc, char **argv){
 #ifdef COMPUTE_CPU_RESULTS
 	for(i = 0; i < SOR_ITERATIONS; i++){
 		for(j = 0; j < MATRIX_SIZE; j++){
-			for(k = 0; k < MATRIX_SIZE; k++){
+			for(k = (j%2); k < MATRIX_SIZE; k+=2){
+				SOR_internal_sequential(h_A_test, OMEGA, j, k, MATRIX_SIZE, MATRIX_SIZE);
+			}
+		}
+		for(j = 0; j < MATRIX_SIZE; j++){
+			for(k = 1- (j%2); k < MATRIX_SIZE; k+=2){
 				SOR_internal_sequential(h_A_test, OMEGA, j, k, MATRIX_SIZE, MATRIX_SIZE);
 			}
 		}
