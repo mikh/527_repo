@@ -48,7 +48,7 @@ void SOR_internal_sequential(float **A, int omega, int xx, int yy, int N_x, int 
 
 int main(int argc, char **argv){
 
-	int i, j, k;
+	int i, j, k, errors = 0;
 	dim3 dimGrid(NUM_BLOCKS,1,1);
 	dim3 dimBlock(THREADS_PER_BLOCK_X,THREADS_PER_BLOCK_Y,1);
 	//Arrays on GPU global memory
@@ -58,6 +58,12 @@ int main(int argc, char **argv){
 	float **h_A;
 	float **h_A_test;
 
+
+	FILE *f = fopen("mismatches.txt", "w");
+	if(f == NULL){
+		printf("Error opening file!\n");
+		exit(1);
+	}
 
 	//Allocate arrays on GPU memory
 	CUDA_SAFE_CALL(cudaMalloc((void **) &g_A, MATRIX_SIZE*MATRIX_SIZE*sizeof(float)));
@@ -90,13 +96,7 @@ int main(int argc, char **argv){
 		kernel_SOR_internal<<<dimGrid, dimBlock>>>(g_A, OMEGA, MATRIX_SIZE, MATRIX_SIZE);
 	}
 
-	for(i = 0; i < SOR_ITERATIONS; i++){
-		for(j = 0; j < MATRIX_SIZE; j++){
-			for(k = 0; k < MATRIX_SIZE; k++){
-				SOR_internal_sequential(h_A_test, OMEGA, j, k, MATRIX_SIZE, MATRIX_SIZE);
-			}
-		}
-	}
+
 
 	//check for errors during launch
 	CUDA_SAFE_CALL(cudaPeekAtLastError());
@@ -108,10 +108,26 @@ int main(int argc, char **argv){
 	//stop and destroy the timer
 
 	//compute results on host
+	for(i = 0; i < SOR_ITERATIONS; i++){
+		for(j = 0; j < MATRIX_SIZE; j++){
+			for(k = 0; k < MATRIX_SIZE; k++){
+				SOR_internal_sequential(h_A_test, OMEGA, j, k, MATRIX_SIZE, MATRIX_SIZE);
+			}
+		}
+	}
 
 	//compare results
+	for(i = 0; i < MATRIX_SIZE; i++){
+		for(j = 0; j < MATRIX_SIZE; j++){
+			if(h_A[i][j] != h_A_test[i][j]){
+				errors++;
+				fprintf(f, "Mismatch at [%d,%d] GPU = %f CPU = %f\n", i, j, h_A[i][j], h_A_test[i][j]);
+			}
+		}
+	}
 
 	//errors
+	printf("Found %d errors\n", errors);
 
 	//free up memory
 	CUDA_SAFE_CALL(cudaFree(g_A));
