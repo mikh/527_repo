@@ -2,8 +2,9 @@
 #include <cstdio>
 #include <cstdlib>
 #include <time.h>
-//#include "cuPrintf.cuh"
 #include "cuPrintf.cu"
+#include "cuPrintf.cuh"
+
 
 #define GIG 1000000000
 #define NANO_TO_MILLI 1000000
@@ -121,6 +122,8 @@ int main(int argc, char **argv){
 
 	//loop variables
 	int i, j, k, errors = 0;
+
+	cudaPrintfInit();
 
 	//timing variables
 	cudaEvent_t start, stop;
@@ -302,6 +305,9 @@ int main(int argc, char **argv){
 	printf("arrays freed\n");
 #endif
 #endif
+
+	cudaPrintfDisplay(stdout, true);
+	cudaPrintfEnd();
 
 	return (float)0;
 }
