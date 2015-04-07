@@ -28,7 +28,8 @@ const int OMEGA = 1;
 //#define COMPARE_RESULTS
 #define FREE_MEMORY
 #define GPU_TIMING
-#define DEBUG_PRINT
+//#define DEBUG_PRINT
+//#define WRITE_2D_ARRAYS
 
 void initialize_array_2D(float **A, int len, int seed);
 
@@ -199,8 +200,11 @@ int main(int argc, char **argv){
 #ifdef DEBUG_PRINT
 	printf("results checked\n");
 #endif
+
+#ifdef WRITE_2D_ARRAYS
 	write_2d_array_to_file(h_A, MATRIX_SIZE, MATRIX_SIZE, "GPU_output.txt");
 	write_2d_array_to_file(h_A_test, MATRIX_SIZE, MATRIX_SIZE, "CPU_output.txt");
+#endif
 
 	//errors
 	printf("Found %d errors\n", errors);
