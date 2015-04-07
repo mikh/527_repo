@@ -1,6 +1,10 @@
 #include <math.h>
 #include <cstdio>
 #include <cstdlib>
+#include <time.h>
+
+#define GIG 1000000000
+#define CPG 3.6         // Cycles per GHz -- Adjust to your computer
 
 // Assertion to check for errors
 #define CUDA_SAFE_CALL(ans) { gpuAssert((ans), __FILE__, __LINE__); }
@@ -24,12 +28,12 @@ const int OMEGA = 1;
 #define TRANSFER_TO_GPU
 #define LAUNCH_KERNEL
 #define TRANSFER_RESULTS
-//#define COMPUTE_CPU_RESULTS
-//#define COMPARE_RESULTS
+#define COMPUTE_CPU_RESULTS
+#define COMPARE_RESULTS
 #define FREE_MEMORY
 #define GPU_TIMING
-//#define DEBUG_PRINT
-//#define WRITE_2D_ARRAYS
+#define DEBUG_PRINT
+#define WRITE_2D_ARRAYS
 
 void initialize_array_2D(float **A, int len, int seed);
 
@@ -77,6 +81,8 @@ int main(int argc, char **argv){
 	//timing variables
 	cudaEvent_t start, stop;
 	float elapsed_gpu;
+	struct timespec diff(struct timespec start, struct timespec end);
+	struct timespec time1, time2, elapsed_cpu;
 
 	//array dimensions
 	dim3 dimGrid(NUM_BLOCKS,1,1);
@@ -171,6 +177,11 @@ int main(int argc, char **argv){
 	printf("results transfered\n");
 #endif
 	//compute results on host
+
+#ifdef CPU_TIMING
+	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1);
+#endif
+
 #ifdef COMPUTE_CPU_RESULTS
 	for(i = 0; i < SOR_ITERATIONS; i++){
 		for(j = 0; j < MATRIX_SIZE; j++){
@@ -180,6 +191,13 @@ int main(int argc, char **argv){
 		}
 	}
 #endif
+
+#ifdef CPU_TIMING
+	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time2);
+	elapsed_cpu = diff(time1,time2);
+	printf("\nCPU time: %ld(msec)\n", (long int)((double)(CPG)*(double)(GIG * elapsed_cpu.tv_sec + elapsed_cpu.tv_nsec)));
+#endif
+
 
 #ifdef DEBUG_PRINT
 	printf("results computed on CPU\n");
@@ -240,3 +258,15 @@ void initialize_array_2D(float **A, int len, int seed){
 	}
 }
 
+struct timespec diff(struct timespec start, struct timespec end)
+{
+  struct timespec temp;
+  if ((end.tv_nsec-start.tv_nsec)<0) {
+    temp.tv_sec = end.tv_sec-start.tv_sec-1;
+    temp.tv_nsec = 1000000000+end.tv_nsec-start.tv_nsec;
+  } else {
+    temp.tv_sec = end.tv_sec-start.tv_sec;
+    temp.tv_nsec = end.tv_nsec-start.tv_nsec;
+  }
+  return temp;
+}
