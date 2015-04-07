@@ -38,6 +38,14 @@ __global__ void kernel_SOR_internal(float *A, int omega, int N_x, int N_y){
 	}
 }
 
+void SOR_internal_sequential(float **A, int omega, int xx, int yy, int N_x, int N_y){
+	float phi;
+	if(xx > 0 && xx < N_x-1 && yy > 0 && yy < N_y-1){
+		phi = A[xx][yy] - .25*((A[xx-1][yy] + A[xx+1][yy]) + (A[xx][yy-1] + A[xx][yy+1]));
+		A[xx][yy] = abs(A[xx][yy] - (phi*omega));
+	}
+}
+
 int main(int argc, char **argv){
 
 	int i;
@@ -48,26 +56,23 @@ int main(int argc, char **argv){
 
 	//Arrays on host memory	
 	float **h_A;
+	float **h_A_test;
 
 
 	//Allocate arrays on GPU memory
-	/*
-	CUDA_SAFE_CALL(cudaMalloc((void **)&g_A, MATRIX_SIZE * sizeof(float*)));
-	for(i = 0; i < MATRIX_SIZE; i++){
-		CUDA_SAFE_CALL(cudaMalloc((void**)&(g_A[i]), MATRIX_SIZE * sizeof(float)));
-	}*/
-
 	CUDA_SAFE_CALL(cudaMalloc((void **) &g_A, MATRIX_SIZE*MATRIX_SIZE*sizeof(float)));
 
 	//Allocate arrays on host memory
 	h_A = (float**) malloc(MATRIX_SIZE * sizeof(float*));
+	h_A_test = (float**) malloc(MATRIX_SIZE * sizeof(float*));
 	for(i = 0; i < MATRIX_SIZE; i++){
 		h_A[i] = (float*) malloc(MATRIX_SIZE * sizeof(float));
+		h_A_test[i] = (float*) malloc(MATRIX_SIZE * sizeof(float));
 	}
 
 	//initialize host arrays
 	initialize_array_2D(h_A, MATRIX_SIZE, 2453);
-
+	initialize_array_2D(h_A_test, MATRIX_SIZE, 2453);
 
 
 	//create cuda events
@@ -79,14 +84,18 @@ int main(int argc, char **argv){
 	for(i = 0; i < MATRIX_SIZE; i++){
 		CUDA_SAFE_CALL(cudaMemcpy(&g_A[i*MATRIX_SIZE], h_A[i], MATRIX_SIZE, cudaMemcpyHostToDevice));
 	}
-/*	CUDA_SAFE_CALL(cudaMemcpy(g_A, h_A, MATRIX_SIZE, cudaMemcpyHostToDevice));
-	for(i = 0; i < MATRIX_SIZE; i++){	//NOTE: might have to use pointer stuff here
-		CUDA_SAFE_CALL(cudaMemcpy(g_A[i], h_A[i], MATRIX_SIZE, cudaMemcpyHostToDevice));
-	}*/
 
 	//launch the kernel
 	for(i = 0; i < SOR_ITERATIONS; i++){
 		kernel_SOR_internal<<<dimGrid, dimBlock>>>(g_A, OMEGA, MATRIX_SIZE, MATRIX_SIZE);
+	}
+
+	for(i = 0; i < SOR_ITERATIONS; i++){
+		for(j = 0; j < MATRIX_SIZE; j++){
+			for(k = 0; k < MATRIX_SIZE; k++){
+				
+			}
+		}
 	}
 
 	//check for errors during launch
@@ -96,12 +105,6 @@ int main(int argc, char **argv){
 	for(i = 0; i < MATRIX_SIZE; i++){
 		CUDA_SAFE_CALL(cudaMemcpy(h_A[i], &g_A[i*MATRIX_SIZE], MATRIX_SIZE, cudaMemcpyDeviceToHost));
 	}
-/*
-	CUDA_SAFE_CALL(cudaMemcpy(h_A, g_A, MATRIX_SIZE, cudaMemcpyDeviceToHost));
-	for(i = 0; i < MATRIX_SIZE; i++){	//NOTE: might have to use pointer stuff here
-		CUDA_SAFE_CALL(cudaMemcpy(h_A[i], g_A[i], MATRIX_SIZE, cudaMemcpyDeviceToHost));
-	}
-*/
 	//stop and destroy the timer
 
 	//compute results on host
@@ -111,12 +114,6 @@ int main(int argc, char **argv){
 	//errors
 
 	//free up memory
-	/*for(i = 0; i < MATRIX_SIZE; i++){
-		CUDA_SAFE_CALL(cudaFree(g_A[i]));
-	}
-	CUDA_SAFE_CALL(cudaFree(g_A));
-*/
-
 	CUDA_SAFE_CALL(cudaFree(g_A));
 	for(i = 0; i < MATRIX_SIZE; i++){
 		free(h_A[i]);
