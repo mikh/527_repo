@@ -77,6 +77,7 @@ int main(int argc, char **argv){
 		exit(1);
 	}
 
+	print("init done");
 	//Allocate arrays on GPU memory
 	CUDA_SAFE_CALL(cudaMalloc((void **) &g_A, MATRIX_SIZE*MATRIX_SIZE*sizeof(float)));
 
@@ -97,7 +98,7 @@ int main(int argc, char **argv){
 
 	//record event on default stream
 
-
+	printf("all init done");
 	//transfer array to GPU memory
 	for(i = 0; i < MATRIX_SIZE; i++){
 		CUDA_SAFE_CALL(cudaMemcpy(&g_A[i*MATRIX_SIZE], h_A[i], MATRIX_SIZE, cudaMemcpyHostToDevice));
@@ -113,12 +114,15 @@ int main(int argc, char **argv){
 	//check for errors during launch
 	CUDA_SAFE_CALL(cudaPeekAtLastError());
 
+	printf("kernel run");
+
 	//transfer results back to host
 	for(i = 0; i < MATRIX_SIZE; i++){
 		CUDA_SAFE_CALL(cudaMemcpy(h_A[i], &g_A[i*MATRIX_SIZE], MATRIX_SIZE, cudaMemcpyDeviceToHost));
 	}
 	//stop and destroy the timer
 
+	printf("results transfered");
 	//compute results on host
 	for(i = 0; i < SOR_ITERATIONS; i++){
 		for(j = 0; j < MATRIX_SIZE; j++){
@@ -128,6 +132,7 @@ int main(int argc, char **argv){
 		}
 	}
 
+	printf("results computed on CPU");
 	//compare results
 	for(i = 0; i < MATRIX_SIZE; i++){
 		for(j = 0; j < MATRIX_SIZE; j++){
@@ -137,6 +142,8 @@ int main(int argc, char **argv){
 			}
 		}
 	}
+
+	printf("results checked");
 	//write_2d_array_to_file(h_A, MATRIX_SIZE, MATRIX_SIZE, "GPU_output.txt");
 	//write_2d_array_to_file(h_A_test, MATRIX_SIZE, MATRIX_SIZE, "CPU_output.txt");
 
@@ -152,6 +159,7 @@ int main(int argc, char **argv){
 	}
 	free(h_A);
 	free(h_A_test);
+	printf("arrays freed");
 
 	return 0;
 }
