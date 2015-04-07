@@ -193,7 +193,7 @@ int main(int argc, char **argv){
 		#endif
 		cudaThreadSynchronize();
 		#ifdef PART_C
-			kernel_copy_back<<<dimGrid, dimBlock>>>(g_A, g_A_temp);
+			kernel_copy_back<<<dimGrid, dimBlock>>>(g_A, g_A_temp, MATRIX_SIZE, MATRIX_SIZE);
 		#endif
 		cudaThreadSynchronize();
 	}
