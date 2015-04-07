@@ -199,6 +199,7 @@ int main(int argc, char **argv){
 #ifdef LAUNCH_KERNEL
 	for(i = 0; i < SOR_ITERATIONS; i++){
 		#ifdef PART_C
+		printf("part c code\n");
 			kernel_SOR_internal_single<<<dimGrid, dimBlock>>>(g_A, g_A_temp, OMEGA, MATRIX_SIZE, MATRIX_SIZE);
 		#endif
 		#ifdef PART_B
