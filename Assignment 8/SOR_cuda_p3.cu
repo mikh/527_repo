@@ -39,8 +39,8 @@ const float EPSILON = 0.05;
 #define DEBUG_PRINT
 #define WRITE_2D_ARRAYS
 
-#define PART_B
-//#define PART_C
+//#define PART_B
+#define PART_C
 
 void initialize_array_2D(float **A, int len, int seed);
 
@@ -74,6 +74,7 @@ __global__ void kernel_SOR_internal_single(float *A, int omega, int N_x, int N_y
 		phi = A[xx*MATRIX_SIZE + yy] - .25*((A[(xx-1)*MATRIX_SIZE + yy] + A[(xx+1)*MATRIX_SIZE+yy]) + (A[xx*MATRIX_SIZE + (yy-1)] + A[xx*MATRIX_SIZE+(yy+1)]));
 		A[xx*MATRIX_SIZE+yy] = abs(A[xx*MATRIX_SIZE+yy] - (phi*omega));
 	}
+	__syncthreads();
 }
 
 void SOR_internal_sequential(float **A, int omega, int xx, int yy, int N_x, int N_y){
