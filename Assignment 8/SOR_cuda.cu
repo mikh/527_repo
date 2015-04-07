@@ -20,13 +20,13 @@ const int THREADS_PER_BLOCK_Y = 16;
 const int SOR_ITERATIONS = 3;
 const int OMEGA = 1;
 
-#define ALLOCATE_AND_INIT
+//#define ALLOCATE_AND_INIT
 //#define TRANSFER_TO_GPU
 //#define LAUNCH_KERNEL
 //#define TRANSFER_RESULTS
 //#define COMPUTE_CPU_RESULTS
 //#define COMPARE_RESULTS
-#define FREE_MEMORY
+//#define FREE_MEMORY
 
 void initialize_array_2D(float **A, int len, int seed);
 
@@ -183,7 +183,7 @@ int main(int argc, char **argv){
 	printf("arrays freed");
 #endif
 
-	return 0;
+	return (float)0;
 }
 
 void initialize_array_2D(float **A, int len, int seed){
