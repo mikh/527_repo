@@ -88,7 +88,7 @@ int main(int argc, char **argv){
 	printf("init done");
 	//Allocate arrays on GPU memory
 #ifdef ALLOCATE_AND_INIT
-	//CUDA_SAFE_CALL(cudaMalloc((void **) &g_A, MATRIX_SIZE*MATRIX_SIZE*sizeof(float)));
+	CUDA_SAFE_CALL(cudaMalloc((void **) &g_A, MATRIX_SIZE*MATRIX_SIZE*sizeof(float)));
 
 	//Allocate arrays on host memory
 	h_A = (float**) malloc(MATRIX_SIZE * sizeof(float*));
