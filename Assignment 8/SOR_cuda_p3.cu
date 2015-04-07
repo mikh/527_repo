@@ -24,7 +24,7 @@ const int THREADS_PER_BLOCK_Y = 16;
 const int NUM_BLOCKS_X = MATRIX_SIZE/THREADS_PER_BLOCK_X;
 const int NUM_BLOCKS_Y = MATRIX_SIZE/THREADS_PER_BLOCK_Y;
 const int SOR_ITERATIONS = 3;
-const int OMEGA = 1;
+const float OMEGA = 1.6;
 const float EPSILON = 0.05;
 
 #define ALLOCATE_AND_INIT
@@ -38,6 +38,9 @@ const float EPSILON = 0.05;
 #define CPU_TIMING
 #define DEBUG_PRINT
 #define WRITE_2D_ARRAYS
+
+#define PART_B
+//#define PART_C
 
 void initialize_array_2D(float **A, int len, int seed);
 
@@ -101,7 +104,12 @@ int main(int argc, char **argv){
 	struct timespec time1, time2, elapsed_cpu;
 
 	//array dimensions
-	dim3 dimGrid(NUM_BLOCKS_X,NUM_BLOCKS_Y,1);
+	#ifdef PART_C
+		dim3 dimGrid(NUM_BLOCKS_X,NUM_BLOCKS_Y,1);
+	#endif
+	#ifdef PART_B
+		dim3 dimGrid(1,1,1);
+	#endif
 	dim3 dimBlock(THREADS_PER_BLOCK_X,THREADS_PER_BLOCK_Y,1);
 	
 	//Arrays on GPU global memory
@@ -160,7 +168,12 @@ int main(int argc, char **argv){
 	//launch the kernel
 #ifdef LAUNCH_KERNEL
 	for(i = 0; i < SOR_ITERATIONS; i++){
-		kernel_SOR_internal_single<<<dimGrid, dimBlock>>>(g_A, OMEGA, MATRIX_SIZE, MATRIX_SIZE);
+		#ifdef PART_C
+			kernel_SOR_internal_single<<<dimGrid, dimBlock>>>(g_A, OMEGA, MATRIX_SIZE, MATRIX_SIZE);
+		#endif
+		#ifdef PART_B
+			kernel_SOR_internal<<<dimGrid, dimBlock>>>(g_A, OMEGA, MATRIX_SIZE, MATRIX_SIZE);
+		#endif
 		cudaThreadSynchronize();
 	}
 #endif
