@@ -18,7 +18,7 @@ inline void gpuAssert(cudaError_t code, char *file, int line, bool abort=true)
 	}
 }
 
-const int MATRIX_SIZE = 2000;
+const int MATRIX_SIZE = 100;
 const int THREADS_PER_BLOCK_X = 16;
 const int THREADS_PER_BLOCK_Y = 16;
 const int NUM_BLOCKS_X = MATRIX_SIZE/THREADS_PER_BLOCK_X;
@@ -37,7 +37,7 @@ const float EPSILON = 0.05;
 #define GPU_TIMING
 #define CPU_TIMING
 #define DEBUG_PRINT
-//#define WRITE_2D_ARRAYS
+#define WRITE_2D_ARRAYS
 
 void initialize_array_2D(float **A, int len, int seed);
 
