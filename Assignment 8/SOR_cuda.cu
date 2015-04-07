@@ -21,12 +21,12 @@ const int SOR_ITERATIONS = 3;
 const int OMEGA = 1;
 
 #define ALLOCATE_AND_INIT
-//#define TRANSFER_TO_GPU
-//#define LAUNCH_KERNEL
-//#define TRANSFER_RESULTS
-//#define COMPUTE_CPU_RESULTS
-//#define COMPARE_RESULTS
-//#define FREE_MEMORY
+#define TRANSFER_TO_GPU
+#define LAUNCH_KERNEL
+#define TRANSFER_RESULTS
+#define COMPUTE_CPU_RESULTS
+#define COMPARE_RESULTS
+#define FREE_MEMORY
 
 void initialize_array_2D(float **A, int len, int seed);
 
@@ -85,7 +85,7 @@ int main(int argc, char **argv){
 		exit(1);
 	}
 
-	printf("init done");
+	printf("init done\n");
 	//Allocate arrays on GPU memory
 #ifdef ALLOCATE_AND_INIT
 	CUDA_SAFE_CALL(cudaMalloc((void **) &g_A, MATRIX_SIZE*MATRIX_SIZE*sizeof(float)));
@@ -107,7 +107,7 @@ int main(int argc, char **argv){
 
 	//record event on default stream
 
-	printf("all init done");
+	printf("all init done\n");
 	//transfer array to GPU memory
 #ifdef TRANSFER_TO_GPU
 	for(i = 0; i < MATRIX_SIZE; i++){
@@ -127,7 +127,7 @@ int main(int argc, char **argv){
 	//check for errors during launch
 	CUDA_SAFE_CALL(cudaPeekAtLastError());
 
-	printf("kernel run");
+	printf("kernel run\n");
 
 	//transfer results back to host
 #ifdef TRANSFER_RESULTS
@@ -137,7 +137,7 @@ int main(int argc, char **argv){
 #endif
 	//stop and destroy the timer
 
-	printf("results transfered");
+	printf("results transfered\n");
 	//compute results on host
 #ifdef COMPUTE_CPU_RESULTS
 	for(i = 0; i < SOR_ITERATIONS; i++){
@@ -149,7 +149,7 @@ int main(int argc, char **argv){
 	}
 #endif
 
-	printf("results computed on CPU");
+	printf("results computed on CPU\n");
 	//compare results
 
 #ifdef COMPARE_RESULTS	
@@ -163,7 +163,7 @@ int main(int argc, char **argv){
 	}
 #endif
 
-	printf("results checked");
+	printf("results checked\n");
 	//write_2d_array_to_file(h_A, MATRIX_SIZE, MATRIX_SIZE, "GPU_output.txt");
 	//write_2d_array_to_file(h_A_test, MATRIX_SIZE, MATRIX_SIZE, "CPU_output.txt");
 
@@ -180,7 +180,7 @@ int main(int argc, char **argv){
 	}
 	free(h_A);
 	free(h_A_test);
-	printf("arrays freed");
+	printf("arrays freed\n");
 #endif
 
 	return (float)0;
