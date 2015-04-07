@@ -238,6 +238,9 @@ int main(int argc, char **argv){
 	cudaEventDestroy(stop);
 #endif
 
+		cudaPrintfDisplay(stdout, true);
+	cudaPrintfEnd();
+
 #ifdef DEBUG_PRINT
 	printf("results transfered\n");
 #endif
@@ -307,8 +310,7 @@ int main(int argc, char **argv){
 #endif
 #endif
 
-	cudaPrintfDisplay(stdout, true);
-	cudaPrintfEnd();
+
 
 	return (float)0;
 }
