@@ -64,7 +64,7 @@ __global__ void kernel_SOR_internal(float *A, int omega, int N_x, int N_y){
 
 }
 
-__global__ void kernel_SOR_internal_single(float *A, int omega, int N_x, int N_y){
+__global__ void kernel_SOR_internal_single(float *A, float *B, int omega, int N_x, int N_y){
 	int xx = blockIdx.x * blockDim.x + threadIdx.x;
 	int yy = blockIdx.y * blockDim.y + threadIdx.y;
 
@@ -72,7 +72,17 @@ __global__ void kernel_SOR_internal_single(float *A, int omega, int N_x, int N_y
 
 	if(xx > 0 && xx < (N_x-1) && yy > 0 && yy < (N_y-1)){
 		phi = A[xx*MATRIX_SIZE + yy] - .25*((A[(xx-1)*MATRIX_SIZE + yy] + A[(xx+1)*MATRIX_SIZE+yy]) + (A[xx*MATRIX_SIZE + (yy-1)] + A[xx*MATRIX_SIZE+(yy+1)]));
-		A[xx*MATRIX_SIZE+yy] = abs(A[xx*MATRIX_SIZE+yy] - (phi*omega));
+		B[xx*MATRIX_SIZE+yy] = abs(A[xx*MATRIX_SIZE+yy] - (phi*omega));
+	}
+	//__syncthreads();
+}
+
+__global__ void kernel_copy_back(float *A, float *B, int N_x, int N_y){
+	int xx = blockIdx.x * blockDim.x + threadIdx.x;
+	int yy = blockIdx.y * blockDim.y + threadIdx.y;
+
+	if(xx > 0 && xx < (N_x-1) && yy > 0 && yy < (N_y-1)){
+		A[xx*MATRIX_SIZE+yy] = B[xx*MATRIX_SIZE+yy];
 	}
 	//__syncthreads();
 }
@@ -119,6 +129,7 @@ int main(int argc, char **argv){
 	
 	//Arrays on GPU global memory
 	float *g_A;
+	float *g_A_temp;
 
 	//Arrays on host memory	
 	float **h_A;
@@ -138,6 +149,7 @@ int main(int argc, char **argv){
 	//Allocate arrays on GPU memory
 #ifdef ALLOCATE_AND_INIT
 	CUDA_SAFE_CALL(cudaMalloc((void **) &g_A, MATRIX_SIZE*MATRIX_SIZE*sizeof(float)));
+	CUDA_SAFE_CALL(cudaMalloc((void **) &g_A_temp, MATRIX_SIZE*MATRIX_SIZE*sizeof(float)));
 
 	//Allocate arrays on host memory
 	h_A = (float**) malloc(MATRIX_SIZE * sizeof(float*));
@@ -174,10 +186,14 @@ int main(int argc, char **argv){
 #ifdef LAUNCH_KERNEL
 	for(i = 0; i < SOR_ITERATIONS; i++){
 		#ifdef PART_C
-			kernel_SOR_internal_single<<<dimGrid, dimBlock>>>(g_A, OMEGA, MATRIX_SIZE, MATRIX_SIZE);
+			kernel_SOR_internal_single<<<dimGrid, dimBlock>>>(g_A, g_A_temp, OMEGA, MATRIX_SIZE, MATRIX_SIZE);
 		#endif
 		#ifdef PART_B
 			kernel_SOR_internal<<<dimGrid, dimBlock>>>(g_A, OMEGA, MATRIX_SIZE, MATRIX_SIZE);
+		#endif
+		cudaThreadSynchronize();
+		#ifdef PART_C
+			kernel_copy_back<<<dimGrid, dimBlock>>>(g_A, g_A_temp);
 		#endif
 		cudaThreadSynchronize();
 	}
