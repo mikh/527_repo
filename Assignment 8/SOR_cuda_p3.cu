@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <time.h>
 #include "cuPrintf.cuh"
+#include "cuPrintf.cu"
 
 #define GIG 1000000000
 #define NANO_TO_MILLI 1000000
