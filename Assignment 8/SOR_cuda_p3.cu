@@ -150,6 +150,7 @@ int main(int argc, char **argv){
 	#ifdef PART_B
 		dim3 dimGrid(1,1,1);
 	#endif
+		dim3 dimGrid(NUM_BLOCKS_X,NUM_BLOCKS_Y,1);
 	dim3 dimBlock(THREADS_PER_BLOCK_X,THREADS_PER_BLOCK_Y,1);
 	
 	//Arrays on GPU global memory
