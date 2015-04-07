@@ -32,6 +32,7 @@ const int OMEGA = 1;
 #define COMPARE_RESULTS
 #define FREE_MEMORY
 #define GPU_TIMING
+#define CPU_TIMING
 #define DEBUG_PRINT
 #define WRITE_2D_ARRAYS
 
