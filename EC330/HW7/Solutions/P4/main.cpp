@@ -9,10 +9,8 @@ using namespace std;
 
 string sequence(string input_file, int read_version);
 void read_in_sequence(string input_file, vector<string> &strs, int read_version);
-void print_list(vector<string> &list);
-void print_list(vector<int> &list);
-string construct_sequence(vector<string> &seq, vector<int> &pos);
-int match_phrase(string intial, string input, int &pos)
+int match_phrase(string intial, string input, int &pos);
+string combine_strings(string phrase, string input, int position);
 
 const char blank_char = '&';
 
@@ -27,14 +25,17 @@ int main(void){
 	return 0;
 }
 
+/*Solves in O(k^2*n) time, where k is the number of input strings, and n is the length */
 string sequence(string input_file, int read_version){
-	vector<string> input, new_input;
+	vector<string> input, unable_to_match;
+	int input_number = -1;
 	read_in_sequence(input_file, input, read_version);
 
 	while(input.size() > 1){
 		string phrase = input[0];
 		input.erase(input.begin());
-		int best_intensity = 0, best_phrase = "", best_position = 0;
+		int best_intensity = 0, best_position = 0;
+		string best_phrase = "";
 		for(int ii = 0; ii < input.size(); ii++){
 			int cur_position, cur_intensity;
 			cur_intensity = match_phrase(phrase, input[ii], cur_position);
@@ -42,62 +43,49 @@ string sequence(string input_file, int read_version){
 				best_intensity = cur_intensity;
 				best_position = cur_position;
 				best_phrase = input[ii];
+				input_number = ii;
 			}
 		}
 		if(best_intensity > 0){
-
+			phrase = combine_strings(phrase, best_phrase, best_position);
+			input.push_back(phrase);
+			vector<string>::iterator iter = input.begin();
+			iter += input_number;
+			input.erase(iter);
+		} else{
+			unable_to_match.push_back(phrase);
 		}
 	}
+	if(unable_to_match.size() > 0){
+		printf("Unable to match all entries.\n");
+		string combine = "";
+		for(int ii = 0; ii < unable_to_match.size(); ii++){
+			combine += unable_to_match[ii];
+		}
+		return combine;
+	}
+	return input[0];
 }
 
+/* Combines in O(n) time */
 string combine_strings(string phrase, string input, int position){
-	string combined = "";
-	if(position < input.length()){
-		for(int ii = 0; ii < input.length()-position-1; ii++){
-
+	string buffer(input.length()-1, blank_char);
+	string buffered_phrase = (buffer + phrase) + buffer, combined = "";
+	for(int ii = 0; ii < buffered_phrase.length(); ii++){
+		if(ii >= position && ii < position + input.length()){
+			combined += input[ii - position];
 		}
-	}
-}
-
-string sequence(string input_file, int read_version){
-	vector<string> input;
-	
-	vector<string> sequence;
-	vector<int> position;
-	read_in_sequence(input_file, input, read_version);
-	print_list(input);
-	printf("\n\n");
-
-	if(input.size() > 0){
-		char temp;
-		sequence.push_back(input[0]);
-		position.push_back(0);
-		input.erase(input.begin());
-				string temp_output = construct_sequence(sequence, position);
-				printf("%s  -  %s\n",phrase.c_str(), temp_output.c_str());
-
-		while(input.size() > 0){
-			for(int ii = 0; ii < input.size(); ii++){
-
+		else{
+			if(buffered_phrase[ii] != blank_char){
+				combined += buffered_phrase[ii];
 			}
-
-
-			string phrase = input[0];
-			input.erase(input.begin());
-			if(!match_phrase(sequence, position, phrase)){
-				input.push_back(phrase);
-			} else{
-				temp_output = construct_sequence(sequence, position);
-				printf("%s  -  %s\n",phrase.c_str(), temp_output.c_str());
-			}
-
 		}
 	}
 
-
-	return construct_sequence(sequence, position);
+	return combined;
 }
 
+/* Matches in O(k*n) time where k is the number of input strings, and n is the length */
 int match_phrase(string intial, string input, int &pos){
 	string buffer(input.length()-1,  blank_char);
 
@@ -149,53 +137,8 @@ int match_phrase(string intial, string input, int &pos){
 
 
 	pos = matches[match_to_use];
-	/*if(p < input.length()){
-		pos.push_back(0);
-		p = input.length() - p-1;
-		for(int ii = 0; ii < pos.size()-1; ii++)
-			pos[ii] += p;
-	} else{
-		pos.push_back(matches[match_to_use]-input.length() + 1);
-	}*/
 
 	return match_intensity[match_to_use];
-}
-
-string construct_sequence(vector<string> &seq, vector<int> &pos){
-	string s = "";
-	int pp = 0;
-	vector<string> build;
-	int max_length = 0;
-
-	for(int ii = 0; ii < pos.size(); ii++){
-		string buffer(pos[ii], blank_char);
-		build.push_back(buffer + seq[ii]);
-		if(build.back().length() > max_length)
-			max_length = build.back().length();
-	}
-
-	for(int ii = 0; ii < build.size(); ii++){
-		if(build[ii].length() < max_length){
-			string buffer(max_length-build[ii].length(), blank_char);
-			build[ii] = build[ii] + buffer;
-		}
-	}
-
-	for(int ii = 0; ii < max_length; ii++){
-		char c = blank_char;
-		for(int jj = 0; jj < build.size(); jj++){
-			if(build[jj][ii] != blank_char){
-				if(c != blank_char && c != build[jj][ii]){
-					printf("mismatch");
-				} else{
-					c = build[jj][ii];
-				}
-			}
-		}
-		s += c;
-	}
-
-	return s;
 }
 
 void read_in_sequence(string input_file, vector<string> &strs, int read_version){
@@ -226,17 +169,4 @@ void read_in_sequence(string input_file, vector<string> &strs, int read_version)
 
 }
 
-
-
-void print_list(vector<string> &list){
-	for(int ii = 0; ii < list.size(); ii++){
-		printf("%s\n", list[ii].c_str());
-	}
-}
-
-void print_list(vector<int> &list){
-	for(int ii = 0; ii < list.size(); ii++){
-		printf("%d\n", list[ii]);
-	}
-}
 
