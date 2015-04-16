@@ -13,8 +13,8 @@ using namespace std;
 
 class Map{
 public:
-	vector<City> map;
-	vector<City> path_list;
+	vector<City*> map;
+	vector<City*> path_list;
 	int roads;
 	int max_distance;
 
@@ -29,15 +29,17 @@ public:
 
 	vector<City> BFS(City &start_city, int levels, bool find_unvisited);
 
+	void free_map();
+
 private:
 
-	City start_city = City("NULL_CITY");
+	City* start_city;
 
 
-	City* find_city(string city_name, vector<City> &list);
-	City* add_city(string &city_name);
+	City* find_city(string city_name, vector<City*> &list);
+	void add_city(string &city_name);
 	bool is_city_null(City &city);
-	void delete_city(City city, vector<City> &list);
+	void delete_city(City* city, vector<City*> &list);
 
 	void BellmanFord(vector<City> &map, City &source);
 	vector<City> get_path(City &source, City &dest);
@@ -54,14 +56,15 @@ Map::Map(){
 
 
 bool Map::greedy_pathing(){
-	vector<City> remaining_city_list(map);
-	City cur_city = start_city;
+	vector<City*> remaining_city_list(map);
+	City* cur_city = start_city;
 	path_list.push_back(start_city);
 
 	delete_city(cur_city, remaining_city_list);
 
-	printf("Starting greedy pathing. Start City = %s. %d cities remaining.\n", cur_city.name.c_str(), remaining_city_list.size());
+	printf("Starting greedy pathing. Start City = %s. %d cities remaining.\n", cur_city->name.c_str(), remaining_city_list.size());
 
+	/*
 	while (remaining_city_list.size() > 0){
 		int search_level = BFS_LEVEL;
 
@@ -99,19 +102,22 @@ bool Map::greedy_pathing(){
 		delete_city(cur_city, remaining_city_list);
 		printf("%d cities remaining\n", remaining_city_list.size());
 	}
+	*/
 
 	return_home(cur_city, start_city);
 	return true;
 }
 
-void Map::return_home(City &source, City &home){
+
+
+void Map::return_home(City* source, City* home){
 	int search_level = BFS_LEVEL;
 	vector<City> submap = BFS(source, search_level, false);
-	City c = *find_city(home.name, submap);
+	City c = find_city(home.name, submap);
 	while (is_city_null(c)){
 		search_level *= 2;
 		submap = BFS(source, search_level, false);
-		c = *find_city(home.name, submap);
+		c = find_city(home.name, submap);
 	}
 
 	BellmanFord(submap, source);
@@ -121,6 +127,7 @@ void Map::return_home(City &source, City &home){
 		path[ii].visited = true;
 	}
 }
+
 
 vector<City> Map::get_path(City &source, City &dest){
 	vector<City> reverse_path;
@@ -140,6 +147,7 @@ vector<City> Map::get_path(City &source, City &dest){
 	return path;
 }
 
+/*
 //used for programming simplicity. Dijkstra's would be more algorithmically efficient
 void Map::BellmanFord(vector<City> &map, City &source){
 	for (int ii = 0; ii < map.size(); ii++){
@@ -153,7 +161,7 @@ void Map::BellmanFord(vector<City> &map, City &source){
 		for (int jj = 0; jj < map.size(); jj++){		//for each edge
 			for (int kk = 0; kk < map[jj].o_dest.size(); kk++){
 				City c = map[jj].o_dest[kk];
-				City dd = *find_city(c.name, map);
+				City dd = find_city(c.name, map);
 				if (is_city_null(dd)){	//making sure edge is in the submap
 					if (c.pred_dist > map[jj].pred_dist + map[jj].o_dist[kk]){	//relax
 						c.pred_dist = map[jj].pred_dist + map[jj].o_dist[kk];
@@ -164,7 +172,9 @@ void Map::BellmanFord(vector<City> &map, City &source){
 		}
 	}
 }
+*/
 
+/*
 vector<City> Map::BFS(City &start_city, int levels, bool find_unvisited){
 	vector<City> found_list;
 	vector<City> search_list;
@@ -180,7 +190,7 @@ vector<City> Map::BFS(City &start_city, int levels, bool find_unvisited){
 			City c = search_list[ii];
 			printf("Searching for cities around %s has %d neighbors\n", c.name.c_str(), c.o_dest.size());
 			for (int jj = 0; jj < c.o_dest.size(); jj++){
-				City dd = *find_city(c.o_dest[jj].name, seen_list);
+				City dd = find_city(c.o_dest[jj].name, seen_list);
 				if (is_city_null(dd)){
 					if (find_unvisited){
 						if (!c.o_dest[jj].visited)
@@ -208,15 +218,17 @@ vector<City> Map::BFS(City &start_city, int levels, bool find_unvisited){
 
 	return found_list;
 }
+*/
 
 bool Map::set_start_city(string city_name){
-	start_city = *find_city(city_name, map);
-	if (is_city_null(start_city)){
+	start_city = find_city(city_name, map);
+	if (start_city == NULL){
 		printf("Cannot find start city\n");
 		return false;
 	}
 	return true;
 }
+
 
 bool Map::is_city_null(City &city){
 	if (city.name.compare("NULL_CITY") == 0)
@@ -227,13 +239,15 @@ bool Map::is_city_null(City &city){
 void Map::add_road(string s_city, string e_city, int distance){
 	roads++;
 	max_distance += distance;
-	City *city_s = find_city(s_city, map);
+	City* city_s = find_city(s_city, map);
 	if (city_s == NULL){
-		city_s = add_city(s_city);
+		add_city(s_city);
+		city_s = map[map.size()-1];
 	}
-	City *city_e = find_city(e_city, map);
+	City* city_e = find_city(e_city, map);
 	if (city_e == NULL){
-		city_e = add_city(e_city);
+		add_city(e_city);
+		city_e = map[map.size()-1];
 	}
 
 	if (!city_s->add_destination(city_e, distance))
@@ -243,35 +257,41 @@ void Map::add_road(string s_city, string e_city, int distance){
 		printf("Duplcate roads\n");
 }
 
-City* Map::find_city(string city_name, vector<City> &list){
+City* Map::find_city(string city_name, vector<City*> &list){
 	for (int ii = 0; ii < list.size(); ii++){
-		if (list[ii].name.compare(city_name) == 0)
-			return &list[ii];
+		if (list[ii]->name.compare(city_name) == 0)
+			return list[ii];
 	}
 	return NULL;
 }
 
-City* Map::add_city(string &city_name){
-	City c = City(city_name);
-	map.push_back(c);
-	return &map[map.size()-1];
+void Map::add_city(string &city_name){
+	map.push_back(new City(city_name));
+	//new_city = map[map.size()-1];
 }
 
 void Map::print_statistics(){
 	printf("Map contains: %d cities, %d roads, with a max distance of %d\n", map.size(), roads, max_distance);
 }
 
-void Map::delete_city(City city, vector<City> &list){
+void Map::free_map(){
+	for(int ii = 0; ii < map.size(); ii++){
+		free(map[ii]);
+	}
+}
+
+
+void Map::delete_city(City* city, vector<City*> &list){
 	int index = -1;
 	for (int ii = 0; ii < list.size(); ii++){
-		if (list[ii].name.compare(city.name) == 0){
+		if (list[ii]->name.compare(city->name) == 0){
 			index = ii;
 			break;
 		}
 	}
 	if (index == -1)
 		return;
-	vector<City>::iterator iter = list.begin();
+	vector<City*>::iterator iter = list.begin();
 	iter += index;
 
 	list.erase(iter);

@@ -1,27 +1,8 @@
-﻿Build started 4/14/2015 12:15:36 PM.
-     1>Project "D:\EC527\EC330\HW7\Solutions\P5\VisualStudio\P5\P5\P5.vcxproj" on node 2 (Build target(s)).
-     1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
-         main.cpp
-     1>d:\ec527\ec330\hw7\solutions\p5\visualstudio\p5\p5\city.h(71): warning C4018: '<' : signed/unsigned mismatch
-     1>d:\ec527\ec330\hw7\solutions\p5\visualstudio\p5\p5\map.h(84): warning C4018: '<' : signed/unsigned mismatch
-     1>d:\ec527\ec330\hw7\solutions\p5\visualstudio\p5\p5\map.h(93): warning C4018: '<' : signed/unsigned mismatch
-     1>d:\ec527\ec330\hw7\solutions\p5\visualstudio\p5\p5\map.h(119): warning C4018: '<' : signed/unsigned mismatch
-     1>d:\ec527\ec330\hw7\solutions\p5\visualstudio\p5\p5\map.h(135): warning C4018: '<' : signed/unsigned mismatch
-     1>d:\ec527\ec330\hw7\solutions\p5\visualstudio\p5\p5\map.h(145): warning C4018: '<' : signed/unsigned mismatch
-     1>d:\ec527\ec330\hw7\solutions\p5\visualstudio\p5\p5\map.h(152): warning C4018: '<' : signed/unsigned mismatch
-     1>d:\ec527\ec330\hw7\solutions\p5\visualstudio\p5\p5\map.h(153): warning C4018: '<' : signed/unsigned mismatch
-     1>d:\ec527\ec330\hw7\solutions\p5\visualstudio\p5\p5\map.h(154): warning C4018: '<' : signed/unsigned mismatch
-     1>d:\ec527\ec330\hw7\solutions\p5\visualstudio\p5\p5\map.h(179): warning C4018: '<' : signed/unsigned mismatch
-     1>d:\ec527\ec330\hw7\solutions\p5\visualstudio\p5\p5\map.h(182): warning C4018: '<' : signed/unsigned mismatch
-     1>d:\ec527\ec330\hw7\solutions\p5\visualstudio\p5\p5\map.h(202): warning C4018: '<' : signed/unsigned mismatch
-     1>d:\ec527\ec330\hw7\solutions\p5\visualstudio\p5\p5\map.h(247): warning C4018: '<' : signed/unsigned mismatch
-     1>d:\ec527\ec330\hw7\solutions\p5\visualstudio\p5\p5\map.h(266): warning C4018: '<' : signed/unsigned mismatch
-       Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\EC527\EC330\HW7\Solutions\P5\VisualStudio\P5\Debug\P5.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\EC527\EC330\HW7\Solutions\P5\VisualStudio\P5\Debug\P5.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\EC527\EC330\HW7\Solutions\P5\VisualStudio\P5\Debug\P5.lib" /MACHINE:X86 Debug\main.obj
-         P5.vcxproj -> D:\EC527\EC330\HW7\Solutions\P5\VisualStudio\P5\Debug\P5.exe
-     1>Done Building Project "D:\EC527\EC330\HW7\Solutions\P5\VisualStudio\P5\P5\P5.vcxproj" (Build target(s)).
+﻿Build started 4/15/2015 11:11:45 PM.
+     1>Project "C:\Users\Mikhail\Desktop\527\EC330\HW7\Solutions\P5\VisualStudio\P5\P5\P5.vcxproj" on node 2 (Build target(s)).
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V110\Microsoft.Cpp.Platform.targets(44,5): error MSB8020: The builds tools for v120 (Platform Toolset = 'v120') cannot be found. To build using the v120 build tools, either click the Project menu or right-click the solution, and then select "Update VC++ Projects...". Install v120 to build using the v120 build tools.
+     1>Done Building Project "C:\Users\Mikhail\Desktop\527\EC330\HW7\Solutions\P5\VisualStudio\P5\P5\P5.vcxproj" (Build target(s)) -- FAILED.
 
-Build succeeded.
+Build FAILED.
 
-Time Elapsed 00:00:15.86
+Time Elapsed 00:00:00.01
