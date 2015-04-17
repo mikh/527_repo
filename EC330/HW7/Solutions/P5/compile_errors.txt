@@ -1,19 +1,4 @@
-rm: cannot remove `P5.exe': No such file or directory
 In file included from main.cpp:6:0:
 map.h:33:36: warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11 [enabled by default]
-map.h: In member function 'std::vector<City> Map::get_path(City&, City&)':
-map.h:125:22: error: base operand of '->' has non-pointer type 'City'
-map.h:130:41: error: invalid use of void expression
-map.h: In member function 'void Map::BellmanFord(std::vector<City>&, City&)':
-map.h:139:23: error: cannot convert 'City' to 'City*' in assignment
-map.h:148:31: error: no matching function for call to 'Map::find_city(City&, std::vector<City>&)'
-map.h:148:31: note: candidate is:
-map.h:36:10: note: City Map::find_city(std::string, std::vector<City>&)
-map.h:36:10: note:   no known conversion for argument 1 from 'City' to 'std::string {aka std::basic_string<char>}'
-map.h:152:22: error: cannot convert 'City' to 'City*' in assignment
-map.h: In member function 'std::vector<City> Map::BFS(City&, int, bool)':
-map.h:174:48: error: no matching function for call to 'Map::find_city(City&, std::vector<City>&)'
-map.h:174:48: note: candidate is:
-map.h:36:10: note: City Map::find_city(std::string, std::vector<City>&)
-map.h:36:10: note:   no known conversion for argument 1 from 'City' to 'std::string {aka std::basic_string<char>}'
-./compile_and_run.sh: line 3: ./P5: No such file or directory
+  City start_city = City("NULL_CITY");
+                                    ^

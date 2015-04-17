@@ -33,6 +33,7 @@ int main(void){
 	map.greedy_pathing();
 
 	printf("Done.\n");
+	map.free_map();
 	char ccc;
 	cin >> ccc;
 	return 0;

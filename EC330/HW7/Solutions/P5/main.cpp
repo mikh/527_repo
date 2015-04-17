@@ -10,9 +10,10 @@ using namespace std;
 
 
 //#define NUMBER_OF_ROADS 1346039
-#define NUMBER_OF_ROADS 83087
+//#define NUMBER_OF_ROADS 83087
+#define NUMBER_OF_ROADS 8660
 
-#define FILENAME "small_map.txt"
+#define FILENAME "super_small_map.txt"
 
 #define START_CITY "ETCW"
 

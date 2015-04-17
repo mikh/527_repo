@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include <stdio.h>
+#include <iostream>
 
 using namespace std;
 
@@ -59,14 +60,19 @@ bool Map::greedy_pathing(){
 
 	delete_city(cur_city, remaining_city_list);
 
+	printf("Starting greedy pathing. Start City = %s. %d cities remaining.\n", cur_city.name.c_str(), remaining_city_list.size());
+
 	while(remaining_city_list.size() > 0){
 		int search_level = BFS_LEVEL;
 
 		vector<City> unvistited_cities = BFS(cur_city, search_level, true);
+
+		printf("Performing search - %d unvisited cities found in a radius of %d\n", unvistited_cities.size(), search_level);
 		
 		while(unvistited_cities.size() == 0){
 			search_level *= 2;
 			unvistited_cities = BFS(cur_city, search_level, true);
+			printf("Performing search - %d unvisited cities found in a radius of %d\n", unvistited_cities.size(), search_level);
 		}
 
 		vector<City> submap = BFS(cur_city, search_level, false);
@@ -119,15 +125,16 @@ vector<City> Map::return_home(City &source, City &home){
 vector<City> Map::get_path(City &source, City &dest){
 	vector<City> reverse_path;
 
-	City cur_city = dest;
-	while(cur_city.name.compare(source.name) != 0){
-		reverse_path.push_back(cur_city);
+	City *cur_city = &dest;
+	while(cur_city->name.compare(source.name) != 0){
+		reverse_path.push_back(*cur_city);
 		cur_city = cur_city->pred;
 	}
 
 	vector<City> path;
 	for(int ii = 0; ii < reverse_path.size(); ii++){
-		path.push_back(reverse_path.pop_back());
+		path.push_back(reverse_path.back());
+		reverse_path.pop_back();
 	}
 
 	return path;
@@ -136,7 +143,8 @@ vector<City> Map::get_path(City &source, City &dest){
 //used for programming simplicity. Dijkstra's would be more algorithmically efficient
 void Map::BellmanFord(vector<City> &map, City &source){
 	for(int ii = 0; ii < map.size(); ii++){
-		map[ii].pred = City();
+
+		map[ii].pred = NULL;
 		map[ii].pred_dist = -1;
 	}
 	source.pred_dist = 0;
@@ -145,11 +153,11 @@ void Map::BellmanFord(vector<City> &map, City &source){
 		for(int jj = 0; jj < map.size(); jj++){		//for each edge
 			for(int kk = 0; kk < map[jj].o_dest.size(); kk++){
 				City c = map[jj].o_dest[kk];
-				City dd = find_city(c, map);
+				City dd = find_city(c.name, map);
 				if(is_city_null(dd)){	//making sure edge is in the submap
 					if(c.pred_dist > map[jj].pred_dist + map[jj].o_dist[kk]){	//relax
 						c.pred_dist = map[jj].pred_dist + map[jj].o_dist[kk];
-						c.pred = map[jj];
+						c.pred = &map[jj];
 					}
 				}
 			}
@@ -170,8 +178,9 @@ vector<City> Map::BFS(City &start_city, int levels, bool find_unvisited){
 	while(cur_level <= levels && search_list.size() > 0){
 		for(int ii = 0; ii < search_list.size(); ii++){
 			City c = search_list[ii];
+			printf("Searching for cities around %s has %d neighbors\n", c.name.c_str(), c.o_dest.size());
 			for(int jj = 0; jj < c.o_dest.size(); jj++){
-				City dd = find_city(c.o_dest[jj], seen_list);
+				City dd = find_city(c.o_dest[jj].name, seen_list);
 				if(is_city_null(dd)){
 					if(find_unvisited){
 						if(!c.o_dest[jj].visited)
@@ -183,6 +192,8 @@ vector<City> Map::BFS(City &start_city, int levels, bool find_unvisited){
 					seen_list.push_back(c.o_dest[jj]);
 				}
 			}
+			char ccc;
+			cin >> ccc;
 		}
 
 		search_list.clear();
