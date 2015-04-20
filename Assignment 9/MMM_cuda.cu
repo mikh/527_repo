@@ -28,8 +28,8 @@ inline void gpuAssert(cudaError_t code, char *file, int line, bool abort=true)
 
 #define NUM_BLOCKS_X 4
 #define NUM_BLOCKS_Y 4
-#define THREADS_PER_BLOCK_X 16
-#define THREADS_PER_BLOCK_Y 16
+#define THREADS_PER_BLOCK_X 64
+#define THREADS_PER_BLOCK_Y 64
 
 #define IMUL(a, b) __mul24(a, b)
 
