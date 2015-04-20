@@ -97,8 +97,8 @@ int main(int argc, char **argv){
 
 	//transfer array to GPU memory
 	printf("Transfering arrays to GPU\n");
-	CUDA_SAFE_CALL(cudaMemcpy(g_A, h_A, NN*NN, cudaMemcpyHostToDevice));
-	CUDA_SAFE_CALL(cudaMemcpy(g_B, h_B, NN*NN, cudaMemcpyHostToDevice));
+	CUDA_SAFE_CALL(cudaMemcpy(g_A, h_A, NN*NN*sizeof(float), cudaMemcpyHostToDevice));
+	CUDA_SAFE_CALL(cudaMemcpy(g_B, h_B, NN*NN*sizeof(float), cudaMemcpyHostToDevice));
 
 	//Launch the kernel
 	//NN*NN/256 = # of blocks
