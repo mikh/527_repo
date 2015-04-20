@@ -26,7 +26,7 @@ inline void gpuAssert(cudaError_t code, char *file, int line, bool abort=true)
 
 #define NN 100		//matrix size
 
-#define THREADS_PER_BLOCK 16
+#define THREADS_PER_BLOCK 32
 
 #define THREADS_PER_BLOCK_Y 16
 #define NUM_BLOCKS_X 16
@@ -42,8 +42,8 @@ void write_2d_array_to_file(float *A, char *filename);
 struct timespec diff(struct timespec start, struct timespec end);
 
 __global__ void kernel_MMM(float *A, float *B, float *C, int N){
-	int i = (blockIdx.x * blockDim.x) + threadIdx.x;
-	int j = (blockIdx.y * blockDim.y) + threadIdx.y;
+	int j = (blockIdx.x * blockDim.x) + threadIdx.x;
+	int i = (blockIdx.y * blockDim.y) + threadIdx.y;
 	int k;
 	float sum = 0;
 
