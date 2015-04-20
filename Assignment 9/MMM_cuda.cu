@@ -45,12 +45,13 @@ __global__ void kernel_MMM(float *A, float *B, float *C, int N){
 	int i = (blockIdx.x * blockDim.x) + threadIdx.x;
 	int j = (blockIdx.y * blockDim.y) + threadIdx.y;
 	int k;
+	float sum = 0;
 
 	if(i >= 0 && i < N && j >= 0 && j < N){
-		C[i*N+j] = 0;
 		for(k = 0; k < N; k++){
-			C[i*N+j] += A[i*N+k] * B[k*N+j];
+			sum += A[i*N+k] * B[k*N+j];
 		}
+		C[i*N+j] = sum;
 	}
 }
 
