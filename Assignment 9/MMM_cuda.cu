@@ -53,6 +53,7 @@ __global__ void kernel_MMM(float *A, float *B, float *C, int N){
 	C[i*N+j] = sum;
 }
 
+/*
 __global__ void kernel_shared_loop_unrolling_MMM(float *A, float *B, float *C, int N){
 	__shared__ float As[THREADS_PER_BLOCK][THREADS_PER_BLOCK];
 	__shared__ float Bs[THREADS_PER_BLOCK][THREADS_PER_BLOCK];
@@ -117,6 +118,7 @@ __global__ void kernel_shared_MMM(float *A, float *B, float *C, int N){
 	}
 	C[Row*N+Col] = Pvalue;
 }
+*/
 
 int main(int argc, char **argv){
 	// GPU Timing variables
