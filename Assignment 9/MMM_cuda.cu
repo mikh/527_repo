@@ -184,10 +184,10 @@ int main(int argc, char **argv){
 
 	//write arrays to file
 	
-	printf("Writing arrays to file\n");
-	write_2d_array_to_file(h_A, "A_matrix.txt");
-	write_2d_array_to_file(h_C, "gpu_MMM.txt");
-	write_2d_array_to_file(h_C_control, "cpu_MMM.txt");
+//	printf("Writing arrays to file\n");
+//	write_2d_array_to_file(h_A, "A_matrix.txt");
+//	write_2d_array_to_file(h_C, "gpu_MMM.txt");
+//	write_2d_array_to_file(h_C_control, "cpu_MMM.txt");
 	
 
 	//compare the results
