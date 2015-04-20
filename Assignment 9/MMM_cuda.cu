@@ -49,7 +49,7 @@ __global__ void kernel_MMM(float *A, float *B, float *C, int N){
 
 	if(i >= 0 && i < N && j >= 0 && j < N){
 		for(k = 0; k < N; k++){
-			sum += A[i*N+k] * B[k*N+j];
+			sum += (A[i*N+k] * B[k*N+j]);
 		}
 		C[i*N+j] = sum;
 	}
