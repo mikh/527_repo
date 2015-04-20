@@ -1,0 +1,21 @@
+Already up-to-date.
+Allocating arrays
+Initializing host arrays
+Starting outer cuda timing
+Transfering arrays to GPU
+Starting outer cuda timing
+Running kernel
+Copying cuda results to host
+Computing MMM on host
+Writing arrays to file
+Comparing results
+Freeing memory
+Printing results
+
+GPU outer loop time: 71.315552 (msec)
+
+GPU inner loop time: 66.795135 (msec)
+
+CPU time: 10101.818359(msec)
+Max difference = 422212465065984.000000, Min difference = 0.000000, Average difference = 32833351450624.000000, Average = 1159462631221881733120.000000, Not a number = 955
+Max Tolerance = 0.000036%, Min Tolerance = 0.000000%, Average Tolerance = 0.000003% NaN Tolerance = 0.095500%
