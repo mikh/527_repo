@@ -58,6 +58,8 @@ __global__ void kernel_MMM(float *A, float *B, float *C, int N){
 int main(int argc, char **argv){
 	// GPU Timing variables
 	int i, j, k;
+	int not_a_number;
+
 	cudaEvent_t start_i, start_o, stop_i, stop_o;
 	float elapsed_gpu_internal, elapsed_gpu_with_copy;
 	float max_difference, min_difference, average_difference, difference, average;
@@ -168,17 +170,22 @@ int main(int argc, char **argv){
 	min_difference = NN*NN;
 	average_difference = 0;
 	average = 0;
+	not_a_number = 0;
 
 	for(i = 0; i < NN; i++){
 		for(j = 0; j < NN; j++){
-			average += h_C[i*NN+j];
-			average += h_C_control[i*NN+j];
-			difference = abs(h_C[i*NN+j] - h_C_control[i*NN+j]);
-			if(difference > max_difference)
-				max_difference = difference;
-			if(difference < min_difference)
-				min_difference = difference;
-			average_difference += difference;
+			if(h_C[i*NN+j] != h_C[i*NN+j])
+				not_a_number++;
+			else{
+				average += h_C[i*NN+j];
+				average += h_C_control[i*NN+j];
+				difference = abs(h_C[i*NN+j] - h_C_control[i*NN+j]);
+				if(difference > max_difference)
+					max_difference = difference;
+				if(difference < min_difference)
+					min_difference = difference;
+				average_difference += difference;
+			}
 		}
 	}
 	average_difference /= (float)(NN*NN);
@@ -199,8 +206,8 @@ int main(int argc, char **argv){
 	printf("\nGPU outer loop time: %f (msec)\n", elapsed_gpu_with_copy);
 	printf("\nGPU inner loop time: %f (msec)\n", elapsed_gpu_internal);
 	printf("\nCPU time: %f(msec)\n", (float)(((double)GIG*elapsed_cpu.tv_sec + elapsed_cpu.tv_nsec)/(double)NANO_TO_MILLI));
-	printf("Max difference = %f, Min difference = %f, Average difference = %f, Average = %f\n", max_difference, min_difference, average_difference, average);
-	printf("Max Tolerance = %f%%, Min Tolerance = %f%%, Average Tolerance = %f%%\n", max_difference/average*100, min_difference/average*100, average_difference/average*100);
+	printf("Max difference = %f, Min difference = %f, Average difference = %f, Average = %f, Not a number = %d\n", max_difference, min_difference, average_difference, average, not_a_number);
+	printf("Max Tolerance = %f%%, Min Tolerance = %f%%, Average Tolerance = %f%% NaN Tolerance = %f%%\n", max_difference/average*100, min_difference/average*100, average_difference/average*100, (float)not_a_number/(float)(NN*NN)*(float)100);
 
 	return 0;
 }
