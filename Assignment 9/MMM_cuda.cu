@@ -55,7 +55,7 @@ __global__ void kernel_MMM(float *A, float *B, float *C, int N){
 	C[i*N+j] = sum;
 }
 
-__global__ void kernel_shared_MMM(float *A, float *B, float *C, int N, int BLOCK_SIZE){
+__global__ void kernel_shared_MMM(float *A, float *B, float *C, int N, const int BLOCK_SIZE){
 	__shared__ float As[BLOCK_SIZE][BLOCK_SIZE];
 	__shared__ float Bs[BLOCK_SIZE][BLOCK_SIZE];
 
