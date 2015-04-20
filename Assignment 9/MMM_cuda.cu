@@ -16,7 +16,7 @@ inline void gpuAssert(cudaError_t code, char *file, int line, bool abort=true)
 
 #define GIG 1000000000
 #define NANO_TO_MILLI 1000000
-#define CPG 3.6         // Cycles per GHz -- Adjust to your computer
+#define CPG 2.53         // Cycles per GHz -- Adjust to your computer
 
 #define NUM_THREADS_PER_BLOCK 	16
 #define NUM_BLOCKS 				16
