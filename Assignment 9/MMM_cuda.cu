@@ -68,7 +68,7 @@ __global__ void kernel_shared_MMM(float *A, float *B, float *C, int N){
 	int Col = bx * THREADS_PER_BLOCK + tx;
 
 	float Pvalue = 0;
-	for(int m = 0; m < N/BLOCK_SIZE; ++m){
+	for(int m = 0; m < N/THREADS_PER_BLOCK; ++m){
 		As[ty][tx] = A[Row*N+(m*THREADS_PER_BLOCK+tx)];
 		Bs[ty][tx] = B[Col+(m*THREADS_PER_BLOCK+ty)*N];
 		__syncthreads();
