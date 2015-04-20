@@ -37,6 +37,7 @@ inline void gpuAssert(cudaError_t code, char *file, int line, bool abort=true)
 
 
 void initialize_array(float *A, int len, int seed);
+void write_2d_array_to_file(float *A, char *filename);
 struct timespec diff(struct timespec start, struct timespec end);
 
 __global__ void kernel_MMM(float *A, float *B, float *C, int N){
@@ -147,6 +148,11 @@ int main(int argc, char **argv){
 	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time2);
 	elapsed_cpu = diff(time1, time2);
 
+	//write arrays to file
+	printf("Writing arrays to file\n");
+	write_2d_array_to_file(h_C, "gpu_MMM.txt");
+	write_2d_array_to_file(h_C_control, "cpu_MMM.txt");
+
 	//compare the results
 	printf("Comparing results\n");
 	max_difference = 0;
@@ -163,7 +169,7 @@ int main(int argc, char **argv){
 			average_difference += difference;
 		}
 	}
-	average_difference /= (NN*NN);
+	average_difference /= (float)(NN*NN);
 
 	//free memory
 	printf("Freeing memory\n");
@@ -208,4 +214,15 @@ struct timespec diff(struct timespec start, struct timespec end)
     temp.tv_nsec = end.tv_nsec-start.tv_nsec;
   }
   return temp;
+}
+
+void write_2d_array_to_file(float *A, char *filename){
+	int i;
+	FILE *f = fopen(filename, "w");
+	for(i = 0; i < NN*NN; i++){
+		fprintf(f, "%f, ", A[i]);
+		if(i%NN == 0)
+			fprintf("\n");
+	}
+	fclose(f);
 }
