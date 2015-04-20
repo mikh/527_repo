@@ -1,0 +1,7 @@
+Already up-to-date.
+Allocating arrays
+Initializing host arrays
+Starting outer cuda timing
+Transfering arrays to GPU
+Starting outer cuda timing
+Running kernel

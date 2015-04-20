@@ -1,0 +1,4 @@
+Updating d1392b2..4c97319
+Fast-forward
+ Assignment 9/MMM_cuda.cu |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
