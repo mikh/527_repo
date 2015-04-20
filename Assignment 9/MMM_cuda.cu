@@ -103,7 +103,7 @@ int main(int argc, char **argv){
 	//Launch the kernel
 	//NN*NN/256 = # of blocks
 
-	dim3 dimGrid(NN/THREADS_PER_BLOCK,NN/THREADS_PER_BLOCK);
+	dim3 dimGrid(NN/THREADS_PER_BLOCK+1,NN/THREADS_PER_BLOCK+1);
 	dim3 dimBlock(THREADS_PER_BLOCK,THREADS_PER_BLOCK);
 
 	//launch the kernel
