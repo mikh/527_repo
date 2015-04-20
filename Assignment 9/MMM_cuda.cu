@@ -179,7 +179,7 @@ int main(int argc, char **argv){
 	cudaEventRecord(start_i, 0);
 
 	printf("Running kernel\n");
-	kernel_shared_loop_unrolling_MMM<<<dimGrid, dimBlock>>>(g_A, g_B, g_C, NN);
+	kernel_MMM<<<dimGrid, dimBlock>>>(g_A, g_B, g_C, NN);
 	cudaThreadSynchronize();
 
 	cudaEventRecord(stop_i,0);
