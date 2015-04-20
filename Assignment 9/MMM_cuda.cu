@@ -222,7 +222,7 @@ void write_2d_array_to_file(float *A, char *filename){
 	for(i = 0; i < NN*NN; i++){
 		fprintf(f, "%f, ", A[i]);
 		if(i%NN == 0)
-			fprintf("\n");
+			fprintf(f, "\n");
 	}
 	fclose(f);
 }
