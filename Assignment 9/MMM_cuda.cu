@@ -220,7 +220,7 @@ void write_2d_array_to_file(float *A, char *filename){
 	int i;
 	FILE *f = fopen(filename, "w");
 	for(i = 0; i < NN*NN; i++){
-		fprintf(f, "%f, ", A[i]);
+		fprintf(f, "%.0f, ", A[i]);
 		if(i%NN == 0)
 			fprintf(f, "\n");
 	}
