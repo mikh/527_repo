@@ -1,0 +1,26 @@
+Updating 623b55b..b5f60d2
+Fast-forward
+ Assignment 9/MMM_cuda.cu    |    2 +-
+ Assignment 9/solutions.docx |  Bin 0 -> 11453 bytes
+ Assignment 9/~$lutions.docx |  Bin 0 -> 162 bytes
+ 3 files changed, 1 insertions(+), 1 deletions(-)
+ create mode 100644 Assignment 9/solutions.docx
+ create mode 100644 Assignment 9/~$lutions.docx
+Allocating arrays
+Initializing host arrays
+Starting outer cuda timing
+Transfering arrays to GPU
+Starting outer cuda timing
+Running kernel
+Copying cuda results to host
+Computing MMM on host
+Writing arrays to file
+Comparing results
+Freeing memory
+Printing results
+
+GPU outer loop time: 71.321854 (msec)
+GPU inner loop time: 66.807617 (msec)
+CPU time: 9097.080078(msec)
+Max difference = 422212465065984.000000, Min difference = 0.000000, Average difference = 32833141735424.000000, Average = 1159456227666161565696.000000, Not a number = 961
+Max Tolerance = 0.000036%, Min Tolerance = 0.000000%, Average Tolerance = 0.000003% NaN Tolerance = 0.096100%

@@ -27,8 +27,10 @@ inline void gpuAssert(cudaError_t code, char *file, int line, bool abort=true)
 #define NN 2000		//matrix size
 
 #define THREADS_PER_BLOCK 16
-#define LOOP_UNROLLING 4
 
+#define THREADS_PER_BLOCK_Y 16
+#define NUM_BLOCKS_X 16
+#define NUM_BLOCKS_Y 16
 
 
 #define IMUL(a, b) __mul24(a, b)
@@ -53,45 +55,6 @@ __global__ void kernel_MMM(float *A, float *B, float *C, int N){
 	C[i*N+j] = sum;
 }
 
-__global__ void kernel_shared_loop_unrolling_MMM(float *A, float *B, float *C, int N){
-	__shared__ float As[THREADS_PER_BLOCK][THREADS_PER_BLOCK];
-	__shared__ float Bs[THREADS_PER_BLOCK][THREADS_PER_BLOCK];
-
-	int bx = blockIdx.x;
-	int by = blockIdx.y;
-	int tx = threadIdx.x;
-	int ty = threadIdx.y;
-
-	int Row = by * THREADS_PER_BLOCK + ty;
-	int Col = bx * THREADS_PER_BLOCK + tx;
-
-	float Pvalue1 = 0, Pvalue2 = 0, Pvalue3 = 0, Pvalue4 = 0;
-	for(int m = 0; m < N/THREADS_PER_BLOCK; ++m){
-		As[ty][tx] = A[Row*N+(m*THREADS_PER_BLOCK+tx)];
-		Bs[ty][tx] = B[Col+(m*THREADS_PER_BLOCK+ty)*N];
-
-		As[ty][tx] = A[Row*N+((m)*THREADS_PER_BLOCK+tx)];
-		Bs[ty][tx] = B[Col+((m)*THREADS_PER_BLOCK+ty)*N];
-		
-		As[ty][tx] = A[Row*N+((m)*THREADS_PER_BLOCK+tx)];
-		Bs[ty][tx] = B[Col+((m)*THREADS_PER_BLOCK+ty)*N];
-		
-		As[ty][tx] = A[Row*N+((m)*THREADS_PER_BLOCK+tx)];
-		Bs[ty][tx] = B[Col+((m)*THREADS_PER_BLOCK+ty)*N];
-		__syncthreads();
-	
-
-		for(int k = 0; k < THREADS_PER_BLOCK; k+= LOOP_UNROLLING){
-			Pvalue1 += As[ty][k] * Bs[k][tx];
-			Pvalue2 += As[ty][k+1] * Bs[k+1][tx];
-			Pvalue3 += As[ty][k+2] * Bs[k+2][tx];
-			Pvalue4 += As[ty][k+3] * Bs[k+3][tx];
-		}
-		__syncthreads();
-	}
-	C[Row*N+Col] = Pvalue1 + Pvalue2 + Pvalue3 + Pvalue4;
-}
-
 __global__ void kernel_shared_MMM(float *A, float *B, float *C, int N){
 	__shared__ float As[THREADS_PER_BLOCK][THREADS_PER_BLOCK];
 	__shared__ float Bs[THREADS_PER_BLOCK][THREADS_PER_BLOCK];
@@ -105,9 +68,9 @@ __global__ void kernel_shared_MMM(float *A, float *B, float *C, int N){
 	int Col = bx * THREADS_PER_BLOCK + tx;
 
 	float Pvalue = 0;
-	for(int m = 0; m < N/THREADS_PER_BLOCK; m+=4){
+	for(int m = 0; m < N/THREADS_PER_BLOCK; ++m){
 		As[ty][tx] = A[Row*N+(m*THREADS_PER_BLOCK+tx)];
-		Bs[ty][tx] = B[Col+(m*THREADS_PER_BLOCK+ty)*N];		
+		Bs[ty][tx] = B[Col+(m*THREADS_PER_BLOCK+ty)*N];
 		__syncthreads();
 	
 
@@ -179,7 +142,7 @@ int main(int argc, char **argv){
 	cudaEventRecord(start_i, 0);
 
 	printf("Running kernel\n");
-	kernel_shared_loop_unrolling_MMM<<<dimGrid, dimBlock>>>(g_A, g_B, g_C, NN);
+	kernel_shared_MMM<<<dimGrid, dimBlock>>>(g_A, g_B, g_C, NN);
 	cudaThreadSynchronize();
 
 	cudaEventRecord(stop_i,0);
