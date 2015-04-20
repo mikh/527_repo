@@ -55,32 +55,6 @@ __global__ void kernel_MMM(float *A, float *B, float *C, int N){
 	C[i*N+j] = sum;
 }
 
-__global__ void kernel_shared_MMM(float *A, float *B, float *C, int N, int BLOCK_SIZE){
-	__shared__ float As[BLOCK_SIZE][BLOCK_SIZE];
-	__shared__ float Bs[BLOCK_SIZE][BLOCK_SIZE];
-
-	int bx = blockIdx.x;
-	int by = blockIdx.y;
-	int tx = threadIdx.x;
-	int ty = threadIdx.y;
-
-	int Row = by * BLOCK_SIZE + ty;
-	int Col = bx * BLOCK_SIZE + tx;
-
-	float Pvalue = 0;
-	for(int m = 0; m < N/BLOCK_SIZE; ++m){
-		As[ty][tx] = A[Row*N+(m*BLOCK_SIZE+tx)];
-		Bs[ty][tx] = B[Col+(m*BLOCK_SIZE+ty)*N];
-		__syncthreads();
-	
-
-		for(int k = 0; k < BLOCK_SIZE; ++k)
-			Pvalue += As[ty][k] * Bs[k][tx];
-		__syncthreads();
-	}
-	C[Row*N+Col] = Pvalue;
-}
-
 int main(int argc, char **argv){
 	// GPU Timing variables
 	int i, j, k;
@@ -142,7 +116,7 @@ int main(int argc, char **argv){
 	cudaEventRecord(start_i, 0);
 
 	printf("Running kernel\n");
-	kernel_shared_MMM<<<dimGrid, dimBlock>>>(g_A, g_B, g_C, NN, THREADS_PER_BLOCK);
+	kernel_MMM<<<dimGrid, dimBlock>>>(g_A, g_B, g_C, NN);
 	cudaThreadSynchronize();
 
 	cudaEventRecord(stop_i,0);
