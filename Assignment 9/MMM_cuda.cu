@@ -18,7 +18,7 @@ inline void gpuAssert(cudaError_t code, char *file, int line, bool abort=true)
 #define NANO_TO_MILLI 1000000
 #define CPG 3.6         // Cycles per GHz -- Adjust to your computer
 
-#define NUM_THREADS_PER_BLOCK 	256
+#define NUM_THREADS_PER_BLOCK 	16
 #define NUM_BLOCKS 				16
 #define PRINT_TIME 				1
 #define SM_ARR_LEN				50000
@@ -41,8 +41,8 @@ void write_2d_array_to_file(float *A, char *filename);
 struct timespec diff(struct timespec start, struct timespec end);
 
 __global__ void kernel_MMM(float *A, float *B, float *C, int N){
-	int i = blockIdx.x * blockDim.x + threadIdx.x;
-	int j = blockIdx.x * blockDim.y + threadIdx.y;
+	int i = (blockIdx.x * blockDim.x) + threadIdx.x;
+	int j = (blockIdx.y * blockDim.y) + threadIdx.y;
 	int k;
 
 	if(i >= 0 && i < N && j >= 0 && j < N){
@@ -99,8 +99,10 @@ int main(int argc, char **argv){
 	CUDA_SAFE_CALL(cudaMemcpy(g_B, h_B, NN*NN, cudaMemcpyHostToDevice));
 
 	//Launch the kernel
-	dim3 dimGrid(NUM_BLOCKS_X,NUM_BLOCKS_Y,1);
-	dim3 dimBlock(THREADS_PER_BLOCK_X,THREADS_PER_BLOCK_Y,1);
+	//NN*NN/256 = # of blocks
+
+	dim3 dimGrid(NN/THREADS_PER_BLOCK,NN/THREADS_PER_BLOCK);
+	dim3 dimBlock(THREADS_PER_BLOCK,THREADS_PER_BLOCK);
 
 	//launch the kernel
 	printf("Starting outer cuda timing\n");
