@@ -55,26 +55,26 @@ __global__ void kernel_MMM(float *A, float *B, float *C, int N){
 	C[i*N+j] = sum;
 }
 
-__global__ void kernel_shared_MMM(float *A, float *B, float *C, int N, const int BLOCK_SIZE){
-	__shared__ float As[BLOCK_SIZE][BLOCK_SIZE];
-	__shared__ float Bs[BLOCK_SIZE][BLOCK_SIZE];
+__global__ void kernel_shared_MMM(float *A, float *B, float *C, int N){
+	__shared__ float As[THREADS_PER_BLOCK][THREADS_PER_BLOCK];
+	__shared__ float Bs[THREADS_PER_BLOCK][THREADS_PER_BLOCK];
 
 	int bx = blockIdx.x;
 	int by = blockIdx.y;
 	int tx = threadIdx.x;
 	int ty = threadIdx.y;
 
-	int Row = by * BLOCK_SIZE + ty;
-	int Col = bx * BLOCK_SIZE + tx;
+	int Row = by * THREADS_PER_BLOCK + ty;
+	int Col = bx * THREADS_PER_BLOCK + tx;
 
 	float Pvalue = 0;
 	for(int m = 0; m < N/BLOCK_SIZE; ++m){
-		As[ty][tx] = A[Row*N+(m*BLOCK_SIZE+tx)];
-		Bs[ty][tx] = B[Col+(m*BLOCK_SIZE+ty)*N];
+		As[ty][tx] = A[Row*N+(m*THREADS_PER_BLOCK+tx)];
+		Bs[ty][tx] = B[Col+(m*THREADS_PER_BLOCK+ty)*N];
 		__syncthreads();
 	
 
-		for(int k = 0; k < BLOCK_SIZE; ++k)
+		for(int k = 0; k < THREADS_PER_BLOCK; ++k)
 			Pvalue += As[ty][k] * Bs[k][tx];
 		__syncthreads();
 	}
@@ -142,7 +142,7 @@ int main(int argc, char **argv){
 	cudaEventRecord(start_i, 0);
 
 	printf("Running kernel\n");
-	kernel_shared_MMM<<<dimGrid, dimBlock>>>(g_A, g_B, g_C, NN, THREADS_PER_BLOCK);
+	kernel_shared_MMM<<<dimGrid, dimBlock>>>(g_A, g_B, g_C, NN);
 	cudaThreadSynchronize();
 
 	cudaEventRecord(stop_i,0);
