@@ -24,7 +24,7 @@ inline void gpuAssert(cudaError_t code, char *file, int line, bool abort=true)
 #define SM_ARR_LEN				50000
 #define TOL						1e-6
 
-#define NN 100		//matrix size
+#define NN 1000		//matrix size
 
 #define THREADS_PER_BLOCK 16
 
@@ -155,10 +155,12 @@ int main(int argc, char **argv){
 	elapsed_cpu = diff(time1, time2);
 
 	//write arrays to file
+	/*
 	printf("Writing arrays to file\n");
 	write_2d_array_to_file(h_A, "A_matrix.txt");
 	write_2d_array_to_file(h_C, "gpu_MMM.txt");
 	write_2d_array_to_file(h_C_control, "cpu_MMM.txt");
+	*/
 
 	//compare the results
 	printf("Comparing results\n");
