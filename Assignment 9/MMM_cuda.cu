@@ -128,7 +128,7 @@ int main(int argc, char **argv){
 
 	//transfer results back to host
 	printf("Copying cuda results to host\n");
-	CUDA_SAFE_CALL(cudaMemcpy(h_C, g_C, NN*NN, cudaMemcpyDeviceToHost));
+	CUDA_SAFE_CALL(cudaMemcpy(h_C, g_C, NN*NN*sizeof(float), cudaMemcpyDeviceToHost));
 
 	//stop and destroy the timer
 	cudaEventRecord(stop_o,0);
