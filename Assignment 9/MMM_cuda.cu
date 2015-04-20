@@ -26,10 +26,11 @@ inline void gpuAssert(cudaError_t code, char *file, int line, bool abort=true)
 
 #define NN 1000		//matrix size
 
-#define NUM_BLOCKS_X 4
-#define NUM_BLOCKS_Y 4
 #define THREADS_PER_BLOCK_X 32
 #define THREADS_PER_BLOCK_Y 32
+#define NUM_BLOCKS_X NN/THREADS_PER_BLOCK_X
+#define NUM_BLOCKS_Y NN/THREADS_PER_BLOCK_Y
+
 
 #define IMUL(a, b) __mul24(a, b)
 
