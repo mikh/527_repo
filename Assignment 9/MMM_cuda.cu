@@ -69,9 +69,9 @@ int main(int argc, char **argv){
 
 	//Allocate arrays on GPU memory
 	printf("Allocating arrays\n");
-	CUDA_SAFE_CALL(cudaMalloc((void **) &g_A, NN*NN*sizeof(float)));
-	CUDA_SAFE_CALL(cudaMalloc((void **) &g_B, NN*NN*sizeof(float)));
-	CUDA_SAFE_CALL(cudaMalloc((void **) &g_C, NN*NN*sizeof(float)));
+	//CUDA_SAFE_CALL(cudaMalloc((void **) &g_A, NN*NN*sizeof(float)));
+//	CUDA_SAFE_CALL(cudaMalloc((void **) &g_B, NN*NN*sizeof(float)));
+	//CUDA_SAFE_CALL(cudaMalloc((void **) &g_C, NN*NN*sizeof(float)));
 
 	//Allocate arrays on host memory
 	h_A = (float*) malloc(NN*NN*sizeof(float));
