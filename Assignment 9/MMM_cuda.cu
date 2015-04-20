@@ -26,7 +26,7 @@ inline void gpuAssert(cudaError_t code, char *file, int line, bool abort=true)
 
 #define NN 1000		//matrix size
 
-#define THREADS_PER_BLOCK 16
+#define THREADS_PER_BLOCK 32
 #define LOOP_UNROLLING 4
 
 
