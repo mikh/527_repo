@@ -1,0 +1,23 @@
+Updating 76eb523..b955772
+Fast-forward
+ Assignment 9/MMM_cuda.cu |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+Allocating arrays
+Initializing host arrays
+Starting outer cuda timing
+Transfering arrays to GPU
+Starting outer cuda timing
+Running kernel
+Copying cuda results to host
+Computing MMM on host
+Comparing results
+Freeing memory
+Printing results
+
+GPU outer loop time: 245.672226 (msec)
+
+GPU inner loop time: 235.587616 (msec)
+
+CPU time: 45756.746094(msec)
+Max difference = 168254200603585019904.000000, Min difference = 0.000000, Average difference = 21394666620452864.000000, Average = 1758651291626039672832.000000, Not a number = 0
+Max Tolerance = 9.567229%, Min Tolerance = 0.000000%, Average Tolerance = 0.001217% NaN Tolerance = 0.000000%
