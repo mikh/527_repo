@@ -60,7 +60,7 @@ int main(int argc, char **argv){
 	int i, j, k;
 	cudaEvent_t start_i, start_o, stop_i, stop_o;
 	float elapsed_gpu_internal, elapsed_gpu_with_copy;
-	float max_difference, min_difference, average_difference, difference;
+	float max_difference, min_difference, average_difference, difference, average;
 	struct timespec diff(struct timespec start, struct timespec end);
 	struct timespec time1, time2, elapsed_cpu;
 
@@ -165,9 +165,12 @@ int main(int argc, char **argv){
 	max_difference = 0;
 	min_difference = NN*NN;
 	average_difference = 0;
+	average = 0;
 
 	for(i = 0; i < NN; i++){
 		for(j = 0; j < NN; j++){
+			average += h_C[i*NN+j];
+			average += h_C_control[i*NN+j];
 			difference = abs(h_C[i*NN+j] - h_C_control[i*NN+j]);
 			if(difference > max_difference)
 				max_difference = difference;
@@ -177,6 +180,7 @@ int main(int argc, char **argv){
 		}
 	}
 	average_difference /= (float)(NN*NN);
+	average /= (float) (2*NN*NN);
 
 	//free memory
 	printf("Freeing memory\n");
@@ -193,7 +197,8 @@ int main(int argc, char **argv){
 	printf("\nGPU outer loop time: %f (msec)\n", elapsed_gpu_with_copy);
 	printf("\nGPU inner loop time: %f (msec)\n", elapsed_gpu_internal);
 	printf("\nCPU time: %f(msec)\n", (float)(((double)GIG*elapsed_cpu.tv_sec + elapsed_cpu.tv_nsec)/(double)NANO_TO_MILLI));
-	printf("Max difference = %f, Min difference = %f, Average difference = %f\n", max_difference, min_difference, average_difference);
+	printf("Max difference = %f, Min difference = %f, Average difference = %f, Average = %f\n", max_difference, min_difference, average_difference, average);
+	printf("Max Tolerance = %f%%, Min Tolerance = %f%%, Average Tolerance = %f%%\n", max_difference/average*100, min_difference/average*100, average_difference/average*100);
 
 	return 0;
 }
