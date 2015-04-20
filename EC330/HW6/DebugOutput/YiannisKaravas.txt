@@ -1,0 +1,104 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(YiannisKaravas),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>Question 1 Results:
+
+Total Grade: 0
+
+	0         		
+	0         		
+	0         		
+
+
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+Provide your pseudocode here.
+</VERBATIM>
+---++ b
+<VERBATIM>
+Provide your pseudocode here.
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 0
+
+	0         		
+	0         		
+
+
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+---++ 3b.
+Attach your solutions to this topic.
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+Provide a description of your approach here.  Upload your code online.
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

@@ -1,0 +1,168 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(ThomasJoncas),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+Theta(V+E)
+---+++!! Brief explanation
+
+Since we have an edge list represented as a linked list, all we have to do is step through the list via an iterator to add up the number of times each vertex appears in the list and return the maximum of these values.  At the end of stepping through the linked list, we will have gone through E (number of edges) vertex pairs (since this is the length of the list), each of which takes constant time to add to the counters for each vertex.  Then, to take the maximum of these counters, we need to use the std::max function or similar which takes up to linear time and we have V counters because there are V vertices.  Thus, our overall time is Theta(V+E).
+---++ b
+---+++!! Running time
+Theta(V*E)
+---+++!! Brief explanation
+Here we have a linked list of linked lists, something like this: { {list of vertices sharing edge with vertex A}, {list of vertices sharing edge with vertex B}, ...}.  The "outer" list has V elements since there are V vertices and each vertex gets a list (here, an element of the outer list).  So to figure out the maximum number of edges that touch a vertex, we need to iterate through the outer list which takes Theta(V) and for each "inner" list, we need to compute the size of it to see the degree of that vertex.  Using the list::size function, it takes linear time to compute the size of a linked list (as per http://www.cplusplus.com/reference/list/list/size/ using C++98).  The maximum size of one of these lists is Theta(E) since there are E edges, so to find the size of each "inner" list it takes Theta(E) time.  So as we go through the "outer" list, we just store the running-maximum size of an "inner" list and return this variable at the end once we have gone through each vertex.  Overall, this will be Theta(V*E) because we do a Theta(E) operation a total of Theta(V) times.
+---++ c
+---+++!! Running time
+Theta(V^2)
+---+++!! Brief explanation
+
+Here we have a two-dimensional vector adjacency matrix that looks something like this <  <0s and 1s representing which vertices share an edge with A>, <0s and 1s representing which vertices share an edge with B>, .... >.  As such, the vector is of size V*V = V^2.  To find the maximum degree of a vertex, we must step through the "outer" vector, let the element of the "outer" vector be called an "inner vector".  For each inner vector, we need to compute the number of non-zero elements.  Since each "inner" vector is of size V, this takes Theta(V) time.  As we do this for each "inner" vector, we are stepping through the outer vector which has V elements and storing the running-maximum degree of a vertex.  Since we are doing a Theta(V) operation a total of V times, the overall running time is Theta(V^2).
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+isBipartite(Graph)
+     pick a start vertex, color it black
+     put this start vertex into a queue called Q
+
+     While Q not empty
+           temp = Q.pop()
+           for every neighbor of temp
+                if neighbor isn't colored
+                     color it gray
+                     put it into Q
+               else
+                    if neighbor is black, return NOT bipartite
+
+     if it gets to this point in the code (meaning Q is now empty), return yes, it is bipartite
+                  
+</VERBATIM>
+By definition, a bipartite graph is one that can be two-colored.  This function uses a queue to try to two-color a graph.  If it can be done, it returns that it is bipartite, otherwise it returns that it isn't bipartite.
+---++ b
+Here we will use a depth-first search to see if there is a cycle
+<VERBATIM>
+Start with all vertices colored white.
+for each vertex
+     DFS-Visit(V)
+
+DFS-Visit (node v)
+   color v gray
+   parentnode = v
+   for each node "n" adjacent to v
+      if n is white and n is not parentnode
+         DFS-Visit(n)
+      if n is gray
+          return "the graph has a cycle"
+   color v black
+
+if we didn't return "the graph has a cycle" yet
+    return "the graph has no cycles"
+    
+    
+</VERBATIM>
+
+Here we use a stack as the data structure for this algorithm.
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+
+   * [[%ATTACHURLPATH%/problem3a.cpp][problem3a.cpp]]: code for problem 3
+
+---++ 3b.
+
+
+   * [[%ATTACHURLPATH%/problem3b.zip][problem3b.zip]]: code for problem 3
+
+<BR>
+<VERBATIM>
+0[0]: 0 1
+1[0]: 1 3
+2[0]: 1 4 5
+3[0]: 0 1 3
+4[0]: 0 3
+5[0]: 0 3 5
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+`  |  a  b  c  d  e  f  g  h
+____________________________
+ 1 |  R  N  B  -  K  B  N  R
+ 2 |  P  P  P  -  P  -  P  P
+ 3 |  -  -  -  -  -  -  -  -
+ 4 |  -  -  -  -  -  -  n  -
+ 5 |  -  -  -  -  -  -  -  -
+ 6 |  -  -  -  -  Q  p  p  b
+ 7 |  p  p  p  -  -  p  -  p
+ 8 |  r  -  b  -  k  -  -  r
+
+Please enter your move: e6-e8
+
+Game Over:  White wins!
+
+</VERBATIM>
+Note that this is the last board that printed.  In reality, the Q (white queen) would be moved to e8 (like the move entered says) and the king would be captured and not appear on the board.
+---+++ ii.  
+<VERBATIM>
+`  |  a  b  c  d  e  f  g  h
+____________________________
+ 1 |  -  -  -  Q  K  -  p  k
+ 2 |  -  -  -  -  -  -  p  p
+ 3 |  -  -  -  -  -  -  -  -
+ 4 |  -  -  -  -  -  -  -  -
+ 5 |  -  -  -  -  -  -  -  -
+ 6 |  -  -  -  -  -  -  -  -
+ 7 |  -  -  -  -  -  -  -  -
+ 8 |  -  -  -  -  -  -  -  -
+</VERBATIM>
+Note that black is still lower-case and started at the bottom of the board.  We got two pawns in the same column because 1 of them attacked one of white's pieces diagonally which moved it over.
+
+---++ 4b.  Main task [20 points]
+   * [[%ATTACHURLPATH%/myPlayer.cpp][myPlayer.cpp]]: Code for Problem 4
+
+   * [[%ATTACHURLPATH%/myPlayer.h][myPlayer.h]]: Code for Problem 4
+
+My approach was to improve the "random move" selection by myPlayer.  To do this, I look to see if any of the available moves are ones that will cause an enemy piece to be captured.  For each of these moves that capture a piece, I weight them based off of what type of piece they will capture, with King being the highest followed by queen and then the others with Pawn as the lowest ranking.  Then I look at all of these possible moves and select the one with the highest rank to make.  I tried to create a function to see if my king was in check and then I was going to have it move the king out of check if this was the case, but I couldn't get it working in an efficient enough way to actually implement it to play against the server.  In any case, I was still able to beat 2 of the 3 server players.
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---
+
+   * [[%ATTACHURLPATH%/problem3a.cpp][problem3a.cpp]]: code for problem 3
+
+   * [[%ATTACHURLPATH%/problem3b.zip][problem3b.zip]]: code for problem 3
+
+   * [[%ATTACHURLPATH%/myPlayer.cpp][myPlayer.cpp]]: Code for Problem 4
+
+   * [[%ATTACHURLPATH%/myPlayer.h][myPlayer.h]]: Code for Problem 4

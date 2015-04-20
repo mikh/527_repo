@@ -1,0 +1,204 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(RyanOFlaherty),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+Theta(E)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+To iterate through a linked list of ordered pairs to find the vertex we are searching for takes Theta(2E) = Theta(E) time.
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+Theta(E+V)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+We need to first iterate through the linked list of vertices, and then a linked list of vertices which is Theta(E + V) time.  It is not V^2 since we only ever search two linked lists, as opposed to a 2D array where this would be n^2 time
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+Theta(V^2)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Since we have a matrix of 0s and 1s to determine adjacency that are stored in a two dimensional matrix, we need to have two loops to search through VxV matrix making the running time Theta(V^2)
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>Question 1 Results:
+
+Total Grade: 30
+
+	10        		
+	10        		
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+
+// Breadth first search to check if a graph is bipartite in linear time
+// Start with random first node and define a color (Blue)
+// Define the color of all of its children (Black)
+// If when defining defining the children of a Black node you see
+// another black node, then the graph is not bipartite
+
+bool isBipartite(Graph [][V], root)
+	
+	ColorsArray[V];				// Create array to hold color values for each node
+	for (i = 0, i < V, i++)
+		ColorsArray[i] = -1;	// init to -1, ie no color assigned
+
+	ColorsArray[root] = 1;	
+
+	queue Q;				        // make queue of ints
+	Q.push(root);				// enqueue root
+
+	while(!isEmpty(Q)){			// run if vertices in queue
+		int u = Q.front()		// dequeue vertex
+		Q.pop()
+
+		for (j = 0, v < V, v++){						
+            if (G[u][v] && ColorsArray[v] == -1){			// if an edge exists and is not colored
+                colorArr[v] = 1 - colorArr[u];				// assign different color
+                q.push(v);									// load next vertex
+            }
+            else if (G[u][v] && colorArr[v] == colorArr[u])	// if they have the same color
+                return false;								// not bipartite
+        }
+	}	
+
+	return true;
+</VERBATIM>
+---++ b
+<VERBATIM>
+
+// depth first search
+
+
+bool isCyclic(V)
+
+stack S
+s.push(V)
+
+while(!sEmpty(S)){
+	V = S.pop()
+	if(!V.discovered){
+		V.discovered = true;
+
+		loop i through V.adjacencylist{
+			s.push(i);
+		}
+	} else {
+		return true;
+	}
+	return false;
+}
+
+
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 20
+
+	10        		
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+---++ 3b.
+Output from print of generateRandom(12):
+
+0[0]: 0 4 10 11
+
+1[1]: 0 1 4 7 8 
+
+2[2]: 1 4 5 6 7 
+
+3[3]: 2 3 4 5 8 9 10 11 
+
+4[4]: 3 4 5 6 8 9 10 
+
+5[5]: 2 3 6 7 8 10 11 
+
+6[6]: 1 3 4 5 7 8 9 
+
+7[7]: 0 1 2 3 5 6 7 11 
+
+8[8]: 2 3 6 9 10 11 
+
+9[9]: 1 5 6 7 9 10 
+
+10[10]: 2 6 7 9 11 
+
+11[11]: 0 1 2 4 6 8 9 
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  -  B  Q  K  B  -  - 
+ 2 |  P  -  P  P  P  -  P  - 
+ 3 |  -  -  N  -  -  -  -  - 
+ 4 |  -  P  -  -  -  -  -  R 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  p  -  p  -  -  -  -  - 
+ 7 |  r  p  -  P  -  p  p  - 
+ 8 |  -  n  b  -  k  -  n  - 
+
+Please enter your move: d7-e8
+
+Game Over:  White wins!
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  -  N  B  -  K  -  N  R 
+ 2 |  -  -  P  -  -  -  -  P 
+ 3 |  P  -  -  -  P  -  -  P 
+ 4 |  -  -  -  -  -  k  -  Q 
+ 5 |  -  R  -  -  -  -  -  - 
+ 6 |  -  -  -  -  -  -  -  - 
+ 7 |  -  -  -  -  -  -  -  - 
+ 8 |  -  P  B  -  -  -  -  P 
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+Provide a description of your approach here.  Upload your code online.
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

@@ -1,0 +1,446 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(NicholasMaresco),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+Then once all vertices have been counted then you know for sure which vertex is of max degree. 
+Calculating the max degree would be O(E) if you keep a running count for all vertices simultaneously, 
+and I am assuming I already have the edge list. The nice part of this approach is that you know every edge is 
+always connected to two different vertices (with the exception of when the edge is a loop to the same node).
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Check all edges taking note of vertices that are on either side within the linked list.
+Count how many times each vertex comes up in the vertex-edge pairs. Below is an example.
+
+ex)
+
+{a,b}{b,c}{c,d}{d,e}{e,a}{e,b}
+
+Vertex - number of connected edges
+
+a - 2
+b - 3
+c - 2
+d - 2
+e - 3
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+It would be O(V+E) worst case to find the the vertex in the list of vertices and then you would need to 
+iterate through each vertices' own link list to see how many components it has. The worst case would be if the last vertex in the list had the 
+max degree in the degree in the given graph G.
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+ex)
+
+a -> b -> e
+b -> a -> c -> e
+c -> b -> d
+d -> e -> c
+e -> a -> b -> d
+
+where the first column is the list of all possible vertices, and the 
+subsequent elements being pointed to are the linked list elements off of the 
+initial vertices. 
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+Each element would have to be iterated through and then each column would have to iterated through.
+The result would mean worst case O(V^2) because each column needs to be fully iterated through which is really inefficient
+to find the max degree of the given graph G.
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Explanation describe in prior box.
+
+an example of such a structure would be:
+   a b c d e
+ a 0 1 0 0 1
+ b 1 0 1 0 1
+ c 0 1 0 1 0
+ d 0 0 1 0 1
+ e 1 1 0 1 0
+
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>Question 1 Results:
+
+Total Grade: 30
+
+	10        		
+	10        		
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+BACKEND:
+
+You need to do a Depth first Search
+The two structures needed would be an undirected graph, a stack, and you can have an array/vector/list of all completed/visited nodes
+ 
+EXAMPLE: 
+ 
+ex)
+
+a-b
+|
+| d
+| |
+s-c-e
+| |
+|_f
+
+HEURISTIC:
+
+pick a being node (a)
+check if neighbors of (a) are unvisited
+go to unvisited branch (b), put (a) on stack, insert (a) into visited array,
+check if neighbors of (b) are unvisited, put (b) on stack
+no unvisited neighbors pop (b) off stack 
+insert (b) into visited array, pop back to (a)
+see if (a) has any unvisited neighbors
+go to (s), add (s) to stack, add (s) to visited array
+check if neighbors of (s) are unvisited
+go to unvisited branch (c), put (c) on stack, add (c) to visited array
+check if neighbors of (c) are unvisited, go to (f), put (f) on stack,
+add (f) to visited array, check if (f) has any unvisited neighbors,
+(f) notices (s) and (c) are only neighbors, both have been visited, which means there
+is an odd cycle therefore not bipartite.
+
+PSUEDO CODE:
+
+search_node(start_node){
+	stack.add(current_node)
+	if (current_node not in visited_array)
+		array.add(current_node)
+	for(ii = 0; ii < num of current_node.neighbors;ii++)
+		if(neighbor isnt visited)
+			go to that neighbor
+			search_node(neighbor)	
+		//checks for odd cycles so would need more than 2 colors
+		else if(even number of neighbors off current_node && all are visited) 
+			RETURN program because graph isnt bi-partite
+		else
+			pop back to previous node
+			pop current_node off the stack
+	RETURN graph is bipartite
+}
+
+RUNTIME:
+
+This algorithm runs in near-linear runtime
+</VERBATIM>
+---++ b
+<VERBATIM>
+BACKEND:
+
+create backend array/vector/list to hold visited nodes
+use graph object to house all the vertices, edges, colors, and node names/values
+graph back end could be implemented through us of sets/pairs/vectors/lists/array/maps
+to contain graph characteristics
+
+HEURISTIC:
+
+start at a node
+color the current node
+move to an uncolored branch leading to uncolored //unvisited node
+keep moving from branch to branch until no more nodes connected to 
+branches are uncolored/unvisited
+//this ensures each node is visited at most once
+once at node without options, pop back to previous node and search for options
+(i)keep searching all uncolored branches until every branch has been seen once 
+									or
+(ii)if current_node is uncolored and one of the branches is to a node that isnt the pervious node 
+but is colored then you must have a cycle
+if keep searching never to hit condition (ii) then there are no cycles
+else RETURN the graph has a cycle
+
+PSUEDO CODE:
+
+search_for_cycle(node,previous_vertex){
+	var is_cycle = false
+	current_node = node
+	color current_node
+	container visited_nodes;
+	visted_node.add(current_node)
+	
+	if(connected vertex isnt colored)
+		go to connecting vertex
+		next_vertex = connecting vertex;
+		previous_vertex = current_node
+		search_for_cycle(next_vertex,previous_vertex)
+	else if(all connecting vertices are colored && not including previous_vertex)
+		is_cycle = true
+	else if(all nodes have been visited)
+		//is_cycle is already false so just break out and return is_cycle
+		
+	RETURN is_cycle
+}
+
+RUNTIME:
+
+Every vertex would only be visited once so the runtime would be O(V)
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 20
+
+	10        		
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+
+(SOLUTIONS ATTACHED)
+---++ 3b.
+Attach your solutions to this topic.
+
+(SOLUTIONS ATTACHED)
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+Welcome to Homework Six simplified chess.
+  Please enter your moves in the format 'e2-e3'.
+  You are playing White.
+
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  Q  K  B  N  R 
+ 2 |  P  P  P  P  P  P  P  P 
+ 3 |  -  -  -  -  -  -  -  - 
+ 4 |  -  -  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  -  -  -  -  -  - 
+ 7 |  p  p  p  p  p  p  p  p 
+ 8 |  r  n  b  q  k  b  n  r 
+
+Please enter your move:  a2-a3 b2-b3 c2-c3 d2-d3 c1-e3 a1-a2 a2-d2
+I move: d7 - d6
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  Q  K  B  N  R 
+ 2 |  -  P  P  P  P  P  P  P 
+ 3 |  P  -  -  -  -  -  -  - 
+ 4 |  -  -  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  -  p  -  -  -  - 
+ 7 |  p  p  p  -  p  p  p  p 
+ 8 |  r  n  b  q  k  b  n  r 
+
+Please enter your move: I move: b7 - b6
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  Q  K  B  N  R 
+ 2 |  -  -  P  P  P  P  P  P 
+ 3 |  P  P  -  -  -  -  -  - 
+ 4 |  -  -  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  p  -  p  -  -  -  - 
+ 7 |  p  -  p  -  p  p  p  p 
+ 8 |  r  n  b  q  k  b  n  r 
+
+Please enter your move: 			//multiple initial inputs is why this shows no input
+I move: c8 - g4
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  Q  K  B  N  R 
+ 2 |  -  -  -  P  P  P  P  P 
+ 3 |  P  P  P  -  -  -  -  - 
+ 4 |  -  -  -  -  -  -  b  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  p  -  p  -  -  -  - 
+ 7 |  p  -  p  -  p  p  p  p 
+ 8 |  r  n  -  q  k  b  n  r 
+
+Please enter your move: 
+I move: g4 - e6
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  Q  K  B  N  R 
+ 2 |  -  -  -  -  P  P  P  P 
+ 3 |  P  P  P  P  -  -  -  - 
+ 4 |  -  -  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  p  -  p  b  -  -  - 
+ 7 |  p  -  p  -  p  p  p  p 
+ 8 |  r  n  -  q  k  b  n  r 
+
+Please enter your move: 
+I move: b8 - a6
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  -  Q  K  B  N  R 
+ 2 |  -  -  -  -  P  P  P  P 
+ 3 |  P  P  P  P  B  -  -  - 
+ 4 |  -  -  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  n  p  -  p  b  -  -  - 
+ 7 |  p  -  p  -  p  p  p  p 
+ 8 |  r  -  -  q  k  b  n  r 
+
+Please enter your move: 
+I move: a6 - b4
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  -  N  -  Q  K  B  N  R 
+ 2 |  R  -  -  -  P  P  P  P 
+ 3 |  P  P  P  P  B  -  -  - 
+ 4 |  -  n  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  p  -  p  b  -  -  - 
+ 7 |  p  -  p  -  p  p  p  p 
+ 8 |  r  -  -  q  k  b  n  r 
+
+Please enter your move: 
+I move: e6 - c8
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  -  N  -  Q  K  B  N  R 
+ 2 |  -  -  -  R  P  P  P  P 
+ 3 |  P  P  P  P  B  -  -  - 
+ 4 |  -  n  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  p  -  p  -  -  -  - 
+ 7 |  p  -  p  -  p  p  p  p 
+ 8 |  r  -  b  q  k  b  n  r 
+
+Please enter your move: c3 - b4
+I move: c8 - f5
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  -  N  -  Q  K  B  N  R 
+ 2 |  -  -  -  R  P  P  P  P 
+ 3 |  P  P  -  P  B  -  -  - 
+ 4 |  -  P  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  b  -  - 
+ 6 |  -  p  -  p  -  -  -  - 
+ 7 |  p  -  p  -  p  p  p  p 
+ 8 |  r  -  -  q  k  b  n  r 
+
+Please enter your move: b1-c3
+I move: f5 - e6
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  -  -  -  Q  K  B  N  R 
+ 2 |  -  -  -  R  P  P  P  P 
+ 3 |  P  P  N  P  B  -  -  - 
+ 4 |  -  P  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  p  -  p  b  -  -  - 
+ 7 |  p  -  p  -  p  p  p  p 
+ 8 |  r  -  -  q  k  b  n  r 
+
+Please enter your move: d3-d4
+I move: e6 - b3
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  -  -  -  Q  K  B  N  R 
+ 2 |  -  -  -  R  P  P  P  P 
+ 3 |  P  b  N  -  B  -  -  - 
+ 4 |  -  P  -  P  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  p  -  p  -  -  -  - 
+ 7 |  p  -  p  -  p  p  p  p 
+ 8 |  r  -  -  q  k  b  n  r 
+
+Please enter your move: d4-d5
+I move: d8 - b8
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  -  -  -  Q  K  B  N  R 
+ 2 |  -  -  -  R  P  P  P  P 
+ 3 |  P  b  N  -  B  -  -  - 
+ 4 |  -  P  -  -  -  -  -  - 
+ 5 |  -  -  -  P  -  -  -  - 
+ 6 |  -  p  -  p  -  -  -  - 
+ 7 |  p  -  p  -  p  p  p  p 
+ 8 |  r  q  -  -  k  b  n  r 
+
+Please enter your move: d1-b3
+I move: a7 - a6
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  -  -  -  -  K  B  N  R 
+ 2 |  -  -  -  R  P  P  P  P 
+ 3 |  P  Q  N  -  B  -  -  - 
+ 4 |  -  P  -  -  -  -  -  - 
+ 5 |  -  -  -  P  -  -  -  - 
+ 6 |  p  p  -  p  -  -  -  - 
+ 7 |  -  -  p  -  p  p  p  p 
+ 8 |  r  q  -  -  k  b  n  r 
+
+Please enter your move: b3-a4
+I move: g8 - f6
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  -  -  -  -  K  B  N  R 
+ 2 |  -  -  -  R  P  P  P  P 
+ 3 |  P  -  N  -  B  -  -  - 
+ 4 |  Q  P  -  -  -  -  -  - 
+ 5 |  -  -  -  P  -  -  -  - 
+ 6 |  p  p  -  p  -  n  -  - 
+ 7 |  -  -  p  -  p  p  p  p 
+ 8 |  r  q  -  -  k  b  -  r 
+
+Please enter your move: a4-e8
+
+Game Over:  White wins!
+Program ended with exit code: 1
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+The king has no movement options.
+
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  -  -  -  -  K  B  N  - 
+ 2 |  -  -  -  R  -  -  -  - 
+ 3 |  P  -  -  -  -  -  -  - 
+ 4 |  B  -  N  -  -  -  -  P 
+ 5 |  -  -  -  -  -  P  -  - 
+ 6 |  p  p  -  -  P  -  P  - 
+ 7 |  -  -  P  -  -  -  Q  - 
+ 8 |  -  -  -  -  k  -  -  R 
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+Provide a description of your approach here.  Upload your code online.
+
+I created a simulator class that implemented the actual board's configuration. So at the beginning of the game I created an AIPlayer and for each turn I simulated the current board configuration for all possible (immediate) turn outcomes, and then I ranked those outcomes based on the number of chess pieces left on the board, giving each type of chess piece a specific point value. So for each move 5 to 15 simulations were run, and the most favorable decision was made. As a result I was able to defeat the first two virtual chess players on the upload, however I ran into logic issues that resulted in errors when it can to run simulations within simulations. In theory my approach would be a step ahead the opponent based on the number of meta-simulations for a given decision path. Once beyond a decision path (depth) of say 2 or 3 I would have then arranged the simulation situations inside a tree optimized for alpha-beta pruning in order to reduce computation, and still ensure low risk, and potentially high gain outcomes.
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

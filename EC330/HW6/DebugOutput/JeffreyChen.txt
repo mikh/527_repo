@@ -1,0 +1,170 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(JeffreyChen),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+*Collaborated with Austin Schiller*
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+&Theta;(V+E)
+---+++!! Brief explanation
+
+Go through the linked list of edges and increment a counter for each vertex every time it appears. (This requires &Theta; (E) time)
+
+The counters can be stored in an array, and then you can find the max of the array (This requires &Theta; (V) time)
+
+Total run time is &Theta;(V+E)
+---++ b
+---+++!! Running time
+
+&Theta;(V*E)
+
+Note: Could be &Theta;(E) if using C++11
+---+++!! Brief explanation
+
+If you were to put all of the vertices into a linked list of linked list, you would wind up with V sub linked lists of linked lists. Each of these V linked lists would have a maximum of E elements. To find the vertex with the highest degree, we would need to go through each of the linked lists and find the one with the biggest size. According to the C++ library, finding the size of a linked list is linear run time for C++98. This means that in the worst case, we have to loop through V * E elements.
+---++ c
+---+++!! Running time
+
+&Theta;(V<sup>2</sup>)
+
+---+++!! Brief explanation
+If you were to make an adjacency list into a 2D matrix, the matrix would have the size V * V. This means that there are a total of V<sup>2</sup> elements. In order to find the vertex with the highest degree you would go row by row in the matrix and count the number of adjacencies in the V columns. If you repeat this for each of the V rows, you wind up with V<sup>2</sup> run time.
+
+---++!! Grader comments *[/30]*
+<VERBATIM>Question 1 Results:
+
+Total Grade: 18
+
+	4         		Invalid runtime, should just be O( E)
+	4         		You can get it down to O(V+E) time
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+Use a greedy coloring algorithm
+
+<verbatim>
+Coloring_Method(Graph)
+       Pick a starting vertex V and color it grey. Color all other vertices white
+       Put V into a queue, Q
+       
+       while Q is not empty
+       {
+           H = head (Q)
+           for every neighbor N of H
+           {
+               if N is white 
+                   color it grey and put into queue
+               else if N is black
+                   return Graph is NOT bipartite
+           }
+           Color H black
+           Pop H from Q
+       }
+       return Graph is Bipartite.
+</verbatim>
+
+Use BFS greedy coloring method. First, color a starting node and put it into queue. Look at neighboring nodes, color them a different color, and put them into queue. If you get a neighbor that is already the same color as it's parent, return not bipartite. If you get through the whole graph without hitting this exception, it is bipartite.
+---++ b
+Use DFS to find cycle
+
+<VERBATIM>
+DFS
+    Color all vertexes white
+    For each white vertex V
+    DFS_Visit(V)
+
+DFS-Visit(V):
+        Color V grey
+        For each neighbor N of V
+        {
+            if (N == white)
+                DFS-Visit(N)
+            else
+                return Cycle Found
+        }
+        Color V black
+</VERBATIM>
+
+This code uses the DFS method. It goes through each node and looks for a node that is adjacent to it that is previously colored grey. If the node has no cycle, the code should only go through each vertex once. If the code has a cycle, It will find a loop before reaching the last vertex.
+         
+---++!! Grader comments *[/20]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 20
+
+	10        		
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+---++ 3b.
+Attach your solutions to this topic.
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  -  -  -  -  B  N  R 
+ 2 |  P  P  -  -  K  -  P  P 
+ 3 |  -  -  -  P  -  P  -  - 
+ 4 |  -  -  -  -  -  -  -  p 
+ 5 |  -  -  -  P  -  -  -  - 
+ 6 |  -  -  Q  p  -  -  -  n 
+ 7 |  r  -  -  -  p  p  p  - 
+ 8 |  -  -  -  -  k  b  r  - 
+
+Please enter your move: c6 - e8
+
+Game Over:  White wins!
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  -  -  -  -  -  -  p  k 
+ 2 |  -  Q  -  -  K  -  p  p 
+ 3 |  -  -  -  -  -  -  -  - 
+ 4 |  -  B  -  -  -  -  -  - 
+ 5 |  -  -  -  B  -  -  -  - 
+ 6 |  -  -  -  -  -  -  -  - 
+ 7 |  -  -  -  -  -  -  -  - 
+ 8 |  -  -  -  -  -  -  -  -
+</VERBATIM>
+
+Black's King is trapped in the corner, and none of Black's pawns can move, so there are no valid moves
+---++ 4b.  Main task [20 points]
+
+Chess engine plays aggressively. It looks for any move it can make where it can take an opposing piece. If it does not find a move where it can take an opposing piece, it moves randomly
+
+Always beats random player, usually beats smarter player, loses to smartest player
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

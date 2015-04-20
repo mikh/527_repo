@@ -1,0 +1,158 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(DereckFagundes),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+Theta(E)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+You would need to go through all the edges and create a counter and see which vertex appeared the most and the counter value is the answer
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+theta(V)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+the linked list of linked list will be of length V so i need to check the length of each list and see which is the longest so just go through it in V time
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+theta(V^2)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+cause the area of the matrix is v^2 so we have to o through every element
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+my code assumes that there is a "queue" and that the graph is structured with 
+nodes that contain a boolean variable, "visited", that is true if the node has been visited and false if it has not,
+and each node has a color. The nodes also have connections to other nodes. The color of each node is 
+originally set to "white".
+
+pick any node to start with
+while(queue != empty){
+    if node.visited == false{
+          node.color = blue
+          enqueue node.connections to queue
+    }
+    if node.visited == true{
+         dequeue node(i) from queue
+         if node.color == node(connections).color{
+                  return "This graph is not bipartite"
+         }
+    }
+    move to next node in queue
+}
+return "This graph is bipartite"
+
+I found a similar problem to this on this website: http://www.ece.northwestern.edu/~dda902/336/hw3-sol.pdf
+and used a similar method.
+</VERBATIM>
+---++ b
+<VERBATIM>
+my code assumes that there is a stack "S" and that the graph has connections between nodes, 
+and that each node has a boolean variable "v" which is true if it has been visited before and false if it has not. 
+put the first node on the stack
+while(stack != empty){
+     node.v = true;
+     put node.connections->stack
+     if (any of node.connections.v == true)
+          return "There is a cycle"
+     else
+         move to next node on stack
+}
+return "No cycle present"
+
+I found a similar problem on this website: http://www.cs.jhu.edu/~xfliu/600.363_F03/hw_solution/midterm2_solution
+and used a similar method.
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+attached
+---++ 3b.
+0[65]: 1 4 9 
+1[45]: 2 5 6 7 8 
+2[19]: 1 4 6 7 9 
+3[81]: 0 1 3 7 
+4[91]: 0 1 2 3 6 7 8 9 
+5[29]: 3 6 9 
+6[83]: 0 1 2 3 6 7 9 
+7[36]: 0 1 2 5 8 
+8[70]: 1 3 4 5 8 9 
+9[3]: 1 3 4 5 6 8 
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  -  K  -  N  R 
+ 2 |  P  P  P  P  -  P  P  P 
+ 3 |  -  -  -  -  P  Q  -  - 
+ 4 |  -  -  B  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  p  -  -  -  p  -  - 
+ 7 |  p  -  p  p  p  k  p  p 
+ 8 |  r  n  b  q  -  b  n  r 
+
+Please enter your move: c4-f7
+
+Game Over:  White wins!
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  -  N  B  -  K   -  R  - 
+ 2 |  -   -   -  P  -   P  -  P 
+ 3 |  P  -  P  -   -   -   -  k 
+ 4 |  -   -  P  -   -   -   -  P 
+ 5 |  -   -  P  -  Q  N  -  - 
+ 6 |  -   -   -  -   -   -  -   - 
+ 7 |  -   -   -  -   -   -  -   - 
+ 8 |  -   -   -  -   -   -  -   -
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+Provide a description of your approach here.  Upload your code online.
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

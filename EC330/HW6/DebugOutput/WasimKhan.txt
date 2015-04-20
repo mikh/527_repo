@@ -1,0 +1,164 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(WasimKhan),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+Theda(E)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+The problem is an edge-list implemented as a linked-list, which means that every item has two vertices that form that edge. As a result, in order to find the maximum degree of a vertex, we can go through each edge and record the vertices that appear. Then, we can go through the vertices, and find the one that occurred the most times, which would take 2E time. In the end, the run time is Theda of E.
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+O(V^2)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+This is a linked-list of linked-lists, so at the first level, each item holds all the vertices that are neighbors of each other, so the number of edges connected to this vertex. The worst case run time is O(V^2) because in a very dense graph where each vertex is connected to the other, then every linked-list would hold the same number of vertices but just in a different order, we would have to calculate the size of the linked-list at each index of the higher linked-list to determine how many edges that vertex has.
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+Theda(V^2)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+An adjacency matrix implemented as a two-dimensional vector would require that we use a nested loop to loop through each item in the first level, and then count how many times it connects with the elements of the second level vector.
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>Question 1 Results:
+
+Total Grade: 24
+
+	10        		
+	4         		You can get it down to O(V+E) time
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+Use breadth-first search
+
+for each vertex u in G.V
+    u.color = white
+    u.pi = NIL
+s.color = red
+s.pi = NIL
+Q = 0
+ENQUEUE(Q,s)
+while Q != 0
+    u = DEQUEUE(Q)
+    for each v in G.Adj[u]
+        if v.color == white
+            if u.color == red     //This checks if the parent was red, then to color the child opposite color
+                v.color = blue
+            else
+                v.color = red
+            v.d = u.d + 1
+            v.pi = u
+            ENQUEUE(Q,v)
+        else if u.color == v.color   //Checks if two neighbors have the same color
+            return 0
+
+//This is a linear time search since it uses BFS
+</VERBATIM>
+---++ b
+<VERBATIM>
+Use depth-first search
+
+for each vertex u in G.V
+    u.color = white
+    u.pi = NIL
+time = 0
+for each vertex u in G.V
+    if u.color == white
+        DFS-VISIT(G,u)
+
+DFS-VISIT(G,u)
+    time = time + 1
+    u.d = time
+    u.color = gray
+    for each v in G.Adj[u]
+        if v.color == white
+            v.pi = u
+            DFS-VISIT(G,v)
+        if v.color ==  black    //Checks if an adjacent vertex has already been discovered, and if so then it has a cycle
+            return 0
+    u.color = black
+    time = time + 1
+    u.f = time
+
+//Run time is O(V) because it uses DFS that is slightly modified
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 20
+
+	10        		
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+---++ 3b.
+Attach your solutions to this topic.
+
+1[1]: 2 3 4 5 
+
+2[2]: 5 6
+ 
+3[3]: 4 
+
+4[4]: 5 
+
+5[5]: 6 
+
+6[6]:
+
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+Provide a description of your approach here.  Upload your code online.
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

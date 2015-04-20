@@ -1,0 +1,199 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(AnishAsthana),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+Theta(E)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+We go through each edge in the list, incrementing the degree associated with each vertex in the edge.
+We then return the required degree.
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+O(V+E)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+It takes v time to travel the linked list of vertices, and a total of E time to travel the linked list of edges for each vertex.
+That comes out to V+E time
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+O(V^2)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+The adjacency list is of size V by V. 
+We have to go through every single member of the adjacency matrix to compute the degrees of each vertex.
+We then return the largest value.
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+
+//Using a slightly modified DFS.
+check=true // Global variable
+
+DFS(input,colour)
+{
+       visited(input)=true
+       colour(input)=colour  // Colours are Red and Green
+       opp_colour= !colour  //Basically assigning the other colour to a variable
+       for all neighbours n of input
+       {
+                   if(!visited(n)): 
+                              DFS(n,opp_colour)
+                   elif (colour(input)==(colour(n)):
+                              check=false
+      }
+ }
+
+bool isBipartite(Graph G)  //returns true or false
+//V= Vertices
+{
+      for all vertices v in V:
+              visited(v)=false
+      for all vertices v in V
+      {
+              if(!visited(v)):
+                   DFS(v)
+       }
+return check;
+}
+</VERBATIM> 
+---++ b
+<VERBATIM>
+//Simple DFS using recursion(as done above)
+
+check=false //Global Variable
+DFS(input)
+{
+       visited(input)=true
+       for all neighbours n of input
+       {
+                   if(!visited(n)): 
+                              DFS(n)
+                   else check==true
+      }
+ }
+
+bool hasCycle(Graph G)  //returns true or false
+//V= Vertices
+{
+      for all vertices v in V:
+              visited(v)=false
+      for all vertices v in V
+      {
+              if(!visited(v)):
+                   DFS(v)
+       }
+return check;
+}
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+You need to compile it like g++ -std=c++0x Graph.cpp
+---++ 3b.
+You need to compile it like g++ -std=c++0x Graph.cpp
+
+1[0]: 2 4 5 6 8 9 10 13 
+
+2[1]: 2 5 12
+
+3[2]: 1 2 6 8 9 11
+
+4[3]: 3 4 5 6 7 10 11 12 13
+
+5[4]: 5 9 10
+
+6[5]: 2 4 5 6 7 8 9 10 11
+
+7[6]: 6 7 8 10 11 12
+
+8[7]: 1 2 3 4 7 9 10 12
+
+9[8]: 1 2 7 8 9 10 11 13
+
+10[9]: 3 13
+
+11[10]: 2 8 9 10 13
+
+12[11]: 1 3 7 8 9
+
+13[12]: 1 2 3 5 8 9 10
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+`  |  a  b  c  d  e  f  g  h
+____________________________
+ 1 |  R  N  B  -  K  -  N  R
+ 2 |  P  P  P  P  -  P  P  P
+ 3 |  -  -  -  -  P  -  -  -
+ 4 |  -  -  B  -  -  -  -  -
+ 5 |  -  -  -  -  -  -  -  -
+ 6 |  p  p  n  -  -  -  -  n
+ 7 |  -  -  p  p  p  Q  p  p
+ 8 |  r  -  b  q  k  b  -  r
+
+Please enter your move: f7-e8
+
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+`  |  a  b  c  d  e  f  g  h
+____________________________
+ 1 |  -  N  B  -  K  -  N  -
+ 2 |  -  P  P  P  -  P  P  -
+ 3 |  -  -  -  -  P  -  -  -
+ 4 |  -  -  B  -  -  -  -  -
+ 5 |  -  -  -  -  -  Q  -  -
+ 6 |  -  -  -  -  -  -  R  -
+ 7 |  R  -  -  -  -  -  -  -
+ 8 |  -  -  -  -  -  -  -  k
+
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+
+So I have an evaluate function which assigns certain values to certain pieces, with the king getting an extremely high value(more than the other pieces combined. I take the difference of the sum of the values of the white pieces and the values of the black pieces.
+So, at the start of the game, the value is 0. As the value gets lower, the relative strength of black gets higher, and as the value gets higher, the relative strength of white gets higher. Inside my getmove function, what I am doing is that I have two nested for loops.
+The outside loop has me going through every move for my player. My inner loop goes through every possible move for the opponent given the move I made. I call the evaluate function inside the inner for loop, and figure out the most advantageous score, and in turn, the best move given the constraints and my laziness, for my player
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

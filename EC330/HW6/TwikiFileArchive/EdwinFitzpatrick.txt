@@ -1,0 +1,146 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(EdwinFitzpatrick),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+Theta(E)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+going through a linked list takes linear time, and the list will be E long because it must take into account each edge.
+
+Depending how the values within the indices of the list are stored this will add another layer of complexity, but given it is not specified I am leaving it out.
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+theta(V+E)
+O(V^2)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+In the worse case there will be a complete graph of n size, which means that we will go over every index, which will take V time, and then with each list at the indices it will take at most V time
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+Theta(V^2)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+If we are using a vector within a vector, we must check the amount of connections at each vertex. This means going through each vertex which will take V time, and then checking if it's connected to every other vertex, therefore it will take V^2 time.
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+
+biPartite?(adjacencyList graph[V][], int source){
+	create colorArray of size V
+	color all nodes white
+	
+	color colorArray[source] red
+	
+	queue BFSQueue
+	add source to BFSQueue
+	
+
+	while (BFSQueue is not empty){
+		s = front of BFSQueue
+		BFSQueue.pop_front()
+		
+		for (int j = 0; j < graph[s].back() ; j++) {
+			node = graph[s][j]
+			if node is white{
+				if i is even; color node blue
+				else color node red 
+				BFSQueue.push_back(node)
+			}
+		}
+	}
+	while (v <= V){
+		for (i = 0; i < graph[v]; i++) {
+			if (colorArray[graph[v][0]] == colorArray[graph[v][i]]) return false
+		}
+	}
+	return true
+	
+}
+
+</VERBATIM>
+---++ b
+<VERBATIM>
+isCycle(graph testGraph[V][], source){
+	Array visited[V]; //to check if a node has been visited already
+	visted[source] = true; 
+	
+	queue toVisit
+	toVisit.push_back(source)
+	s = toVisit.front()
+	
+	while (!toVisit.empty()) {
+		s = toVisit.front()
+		toVisit.pop()
+		if (visited[testGraph[s][0]]) return true
+		visited[testGraph[s][0]] = true
+		for (i = 0; i <= testGraph[s].end; i++) {
+			toVisit.push_back(testGraph[s][i])
+		}		
+	}
+	return false
+}
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+---++ 3b.
+Attach your solutions to this topic.
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+Provide a description of your approach here.  Upload your code online.
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---
+
+   * [[%ATTACHURLPATH%/problem3a.cpp][problem3a.cpp]]: problem3a.cpp

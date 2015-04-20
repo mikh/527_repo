@@ -1,0 +1,356 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(IgorPereiraDePaula),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time + Brief explanation
+<VERBATIM>
+We must go through the entire linked list of length E to compute the degree of every vertex. Then we must go through the entire data structure of length V where every element contains the degree of a vertex to the find the max.
+
+Therefore, it is Theta(E + V)
+</VERBATIM>
+
+---++ b
+---+++!! Running time + Brief explanation
+<VERBATIM>
+Assume that list A has a list Bi at every node of list A
+
+It takes Theta(V) because we traverse list A and find the length (the length function of lists are Theta(1)) of the inner lists, B0 through BV-1. We assume there is a variable that stores the max length as we loop through the list. If the length of the current list B is larger than we any of the previous ones we overwrite it. When the list A has been traversed our variable would contain the max degree.
+</VERBATIM>
+
+---++ c
+---+++!! Running time + Brief explanation
+<VERBATIM>
+We count the number of edges (ie the number of true's/1's) in each row so there is V counts and each count takes Theta(V) to calculate. After each row has been counted we find the max of those counts.
+</VERBATIM>
+
+---++!! Grader comments *[/30]*
+<VERBATIM>Question 1 Results:
+
+Total Grade: 18
+
+	4         		Invalid runtime, should just be O( E)
+	7         		In some cases, you will have O(V+E) which could be greater than O(V)
+	7         		Final Answer?
+
+
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+%CODE{cpp}%
+*obs:
+   a lot of the syntax matches the Graph implementation on problem 3
+
+bool checkBGraph(Graph  g_a)
+
+  for all edges in the g_a
+    if g_a.getColor(edge->first) == g_a.getColor(edge->second) //in other words: if two connecting vertices have the same color
+      return false;
+
+  return true;
+%ENDCODE%
+
+---++ b
+%CODE{cpp}%
+func detectCycle()
+
+  for node in graph:
+    visited = bool[N]
+    set all visited to false
+    detectCycle(n, n, visited)
+
+func detectCycle(n, origin, visited)
+  for neighbour in graph[n]
+    if neighbour == origin
+       cycle detected
+    if not visited[neighbour]
+       visited[neighbour] = true
+       detectCycle(neighbour, visited)
+       visited[neighbour] = false
+%ENDCODE%
+
+---++!! Grader comments *[/20]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 10
+
+	5         		algorithm needs more definition
+	5         		This will not find all cycles
+
+
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ Graph.h
+%CODE{cpp}%
+#ifndef GRAPH
+#define GRAPH
+
+#include <set>
+#include <map>
+#include <sstream>
+#include <string>
+#include <iterator>
+
+using namespace std;
+
+/** Type definitions to make life easier. */
+typedef pair<int, int> directedEdge;
+typedef set<int>::iterator vertexIterator;
+
+class Graph {
+	/**
+	* Implements a directed, unweighted graph, where vertices can have color.
+	*/
+public:
+
+    // CONSTRUCTORS
+	/**
+	* Constructs a graph with no edges or vertices.
+	*/
+	Graph();
+//
+//    // SETTERS
+//	/**
+//	* Adds a vertex to the graph with color <color>.
+//	* @param color The color of the added vertex.
+//	* @return The ID of the vertex that was added.
+//	*/
+	int addVertex(int color);
+//
+//	/**
+//	* Adds the given edge to the graph.
+//  * @param newEdge An edge to add to the graph.
+//	* @require the vertices of <newEdge> must currently exist in the graph.
+//	*/
+	void addEdge(directedEdge newEdge);
+//
+//    // GETTERS
+//
+//	/**
+//	* @param vertex the vertex whose color is of interest.
+//	* @require the vertex <vertex> must currently exist in the graph.
+//	* @return the color of vertex <vertex>.
+//	*/
+    int getColor(int vertex); //DONE
+//
+//	/**
+//	* @return true iff there is an edge in the graph with the same vertices as newEdge
+//	*/
+	bool isEdge(directedEdge newEdge); //DONE
+//
+//    /**
+//    * Returns a string representing a human-readable version of the adjacency list of the graph.
+//    * Format is:  vertex [color]: adjacent_vertex_1 adjacent_vertex_2 ...
+//     */
+	string print();
+    
+    /**
+    * @param num will return how many vertices you'll find on the new Graph
+    * @return the pointer to a new graph
+    */
+    
+    static Graph* generateRandom(int num);
+    
+
+private:
+	set<int> vertices;         /** The set of vertices of the graph. */
+	set< directedEdge > edges; /** A set of edges of the graph. */
+	map< int, int > colors;    /** A mapping between vertices in and their colors. */
+};
+
+#endif
+
+%ENDCODE%
+---++ Graph.cpp
+%CODE{cpp}%
+#include "Graph.h"
+#include <iostream>
+
+using namespace std;
+
+/************* CONSTRUCTOR **************/
+Graph::Graph(){
+    
+    return;
+    
+}
+/****************************************/
+
+/************ ADD VERTEX ***************/
+int Graph::addVertex(int color){
+    
+    int id = (int)vertices.size() + 1;
+    
+    vertices.insert(id); // add color
+    
+   
+    //save color
+    colors.insert(pair<int,int>(id, color));
+    return id;
+    
+}
+/***************************************/
+
+
+/************ ADD EDGE ***************/
+void Graph::addEdge(directedEdge newEdge){
+    
+    if(newEdge.first > vertices.size() || newEdge.second > vertices.size()){
+        return;
+    }else{
+        edges.insert(newEdge);
+    }
+    
+}
+/***************************************/
+
+
+
+/************* GET COLOR FUNCTION *********/
+int Graph::getColor(int vertex){
+    
+    for(map< int, int >::iterator it=colors.begin(); it!=colors.end(); ++it){
+        if (it->first == vertex) {
+            return it->second;
+        }
+    }
+    return -1; //set -1 as flag
+}
+/*******************************************/
+
+
+/*********** IS EDGE FUNCTION **********/
+bool Graph::isEdge(directedEdge newEdge){
+    
+    for(set<directedEdge>::iterator it=edges.begin(); it!=edges.end(); ++it){
+        if (it->first == newEdge.first && it->second == newEdge.second) {
+            return true;
+        }
+    }
+    
+    return false;
+
+}
+/**************************************/
+
+
+/******** PRINT FUNCTION *********/
+string Graph::print() {
+    stringstream result;
+    for (vertexIterator vert1=vertices.begin(); vert1 != vertices.end(); vert1++) {
+        result << *vert1 << "[" << (char)getColor(*vert1) << "]: ";                      // make sure that on your code you get rid of the "(char)"
+        for (vertexIterator vert2 = vertices.begin(); vert2 != vertices.end(); vert2++)
+            if (isEdge (directedEdge(*vert1, *vert2)))
+                result << *vert2 << " ";
+        result << endl;
+    }
+    return result.str();
+}
+/*********************************/
+Graph* Graph::generateRandom(int num){
+    
+    srand((int)time(NULL));
+    
+    char colorsToAdd[] = {'g',//green
+                        'b',//blue
+                        'k',//black
+                        'o',//orange
+                        'r',//red
+                        'y'};//yellow
+    
+    Graph* toReturn = new Graph;
+    
+    // create vertices
+    for (int ii = 0; ii < num; ++ii) {
+        toReturn->addVertex(colorsToAdd[rand()%5]);
+    }
+    
+    // create edges w.p. 0.5
+    for (int ii = 0; ii < num; ii++) {
+        for (int jj = 0; jj < num; jj++) {
+            if(ii == jj){continue;}
+            if( (rand() % 2) == 1){ // implementing the 50/50 chance here
+                toReturn->addEdge(directedEdge(ii,jj));
+            }
+        }
+    }
+    
+    
+    
+    return toReturn;
+    
+}
+/******** CREATE RANDOM GRAPH ***********/
+
+/****************************************/
+%ENDCODE%
+---++ main.cpp
+%CODE{cpp}%
+#include "Graph.h"
+#include <iostream>
+
+using namespace std;
+
+int main(){
+    
+    // create a basic graph for warm up
+    Graph myGraph;
+    
+    int uno  = myGraph.addVertex('g');
+    int dos  = myGraph.addVertex('b');
+    int tres = myGraph.addVertex('r');
+    
+    myGraph.addEdge(directedEdge(uno,dos));
+    myGraph.addEdge(directedEdge(dos,tres));
+    myGraph.addEdge(directedEdge(tres,uno));
+    
+    // bet, lets look at it:
+    cout << myGraph.print() << endl;
+    
+    // now, lets do part B:
+    Graph* testGraph = Graph().generateRandom(8);
+    
+    cout << testGraph->print() << endl;
+    
+    
+    return 0; 
+}
+%ENDCODE%
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+Done
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+Provide a description of your approach here.  Upload your code online.
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

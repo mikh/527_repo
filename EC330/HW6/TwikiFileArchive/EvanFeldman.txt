@@ -1,0 +1,152 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(EvanFeldman),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+O(E+V)
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+We first create an array of size V, then we go through the linked list of edges (takes  O(E) time) and increment each vertex whenever an edge connects two vertices. Scanning the array takes  O(V) time. In total takes O(E+V) time.
+---++ b
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+O(E+V)
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+We go through the outer linked list (which is of size V) and we count the total number of edges from each vertex (the size of the inner linked list), in total we take 2*E steps which is O(E), however the overhead of combining the steps totals V.
+---++ c
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+<latex>O(V^2)</latex>
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+We need to add up the 1s in every row, that requires us to go through each vector one element at a time, we have V vectors each of size V
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+//assume it's stored in an adjacency list as a linked list of linked lists
+bool hasCycle(int source, color target)
+if(colors[vertices[source]]==target||colors[vertices[source]]==null){
+     colors.insert(vertices[source],target)
+}
+else return false;
+for(iterator a=vertices[source].start;a<vertices[source].end,a++){
+     hasCycle(a,!target);
+}
+//!target - the other color, what this pseudo code is, is an implementation of a 2 coloring of the map, if possible its bipartite
+return true;
+</VERBATIM>
+---++ b
+<VERBATIM>
+bool verticesSeen[V]=false;
+//we set the graph as a 2d vector to represent the adjacency list
+int currentVertex=0;
+while(!verticesSeen){
+     if(verticesSeen[currentVertex]){
+          return false;
+          //if we already saw this vertex then the graph has a cycle
+     }
+     verticesSeen[currentVertex]=true;
+     if(currentvertex==vertices.size()){
+          return true;
+          //if we get to the end of the array then we're done and there are no cycles
+     }
+     if(vertices[currentVertex].size()==1){
+          currentVertex=vertices[currentVertex][0];
+          vertices.[currentVertex].erase(1);
+     }
+     if(vertces[currentVertex].size()==0){
+          currentVertex++;
+          //if we get to the end of the tree then we go toe the next one
+     }
+}
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+---++ 3b.
+Attach your solutions to this topic.
+
+the output is:
+<verbatim>
+0[0]:
+1[0]: 4
+2[0]: 1
+3[0]: 1
+4[0]: 0
+5[0]: 1 2 4
+</verbatim>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+|* *|*A*|*B*|*C*|*D*|*E*|*F*|*G*|*H*|
+|*1*|R|N|B|-|K|B|N|R|
+|*2*|P|P|P|-|-|P|P|P|
+|*3*|-|-|-|-|-|-|-|-|
+|*4*|-|-|-|-|P|-|-|-|
+|*5*|-|-|-|-|p|-|-|-|
+|*6*|-|-|-|-|-|-|p|n|
+|*7*|p|p|p|Q|k|-|-|p|
+|*8*|r|-|b|-|-|p|-|r|
+Please enter your move: d7-e7
+Game Over: White Wins!
+---+++ ii.  
+|* *|*A*|*B*|*C*|*D*|*E*|*F*|*G*|*H*|
+|*1*|k|-|-|-|-|-|-|-|
+|*2*|-|R|-|-|-|-|-|-|
+|*3*|-|-|K|-|-|-|-|-|
+|*4*|-|-|-|-|-|-|-|-|
+|*5*|-|-|-|-|-|-|-|-|
+|*6*|-|-|-|-|-|-|-|-|
+|*7*|-|-|-|-|-|-|-|-|
+|*8*|-|-|-|-|-|-|-|-|
+---++ 4b.  Main task [20 points]
+Provide a description of your approach here.  Upload your code online.
+
+The approach was to use a modifed variant of the blitzkreig 4 move mate, modified to account for various other scenarios (essentially allowing the AI to focus on one branch of the tree)
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

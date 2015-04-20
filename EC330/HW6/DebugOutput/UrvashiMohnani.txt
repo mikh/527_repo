@@ -1,0 +1,251 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+Worked with Christine Low
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(UrvashiMohnani),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+&theta;(E+V)
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+So first you will traverse through the linked list containing the edges to extract the vertices and store them in a separate linked list. This will take time E to to go through the edges and time V to store the vertices in another linked list. Then for each vertex in the vertices linked list, you will traverse through the edgelist to find coordinates that have this vertex as its first coordinate. Every time such an edge is found count will be incremented and the maximum count so far will be kept track for. This will take time V to go through the list of vertices and do it for every vertex, and time E to go through the edgelist and find matches. Hence in total it will take a total time of V+E.
+---++ b
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+&theta;(V)
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+To find the maximum degree of the vertex, you want to go through all the vertices in the graph, calculate its degree and keep track of the maximum degree. To get the degree of a vertex, we want to find how many adjacent vertices that specific vertex has. In an adjency list implemented by a linked list of linked lists, the size of the vertices linked list will be V. So we traverse through the vertices list, and when we find the index of the specific vertex we are looking for, we can just go to that vertex in the other linked list that contains the neighbours. This would require constant time, but going through the list of vertices will take a time of V. 
+---++ c
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+&theta;(V<sup>2</sup>)
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+The adjacency matrix is implemented as two-dimensional vector. Hence to find the vertex with the maximum degree we have to traverse through the first dimension of the vector that holds the different types of possible vertices, so that will take time V. Since the matrix stores 0's and 1's so to find the number of adjacent vertices a specific vertex is, we have to add up the numbers in the second dimension of the vector, which will take time V because there are V vertices in the graph. Hence a total time of V<sup>2</sup>.
+---++!! Grader comments *[/30]*
+<VERBATIM>Question 1 Results:
+
+Total Grade: 21
+
+	4         		Invalid runtime, should just be O( E)
+	7         		In some cases, you will have O(V+E) which could be greater than O(V)
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+Provide your pseudocode here.
+
+using an algorithm similar to that of Breadth First Search, because to check if a graph is bipartite you want to go through
+the discovered and undiscovered vertices of the graph across the breadth of the graph.
+
+bool check_bipartite(graph, s_vertex)
+{
+	bool check = true;
+	colour each vertex white;
+	queue <int> Q;
+	enqueue(s_vertex)
+	while Q is not empty
+	{
+		h is the head of Q;
+		if h is white
+		{
+			colour h grey; // colouring the head grey if it hasnt been coloured
+		}
+		for each adjacent vertex n of h
+		{
+			if n is white and h is grey
+			{
+				colour n black;
+				enqueue(n);
+			}
+			else if n is grey and h is grey
+			{
+				check = false;
+			}
+			else if n is white and h is grey
+			{
+				colour n black;
+			}
+			else if n is black and h is black
+			{
+				check = false;
+			}
+		}
+		dequeue(h);
+	}
+	return check;
+}
+
+</VERBATIM>
+---++ b
+<VERBATIM>
+Provide your pseudocode here.
+
+Using an algorithm similar to the concept of Depth First Search, because to check if a graph is a cycle we want to look for the unexplored
+edges of the vertices that have been discovered to check whether they are connected or not. 
+
+bool has_cycle(graph)
+{
+	bool check = false;
+	colour all the vertices white; //white vertex means it has not been visited
+	for(every vertex v in graph)
+	{
+		if v is white
+		{
+			if is_cycle(v) //if a cycle already exists at that vertex
+			{
+				check = true;
+			}
+		}
+	}
+	return check;
+}
+
+bool is_cycle(u)
+{
+	bool check = false;
+	colour u red; //red vertex has been visited
+	for(each vertex v adjacent to u)
+	{
+		if v is white
+		{
+			is_cycle(u);
+		}
+		else if v is red
+		{
+			check = true;
+		}
+	}
+	colour u blue;
+	return check;
+}
+
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 20
+
+	10        		
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+---++ 3b.
+Attach your solutions to this topic.
+<VERBATIM>
+0[83]: 0 6 8 9 13 
+1[86]: 0 1 2 6 7 8 10 12 13 
+2[77]: 0 1 3 6 8 10 13 
+3[15]: 3 4 5 7 9 11 12 13 
+4[93]: 1 3 5 8 10 
+5[35]: 2 3 5 10 
+6[86]: 1 2 6 7 8 10 
+7[92]: 0 3 4 5 7 9 10 11 12 13 
+8[49]: 0 1 2 3 4 6 7 9 11 12 
+9[21]: 1 3 4 5 9 11 13 
+10[62]: 1 3 4 5 6 10 12 
+11[27]: 4 6 7 8 9 10 13 
+12[90]: 0 2 3 5 7 8 9 10 11 
+13[59]: 0 1 3 6 7 8 
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+Provide your answer here.
+I move: e8 - d8
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  -  Q  K  B  -  R 
+ 2 |  P  -  -  P  P  -  -  P 
+ 3 |  -  -  -  -  -  -  -  N 
+ 4 |  -  -  -  -  -  -  P  - 
+ 5 |  -  P  -  -  -  -  P  - 
+ 6 |  -  q  -  -  -  -  -  - 
+ 7 |  p  -  p  p  B  p  p  p 
+ 8 |  r  n  -  k  -  b  -  r 
+
+Please enter your move: e7-d8
+
+Game Over:  White wins!
+
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+Provide your answer here.
+
+Please enter your move: a7-a8
+I move: h8 - g8
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  -  N  B  Q  K  -  N  - 
+ 2 |  -  P  -  P  -  -  -  - 
+ 3 |  -  -  -  -  -  -  -  - 
+ 4 |  -  -  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  -  -  -  B  P  P 
+ 7 |  -  -  -  -  P  -  -  - 
+ 8 |  R  -  -  -  -  R  -  k 
+
+
+Basically, I got rid of all the opponent's pieces and trapped the king, so the next move I make will be to kill 
+</VERBATIM>
+---++ 4b.  Main task [20 points]
+Provide a description of your approach here.  Upload your code online.
+
+For the Artificial Intelligence to think like a human would, the code should do the following:<br>
+1) First check if there is any danger to its king. This will be done by checking if there is a shortest path available from any of the opponents pieces, which will be done by making each square a vertex and check if they can be connected from the king to the opponent's piece where that move is legal by the game. If there is such a piece on the opponent's side, then the code will check what happens if the king is moved up, right, left or right. And if there is still danger to the king by being moved to this position, then the code should check if there are some pieces around the king that can be moved to protect the king for the said opponent's piece. But if there is no such piece that can be used as a sacrifice, then just play any random move.  Once this is checked for and fixed, that move should be played. But if there is no danger to the king then check for step 2.<br>
+2) Since the king is safe, now check for the queen, which is the next important piece in the game. Do the same as the king, check if there is any harm to queen and if there is what is the best way to save her, is it by moving her to another location or sacrificing one of the pieces to protect her. This can be done by checking for any available shortest path from the queen to one of the opponent's piece that can kill her. If the queen is safe, check for bishops, castles and knights the same way. Pawns are not so important and can be used as sacrifice in the game. If there is no major harm to any of the important pieces check for step 3.<br>
+3) Now if the important pieces are safe, the next thing is to check if any of the opponent's pieces can be killed. Use the shortest paths method to check if there are any legal shortest paths from a piece to an opponent's piece. If there are more than one path, check to see what the opponent's pieces are and chose the path that would lead in the death of an important opponent's piece, like the king, queen, bishop. Otherwise just take the shortest possible path and kill whatever opponent's piece it is. 
+4) If there is no such path, and nothing of the opponent's can be killed. Check for a shortest, legal path that would take one of the pieces closest to the opponent's king. Because we want to win by killing of the opponents king.<br>
+Hence, this is the hierarchy the computer should "think" in, and this would help beat a pretty smart player.<br>
+I did not finish writing code for all these steps, but this was the idea I had. <br>
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---
+
+   * [[%ATTACHURLPATH%/problem3a.zip][problem3a.zip]]: problem3a.zip
+
+   * [[%ATTACHURLPATH%/problem3b.zip][problem3b.zip]]: problem3b.zip

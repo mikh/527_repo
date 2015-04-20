@@ -1,0 +1,172 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(AlexanderWong),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<latex> \Theta(E) </latex>
+---+++!! Brief explanation
+A edge list (represented as a linked list) will simply be all of the edge pairs linked together.  So, in order to determine which vertex has the highest degree, we have to look at every edge and keep count of the edges for each vertex. Looking at every edge -> running time of <latex> \Theta(E) </latex>.
+---++ b
+---+++!! Running time
+<latex> \Theta(2E) = \Theta(E) </latex>
+---+++!! Brief explanation
+The adjacency list is similar to the edge list in that it can also be represented as edges as pairs of vertices. But, since it specifies the neighbor vertices for each vertex, it lists all of the edges twice, giving <latex> \Theta(2E) </latex> which is the same as <latex> \Theta(E) </latex>.
+---++ c
+---+++!! Running time
+<latex> \Theta(V^2) </latex>
+---+++!! Brief explanation
+The matrix is # of vertices by # of vertices. You can determine the number of edges per vertex by iterating across # of vertices.  You must do this for all vertices to determine which one has the maximum degree, so we're iterating across vertices*vertices (a nested for loop across v), giving <latex> \Theta(V^2) </latex>.
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+bool bipartite(graph G)
+	// A graph is bipartite if it can be colored by two colors
+	// Here we are using a queue to keep track of nodes to look at
+	// Also assume that we have some sort of adjacency matrix that defines neighbors of all nodes
+	
+	// start at any node S
+	S.color = white
+	ENQUEUE(S)
+	while(queue not empty)
+		h = pop(queue) // remove first element from queue and store it
+		for each neighbor n of h
+			if n is not colored
+				n.color = opposite(h)
+				ENQUEUE(n)
+			if n is colored
+				if n.color == h.color
+				return false
+	return true // if not caught earlier - was able to color graph using two color
+</VERBATIM>
+---++ b
+<VERBATIM>
+void cycle-visit(node n)
+	// Using a depth first search
+	// Again assume that we have some sort of adjacency matrix that defines neighbors of all nodes
+	// Three color system:
+		// White = unvisited
+		// Grey = Visiting
+		// Black = Done with
+	// Recursively go through nodes to determine if we have a cycle
+	// (A node that has not 'finished' exploring all decendants is visited again)
+
+	// Start at any node n
+
+	if n.color == grey
+		CYCLE FOUND
+
+	n.color = grey // signifying this node is being visited now
+	for each child c in n.neighbors
+		if child.color == white // unvisited
+			cycle-visit(child)
+
+	n.color = black // finished exploring this node when there are no more recursive calls to all decendants</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+---++ 3b.
+Random graph generated:
+<VERBATIM>
+0[0]: 1 4 6 
+1[0]: 2 3 4 5 6 
+2[0]: 0 5 
+3[0]: 0 1 4 5 6 
+4[0]: 3 
+5[0]: 0 3 4 6 
+6[0]: 1 4 
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  -  -  B  Q  K  B  -  R 
+ 2 |  -  P  P  P  -  P  P  P 
+ 3 |  -  -  -  -  P  -  -  b 
+ 4 |  P  -  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  p  -  p  R  p  N  -  - 
+ 7 |  -  p  r  -  -  p  -  p 
+ 8 |  -  -  -  -  k  -  n  r 
+
+Please enter your move: f6-e8
+
+Game Over:  White wins!
+</VERBATIM>
+---+++ ii.  
+The question isn't clear on whether we're supposed to provide a checkmate situation (BLACK can't make any move) or literally a situation in which the King can't move.
+
+Here's a checkmate situation:
+<VERBATIM>
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  -  -  -  -  -  -  K  - 
+ 2 |  -  -  -  -  -  -  -  - 
+ 3 |  -  -  -  -  -  -  -  - 
+ 4 |  -  -  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  -  -  -  N  -  - 
+ 7 |  -  -  -  R  -  -  -  - 
+ 8 |  -  -  -  -  -  -  k  - 
+</VERBATIM>
+
+Here's a situation in which the black king can literally not move:
+<VERBATIM>
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  -  B  Q  K  B  N  R 
+ 2 |  P  P  P  P  P  P  P  P 
+ 3 |  -  -  -  -  -  -  -  - 
+ 4 |  -  -  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  -  -  -  -  p  p 
+ 7 |  p  p  N  p  p  p  -  - 
+ 8 |  r  n  b  q  k  b  n  r 
+</VERBATIM>
+---++ 4b.  Main task [20 points]
+
+Creating a chess engine can be incredibly complex.  To simplify and have the best chances of winning, I decided to prioritize a few things:
+
+   1. If we can take a king, take it.
+   1. If our king is in check, move it.
+   1. If we can take a high value piece (queen, rook, etc) take it
+   1. Balance that 
+
+If none of those conditions appear, I then just took a random move.
+
+I ended up only being able to beat player 1 and player 2. I didn't have time to implement a full min-max algorithm that's probably needed to beat the third opponent.
+
+I have attached my code.
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

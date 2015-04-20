@@ -1,0 +1,121 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(NicholasMemme),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+&Theta; (E)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+It is &Theta; (E) because it is not possible to know how many are in the linked list edge-list unless you traverse the entire list.
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+&Theta; (E+V)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+This is due to the fact that since it is a linked list of linked list each vertex has their own linked list of edges so it has to traverse the list of vertices along with the list of the edges of the desired vertex. 
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+&Theta; (V)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+This is true because it only involves traversing one dimension of the matrix one time to count the number of connected vertices.
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+
+c=blue
+color all nodes c
+s=root
+queue q
+q.push(s)
+while q not empty
+    h=head(q)
+      if c is blue
+             c = red
+         else
+             c = blue
+    for each neighbor n of h       
+         color neighbors  c
+         if(n.color == h.color)
+             return false
+         q.push(n)
+    q.pop(h)
+
+return true
+
+
+</VERBATIM>
+---++ b
+<VERBATIM>
+color all vertices blue
+for each blue vertex v
+    Visit(v)
+return false
+
+Visit(v)
+   color v red
+   for each node n adjacent to v
+       if n.color == red
+            return true
+       Visit (v)
+
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+---++ 3b.
+Attach your solutions to this topic.
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+%ATTACHURL%/chesswin.png
+---+++ ii.  
+<VERBATIM>
+In order for the black player to have a king but no moves, the white pieces must be set in a position in which all moves that the king could take would result in it being in check while it is currently not in check in its current position.
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+My strategy was to check if there was a possible capture move if so take the first one, if not make a random move.
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

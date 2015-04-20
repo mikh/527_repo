@@ -1,0 +1,183 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(MaxLi),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<latex>
+\theta (E)
+</latex>
+---+++!! Brief explanation
+<VERBATIM>
+This is because it has to go through the whole list and find the vertex with the most edges. The size of the list is theta(E), and if you use a counter every time you see a vertex of that type, then the runtime is the size of the list, which makes the runtime theta(E).
+</VERBATIM>
+---++ b
+---+++!! Running time
+<latex>
+\theta (V^2)
+</latex>
+---+++!! Brief explanation
+<VERBATIM>
+To go through the list, it takes  theta(V) time. However, if each vertex is connected to every other vertex, it will be theta(V+E) time. So total, it is theta((V)(V+E)) time, which is theta(V^2)
+</VERBATIM>
+---++ c
+---+++!! Running time
+<latex>
+\theta (V^2)
+</latex>
+---+++!! Brief explanation
+<VERBATIM>
+It takes V time to go through every vertex, and if every vertex is V long to go through, then it will be theta(V^2).
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+bool isBipartite(G[ ][V], origin)      // takes 2d array, and the origin node
+{
+  int colorArr[V]
+
+  for i = 0 to V        // -1 represents no color at that node, 0 represents the first color, and 1 represents the second color
+    colorArr[i] = -1
+
+  colorArr[origin] = 0          // set the origin node to be the first color
+  vector temp;         // make a vector, name it temp
+  temp.push_back(origin)         // insert the origin node into the vector
+
+  while(temp isn't empty)         // run the while loop while the temp vector isn't empty
+  {
+    int u = temp.front()       // set a local variable to be the front of the vector
+    delete first element of the vector 
+
+    for j = 0 to V                                 //go through and find all adjacent vertices that exist
+    {
+      if (G[u][j] and colorArr[j] == -1)      // checks to see if the node is colored
+      {
+        colorArr[j] = 1 - colorArr[u]       // if it's not colored, then color it the opposite color of the previous node
+        temp.push_back(j)                                          //add j to the end vector
+      }
+      else if (G[u][j] and colorArr[j] == colorArr[u])     // checks to see if this node is the same color as the previous node
+      {
+        return false;     //since the node was the same color as the previous node, return false, becasue the graph is not bipartite  
+      }
+    }
+  }
+
+  return true;   //if it makes it here, that means it went through every node, and colored every node the alternate color of the previous node. this means the graph is bipartite
+}
+
+
+this pseudocode representation assumes an adjacency list
+</VERBATIM>
+---++ b
+<VERBATIM>
+// the only way an undirected graph doesn't have a cycle means that its a forest
+// so use a depth first search, and look for back edges
+// the complexity is O(V) because we look through only the vertices and see if there is a backedge. If none of them have a backedge, then we know that it does not contain a cycle
+bool containsCycle(G , origin )   // pass in a graph, and the origin point
+{
+  stack s;       // start with an empty stack
+  for each vertex leaf v     // look at the leafs only, because those are the only cycles that 
+     visited(v) is false;      // haven't visited any vertices
+     s. push(v);           // add v to the stack
+  while(s isn't empty)   //run the while loop while s isn't empty
+  {
+    s. pop(v) 
+    if (visited(v) and not connected to ancestor)    // looks to see if any leaf is connected to a previous one. if not, then we continue looking. 
+         continue
+    else    // if there is a backedge, then that means it is a cycle. once there is a cycle, then automatically means graph contains a cycle, so we can say false
+         return false
+  }
+  return true;   //if it makes it here, that means there were no backedges, and so it doesn't contain a cycle, in which case we would return true
+}
+
+ 
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attached
+---++ 3b.
+<VERBATIM>
+0[0]: 1 2 3 6 8 9 10 12 
+1[5]: 2 3 5 8 9 10 11 12 
+2[12]: 0 3 5 7 8 12 13 
+3[9]: 4 8 11 13 
+4[13]: 1 5 8 11 13 
+5[0]: 2 3 4 6 7 8 9 11 12 13 
+6[0]: 0 1 2 5 7 8 9 10 11 
+7[4]: 0 2 3 4 5 6 10 
+8[13]: 0 4 5 9 12 13 
+9[12]: 0 3 6 7 8 11 12 13 
+10[13]: 0 2 3 6 9 13 
+11[1]: 0 1 2 5 7 10 
+12[7]: 2 3 4 6 11 
+13[1]: 0 3 7 9 11 
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  -  K  B  N  R 
+ 2 |  P  P  P  P  -  P  P  P 
+ 3 |  -  -  -  -  P  -  -  - 
+ 4 |  -  -  -  -  -  -  b  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  -  p  -  -  -  - 
+ 7 |  p  p  p  -  p  Q  p  p 
+ 8 |  r  n  -  q  k  b  n  r 
+
+Please enter your move: f7-e8
+
+Game Over:  White wins!
+
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  -  -  -  -  -  -  p  k 
+ 2 |  -  -  -  -  -  -  p  p 
+ 3 |  -  -  -  -  -  -  -  - 
+ 4 |  -  -  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  -  -  -  -  -  - 
+ 7 |  -  -  K  -  -  -  -  - 
+ 8 |  -  -  -  -  -  -  -  - 
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+Provide a description of your approach here.  Upload your code online.
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

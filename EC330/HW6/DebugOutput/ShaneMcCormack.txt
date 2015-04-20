@@ -1,0 +1,225 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(ShaneMcCormack),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+theta(E+V)
+Note for this homework: Collabed with Alex Nero
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+A edge-list implemented with a linked list would take E+V time to find the max degrees. This is because each link in the list represents an edge with 2 vertices, and we just keep track of how many edges each vertex has been a part of as we loop through each edge. We will end up looking through E links, as there are E edges. After this, we must go through every vertex to find the one with the maximum degree, for V time.
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+Theta(V+E)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+An adjacency list implemented by a linked list of linked lists would take V+2E time to find the vertex of the highest degree. Each vertex has a link in the list of vertices, and we must go through each of these links, granting V time. For each vertex, we must check each of it's edges, which is the secondary linked list inside of the overarching linked list. This takes 2E time, as we will be counting each edge twice, once at one of its vertices, and again at is other.
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+Theta(V^2)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Searching an adjacency matrix implemented with a 2-D vector to find the highest degree of the vertices will take V^2 time, as at each vertex we must search through every other vertex to see if it has an edge with it. 
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>Question 1 Results:
+
+Total Grade: 24
+
+	4         		Invalid runtime, should just be O( E)
+	10        		
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+[using an adjacency list with the heads showing what vertex they are in an integer variable, and also with having a vector for neighbors, which has its own color]
+
+struct Adjnodes //struct for neighboring node vector
+{
+	int pos;
+	int color = 0
+}
+
+struct Adjlist	//adjacency list
+{
+	int pos;
+	vector <Adjnodes> nodes;	//vector for adjacent vertices
+}
+
+bool isBipart(Adjlist* heads)
+{
+	for (int j = &heads; j <head.size(); j++)
+	{
+		int vertColor = *(j).nodes[0].color; //get the vertex color
+		if (vertColor==0)
+		{ 
+			*(j).nodes[0].color = 1;
+			neighborColor = 2;
+		}
+		else if (color == 1) neighborColor = 2;
+		else neighborColor = 1;
+		for (int i = 0; i < *(j).nodes.size(); i++)
+		{
+		if (*(j).nodes[i].color != 0)
+  			if (*(i).nodes[i] !=neighborColor)
+     			return false;
+		*(j).nodes[1].color = neighborColor;
+		}
+	}
+	return true;
+}
+
+Explanation: 
+Goes through each vertices and their edges. Starts at first vertex and assigns the color, then colors all neighbors and moves to next vertices. Goes through all the graphs, until it reaches a conflict with the coloring system. Returns false for vertex of color that conflicts with a neighbor, else it continues until finishing and returns true. 
+
+Time:
+This goes through all the vertices, giving V time. It also goes through every neighbor of each vertex, which would give 2E (checking edges from both sides)  
+=Theta(V+2E)
+</VERBATIM>
+---++ b
+<VERBATIM>
+Using an adjacency linked list
+Assuming the list is made out of int, the node lists are in order, and they are connected in sequence
+
+
+struct Adjnode
+{
+	int color = 0;
+}
+
+struct Adjlist
+{
+	vector <Adjnode> nodes;
+}
+
+bool checkCyclic(Adjlist *heads)
+{
+	int* colored = new int(heads.size());
+	for (int ii = 0; ii < heads.size(); ii++)
+	{
+		colored[ii] = 0;
+	}
+
+	int count = heads.size();
+	iterator check = heads.begin();
+	for(iterator jj = heads.begin; jj < heads.end(); jj++)
+	{
+		if ((*jj).nodes.size() != 2)
+		return false;
+		else
+		{ 
+			int temp = (*jj).nodes[0];
+			if ((*jj).nodes[0].color == 1) return false;
+			else
+			{
+				(*jj).nodes[0].color == 1;
+			}
+		}
+	return true;
+}
+
+Explanation:
+
+Takes in an array of Adjlists, which are lists of vertices each vertex are connected to.
+Then goes through array of Adjlists (V times)
+Each time it checks if the list of nodes at each head in adjlist has size 2; if it does, can't be cyclic.
+Checks if the graph has been visited before by checking to see if its place is a 1.
+Then colors in the vertex by giving a 1 in .color, continues until it has reached all vertices.
+If it visits all without issue, loop ends and returns true.
+
+Time:
+Goes through V to check each vertex, so theta(V).
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 20
+
+	10        		
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+---++ 3b.
+Attach your solutions to this topic.
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  -  K  B  N  R 
+ 2 |  P  P  P  P  -  P  P  P 
+ 3 |  -  -  -  -  P  -  -  - 
+ 4 |  -  -  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  p  -  -  -  -  p 
+ 7 |  p  p  -  p  p  Q  p  r 
+ 8 |  r  n  b  q  k  b  n  - 
+
+Please enter your move: f7-e8
+
+Game Over:  White wins!
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  k  p  -  -  -  -  -  - 
+ 2 |  p  p  -  -  -  -  -  - 
+ 3 |  -  -  -  -  -  -  -  - 
+ 4 |  -  -  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  -  -  -  -  -  - 
+ 7 |  -  -  -  -  -  -  -  - 
+ 8 |  -  -  -  -  - -   -  K 
+
+
+Game Over:  White wins!
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+I looked at all possible moves for me and my opponent (after my move).
+I ran a board evaluation at every case, and assumed that my opponent would choose the best case for him, according to my board eval.
+My board eval was primarily based on the pieces left on the board, with opponent's pieces being negative, and mine being positive. The king was worth the most, then the queen, rook, etc.
+I also weighted knights and bishop's point values so that they would prefer to not be on the edges of the board.
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

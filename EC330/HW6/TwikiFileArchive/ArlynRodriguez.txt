@@ -1,0 +1,179 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(ArlynRodriguez),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+O(E)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+   Because there are E elements in the list and it takes O(E) time to compute all of the degrees and O(E) time to compare them, which is O(2E) = O(E)
+
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+ O(V^2)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Because there are V vertices in a list, each having up to V-1 neighbors in a second list. We have to go through each the second list, which takes O(V) time, of each list (V of them), so we have O(V*V) = O(V^2)
+
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+ O(V^2)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Because we have to find the neighbors of each vertex (columns of the matrix), which takes O(V) time, and we have to do this for each vertex (each row in the column), of which there are V. So we have O(V*V) = O(V^2)
+
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+Implementing the Algorithm using a Breadth First Search (BFS)
+
+Let s = source/root vertex; u = a vertex; d = distance between two vertices; p = predecessor to current vertex; Q = a queue; Adj = adjacency linked list
+for each vertex u in G.V - {s} 
+__________________________________________________________________
+	u.color = white
+	u.d = infinity
+	u.p = NIL
+s.color = gray
+s.d = 0
+s.p = NIL
+Q = empty
+Enqueue(Q,s)
+while Q is not empty
+	u = dequeue(Q)
+	for each v in G.Adj[u]
+		if v.color == white
+			v.color = gray
+			v.d = u.d + 1
+			v.p = u
+			enqueue(Q,v)
+		else if v.color == white AND v.p = gray
+			v.color = blue
+			v.d = u.d + 1
+			v.p = u
+			enqueue(Q,v)
+		else if v.color == white AND v.p = blue
+			v.color = gray
+			v.d = u.d + 1;
+			v.p = u
+			enqueue(Q,v)
+if s.color != v[last].color
+	return true  //is bipartite
+else
+	return false //is not bipartite
+</VERBATIM>
+---++ b
+<VERBATIM>
+This algorithm also uses a BFS
+
+Let s = source/root vertex; u = a vertex; d = distance between two vertices; p = predecessor to current vertex; Q = a queue; Adj = adjacency linked list
+__________________________________________________________________
+for each vertex u in G.V - {s} 
+	u.color = white
+	u.d = infinity
+	u.p = NIL
+s.color = gray
+s.d = 0
+s.p = NIL
+Q = empty
+Enqueue(Q,s)
+while Q is not empty
+	u = dequeue(Q)
+	for each v in G.Adj[u]
+		if v.color == white
+			v.color = gray
+			v.d = u.d + 1
+			v.p = u
+			enqueue(Q,v)
+	u.color = black;
+	if any successor v is colored black
+		return true //is a cycle
+return false //if went through while loop and did not get return true, then it is false
+
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+---++ 3b.
+Attach your solutions to this topic.
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+
+Please enter your move: c3-d5
+I move: e7 - f6
+`  |  a  b  c  d  e  f  g  h
+____________________________
+ 1 |  R  -  B  Q  K  B  N  R
+ 2 |  -  -  -  P  P  P  -  -
+ 3 |  -  -  -  -  -  -  -  -
+ 4 |  -  -  -  -  -  -  -  -
+ 5 |  b  -  -  N  p  -  -  -
+ 6 |  p  -  P  p  -  k  -  -
+ 7 |  -  -  -  -  -  b  P  -
+ 8 |  P  -  -  -  -  -  n  -
+
+Please enter your move: d5-f6
+
+Game Over:  White wins!
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+`  |  a  b  c  d  e  f  g  h
+____________________________
+ 1 |  R  -  B  -  K  B  -  R
+ 2 |  -  -  -  -  P  P  -  -
+ 3 |  -  -  -  -  -  -  -  -
+ 4 |  -  -  -  -  -  N  -  P
+ 5 |  -  -  -  -  -  P  -  -
+ 6 |  -  -  -  -  -  P  -  k
+ 7 |  -  -  -  -  -  -  -  -
+ 8 |  -  -  -  -  -  -  Q  -
+
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+Provide a description of your approach here.  Upload your code online.
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

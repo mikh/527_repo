@@ -1,0 +1,418 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(AndrewIvanov),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+Theta(E) <br>
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+For each occurrence of a unique set of edge points e.g. {a,b} , {b,c} count the have an incrementing Max counter for the occurrences of the most recurring vertex. <br>
+In this case b is max at 2. <br>
+With the time maxing at E because all edges will be cycled through. <br>
+---++ b
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+O(V^2) is max size to search through         <br>
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+For each vertex in the list the maximum edge counts for complete will have V-1 = E length lists, thus making a O(V^2), but theta(V+E) can be made with these 2 boundaries.
+---++ c
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+Theta(V^2)           <br>
+
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+The whole adjacency matrix will be scanned one for determining adjacencies, thus making V rows by V columns search time span leading to V^2.
+---++!! Grader comments *[/30]*
+<VERBATIM>Question 1 Results:
+
+Total Grade: 24
+
+	10        		
+	4         		You can get it down to O(V+E) time
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+Provide your pseudocode here.
+</VERBATIM>
+
+Modified BFS: Determines if equal colors are adjacent as BFS is done, if yes then not bipartite, otherwise if no same colors touch then it is bipartite. <br>
+
+%CODE{"cpp"}%
+
+// True if bipartite, else false
+bool isBipartite(int G[][V], int src)
+{
+// white = -1
+// grey = 1
+// black = 0
+// according to notes
+int colorarray[V];
+for (int i = 0; i < V; ++i){
+        colorarray[i] = -1;                  // all white initially
+        }
+
+colorarray[src] = 1;       // set current to grey
+
+queue <int> q;
+    q.push(src);         // usin the queue
+
+while (!q.empty())
+    {
+        // Dequeue a vertex from queue ( Refer http://goo.gl/35oz8 )
+        int u = q.front();
+        q.pop();
+ 
+         // Find all non-colored adjacent vertices
+        for (int v = 0; v < V; ++v)
+        {
+            // An edge from u to v exists and destination v is not colored
+            if (G[u][v] && colorarray[v] == -1)
+            {
+                // Assign alternate color to this adjacent v of u
+                colorarray[v] = 1 - colorarray[u];
+                q.push(v);
+            }
+ 
+            //  touching same color is not bipartite
+            else if (G[u][v] && colorarray[v] == colorarray[u])
+                return false;
+        }
+    }
+ 
+    // bipartite yes, no same color touch
+    return true;
+}
+
+// Sources used: http://www.geeksforgeeks.org/bipartite-graph/        Author: Unknown
+
+%ENDCODE%
+---++ b
+<VERBATIM>
+Provide your pseudocode here.
+</VERBATIM>
+
+DFS modified: Detect when any back edges are found & that is a cycle, since an undirected graph is acyclic (or a forest) if no back edges are found.
+
+%CODE{"cpp"}%
+DFS() {
+color all vertices white;
+foreach white vertex v {
+ DFS-VISIT(v); }
+}
+
+DFS-VISIT(v) {
+ color v grey;
+ foreach node n adjacent to v {
+  if n is white {
+   DFS-VISIT(n) }
+  if n is back-edge {
+   return NOT ACYCLIC! (Contains a cycle) }}
+ color v black
+}
+
+// Sources used for solution: http://www.cs.jhu.edu/~xfliu/600.363_F03/hw_solution/midterm2_solution Author: Unknown
+
+%ENDCODE%
+---++!! Grader comments *[/20]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 20
+
+	10        		
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+
+Attached as problem3a.cpp below
+---++ 3b.
+Attach your solutions to this topic.
+
+Attached as problem3b.zip <br>
+
+Sample output:
+%CODE{"cpp"}%
+bash-4.1$ g++ Graph.cpp Graph.h
+Graph.h:6:19: warning: extra tokens at end of #include directive
+bash-4.1$ ./a.out
+
+1[13]: 5 7 10 11 
+2[13]: 4 6 7 8 12 
+3[13]: 4 5 6 7 9 10 12 
+4[13]: 2 3 6 10 12 
+5[13]: 1 3 6 7 8 11 
+6[13]: 3 5 7 8 10 11 12 
+7[13]: 1 3 4 6 12 
+8[13]: 2 4 7 9 10 11 
+9[13]: 7 11 12 
+10[13]: 1 4 5 7 9 
+11[13]: 1 2 4 5 6 7 
+12[13]: 3 4 6 7 
+13[13]: 
+
+bash-4.1$ 
+
+%ENDCODE%
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+
+
+---+++ i.
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+%CODE{"cpp"}%
+
+bash-4.1$ g++ -O2 main.cpp chessBoard.cpp -o chess
+bash-4.1$ ./chess
+Welcome to Homework Six simplified chess.
+  Please enter your moves in the format 'e2-e3'.
+  You are playing White.
+
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  Q  K  B  N  R 
+ 2 |  P  P  P  P  P  P  P  P 
+ 3 |  -  -  -  -  -  -  -  - 
+ 4 |  -  -  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  -  -  -  -  -  - 
+ 7 |  p  p  p  p  p  p  p  p 
+ 8 |  r  n  b  q  k  b  n  r 
+
+Please enter your move: e2-e3
+I move: g8 - f6
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  Q  K  B  N  R 
+ 2 |  P  P  P  P  -  P  P  P 
+ 3 |  -  -  -  -  P  -  -  - 
+ 4 |  -  -  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  -  -  -  n  -  - 
+ 7 |  p  p  p  p  p  p  p  p 
+ 8 |  r  n  b  q  k  b  -  r 
+
+Please enter your move: d1-g4
+I move: b8 - a6
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  -  K  B  N  R 
+ 2 |  P  P  P  P  -  P  P  P 
+ 3 |  -  -  -  -  P  -  -  - 
+ 4 |  -  -  -  -  -  -  Q  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  n  -  -  -  -  n  -  - 
+ 7 |  p  p  p  p  p  p  p  p 
+ 8 |  r  -  b  q  k  b  -  r 
+
+Please enter your move: g4-d7
+I move: f6 - g8
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  -  K  B  N  R 
+ 2 |  P  P  P  P  -  P  P  P 
+ 3 |  -  -  -  -  P  -  -  - 
+ 4 |  -  -  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  n  -  -  -  -  -  -  - 
+ 7 |  p  p  p  Q  p  p  p  p 
+ 8 |  r  -  b  q  k  b  n  r 
+
+Please enter your move: d7-e8
+
+Game Over:  White wins!
+bash-4.1$ 
+
+%ENDCODE%
+---+++ ii.  
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+%CODE{"cpp"}%
+
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  -  K  -  p  k 
+ 2 |  P  P  P  P  -  -  p  p 
+ 3 |  -  -  -  -  P  -  -  - 
+ 4 |  -  -  B  N  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  -  -  -  -  -  - 
+ 7 |  -  -  -  -  -  -  -  - 
+ 8 |  -  -  -  -  -  Q  -  - 
+
+%ENDCODE%
+---++ 4b.  Main task [20 points]
+Provide a description of your approach here.  Upload your code online.
+
+- Detect spaces on the board from available moves for enemy pieces and take them if found.         <br>
+- Ranking for capturing the pieces prioritizing Kings > Queens > some order or the 3 (Bishop>Knight>Rook) > Pawns was implemented.        <br>
+
+%CODE{"cpp"}%
+
+#include "myPlayer.h"
+#include "chessBoard.h"
+#include "chessPlayer.h"
+#include <cstdlib>
+
+
+void myPlayer::enemyMove(chessBoard::move theMove) {
+	//cout << "I am FRIEND" << endl;
+	//cout << myBoard.printMoves() << endl;
+	myBoardtemp = myBoard;
+	myBoard.makeMove(theMove); 
+	//cout << theMove.print() << endl;
+	};
+
+chessBoard::move myPlayer::getMove() {
+	chessBoard::move theMove = myBoard.nthMove(rand() % myBoard.numMoves()); 
+	//chessBoard::piece enemypiece = myBoardtemp.piece;
+	//chessBoard::pieceType Enemypiece = enemypiece.type;
+	//cout << myBoard.numMoves() << endl;	
+	//cout << "I am PLAYER" << endl;
+	//cout << myBoard.printMoves() << endl;	
+	//cout << "I am FOE" << endl;
+	//cout << myBoardtemp.printMoves() << endl;
+	//cout << myBoard.nthMove(1).to.col << endl;	// myBoard.nthMove(1).to.col
+	for (int ii = 0; ii < myBoard.numMoves(); ii++) {
+		if (!myBoard.emptySquareQ(myBoard.nthMove(ii).to.col, myBoard.nthMove(ii).to.row)) {
+			//switch()
+			//cout << myBoard.nthMove(ii).to.col << endl;
+			//cout << "WOOOT " << ii << " " << myBoard.nthMove(ii).to.col << " " << myBoard.nthMove(ii).to.row << endl;
+			theMove = myBoard.nthMove(ii); 
+		}
+	} 	
+
+	int value = 0;
+	int maxvalue = 0;
+	
+	for (int ii = 0; ii < myBoard.numMoves(); ii++) {
+		if (!myBoard.emptySquareQ(myBoard.nthMove(ii).to.col, myBoard.nthMove(ii).to.row)) {
+			chessBoard::move movtemp = myBoard.nthMove(ii);
+			chessBoard::piece enemypiece = myBoard.atSquare(movtemp.to);
+			chessBoard::pieceType Enemypiece = enemypiece.type;
+			switch(Enemypiece) {
+				case chessBoard::King: value = 100000;
+				case chessBoard::Queen: value = 10000;
+				case chessBoard::Bishop: value = 5000;
+				case chessBoard::Knight: value = 2500;
+				case chessBoard::Rook: value = 1250;
+				case chessBoard::Pawn: value = 250;
+			}
+		}
+		if (maxvalue < value) {
+			//cout << maxvalue << endl;
+			//cout << value << endl;
+			maxvalue = value;
+			//cout << maxvalue << endl;
+			value = 0;
+			theMove = myBoard.nthMove(ii);
+			cout << theMove.print() << endl;
+		}
+	}
+
+	
+	
+
+	//if (chessPlayer::mycolor == 0) { // im white
+	//	int array[0];
+	//	array[3] = 0;
+	//}
+
+	myBoard.makeMove(theMove); 
+	return theMove;
+
+	};
+
+
+/*chessBoard myPlayer::scoring(chessBoard myBoardtemp2) {
+	int value = 0;
+	int maxvalue = 0;
+	
+	for (int ii = 0; ii < myBoardtemp2.numMoves(); ii++) {
+		if (!myBoard.emptySquareQ(myBoardtemp2.nthMove(ii).to.col, myBoardtemp2.nthMove(ii).to.row)) {
+			chessBoard::move movtemp = myBoardtemp2.nthMove(ii);
+			chessBoard::piece enemypiece = myBoardtemp2.atSquare(movtemp.to);
+			chessBoard::pieceType Enemypiece = enemypiece.type;
+			switch(Enemypiece) {
+				case chessBoard::King: value += 100000;
+				case chessBoard::Queen: value += 10000;
+				case chessBoard::Bishop: value += 5000;
+				case chessBoard::Knight: value += 2500;
+				case chessBoard::Rook: value += 1250;
+				case chessBoard::Pawn: value += 250;
+			}
+		}
+		if (maxvalue < value) {
+			maxvalue = value;
+			theMove = myBoardtemp2.nthMove(ii);
+		}
+	}
+
+	return myBoardtemp2;
+}*/
+
+
+
+
+// g++ -O2 main.cpp chessBoard.cpp myPlayer.cpp -o chess
+// ./chess
+
+// p r b n q k
+
+%ENDCODE%
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

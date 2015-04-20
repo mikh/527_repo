@@ -1,0 +1,184 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(BrianTan),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+Big Theta (E). 
+
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+The link list will have a total of E nodes. Therefore, in order to check for the degree of a vertex, say for a vertex 'a,' we have to look inside each node if there is an 'a' in it. 
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+Big Theta (V)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+The highest level link list will always have V nodes. Worst case scenario when looking for vertex degree is that the vertex we are looking for is the last one in our list. This will take V time to get to. Worst case scenario also presumes that our last node is connected to all other vertices. To traverse through all these lower level nodes will take V - 1 time. In total this will be "2V - 1" time. This means for the adjacency list it will take Big Theta (V) time. 
+
+
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+Big Theta (V)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+To access the internal vector of the desired vertex will take constant time. To check for the degree of that vertex, it is necessary to check every index of the internal vector for its value. This will take a number of V accesses into each index. In total it will be "1 + V" time which is Big Theta (V). 
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>Question 1 Results:
+
+Total Grade: 21
+
+	10        		
+	7         		In some cases, you will have O(V+E) which could be greater than O(V)
+	4         		Incorrect answer
+
+
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+Give a linear-time algorithm for determining whether a given undirected graph is bipartite. 
+
+Utilize a Depth First Search similar to the one discussed in class.
+
+//PSUEDO CODE
+
+
+bool isBipartite(Graph)
+{
+   for(int i = 1; i < V; i++)
+   {
+      color each vertex gray.
+   }
+
+   // 0 = white, 1 = black
+   int color = 0;
+   for(int i = 1; i <V; i++)
+   {
+      //will see if graph is bipartite
+      //DFS = depth first search
+      perform a DFS(V, color%2);
+      if(DFS(V,color%2) == false)
+         return false;
+      color++; 
+   }
+}
+
+bool DFS(V, color)
+{
+   change V to the passed color
+   //test to see if neighbors are the same color as you
+   if(neighbors of V are not gray, and are not the same color as V)
+   {
+      //the graph is not bipartite if a neighbor has the same color as a vertex
+      return false;
+   }
+   for(each node which neighbors V)
+   {
+      //Colors the neighbors opposite colors
+      if(V is white)
+      {
+         color neighbors black
+      }
+      else
+         color neighbors white
+   }
+   return true;
+}
+
+</VERBATIM>
+---++ b
+<VERBATIM>
+Provide your pseudocode here.
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 10
+
+	10        		
+	0         		
+
+
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+---++ 3b.
+Attach your solutions to this topic.
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  -  B  -  K  B  R  - 
+ 2 |  -  P  P  -  -  -  -  P 
+ 3 |  -  -  -  P  -  P  -  - 
+ 4 |  P  -  -  -  P  -  P  - 
+ 5 |  Q  N  p  -  -  -  -  - 
+ 6 |  n  -  -  p  -  p  N  p 
+ 7 |  p  q  -  -  p  -  -  r 
+ 8 |  -  r  b  k  -  b  n  - 
+
+Please enter your move: a5-d8
+
+Game Over:  White wins!
+Program ended with exit code: 1
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+Please enter your move: e7-f8
+I move: h8 - h7
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  -  B  -  K  -  -  R 
+ 2 |  P  P  P  P  -  P  P  P 
+ 3 |  -  -  -  -  P  N  -  - 
+ 4 |  -  -  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  B 
+ 6 |  -  -  -  -  -  N  -  - 
+ 7 |  -  -  -  -  -  -  -  k 
+ 8 |  -  -  -  -  -  Q  -  - 
+
+Please enter your move: 
+
+Please enter your move: 
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+Provide a description of your approach here.  Upload your code online.
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

@@ -1,0 +1,158 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(FrankSavoca),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+Big Theta(E)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+The worst case runtime is that you have to iterate through the entire list to find the ordered pairs with every vertex you are looking for.
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+Big Theta(V + E)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+This is the runtime because the number of times you have to access the outermost linked list is linear, with respect to the number of vertices and edges.
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+Big Theta(V^2)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+This is the runtime because the matrix is V rows x V columns. Thus, it takes us Big Theta(V^2) time to compute the maximum degree of a vertex in the graph.
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>Question 1 Results:
+
+Total Grade: 30
+
+	10        		
+	10        		
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+Relevant data structures: queue
+Representations: Adjacency list
+v is any vertex in the graph G
+
+Based BFS pseudocode from here: http://en.wikipedia.org/wiki/Breadth-first_search#Pseudocode
+
+Q = queue
+Q.enqueue(v)
+v.color() = red
+while (!(Q.empty()))
+    v = Q.dequeue()
+    v.child_color = v.opposite_color
+    for (i edges from v to w in the adjacency list)
+        if (i.colored == true && i.color != v.child_color)
+            G.bipartite == false
+        if (i.colored == false)
+            Q.enqueue(i)
+            i.color = v.child_color
+G.bipartite == true
+</VERBATIM>
+---++ b
+<VERBATIM>
+Relevant data structures: stack
+Representations: Adjacency List
+v is any vertex in the graph G
+
+Based DFS pseudocode from here: http://en.wikipedia.org/wiki/Depth-first_search#Pseudocode
+
+S = stack
+S.push(v)
+while (!(S.empty()))
+    v = S.pop()
+    if (!(v.discovered()))
+        v.discovered() == true
+        for (i edges from v to w in the adjacency list)
+            S.push(w)
+    else
+        G.cycle() == true
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 20
+
+	10        		
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+---++ 3b.
+Attach your solutions to this topic.
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  -  K  B  N  R 
+ 2 |  P  P  P  -  P  P  P  P 
+ 3 |  -  -  -  -  Q  -  -  - 
+ 4 |  -  -  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  p  p  -  -  p  -  n 
+ 7 |  p  -  n  p  -  -  p  p 
+ 8 |  r  -  b  q  k  P  -  r 
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+White Queen checks the Black King, white wins.
+White is capital letters, black is lowercase.
+
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 8 |  -  -  -  -  Q  -  k  - 
+ 7 |  -  -  -  -  -  p  p  p 
+ 6 |  -  -  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  q  - 
+ 4 |  -  -  -  -  -  -  -  - 
+ 3 |  -  r  -  -  -  -  -  - 
+ 2 |  -  -  -  -  -  P  P  P 
+ 1 |  -  -  -  -  -  R  K  - 
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+Provide a description of your approach here.  Upload your code online.
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

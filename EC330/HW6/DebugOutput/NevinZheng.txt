@@ -1,0 +1,482 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(NevinZheng),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+Theta(E) to compute the degree of a vertex using edge list with linked list.
+E = number of edges
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+By using an edge list, you have to scan the entire list for the presence of your vertex in the list. Since you have to look at all the edges you have Theta(E) 
+For example if your vertex is A, then you have to look at all edges to see if any of them contain E. If it does then there is an edge connected to that vertex.
+
+If you want to find the degree of each vertex to determine the max degree you just scan through the list and keep count of everytime you see each vertex that still takes Theta(E) time.
+
+Some pseudo code:
+edgeList = [(A,B), (A,C), (B,C)]
+
+aDegree = 0
+bDegree = 0
+
+for x in edgeList:
+if A in x:
+aDegree ++
+
+return aDegree, bDegree
+---++ b
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+O(V^2).
+
+Worst case is O(V^2), but on average it is more likely to perform a lot better.
+Average case is Theta(V+2E) which is Theta(V+E).
+Each vertex appears once so you have to hit it. and each edge appears twice so you have to hit those.
+
+lower bound edge case if all nodes are all disconnected so the lower bound is Omega(V)
+Average case is Theta(V+2E)
+Worst case is O(V^2) for a complete graph
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+Worst case is if the vertex your looking for is at the very end of the linked list. So you have to do a linear search O(V) through the linked list to find your edge.
+Then you have to count through all the vertices attached to your target vertex. worst case for that is that node is complete and attached to all other nodes which is O(V). Overall thats 2V worst case. Since you want to find the max degree, you need the degree of all the nodes. So thats O(V^2) in the worst case.
+
+Theta(V+2E) for average case.
+O(V^2) for worst case complete graph
+Omega(V) for edge case of completely disconnected graph
+---++ c
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+O(V^2)
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+Finding the degree of a vertex takes O(V) time because you just have to access and count all the elements in a vertex's row or column, you just count the non zero elements.. But to determine the max you just do that V times.
+So overall to determine the maximum degree you just perform an O(V^2) operation. it has to do this O(V^2) operation all the time, so thats best worst and average case
+---++!! Grader comments *[/30]*
+<VERBATIM>Question 1 Results:
+
+Total Grade: 24
+
+	10        		
+	4         		You can get it down to O(V+E) time
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+Provide your pseudocode here.
+</VERBATIM>
+
+To determine whether or not a graph is bipartite, we will apply a breadth first search.
+First we have two colors say red and blue.
+Initialize the graph with no color.
+Begin by coloring your first node red.
+Color nodes adjacent to that blue.
+Move to the next node and color all adjacent non colored nodes blue.
+Repeat this process for all nodes.
+If while coloring a node you see a node that is the same color as it then the graph is bipartite.
+For example if you are on a red node and meet another red node then you aren't bipartite.
+if you compete the whole graph without such collisions then the graph is bipartite.
+
+Analysis:
+You need to hit every vertex which takes V time and you need to cover every edge which is E time.
+Overall this algorithm is O(V+E). this is always linear to the number of edges and vertices. Worst case is in a complete graph where E = ~V^2, but thats still proportional to the number of edges.
+
+
+Code:
+
+node* Graph = [V] //an array of graph node objects
+for node in graph:
+   node.color = -1 // instantiate all nodes with no color
+
+bool current_color = 0
+
+for node in graph:
+   if(node.not_visited()):
+        for NODE in node.adjacent node:
+                if NODE.color != current_color:
+                       NODE.color = current_color: //check to see if you've already hit that node
+                else: return False //if it is the same color return not bipartite
+        current_color = !current_color //switch color
+
+
+
+    return True     // if nothing bad like happens return True
+
+
+
+---++ b
+<VERBATIM>
+Provide your pseudocode here.
+</VERBATIM>
+
+One way to detect a cycle is to perform a depth first search. If during a search you encounter a node that you've seen before whilst not backtracking you've detected a cycle and can return false.
+
+Analysis:
+O(V+E)
+this is just an application of depth first search under its standard running time.
+
+
+startNode = A
+
+graph.Mark(undiscovered, all)
+
+procedure DFS(G,v):
+   if(v.notDiscovered()):
+       label v as discovered
+    for all edges from v to w in G.adjacentEdges(v) do
+       if vertex w is not labeled as discovered then
+            recursively call DFS(G,w)
+---++!! Grader comments *[/20]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 10
+
+	5         		algorithm needs more definition
+	5         		algorithm needs more definition
+
+
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+<VERBATIM>
+#include "Graph.h"
+#include <iostream>
+
+using namespace std;
+
+Graph::Graph(){
+	set<int> vertices;         /** The set of vertices of the graph. */
+	set< directedEdge > edges; /** A set of edges of the graph. */
+	map< int, int > colors;
+}
+
+int Graph::addVertex(int color){
+
+	if(vertices.empty()) {
+		vertices.insert(0);
+		colors[0] = color;
+		return 0;
+
+	}
+	else{
+		//max vertex
+		int nextVertex = (*vertices.rbegin()) + 1 ;
+		vertices.insert(nextVertex);
+		colors[nextVertex] = color;
+
+		return nextVertex;
+		//find the max valued vertex and add a vertex with max+1 index
+
+	}
+	
+}
+
+void Graph::addEdge(directedEdge newEdge){
+	int x = newEdge.first;
+	int y = newEdge.second;
+
+	vertexIterator one = vertices.find(x);
+	vertexIterator two = vertices.find(y);
+
+	if( one!=vertices.end() && two !=vertices.end() ){	
+
+		set<directedEdge>::iterator it = edges.find(newEdge);
+		
+		if(it == edges.end()){
+			edges.insert(newEdge);
+
+		}
+	}
+
+
+}
+
+int Graph::getColor(int vertex){
+	
+	vertexIterator it = vertices.find(vertex);
+	if( it != vertices.end()){
+		return colors[vertex];
+	}
+
+	return 0;
+}
+
+
+bool Graph::isEdge(directedEdge newEdge){
+
+	if( edges.find(newEdge) != edges.end() ){
+		return true;
+	}
+	else{
+		return false;
+	}
+}
+
+
+string Graph::print() {
+	stringstream result;
+	for (vertexIterator vert1=vertices.begin(); vert1 != vertices.end(); vert1++) {
+		result << *vert1 << "[" << getColor(*vert1) << "]: ";
+		for (vertexIterator vert2 = vertices.begin(); vert2 != vertices.end(); vert2++)
+			if (isEdge (directedEdge(*vert1, *vert2)))
+				result << *vert2 << " ";
+		result << endl;
+	}
+		return result.str();
+}
+</VERBATIM>
+---++ 3b.
+Attach your solutions to this topic.
+
+<VERBATIM>
+#include "Graph.h"
+#include <iostream>
+#include <ctime>
+#include <cstdlib>
+
+using namespace std;
+
+Graph::Graph(){
+	set<int> vertices;         /** The set of vertices of the graph. */
+	set< directedEdge > edges; /** A set of edges of the graph. */
+	map< int, int > colors;
+}
+
+int Graph::addVertex(int color){
+
+	if(vertices.empty()) {
+		vertices.insert(1);
+		colors[1] = color;
+		return 1;
+
+	}
+	else{
+		//max vertex
+		int nextVertex = (*vertices.rbegin()) + 1 ;
+		vertices.insert(nextVertex);
+		colors[nextVertex] = color;
+
+		return nextVertex;
+		//find the max valued vertex and add a vertex with max+1 index
+
+	}
+	
+}
+
+void Graph::addEdge(directedEdge newEdge){
+	int x = newEdge.first;
+	int y = newEdge.second;
+
+	vertexIterator one = vertices.find(x);
+	vertexIterator two = vertices.find(y);
+
+	if( one!=vertices.end() && two !=vertices.end() ){	
+
+		set<directedEdge>::iterator it = edges.find(newEdge);
+		
+		if(it == edges.end()){
+			edges.insert(newEdge);
+
+		}
+	}
+
+
+}
+
+int Graph::getColor(int vertex){
+	
+	vertexIterator it = vertices.find(vertex);
+	if( it != vertices.end()){
+		return colors[vertex];
+	}
+
+	return 0;
+}
+
+
+bool Graph::isEdge(directedEdge newEdge){
+
+	if( edges.find(newEdge) != edges.end() ){
+		return true;
+	}
+	else{
+		return false;
+	}
+}
+
+
+string Graph::print() {
+	stringstream result;
+	for (vertexIterator vert1=vertices.begin(); vert1 != vertices.end(); vert1++) {
+		result << *vert1 << "[" << getColor(*vert1) << "]: ";
+		for (vertexIterator vert2 = vertices.begin(); vert2 != vertices.end(); vert2++)
+			if (isEdge (directedEdge(*vert1, *vert2)))
+				result << *vert2 << " ";
+		result << endl;
+	}
+		return result.str();
+}
+
+
+Graph* Graph::generateRandom(int num){
+
+	Graph::Graph *randomGraph = new Graph();
+
+	for(int i = 0; i <num ; i++){
+		randomGraph->addVertex(0);
+	}
+
+	std::srand(time(NULL));
+
+	//int randomVariable;
+
+	vertexIterator it;
+
+	for(int i=0; i < num+1; i++){
+		for(int j = 0; j< num+1; j++){
+			if(std::rand()%2){
+				randomGraph->addEdge(directedEdge(i,j));
+
+			}
+		}
+
+	}
+
+	return randomGraph;
+}
+
+////////////////////
+
+
+#include "Graph.h"
+#include <iostream>
+
+
+
+int main(){
+
+	Graph::Graph *random = Graph::generateRandom(14);
+
+	cout << random->print() << endl;
+
+	return 0;
+}
+
+
+
+///////
+
+1[0]: 6 9 
+2[0]: 1 3 5 7 10 11 14 
+3[0]: 2 6 9 10 12 14 
+4[0]: 1 3 5 6 9 11 
+5[0]: 3 4 6 9 10 
+6[0]: 1 2 3 5 7 8 9 10 13 
+7[0]: 1 2 4 6 9 11 12 14 
+8[0]: 1 6 7 9 11 12 
+9[0]: 1 4 5 8 11 12 13 14 
+10[0]: 1 4 5 6 7 9 13 
+11[0]: 2 4 5 6 7 8 9 11 13 14 
+12[0]: 5 6 7 9 12 14 
+13[0]: 1 3 4 5 7 12 
+14[0]: 4 12 13 14 
+
+
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+<VERBATIM>
+Please enter your move: d7-e7
+I move: b6 - d4
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  -  K  B  N  R 
+ 2 |  P  P  P  -  P  -  P  P 
+ 3 |  -  -  -  -  -  -  -  - 
+ 4 |  -  -  -  b  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  n  -  p  -  -  - 
+ 7 |  p  p  -  -  Q  p  p  p 
+ 8 |  r  -  b  P  k  -  -  r 
+
+Please enter your move: e7-e8
+
+Game Over:  White wins!
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+<VERBATIM>
+Please enter your move: g6-g7
+I move: g4 - f6
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  -  N  B  Q  K  B  N  - 
+ 2 |  -  P  P  P  P  P  P  - 
+ 3 |  -  -  -  -  -  -  -  - 
+ 4 |  -  -  -  -  -  -  -  - 
+ 5 |  P  -  p  -  -  -  -  - 
+ 6 |  p  q  -  -  -  n  -  - 
+ 7 |  r  p  -  p  p  p  R  - 
+ 8 |  -  n  b  -  k  -  -  R 
+
+Please enter your move: 
+</VERBATIM>
+
+black king is pinned by white rook behind a row of pawns
+---++ 4b.  Main task [20 points]
+Provide a description of your approach here.  Upload your code online.
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---
+
+   * [[%ATTACHURLPATH%/problem3a.cpp][problem3a.cpp]]: nevin: graph.cpp implementation

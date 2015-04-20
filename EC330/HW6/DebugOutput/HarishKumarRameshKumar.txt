@@ -1,0 +1,172 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(HarishKumarRameshKumar),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+Theta(E)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Since the size of an edge-list implemented as a link-list is Theta(E), and since the way to determine the degree for a vertex is to go thru the link-list and count how many times that vertex appears in all the links, all of the links must be traversed, which would take Theta(E) time. 
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+Theta(V)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+To determine the degree if a vertex using a adjacency-list implemented as a linked list of linked lists, you must traverse the first linked list to find the vertex you're examine and then traverse its corresponding linked list and count how many links there are to determine the degree.
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+Theta(V)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Determining the degree of a vertex using an adjacency matrix stored as a two-dimensional vector is done by using the vertex as one of the indices and incrementing thru the second index, counting up how many ever times a 1 shows up.
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>Question 1 Results:
+
+Total Grade: 21
+
+	10        		
+	7         		In some cases, you will have O(V+E) which could be greater than O(V)
+	4         		Incorrect answer
+
+
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+Using Breath First Search
+-->	First the color RED is assigned to the source vertex (put into set U).
+-->	Then we color all the neighbors with BLUE (putting them into set V).
+-->	Then we color all neighbor’s neighbor with RED (putting them into set U).
+-->  While assigning colors, if we find a neighbor which is colored with same color as current vertex, then the graph cannot be 
+colored with 2 vertices (or basically the graph is not Bipartite)
+
+bool isBipartite(int G[][V], int src)
+{
+    int colorArr[V];
+    for (int i = 0; i < V; ++i)
+        colorArr[i] = -1;
+        colorArr[src] = 1;
+    // for BFS traversal
+    queue <int> q;
+    q.push(src);
+        while (!q.empty())
+    {
+        int u = q.front();
+        q.pop();
+        for (int v = 0; v < V; ++v)
+        {
+            if (G[u][v] && colorArr[v] == -1)
+            {
+                // Assigning alternate color to this adjacent v of u
+                colorArr[v] = 1 - colorArr[u];
+                q.push(v);
+            }
+                        else if (G[u][v] && colorArr[v] == colorArr[u])
+                return false;
+        }
+    }
+       return true;
+}
+</VERBATIM>
+---++ b
+<VERBATIM>
+The graph can frist be stored in an adjacency matrix using an array, vector or even list size of (V^2). To run thru the matrix,
+you could just use adjacencyMatrix[row][column].
+
+int count = 0;
+for (i = 1, through v, i++){
+    if (adjacencyMatrix[1][i] = 1) //Although this algorithm works for any row, not just row1
+        count = count +1;
+    if (count = 2)
+        return false;
+}
+return true;
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 15
+
+	10        		
+	5         		This will not find all cycles
+
+
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Solution Uploaded
+---++ 3b.
+Attach your solutions to this topic.
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+Please enter your move: d8-f7
+I move: e8 - f7
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  -  K  B  -  R 
+ 2 |  P  P  -  -  -  P  P  P 
+ 3 |  -  -  P  P  -  Q  -  - 
+ 4 |  p  -  -  -  P  -  -  p 
+ 5 |  -  r  -  -  -  -  -  - 
+ 6 |  -  -  -  -  p  -  -  - 
+ 7 |  -  p  p  p  -  k  p  - 
+ 8 |  -  n  b  -  -  b  n  r 
+
+Please enter your move: f3-f7
+
+Game Over:  White wins!
+Program ended with exit code: 1
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  -  B  -  K  B  N  R 
+ 2 |  P  P  P  P  -  P  P  P 
+ 3 |  -  -  -  -  -  -  -  - 
+ 4 |  -  -  -  -  P  -  B  - 
+ 5 |  -  -  -  -  p  -  -  - 
+ 6 |  -  -  n  -  -  N  p  - 
+ 7 |  p  p  p  -  n  p  -  p 
+ 8 |  r  -  -  q  k  b  -  r 
+
+</VERBATIM>
+---++ 4b.  Main task [20 points]
+The program is designed to capture any of the opponents pieces that are in a compromised location. All the pieces are ranked using a number system to determine which are the most valuable pieces to capture. So given an option between a pawn and a Queen, the program would choose to capture the Queen rather than the pawn. Other than this the program is designed to take randomized steps up until a compromised piece is detected.
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

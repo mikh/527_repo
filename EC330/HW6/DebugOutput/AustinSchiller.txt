@@ -1,0 +1,317 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(AustinSchiller),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+Theta  (V+E)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+You go through the linked lists and count the number of times each vertex is written. This is theta (E) runtime. You then go through all of these values (Theta(v)) run time and find the max.
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+Theta(V*E)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+according to the c++ reference library for C++98, finding the size of a linked list is "up to linear". To solve this problem, you go through each vertex's linked list and find the size. This is Theta(V*E) run time. For each vertex, there are up to E adjacencies that it can have.
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+Theta(v^2)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+The matrix winds up being of size v*v. If you look through every row of the matrix and count the number of adjacencies it has, you run at theta(v^2) time. To do this you would need a variable that keeps track of the max number of adjacencies and the corresponding vertex.
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>Question 1 Results:
+
+Total Grade: 18
+
+	4         		Invalid runtime, should just be O( E)
+	4         		You can get it down to O(V+E) time
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+Coloringmethod(G): // use bredth first search.
+       Pick a start vertex and color it black 
+       put vertex into a queue, Q
+       
+       while Q is not empty{
+              temp = pop(Queue)
+              for every neighbor of temp
+                        {
+                        if neighbor isn't colored  {color it grey and put into queue}
+                        else {if neighbor is black{return NOT bipartite}
+                        }
+      }
+      return G is Bipartite.
+      
+//referenced from ucsd website. Use coloring method to color a starting node. Look at neighboring nodes, color them a different color, and put them into queue. If you get a neighbor that is already the same color as it's parent, return not bipartite. If you get through the whole graph without hitting this exception, it is bipartite.
+</VERBATIM>
+---++ b
+<VERBATIM>
+
+
+DFS:
+        color all vertexes white
+        for each vertex
+        {DFS-Visit(v)}
+
+DFS-Visit(v):
+        color v grey
+        parent node = v;
+        for each node adj to v
+        {
+        if (node == white && node is not parent node)
+        {DFS-Visit(n)}
+
+        if(node == grey)
+        {cycle found!}
+        }
+        color v black
+        
+
+
+// this code uses the DFS method. It goes through each node and looks for a node that is adjacent to it that is previously colored grey. If the node has no cycle, the code should only go through each vertex once. If the code has a cycle, It will find a loop before reaching the last vertex.
+         
+
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 20
+
+	10        		
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+#include "Graph.h"
+#include <iostream>
+#include <cstdlib>
+#include <time.h>
+#include <fstream>
+ 
+using namespace std;
+ 
+Graph::Graph()
+{
+}
+ 
+int Graph::addVertex(int color)
+{
+    //Add vertex to set and color to map
+    int vertID = vertices.size() + 1;
+    vertices.insert(vertices.size() + 1);
+    colors.insert(std::pair<int,int>(vertID,color));
+    return vertID;
+}
+ 
+void Graph::addEdge(directedEdge newEdge)
+{
+    //Check if the vertices exist
+    bool isVertA = false;
+    bool isVertB = false;
+    for (vertexIterator it = vertices.begin(); it != vertices.end(); it++)
+    {
+        if (newEdge.first == *it)
+        {
+            isVertA = true;
+        }
+        if (newEdge.second == *it)
+        {
+            isVertB = true;
+        }
+    }
+    //If the vertices exist, then add the edge
+    if (isVertA && isVertB)
+    {
+        edges.insert(newEdge);
+    }
+}
+ 
+int Graph::getColor(int vertex)
+{
+    //Find vertex in map and return its color
+    for (std::map<int,int>::iterator it = colors.begin(); it != colors.end(); ++it)
+    {
+        if (it -> first == vertex)
+            return (it -> second);
+    }
+}
+ 
+bool Graph::isEdge(directedEdge newEdge)
+{
+    //Go through edges set and see if the new edge is there
+    for (std::set<directedEdge>::iterator it = edges.begin(); it != edges.end(); it++)
+    {
+        if (it -> first == newEdge.first && it -> second == newEdge.second)
+            return true;
+    }
+    return false;
+}
+ 
+string Graph::print()
+{
+    stringstream result;
+    for (vertexIterator vert1=vertices.begin(); vert1 != vertices.end(); vert1++)
+    {
+        result << *vert1 << "[" << getColor(*vert1) << "]: ";
+        for (vertexIterator vert2 = vertices.begin(); vert2 != vertices.end(); vert2++)
+            if (isEdge (directedEdge(*vert1, *vert2)))
+                result << *vert2 << " ";
+        result << endl;
+    }
+    return result.str();
+}
+ 
+Graph* Graph::generateRandom(int num)
+{
+    //Create graph and add the number of vertices
+    int prob;
+    Graph g1 = Graph();
+    for (int ii = 0; ii < num; ii++)
+    {
+        g1.addVertex(ii);
+    }
+    srand(time(NULL));
+    //Loop through the vertices set
+    for (int ii = 1; ii < g1.vertices.size() + 1; ii++)
+    {
+        //Second loop through vertices to make edges
+        for (int jj = 1; jj < g1.vertices.size() + 1; jj++)
+        {
+            //Random number 1 or 0
+            prob = rand() % 2;
+            if (prob == 1)
+            {
+                directedEdge newEdge;
+                newEdge.first = ii;
+                newEdge.second = jj;
+                g1.addEdge(newEdge);
+            }
+        }
+    }
+    string result = g1.print();
+    cout << result << endl;
+    ofstream myfile ("Result.txt");
+    if (myfile.is_open())
+    {
+        myfile << result;
+    }
+    Graph* gPtr = &g1;
+    return gPtr;
+}
+---++ 3b.
+Graph* Graph::generateRandom(int num)
+{
+    //Create graph and add the number of vertices
+    int prob;
+    Graph g1 = Graph();
+    for (int ii = 0; ii < num; ii++)
+    {
+        g1.addVertex(ii);
+    }
+    srand(time(NULL));
+    //Loop through the vertices set
+    for (int ii = 1; ii < g1.vertices.size() + 1; ii++)
+    {
+        //Second loop through vertices to make edges
+        for (int jj = 1; jj < g1.vertices.size() + 1; jj++)
+        {
+            //Random number 1 or 0
+            prob = rand() % 2;
+            if (prob == 1)
+            {
+                directedEdge newEdge;
+                newEdge.first = ii;
+                newEdge.second = jj;
+                g1.addEdge(newEdge);
+            }
+        }
+    }
+    string result = g1.print();
+    cout << result << endl;
+    ofstream myfile ("Result.txt");
+    if (myfile.is_open())
+    {
+        myfile << result;
+    }
+    Graph* gPtr = &g1;
+    return gPtr;
+}
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+
+move: a8 - a7
+`  |  a  b  c  d  e  f  g  h
+____________________________
+ 1 |  R  -  -  -  -  B  N  R
+ 2 |  P  P  -  -  K  -  P  P
+ 3 |  -  -  -  P  -  P  -  -
+ 4 |  -  -  -  -  -  -  -  p
+ 5 |  -  -  -  P  -  -  -  -
+ 6 |  -  -  Q  p  -  -  -  n
+ 7 |  r  -  -  -  p  p  p  -
+ 8 |  -  -  -  -  k  b  r  -
+
+Please enter your move: c6 - e8
+
+Game Over:  White wins!
+
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+`  |  a  b  c  d  e  f  g  h
+____________________________
+ 1 |  -  -  -  -  -  -  p  k
+ 2 |  -  Q  -  -  K  -  p  p
+ 3 |  -  -  -  -  -  -  -  -
+ 4 |  -  B  -  -  -  -  -  -
+ 5 |  -  -  -  B  -  -  -  -
+ 6 |  -  -  -  -  -  -  -  -
+ 7 |  -  -  -  -  -  -  -  -
+ 8 |  -  -  -  -  -  -  -  - 
+</VERBATIM>
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+I wasn't entirely sure how to manipulate the chess pieces properly, so I wrote a code that just captured pieces whenever possible. Otherwise, the AI just moved randomly. This was good enough to beat the first two AI's. I implemented this by looping through all of the possible moves and seeing if the space that the pieces could theoretically move to was occupied by an enemy piece.
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

@@ -1,0 +1,185 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(DanielKim),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+The running time is Theta(E).
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+The edge-list linked list only contains the edges of the graph. To find the vertex that possesses the maximum degree, the function would have to iterate through each edge in the linked list. Once all edges have been iterated through, the function should then be able to return the maximum degree of a vertex.
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+The running time is Theta(E + V).
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+The linked list of linked list vertices, again, must be iterated through entirely to get the maximum degree. Each vertex.has E number of edges to iterate through. If all vertices are iterated through, then the running time should be Theta(E + V)
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+The running time is Theta(V^2)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+The matrix has all vertices aligned in a VxV sized grid. To iterate through the entire matrix requires Theta(V^2) time.
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>Question 1 Results:
+
+Total Grade: 30
+
+	10        		
+	10        		
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+The algorithm will run at linear running time only if the data structure used is an adjacency list.
+
+We can find if the graph is bipartite or not by using a modified Breadth First Search algorithm.
+
+bool BFSBipartite(G, s) // G is a graph, s is the source vertex
+	// Fill an array with items equal to the number of vertices in G.
+	// There will be three states for each vertex:
+	// - 1 = no color
+	// 0 = red
+	// 1 = blue
+	// Starting from chosen source vertex, the function will "creep" out to adjacent edges
+	// and fill them with the opposite color from previous vertex.
+	// ex: source (blue) -> adjacents (red) -> next adjacents (blue)
+	int copyGraph[V]
+	for (int i = 0; i <V; i++)
+		copyGraph[i] = -1; // Fill array with -1, no color. Takes V time
+		
+	// Select source vertex. Change its color to 1. Takes (1) time.
+	selectSource = copyGraph[s] = 1
+	
+	while(! (no other vertices left))
+		if (copyGraph[i] != -1) // this vector has been visited
+			BFSBipartite(G - 1, s) // remove vertex from graph
+		else if (copyGraph[i] == last Vertex color){
+			return False // Vertex is of same color as previous, so not bipartite.
+			}
+	return true; // while loop completely finishes, so graph is bipartite
+
+Running time is Omega(V + E).
+</VERBATIM>
+---++ b
+<VERBATIM>
+This function framework will attempt to detect a cycle in a given graph.
+A graph has a cycle if a vertex is adjacent to an already visited vector.
+This function is based off of Depth First Search.
+
+bool detectCycle(G, s) // G is the graph, s is the source vertex.
+	mark all vertices as unvisited
+	for (int i = 0; i < number of vertices; i++)
+		if (vertex was not visited)
+			if (adjacent vertex was visited and is not parent)
+				return true // graph contains cycle
+	return false // Graph has no cycle, since for loop finished
+	
+Total running time should be O(V + E), assuming an adjacent list is used.
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 20
+
+	10        		
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Solution code attached as problem3a.zip.
+---++ 3b.
+Solution zip attached as problem3b.zip.
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+I move: e2 - d3
+`  |  a  b  c  d  e  f  g  h
+____________________________
+ 1 |  R  -  -  -  K  B  N  R
+ 2 |  P  P  -  -  -  -  -  P
+ 3 |  -  -  -  b  -  -  P  -
+ 4 |  -  -  -  P  -  q  -  -
+ 5 |  -  -  -  -  -  -  -  -
+ 6 |  -  P  -  -  p  -  p  -
+ 7 |  p  -  N  Q  -  -  -  p
+ 8 |  r  n  -  -  k  b  n  r
+
+Please enter your move: d7-e8
+
+Game Over:  White wins!
+
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+`  |  a  b  c  d  e  f  g  h
+____________________________
+ 1 |  -  -  -  -  -  -  -  -
+ 2 |  -  -  -  -  -  -  -  -
+ 3 |  -  -  -  -  -  -  -  -
+ 4 |  -  -  -  -  -  -  -  -
+ 5 |  -  -  -  -  -  -  -  -
+ 6 |  -  -  -  -  -  -  Q  -
+ 7 |  -  -  -  -  -  K  -  -
+ 8 |  -  -  -  -  -  -  -  K
+
+Here is an example of stalemate.
+The black king is locted at h8, surrounded by white king and queen.
+
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+The overall approach is to use an aggressive playstyle, focussing our own pieces to attack enemy targets whenver available.
+
+In the code, each piece is given "weight" or value over others. The ranking of value goes: King -> Queen -> Knight -> Bishop -> Rook -> Pawn.
+
+The controlled army will move pieces randomly, with priority on pawns moving. The king will not move at all from its initial position, unless something within its immediate range threatens it.
+
+If multiple enemy pieces are within range, the code will iterate through potential moves to kill the highest priority piece with the lowest value piece (hopefully a pawn kills a king).
+
+I believe the first opponent move with complete randomness, so most of the time it is beatable.
+The second opponent either moves one pawn or rook constantly towards the enemy king. (I can't beat this for some reason).
+
+All my code is written in the myPlayer.h file.
+** NOTE: Unfortunately, this code is incomplete. I only was able to beat the first opponent.
+Unimplemented features: Prioritize king to kill any immediate threat next to it, if possible. King does still move.
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

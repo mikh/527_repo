@@ -1,0 +1,220 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(AidarAidymbekov),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+Theta(E)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+In order to determine the degree for a vertex is to go through the linked list
+ and count the number of times that vertex appears in all the links, 
+all of the links must be traversed. This would take Theta(E) time.
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+Theta(V+E)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+In order to find the degree of a vertex using an adjacency-list implemented
+as a linked-list of linked-lists, I would just traverse the first linked list to find the examining vertex
+and then traverse its corresponding linked list and count how many links there are to determine the degree.
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+Theta(V^2)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+In order to find the degree of a vertex using an adjacency matrix stored as a two-dimensional vector,
+I would first use the vertex as one of the indices and going through the second index.
+Incrementing through one axis of the vector would take Theta(v) time, while the size of the vector is Theta(v^2)
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+using the breadth first search
+Assign red color to the source vertex, then color all the neighbors with BLUE color. Repeat it coloring it with red color.
+Repeat this process. While assigning colors, if we find a neighbor which is colored with same color as current vertex,
+then the graph cannot be colored with 2 vertices, which basically means the graph is not Bipartite.
+</VERBATIM>
+%CODE{"cpp"}%
+ int array
+    for ( 0 to V)
+        array[i] = -1;
+    Assign first color to source
+    Create FIFO of vertex numbers and enqueue source vertex for BFS traversal
+    while ( q is not empty)
+    {
+        Dequeue a vertex from queue
+        Find all non-colored adjacent vertices
+        for (0 to  V)
+        {
+            if (An edge from u to v exists and destination v is not colored)
+            {
+                give toher color to this adjacent v of u
+            }
+ 
+              An edge from u to v exists and destination v is colored with
+              same color as u
+            else if (G[u][v] && colorArr[v] == colorArr[u])
+                return false;
+        }
+    }
+ 
+     If we reach here, then all adjacent vertices can be colored with the other color
+    return true;
+}
+%ENDCODE%
+---++ b
+<VERBATIM>
+Given graph gets stored in an adjacency matrix,
+This can be implemented using various ways such as an array, 
+vector or list of size (v^2). In order to index thru it, adjacency Matrix would be reasonable choice
+</VERBATIM>
+%CODE{"cpp"}%
+int count = 0;
+for (1 goto v)
+{
+    if (adj  matrix[1][i] == 1) 
+        count++
+    if (count == 2)
+        return false;
+}
+return true;
+
+%ENDCODE%
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+%CODE{"cpp"}%
+//Aidar Aidymbekov
+
+#include "Graph.h"
+#include <iostream>
+
+using namespace std;
+
+string Graph::print() {
+	stringstream result;
+	for (vIterator vertex1=vertices.begin(); vertex1 != vertices.end(); vertex1++) {
+		result << *vertex1 << "[" << getColor(*vertex1) << "]: ";
+		for (vIterator vertex2 = vertices.begin(); vertex2 != vertices.end(); vertex2++)
+			if (isEdge (directedEdge(*vertex1, *vertex2)))
+				result << *vertex2 << " ";
+		result << endl;
+	}
+		return result.str();
+}
+
+int Graph::addVertex(int color){
+	int var = vertices.size()+1;
+	vertices.insert(color);
+	return var;
+}
+
+void Graph::addEdge(directedEdge newEdge){
+	if(edges.find(newEdge) == edges.end())
+		edges.insert(newEdge);
+}
+
+int Graph::getColor(int vertex){
+	return colors.at(vertex);
+}
+
+bool Graph::isEdge(directedEdge newEdge){
+	if(edges.find(newEdge) != edges.end())
+		return false;
+	else
+		return true;
+}
+%ENDCODE%
+---++ 3b.
+<VERBATIM>
+   
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+My winning position was:
+
+Please enter your move: h5-g6
+I move: e8 - f7
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  -  K  B  -  R 
+ 2 |  P  P  P  P  -  P  P  P 
+ 3 |  -  -  -  -  P  -  -  - 
+ 4 |  -  -  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  p  n  -  -  p  Q  - 
+ 7 |  p  -  p  p  p  k  -  p 
+ 8 |  r  -  b  N  -  b  n  r 
+
+Please enter your move: d8-f7
+
+Game Over:  White wins!
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+ |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  -  B  -  K  B  N  R 
+ 2 |  P  P  P  P  -  P  P  P 
+ 3 |  -  -  -  -  -  -  -  - 
+ 4 |  -  -  -  -  P  -  B  - 
+ 5 |  -  -  -  -  p  -  -  - 
+ 6 |  -  -  n  -  -  N  p  - 
+ 7 |  p  p  p  -  n  p  -  p 
+ 8 |  r  -  -  q  k  b  -  r 
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+<VERBATIM>
+   The idea I came up behind the approach that I used to  solve this problem is that
+   my program first captures any of the opponents pieces  (only those ones which a
+   re in a position, that can be taken/killed by a player).The figures are ranked using
+    a  number  system  so  it  could  figure  out  the  most valuable figures to capture
+   ( http://en.wikipedia.org/wiki/Chess_piece_relative_value )
+   For instance, between a bishop and a Rook, the program  decides to capture the 
+   Rook rather than the bishop. Also the program is takes steps up in random order
+   (using rand function), until  the moment where it finally detects another   compro-
+   mised figure.
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

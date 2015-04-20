@@ -1,0 +1,230 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(PhilipZhang),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+theta(V + E)
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+You will look through the linked list and for every vertex you see, you will increment a counter for that vertex in another array. After going through the entire linked list, you will iterate through the array of vertices to see which one has the largest value. The first step will be theta(E) and the second step will be theta(V). Thus, the process as a whole will take theta(V + E)
+---++ b
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+theta(V) for c++11
+tehta(V*E) for c++98
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+The outer linked list just contains the vertices. To find the vertex with the largest degree, you must find the inner linked list with the largest number of elements. Thus, you will have to iterate through all the vertices to achieve this number. Also, since finding the size of a linked list is O(1) for c++11 and O(E) for c++98, this complete process will be theta(V) for c++11 and theta(V*E) for c++98.
+---++ c
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+theta(V^2)
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+In order to find the vertex with the greatest degree, you must iterate though the outer vector and sum up the inner vectors to compare which index of the outer vector has the greatest sum. Finding the sum of an inner vector will be theta(V) and you must do this V times. Thus, this process will be on the order of theta(V^2)
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+Provide your pseudocode here.
+</VERBATIM>
+
+graph = variable name for adjacency in the form of vector of vectors
+V = number of vertices
+
+bool isBipartite(graph, V)
+    int v_color[V]; // array of size V that will hold the colors of the vertices
+    v_color[0] = 0;
+    for int i from 0 to V
+        if v_color[i] != NULL
+            if any values of graph[i][ ] == (v_color[i] xor 1)
+                return false
+            else 
+                all of values of v_color[graph[i][ ]] = v_color[i] xor 1
+        else
+            v_color[i] = 0
+            all of values of v_color[graph[i][ ]] = v_color[i] xor 1
+    return true
+
+
+
+This will basically label each vertex with a certain color and will label neighbors will a second color. If the graph is not able to be colored with only two colors, then the graph is not bipartite. You can see this if two neighboring vertices have the same color. This will be theta(V) since you only need to color V vertices
+---++ b
+<VERBATIM>
+Provide your pseudocode here.
+</VERBATIM>
+
+graph = variable name for the graph in the form of an adjacency list (vector of vectors)
+V = number of vertices
+
+bool isCyclic(graph, V)
+    make array v_colors of all zeros that will represent the color of the vertex
+    for int i from 0 to V
+        if v_color[i] == 0
+            DFS_visit(graph, i)
+    return false
+
+bool DFS_visit(graph, vertex)
+    set v_color[vertex] = 1
+    for every element x in graph[vertex]
+        if v_color[x] == 0
+            DFS_visit(graph, x)
+        if v_color[x] == 1
+            return true;
+
+This is basically a depth first search to find if the graph is cyclic
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+---++ 3b.
+Attach your solutions to this topic.
+
+Output for randomGenerate(6)
+
+0[0]: 3 
+1[0]: 0 2 4 5 
+2[0]: 0 1 5 
+3[0]: 0 1 2 3 5 
+4[0]: 0 2 4 
+5[0]: 5 
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+Provide your answer here.
+
+Welcome to Homework Six simplified chess.
+  Please enter your moves in the format 'e2-e3'.
+  You are playing White.
+
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  Q  K  B  N  R 
+ 2 |  P  P  P  P  P  P  P  P 
+ 3 |  -  -  -  -  -  -  -  - 
+ 4 |  -  -  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  -  -  -  -  -  - 
+ 7 |  p  p  p  p  p  p  p  p 
+ 8 |  r  n  b  q  k  b  n  r 
+
+Please enter your move: e2 - e3
+I move: f7 - f6
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  Q  K  B  N  R 
+ 2 |  P  P  P  P  -  P  P  P 
+ 3 |  -  -  -  -  P  -  -  - 
+ 4 |  -  -  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  -  -  -  p  -  - 
+ 7 |  p  p  p  p  p  -  p  p 
+ 8 |  r  n  b  q  k  b  n  r 
+
+Please enter your move: f1 - c4
+I move: f6 - f5
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  Q  K  -  N  R 
+ 2 |  P  P  P  P  -  P  P  P 
+ 3 |  -  -  -  -  P  -  -  - 
+ 4 |  -  -  B  -  -  -  -  - 
+ 5 |  -  -  -  -  -  p  -  - 
+ 6 |  -  -  -  -  -  -  -  - 
+ 7 |  p  p  p  p  p  -  p  p 
+ 8 |  r  n  b  q  k  b  n  r 
+
+Please enter your move: d1 - h5
+I move: f5 - f4
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  -  K  -  N  R 
+ 2 |  P  P  P  P  -  P  P  P 
+ 3 |  -  -  -  -  P  -  -  - 
+ 4 |  -  -  B  -  -  p  -  - 
+ 5 |  -  -  -  -  -  -  -  Q 
+ 6 |  -  -  -  -  -  -  -  - 
+ 7 |  p  p  p  p  p  -  p  p 
+ 8 |  r  n  b  q  k  b  n  r 
+
+Please enter your move: h5 - e8
+
+Game Over:  White wins!
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+Provide your answer here.
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  Q  K     p  k 
+ 2 |  P  P  P  P  P     p  p 
+ 3 |  -  -  -  -  -  -  -  - 
+ 4 |  -  -  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  -  -  -  -  -  - 
+ 7 |  -  -  -  -  -  -  -  -         
+ 8 |  -  -  -  -  -  -  -  -         
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+Provide a description of your approach here.  Upload your code online.
+
+I set point values to every piece.
+P = 1
+B = 3
+N = 3
+R = 5
+Q = 9
+K = 1000
+p = -1
+b = -3
+n = -3
+r = -5
+q = -9
+k = -1000
+I would make a separate board and play each possible move and calculate the board's points for each move. I would pick the move with the highest or lowest board point value based on which color I was
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

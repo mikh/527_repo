@@ -1,0 +1,132 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(BarronRoth),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+Theta(E)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Edge lists are either an array, vector, or list of edges and their connections. Therefore, their run time should be dependent on edges.
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+Theta(V+E), upper bound = O(V^2)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Directly dependent on number of vertices and edges in each of the two linked lists. 
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+Theta(V^2)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Adjacency matrix that is 2D will be V * V inherently because of the dimensionality. On the plus side, removing edges takes constant time.
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+first = initial color of vertex
+e = edges
+u = source
+v = destination
+0 = uncolored
+1 = blue
+-1 = red
+Adj[u][v] = adjacency matrix
+	int color[v]
+		for i = 0 to v-1
+			color[i] = 0
+			color[first] = 1
+		for j = 0 to u-1
+		{
+			for k = 0 to v-1
+			{
+				if Adj[j][k] && (color[k] == 0)
+					color[k] = (-1)(color[u]);
+				else if Adj[j][k] && color[k] == color[j]
+					return false;
+ 			}
+		}
+</VERBATIM>
+---++ b
+<VERBATIM>
+v = vertex
+i = 
+
+function isCycle
+
+visited[v] = true;
+ 
+    for i = adj[v].begin; i != adj[v].end; i++)
+    {
+        if i != visited
+        {
+			run isCycle recursively
+              return true;
+        }
+ 
+        else if i != parent
+           return true;
+    }
+    return false;
+}
+ 
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+---++ 3b.
+Attach your solutions to this topic.
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+Provide a description of your approach here.  Upload your code online.
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

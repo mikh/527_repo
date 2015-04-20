@@ -1,0 +1,425 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(ChristineLow),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+</VERBATIM>
+&Theta;(E)
+---+++!! Brief explanation
+<VERBATIM>
+To traverse the linked list of edges, it will take E times. However, within each edge, there are two Vertices. 
+To find the max degree, you need to keep track of how many times a vertex appears so you need to go through the linked list of each edge, resulting in 2 steps per traversing.
+The end result is Theta(E).
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+</VERBATIM>
+&Theta;(V)
+---+++!! Brief explanation
+<VERBATIM>
+it will take V times to go through the linked list of vertices and then constant time to find the size of the linked list of the vertex's neighbors. You want to do this while keeping track of the vertex with the biggest size of linked list neighbors because this represents the max degree. Doing this results in Theta(V)
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+</VERBATIM>
+&Theta;(V^2)
+---+++!! Brief explanation
+<VERBATIM>
+It takes V times to traverse one row of the vector and add up the count of how many edges it has (it's degree). Since there are V rows, it will take Theta(V^2) to go traverse V rows to find which has the highest degree.
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+//G is the input graph G = (V,E) represented by adjacency list
+//s is source vertex
+bool isBipartite(G,s)
+{
+	color every vertex white;
+	queue <int> Q;
+	enqueue(s);
+	while Q != empty
+	{
+		h = head of Q;
+
+		if( h is white )
+		{
+			//color the head red if it hasn't been colored yet
+			color h red;
+		}
+
+		for( each neighbor n of h )
+		{
+			if( n is white && h is red)
+			{
+				//color n the opposite color of head
+				//so color n blue since head is red
+				color n blue;
+				enqueue(n);
+			}
+			else if( n is red && h is red)
+			{
+				//if neighbor is the same color as the head then it is not bipartite
+				return false;
+			}
+			else if( n is white && h is blue)
+			{
+				//color n the opposite color of head
+				//so color n red since head is blue
+				color n red
+			}
+			else if( n is blue && h is blue)
+			{
+				//if neighbor is same color as head then it is not bipartite
+				return false;
+			}
+		}
+
+		dequeue(h);
+	}
+
+	return true;
+}
+</VERBATIM>
+---++ b
+<VERBATIM>
+bool isCycle(u)
+{
+	//grey means visited
+	color u grey;
+
+	for( each adjacent v of u)
+	{
+		if ( v is white )
+		{
+			isCycle(u);
+		}
+		else if ( v is grey )
+		{
+			//if v is grey, it means it has been visited, completing the cycle
+			return true;
+		}
+	}
+
+	color u black; //finished
+
+	return false;
+}
+
+
+bool containsCycle(G)
+{
+	//white means the vertex has not been visited yet
+	color all vertices white;
+
+	for( each vertex v in G )
+	{
+		if( v is white )
+		{
+			if ( isCycle(v) ) //if there is a cycle at that vertex
+			{
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+---++ 3b.
+<VERBATIM>
+0[6]: 1 2 3 4 7 8 9 
+1[3]: 0 4 8 10 11 
+2[11]: 0 1 4 5 6 7 8 11 
+3[4]: 0 2 4 5 6 7 8 9 11 
+4[1]: 3 5 6 9 10 
+5[9]: 1 6 7 10 11 
+6[10]: 0 4 5 8 
+7[1]: 1 3 6 8 
+8[2]: 0 1 3 5 7 11 
+9[1]: 2 3 4 5 11 
+10[10]: 0 1 3 4 5 6 9 
+11[8]: 2 4 6 
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+Player is White
+Compilation
+
+
+...compilation completed without problems.
+Running ...
+
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  Q  K  B  N  R 
+ 2 |  P  P  P  P  P  P  P  P 
+ 3 |  -  -  -  -  -  -  -  - 
+ 4 |  -  -  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  -  -  -  -  -  - 
+ 7 |  p  p  p  p  p  p  p  p 
+ 8 |  r  n  b  q  k  b  n  r 
+
+Move #1: White moves b2 - b3
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  Q  K  B  N  R 
+ 2 |  P  -  P  P  P  P  P  P 
+ 3 |  -  P  -  -  -  -  -  - 
+ 4 |  -  -  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  -  -  -  -  -  - 
+ 7 |  p  p  p  p  p  p  p  p 
+ 8 |  r  n  b  q  k  b  n  r 
+
+Move #2: Black moves b8 - a6
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  Q  K  B  N  R 
+ 2 |  P  -  P  P  P  P  P  P 
+ 3 |  -  P  -  -  -  -  -  - 
+ 4 |  -  -  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  n  -  -  -  -  -  -  - 
+ 7 |  p  p  p  p  p  p  p  p 
+ 8 |  r  -  b  q  k  b  n  r 
+
+Move #3: White moves c2 - c3
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  Q  K  B  N  R 
+ 2 |  P  -  -  P  P  P  P  P 
+ 3 |  -  P  P  -  -  -  -  - 
+ 4 |  -  -  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  n  -  -  -  -  -  -  - 
+ 7 |  p  p  p  p  p  p  p  p 
+ 8 |  r  -  b  q  k  b  n  r 
+
+Move #4: Black moves a6 - b8
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  Q  K  B  N  R 
+ 2 |  P  -  -  P  P  P  P  P 
+ 3 |  -  P  P  -  -  -  -  - 
+ 4 |  -  -  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  -  -  -  -  -  - 
+ 7 |  p  p  p  p  p  p  p  p 
+ 8 |  r  n  b  q  k  b  n  r 
+
+Move #5: White moves b1 - a3
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  -  B  Q  K  B  N  R 
+ 2 |  P  -  -  P  P  P  P  P 
+ 3 |  N  P  P  -  -  -  -  - 
+ 4 |  -  -  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  -  -  -  -  -  - 
+ 7 |  p  p  p  p  p  p  p  p 
+ 8 |  r  n  b  q  k  b  n  r 
+
+Move #6: Black moves g8 - f6
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  -  B  Q  K  B  N  R 
+ 2 |  P  -  -  P  P  P  P  P 
+ 3 |  N  P  P  -  -  -  -  - 
+ 4 |  -  -  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  -  -  -  n  -  - 
+ 7 |  p  p  p  p  p  p  p  p 
+ 8 |  r  n  b  q  k  b  -  r 
+
+Move #7: White moves b3 - b4
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  -  B  Q  K  B  N  R 
+ 2 |  P  -  -  P  P  P  P  P 
+ 3 |  N  -  P  -  -  -  -  - 
+ 4 |  -  P  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  -  -  -  n  -  - 
+ 7 |  p  p  p  p  p  p  p  p 
+ 8 |  r  n  b  q  k  b  -  r 
+
+Move #8: Black moves f6 - g4
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  -  B  Q  K  B  N  R 
+ 2 |  P  -  -  P  P  P  P  P 
+ 3 |  N  -  P  -  -  -  -  - 
+ 4 |  -  P  -  -  -  -  n  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  -  -  -  -  -  - 
+ 7 |  p  p  p  p  p  p  p  p 
+ 8 |  r  n  b  q  k  b  -  r 
+
+Move #9: White moves e2 - e3
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  -  B  Q  K  B  N  R 
+ 2 |  P  -  -  P  -  P  P  P 
+ 3 |  N  -  P  -  P  -  -  - 
+ 4 |  -  P  -  -  -  -  n  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  -  -  -  -  -  - 
+ 7 |  p  p  p  p  p  p  p  p 
+ 8 |  r  n  b  q  k  b  -  r 
+
+Move #10: Black moves d7 - d6
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  -  B  Q  K  B  N  R 
+ 2 |  P  -  -  P  -  P  P  P 
+ 3 |  N  -  P  -  P  -  -  - 
+ 4 |  -  P  -  -  -  -  n  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  -  p  -  -  -  - 
+ 7 |  p  p  p  -  p  p  p  p 
+ 8 |  r  n  b  q  k  b  -  r 
+
+Move #11: White moves d1 - g4
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  -  B  -  K  B  N  R 
+ 2 |  P  -  -  P  -  P  P  P 
+ 3 |  N  -  P  -  P  -  -  - 
+ 4 |  -  P  -  -  -  -  Q  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  -  p  -  -  -  - 
+ 7 |  p  p  p  -  p  p  p  p 
+ 8 |  r  n  b  q  k  b  -  r 
+
+Move #12: Black moves c8 - e6
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  -  B  -  K  B  N  R 
+ 2 |  P  -  -  P  -  P  P  P 
+ 3 |  N  -  P  -  P  -  -  - 
+ 4 |  -  P  -  -  -  -  Q  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  -  p  b  -  -  - 
+ 7 |  p  p  p  -  p  p  p  p 
+ 8 |  r  n  -  q  k  b  -  r 
+
+Move #13: White moves g4 - g7
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  -  B  -  K  B  N  R 
+ 2 |  P  -  -  P  -  P  P  P 
+ 3 |  N  -  P  -  P  -  -  - 
+ 4 |  -  P  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  -  p  b  -  -  - 
+ 7 |  p  p  p  -  p  p  Q  p 
+ 8 |  r  n  -  q  k  b  -  r 
+
+Move #14: Black moves b7 - b6
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  -  B  -  K  B  N  R 
+ 2 |  P  -  -  P  -  P  P  P 
+ 3 |  N  -  P  -  P  -  -  - 
+ 4 |  -  P  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  p  -  p  b  -  -  - 
+ 7 |  p  -  p  -  p  p  Q  p 
+ 8 |  r  n  -  q  k  b  -  r 
+
+Move #15: White moves g7 - f7
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  -  B  -  K  B  N  R 
+ 2 |  P  -  -  P  -  P  P  P 
+ 3 |  N  -  P  -  P  -  -  - 
+ 4 |  -  P  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  p  -  p  b  -  -  - 
+ 7 |  p  -  p  -  p  Q  -  p 
+ 8 |  r  n  -  q  k  b  -  r 
+
+Move #16: Black moves f8 - h6
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  -  B  -  K  B  N  R 
+ 2 |  P  -  -  P  -  P  P  P 
+ 3 |  N  -  P  -  P  -  -  - 
+ 4 |  -  P  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  p  -  p  b  -  -  b 
+ 7 |  p  -  p  -  p  Q  -  p 
+ 8 |  r  n  -  q  k  -  -  r 
+
+Move #17: White moves f7 - e8
+Game Over!
+White player wins
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  -  N  B  -  K  -  N  - 
+ 2 |  -  P  -  P  -  -  -  - 
+ 3 |  -  -  -  -  -  -  -  - 
+ 4 |  -  -  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  -  -  B  P  P  -
+ 7 |  -  -  -  Q  -  -  -  -
+ 8 |  -  -  -  -  k  -  -  R
+
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+I made an array that stored the "weight" of each possible move. (The more the weight, the better the move is) <br>
+To calculate the weight of each move, I had a couple of functions. <br>
+The function calculate_kill(), determines if the resulting move can kill an opponents's piece. If so, then it increases the weight of that move. <br>
+The function calculate_check(), determines if the move will result in killing the opponent's king. If so, then it increases the weight by 1000 so it has to be the best move.<br>
+The function calculate_type(), determines what type of piece is being moved. Depending on the type, it increases the weight.<br>
+For example, the type that has the most range in movement will be more likely to be a better move.<br>
+The function calculate_bestmove() determines which move has the most weight.<br>
+The move with the most weight then gets carried out.<br>
+I store the move and the type of piece that got moved so in the next turn, I can prevent from carrying out a move that could just be backtracking the previous move. <br>
+If there is absolutely no most favorable/weighted move, i generate a random move.
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

@@ -1,0 +1,229 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(AndrewColletta),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+theta(E) 
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Each vertex will have a value represented as an integer. These values are not known yet, but they exist. 
+For an example, each vertex will be an integer. 
+Create a vector of ints. The vertex values will be the key and the number of vertexes present will be the value. 
+Create an integer to represent the maximum degree and set it as 0. 
+Iterate through the edges, increment value at the vertex value. Check if this value is greater than max degree, if so, overwrite max degree as the value. (E time)
+Return the greatest max degree. 
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+theta(V)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Iterate through the list of lists. Create an integer to represent the maximum degree. 
+For the first sublist vertex, store the vertex it represents and the size of the sublist.  
+Then for each sublist, measure the size, and if greater than the maximum degree, 
+overwrite the maximum degree with the size. Return the maximum degree.
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+theta(V^2) 
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+A two dimensional vector will be implemented as a vector of vectors. 
+Create an integer to represent the maximum degree and set it as 0. 
+Sum the values in each row of the matrix storing by summing the values of subvector_ii[ jj ] 
+and incrementing jj to V or the end of the row. If this is greater than the maximum degree than 
+overwrite the maximum degree with this value. (V each V so V^2 time)
+If this is a directed graph you will also have to check the sum of each column. 
+Use accumulate(vector.begin(),vector.end(),0) on each subvector.  
+If this is greater than maximum degree than overwrite the maximum degree with this value. (V each V so V^2 time) 
+Return the maximum degree. 
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>Question 1 Results:
+
+Total Grade: 27
+
+	10        		
+	7         		In some cases, you will have O(V+E) which could be greater than O(V)
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+struct Node
+{
+	int color = NULL;	  //color of the node 
+	list<Node> adjacency; 	//each node adjacent to this node will be in this list 
+}
+
+queue<Node> Graph; 	//this is filled with the nodes of the graph
+
+
+bool CheckBipartite(list<Node> Graph)  //true if bipartite; false if not bipartite
+{
+	Graph[0].color = 1 	//color one is blue; color two will be red
+	queue<Node> GraphCopy = Graph  //this is so you don't alter the Graph by running bool check. 
+                                                                  //could also pass by reference or something 
+	while GraphCopy not empty
+	{
+		popped= pop(GraphCopy)
+		if popped.color = null
+			if popped.adjacency.size = 0
+				popped.color = 1
+			else
+				for adj in popped.adjacency
+					if all adjacency colors are the same
+						popped.color = !popped.adj[0].color
+		else
+			for every node adj in popped.adjacency  	//neighbors
+				if adj.color= NULL
+					adj.color = !popped.color
+				if adj.color = popped.color
+					return FALSE  	//a neighbor is the same color and 									//therefore the graph is not bipartite
+	}
+	return TRUE	//No same color neighbors are found and therefore the graph is bipartite. 
+	
+}
+
+// Run time is same as BFS which is O(V+E) since constant time work is done V times 
+//to put things in/out of the queue. Constant time work is done for comparing the neighboring colors 2E times.  
+</VERBATIM>
+---++ b
+<VERBATIM>
+
+// A depth first search with a check that adjacent nodes have been visited before will tell us if the graph is a cycle. If this check succeeds, it is a cycle.
+
+struct node
+{
+     bool visited = false;     //false until visited, then becomes true. 
+     list<node> adjacencyList;    //each node adjacent to this node will be in this list 
+}
+
+map<node> Graph //the graph in question
+stack<node> Stack
+Stack[0] = Graph[0]
+
+bool CycleCheck(stack<node> Stack)  //returns true if a cycle is found
+{
+     current = pop(Stack)
+     current.visited = true
+     while Stack not empty
+     {
+          for adj in current.adjacencyList
+          {
+               if adj.visited = true
+                     return true
+               Stack.push(adj)
+          }
+     }
+     for vertex in Graph  // go through the graph from beginning until end or in this case it finds something not visited
+         if !vertex.visited 
+              Stack[0] = Graph[vertex] //stack is filled with new unseen vertex
+              CycleCheck(Stack)
+}
+
+// This is O(V) time, because for each unvisited vertex to the stack, a constant amount of 
+//  work is done to check that it has no previously visited neighbors.
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 20
+
+	10        		
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+---++ 3b.
+Attach your solutions to this topic.
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+Please enter your move: f1-c4
+I move: a7 - a6
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  -  N  -  Q  K  -  -  R 
+ 2 |  -  B  R  P  -  N  -  P 
+ 3 |  -  P  -  -  P  -  P  - 
+ 4 |  -  P  B  -  -  P  -  - 
+ 5 |  P  -  -  -  -  -  -  - 
+ 6 |  p  p  -  p  -  p  p  - 
+ 7 |  -  -  p  -  p  k  -  p 
+ 8 |  -  -  r  q  -  b  n  r 
+
+Please enter your move: c4-f7
+
+Game Over:  White wins!
+
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  -  N  -  Q  K  -  -  - 
+ 2 |  -  B  -  P  -  N  -  P 
+ 3 |  -  P  -  -  P  -  -  - 
+ 4 |  -  P  B  -  -  P  -  - 
+ 5 |  -  -  -  -  -  -  R  - 
+ 6 |  -  -  -  -  -  -  -  - 
+ 7 |  R  -  -  -  -  -  -  - 
+ 8 |  -  -  -  -  -  -  -  k 
+
+Stalemate
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+Each type of piece is assigned a value: pawn, 1; bishop, 3; knight, 3; 
+rook, 5; queen, 9; king, 10000. 
+If a piece is taken, the score goes up by the value of the piece. 
+If a piece is lost, the score goes down by the value of the piece. 
+Score is originally set to 0. Every possible move is scored and if there 
+is a move with a higher score than seen before, this move is chosen 
+on a test board and every move on this board is evaluated. if the score 
+is less than the score before, meaning a more valuable piece is potentially 
+lost, this move has this as the final score. Basically it looks for moves 
+where you take valuable pieces but do not lose valuable pieces. 
+The move with the highest score is chosen. 
+If there is no move with a high score, a random move is selected. 
+This is not properly implemented. Random moves are usually selected.
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

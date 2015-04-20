@@ -1,0 +1,156 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(ConnorRichmond),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+This code is the collaborative work of Connor Richmond and Alejandro Eguren 
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<latex> \Theta (E) </latex>
+---+++!! Brief explanation
+Since we have an linked list of edges. To find the degree of a vertex we have to find out how many edges are coming out of our target Vertex. To do this we keep a count as we walk through and add every time we see our target vertex appear in the first entry. It would have to run through the whole list of edges to make sure it's all accounted for. If we know the list is sorted then once we pass the edge with our vertex we can exit out and the run time will be BIG O(E).
+---++ b
+---+++!! Running time
+<latex> \Theta (V) </latex>
+---+++!! Brief explanation
+For this one we have a link-list of link lists: one is of V and the other of E. To find a degree we have to walk through the first link list to find the Vertex we want to look at which is Theta(V). At this point the link list points to another link list. For this we use the list.size() to get how many edges are found in the list, this would be of constant time. So in conclusion once we walk and find our V we can simply size and see how many edges are attached to that vertex.
+---++ c
+---+++!! Running time
+<latex> \Theta (V) </latex>
+---+++!! Brief explanation
+The first assumption is that we know where the position of the vertex is on the matrix columns, otherwise this form of the data wouldn't be of much use for this. Given that information, finding the column of our target vector will be of constant time. Then we need to sum all the 1's in that column which will be theta of V. In conclusion we just need to walk through all the target column that will give us the total number of edges associated with that vertex and hence it's degree. 
+---++!! Grader comments *[/30]*
+<VERBATIM>Question 1 Results:
+
+Total Grade: 21
+
+	10        		
+	7         		In some cases, you will have O(V+E) which could be greater than O(V)
+	4         		Incorrect answer
+
+
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+In this algorithm I assume that the the vertex and the edges are stored in an adjacency list which is a list of lists.
+
+%CODE{"cpp"}%
+int check_array[]= array of zeros the size of the outer list;
+for (ii = start to the end of the outer list)
+{
+     if 0 store vertex as value 1;
+
+     for(jj= start to end of inner lists)
+     {
+          if(value at list[jj] is equal to list[ii] in checker_array)
+                return false;
+     }          
+}
+return true
+%ENDCODE%
+
+Essentially this algorithm goes and checks each vertex and edge, edges change colors, and if within an inner loop we identify a a discrepancy then it is not bipartite. This uses the idea of coloring the graph with just two colors. And would run big O(V+E).
+---++ b
+In this algorithm we implement a modified Depth Search First (DSF) where if we backtrack on a vertex then we return true that we've found a loop.
+
+%CODE{"cpp"}%
+int color_vertex[] ={0}; % this is a coloring array which we initialize all to all vertexes to white. white=1, gray=2 black=0
+stack data_in(v); %this is the stack where we will move on to other vertexes.
+int *search; % This is a pointer so we can keep the run time to O(V) and not have to run multiple times through.
+int adjacency; % this is to check that a cycle isn't just two vertices
+
+for (each white vertex v)
+     DFS_Visit(v);
+return false; %that after a whole travel we don't find a cycle.
+
+bool DFS_Visit(...)
+{
+color v gray 
+for each adjacent node(n)
+{
+if n is black and n!= to adjacency then-> then return true; %backtracking to black would represent a cycle.
+else DFS_Visit(n)
+}
+v=black
+}
+
+%ENDCODE%
+
+Essentially this algorithm goes through and as soon as a vertex thats atleast 2 edges away is already visited then it's a cycle and returns true.
+---++!! Grader comments *[/20]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 15
+
+	5         		algorithm needs more detail
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Please see attached code
+---++ 3b.
+see attached code
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  -  -  K  -  N  R 
+ 2 |  P  P  P  -  -  P  P  P 
+ 3 |  -  -  -  -  -  -  -  - 
+ 4 |  -  -  B  P  P  -  -  - 
+ 5 |  -  p  -  Q  -  -  -  p 
+ 6 |  -  -  -  -  -  -  p  B 
+ 7 |  p  -  p  p  p  p  -  r 
+ 8 |  r  n  -  q  -  k  n  - 
+
+Please enter your move: h6 - f8
+
+Game Over:  White wins!
+
+RUN FINISHED; exit value 1; real time: 4m 46s; user: 0ms; system: 20ms
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  -  -  K  -  N  - 
+ 2 |  P  P  P  -  -  P  P  P 
+ 3 |  -  -  -  -  -  -  -  - 
+ 4 |  -  -  B  P  P  -  -  - 
+ 5 |  -  -  -  -  -  -  -  -
+ 6 |  -  -  -  -   - Q  -  R 
+ 7 |  -  -  -  -  -  -  -  - 
+ 8 |  R  -  -  -  -  -  k  -   
+
+</VERBATIM>
+In this move, the black player still has their king, but it is impossible for them to make a move
+---++ 4b.  Main task [20 points]
+This code searches through every possible move and assigns a point value to either doing nothing, or taking an opponents piece. Each piece has its own value, to make it more desirable to take an opponents King compared to their pawn. It then looks forward to calculate different possible moves the opponent could take and calculates the least desirable moves, and uses the weight of that calculation to factor into its original move choice. It then repeats that step to look forward 4 moves in advance before making its choice of move. My code assumes that the opponent will make the most favorable move for them every time, and so my player tries to move them towards moves that will end in a victory for it. Lastly the code also does some pruning to determine which moves should be analyzed versus skipped over. If I can take a king 2 turns from now, it stops calculating future moves, and preforms the move most likely to result in a victory. 
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

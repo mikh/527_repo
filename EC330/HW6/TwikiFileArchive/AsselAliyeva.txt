@@ -1,0 +1,492 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(AsselAliyeva),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+
+
+---+++!! Running time
+<VERBATIM>
+theta(V+E)
+
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+you need to go through both arrays-the one with size (v) and the one with size (e)
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+theta(V+E) 
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+So adjacency list stores V Vertices and the connections in between them (2E)
+so going through the list would take Theta(V+2e)=Theta(V+e)
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+Theta(V^2)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+every V can be connected to another V
+(so every time we need to check V for V)
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+
+Choose any V, color it (say,in red)
+put it into a queue
+
+while (queue is not empty)
+D=pop (queue)
+for (int n=0; n<#of neighbors of D)
+      if (n has the same color as D) then return false;
+      if(n has no color) then color it into different color from D( say, grey) and put n in queue;
+return true
+ 
+d.s: adjacency list (linked list of linked lists), queue
+Theta(E+V)
+
+
+
+
+
+
+
+
+</VERBATIM>
+---++ b
+<VERBATIM>
+
+bool if_contains_cycle(int nodes,bool visited_nodes[],int prev_node){
+     create a bool array visited_nodes of V nodes, make all the elements=false;
+     for (int i=0; i<adjacency_list.size();i++){
+          if (visited_nodes[i]==true) then
+              if( if_contains_cycle(i, visited_nodes, v)==true)
+                    return true;
+          else (if (i!=parent)) then return false}
+
+return false;
+}
+
+d.s: adjacency list
+
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+#include "Graph.h"
+#include <iostream>
+
+
+
+using namespace std;
+
+
+
+// SETTERS
+/**
+* Adds a vertex to the graph with color <color>.
+* @param color The color of the added vertex.
+* @return The ID of the vertex that was added.
+*/
+int Graph::addVertex(int color){
+	int v = 0;
+	vertices.insert(v);
+	colors[v] = color;
+	v++;
+	return (v - 1);
+}
+
+/**
+* Adds the given edge to the graph.
+* @param newEdge An edge to add to the graph.
+* @require the vertices of <newEdge> must currently exist in the graph.
+*/
+void Graph::addEdge(directedEdge newEdge){
+	int vert1 = get<0>(newEdge);
+	int vert2 = get<1>(newEdge);
+	bool if_vert1 = false;
+	bool if_vert2 = false;
+
+	for (vertexIterator i = vertices.begin(); i != vertices.end(); i++){
+
+		if (*i == vert1){ if_vert1 = true; }
+		if (*i == vert2){ if_vert2 = true; }
+
+		if (if_vert1 && if_vert2){
+			edges.insert(newEdge);
+		}
+	}
+
+
+}
+
+
+// GETTERS
+
+/**
+* @param vertex the vertex whose color is of interest.
+* @require the vertex <vertex> must currently exist in the graph.
+* @return the color of vertex <vertex>.
+*/
+int Graph::getColor(int vertex){
+	int color;
+	for (vertexIterator i = vertices.begin(); i != vertices.end(); i++){
+		if (vertex == *i){
+			color = colors.at(vertex);
+			return color;
+		}
+	}
+
+}
+
+/**
+* @return true iff there is an edge in the graph with the same vertices as newEdge
+*/
+bool Graph::isEdge(directedEdge newEdge){
+	//typedef set<int>::iterator vertexIterator;
+	typedef set<directedEdge>::iterator edgeIterator; 
+	int vert1 = get<0>(newEdge);
+	int vert2 = get<1>(newEdge);
+	
+	for (edgeIterator i= edges.begin(); i!= edges.end(); i++){
+		if ((vert1 == get<0>(*i)) && (vert2 == get<1>(*i))){ return true; }
+		else { continue; }
+	}
+
+	return false;
+}
+
+
+string Graph::print() {
+	stringstream result;
+	for (vertexIterator vert1 = vertices.begin(); vert1 != vertices.end(); vert1++) {
+		result << *vert1 << "[" << getColor(*vert1) << "]: ";
+		for (vertexIterator vert2 = vertices.begin(); vert2 != vertices.end(); vert2++)
+		if (isEdge(directedEdge(*vert1, *vert2)))
+			result << *vert2 << " ";
+		result << endl;
+	}
+	return result.str();
+}
+---++ 3b.
+
+0[9]: 0 2 3 4 
+1[9]: 1 2 4 5 6 7 
+2[6]: 0 1 3 4 6 7 
+3[0]: 0 1 2 7 
+4[6]: 0 1 4 7 
+5[0]: 0 1 3 4 6 7 
+6[3]: 0 1 4 5 
+7[6]: 0 1 2 4 5 6 7 
+
+
+0[8]: 1 2 3 4 5 
+1[1]: 0 2 3 4 
+2[6]: 0 1 2 4 5 
+3[7]: 2 3 
+4[3]: 2 3 4 7 
+5[6]: 0 1 4 5 6 
+6[4]: 0 5 
+7[8]: 0 4 5 
+
+
+0[1]: 0 1 2 4 7 
+1[5]: 0 2 3 6 
+2[4]: 0 1 5 
+3[2]: 0 2 3 4 6 
+4[4]: 0 1 5 7 
+5[1]: 1 2 6 7 
+6[2]: 
+7[0]: 0 1 2 7 
+
+
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+1. 
+
+I move: f8 - a3
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  -  K  B  -  R 
+ 2 |  P  P  P  P  -  P  P  P 
+ 3 |  b  -  -  -  P  -  -  - 
+ 4 |  -  -  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  N  - 
+ 6 |  p  -  -  -  p  -  -  p 
+ 7 |  -  p  p  p  -  Q  p  - 
+ 8 |  r  n  b  -  k  -  n  r 
+
+Please enter your move: f7-e8
+
+Game Over:  White wins!
+
+
+2.
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  -  -  -  -  -  -  -  -
+ 2 |  P -  P  -  -  P  P  P 
+ 3 |  B -  -  -  -  -  -  N
+ 4 |  -  -  -  -  -  -  -  - 
+ 5 |  -  -  N  -  -  -  K  - 
+ 6 |  -  -  -  -  -  -  -  - 
+ 7 |  k  -  -  -  -  -  -  - 
+ 8 |  -  -  -  Q  -  -  -  - 
+
+
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+
+
+ so i created a strategy that evaluates my move by using as information the number of available moves in each sub-tree. this  is an artificial intelligence heuristic, according to which the most intelligent agent maximizes the number of future possibilities. ideally, there are other strategies too
+
+fill the strategies
+piece values:
+rook=5 points
+bishop=3 points
+pawn=1 point
+queen=9 points
+knight=3 points
+king=15 points
+
+factors to consider:
+danger:
+something attacks your king: move the king or if possible defend it
+something attacks your pieces:
+a) if it leads to the same piece (value-piece value_current-piece value_future)<=-1 (3 possible moves)
+if (position value_current-position_value_future)<=0 then do the move
+else: move attacked pieces in the safe zone
+if nothing attacks you:
+if it leads to the same piece (value-piece value_current-piece value_future)<=-1 (3 possible moves)
+if (position value_current-position_value_future)<=0 then do the move
+else:try another move
+
+board/position values:
+
+for whites:
+first and second row-all zero values
+starting 3 row=position_value increases by one
+columns: 0-4-value increases by one
+4-7-value decreases by one
+for black:
+6 and 7 row-all zero values
+starting 5 row=position_value increases by one
+columns: 0-4-value increases by one
+4-7-value decreases by one
+
+
+I really dont know why my code didnt work  (heavily commented)//attached//heavily commented
+
+
+#ifndef MYPLAYER_H
+#define	MYPLAYER_H
+#include <cstdlib>
+#include "chessBoard.h"
+
+class myPlayer : public chessPlayer {
+public:
+
+	const static int treeLayers = 4;
+
+	//myPlayer(chessBoard::colorType col) : chessPlayer(col) { srand(time(NULL)); };
+	myPlayer(chessBoard::colorType col);
+	virtual void enemyMove(chessBoard::move theMove) { myBoard.makeMove(theMove); };
+	//virtual chessBoard::move getMove() {chessBoard::move theMove = myBoard.nthMove(rand() % myBoard.numMoves()); myBoard.makeMove(theMove); return theMove;}
+	virtual chessBoard::move getMove();
+
+
+	struct treeNode {
+		chessBoard* board;
+		double state;
+		vector<treeNode*> nextNodes;
+	};
+
+
+
+	void fillStrategies(const int k, treeNode* node);
+
+	chessBoard::move findBestMove();
+
+
+	// This function will fill up the state values of each possible board in the tree. These values are
+	//  used to find the best move
+	void evaluateTree(const int k, treeNode* node);
+
+
+private:
+	chessBoard myBoard; // internal version of the current board
+
+	treeNode* strategy; /* a pointer to a tree node */
+
+
+};
+
+
+myPlayer::myPlayer(chessBoard::colorType col) : chessPlayer(col) {
+
+	strategy = new treeNode;
+
+
+
+};
+
+
+chessBoard::move myPlayer::getMove() {
+
+
+	// Allocate memory for the first board on the tree, which will be created equal to the current board
+	strategy->board = new chessBoard(myBoard);
+
+	// Allocate memory for the board on this first node, which will be created equal to the current board
+	strategy->board = new chessBoard(myBoard);
+
+	// Now fill the rest of the tree recursively k time (k levels)
+	fillStrategies(treeLayers, strategy);
+
+	/* finally call a function that picks the best move from the tree */
+
+	chessBoard::move bestMove = findBestMove();
+
+	return bestMove;
+
+}
+
+
+
+void myPlayer::fillStrategies(const int k, treeNode* node) {
+
+	if (k > 0) { // Check that we haven't reached the bottom level
+
+		// Now we loop through all the possible moves of the current board
+
+		int m = 0;
+
+		// loop through the list of possible moves on the board in this node
+		for (m = 0; m<node->board->numMoves(); m++) { // for each possible move on his board
+
+			// create a new node
+			treeNode* newNode = new treeNode;
+
+			// on this new node create a new board equal to the current one
+			newNode->board = new chessBoard(myBoard);
+
+			// update this new board with the move
+			newNode->board->makeMove(node->board->nthMove(m));
+
+			// add this node to the list of next nodes
+			node->nextNodes.push_back(newNode);
+
+			// fill recursively the sub-tree starting from this node
+			fillStrategies(k - 1, newNode);
+
+		}
+
+	}
+
+}
+
+
+
+chessBoard::move  myPlayer::findBestMove() {
+
+	int m = 0;
+
+	double bestValue = -1000000000;
+
+	chessBoard::move bestMove;
+
+	// Loop through all the moves possible on this board
+	for (m = 0; m < strategy->board->numMoves(); m++)
+
+	if (strategy->nextNodes[m]->state > bestValue) { // if this move is best so far
+
+		bestMove = strategy->board->nthMove(m); // select it
+
+		bestValue = strategy->nextNodes[m]->state; // update value
+
+
+	}
+
+
+	return bestMove;
+
+
+}
+
+void  myPlayer::evaluateTree(const int k, treeNode* node) {
+
+
+	if (k > 0) { 
+
+		node->state = node->board->numMoves();
+
+
+	}
+	else {
+
+		// if im not  at the bottom of the tree, then I simply add all the available moves on each
+		// sub-tree and  evaluate the tree recursively
+
+		node->state = 0;
+
+		for (int m = 0; m<node->board->numMoves(); m++) {
+
+			evaluateTree(k - 1, node->nextNodes[m]);
+
+			node->state += node->nextNodes[m]->state;
+		}
+
+	}
+
+
+}
+
+
+#endif	/* MYPLAYER_H */
+
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

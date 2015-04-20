@@ -1,0 +1,309 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(DouglasRoeper),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+Theta( E )
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+In an edge list, edges are represented as pairs of vertices, such as (V1, V2). This means that there are E number of pairs of vertices, since there are E edges. Thus to determine the maximum degree of a vertex, you would have to go through every pair in the edge list. Thus, it would take you Theta( E ).
+---++ b
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+Theta( V + E )
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+In an adjacency list, you have a list of edge pairs organized by vertex. Thus to find the maximum degree of a vertex, you would have to get the size of each edge-list for every vertex. Since it is a list, you must enumerate through the list to count all the elements. Thus, since there are E items in all the edge-lists, the total number of enumerations you need to do is E. You also have to do a constant amount of work to count the edges of each of the V vertices, which takes V time. Thus, the total time is Theta( V + E).
+---++ c
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+Theta( V^2 )
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+In the adjacency matrix, you have a table with V number of columns and V number of rows. To determine the maximum degree, you must go through each of the V rows, which contains all the edges for each vertex. Each row has V entries, since the vertex can connect at maximum to V vertexes, thus it takes V time to enumerate through every row entry and determine the degree of the current vertex. You have to do this for each vertex, so the time it takes is Theta( V * V ).
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+Provide your pseudocode here.
+</VERBATIM>
+
+If a graph is bipartite, that means that it can be colored using 2 colors, one for each group. My algorithm thus tries to color the vertices and if when it visits a node the colors conflict, the graph is not bipartite.
+
+%CODE{"cpp"}%
+
+int oppositeColor(int aColor)
+{
+	int result = NO_COLOR;
+	if (aColor == RED)
+	{
+		result = BLUE;
+	}
+	else
+	{
+		result = RED;
+	}
+	return !aColor;
+}
+
+bool isGraphBipartite(vertex[] V)
+{
+	//assume we can color all the neighbors correctly until
+	//we find otherwise
+	bool result = true;
+	
+	//go through each vertex (assumes all the vertexes start with NO_COLOR)
+	for each currentVertex in V
+	{
+		//see if the vertex is already been colored
+		if (currentVertex.color == NO_COLOR)
+		{
+			//if it hasn't, then we should try and color it
+			result = isGraphBipartiteColor(currentVertex, RED);
+			//check if we colored the graph successfully
+			if (!result)
+			{
+				//if not break because the test has failed
+				break;
+			}
+		}
+	}
+
+	return result;
+}
+
+bool isGraphBipartiteColor(vertex aVertex, int aParentColor)
+{
+	//assume we can color all the neighbors correctly until
+	//we find otherwise
+	bool result = true;
+	
+	//color the current vertex with the opposite of the
+	//color used to color the parent
+	aVertex.color = oppositeColor(aParentColor);
+	
+	//go through all the neighbors of the vertex
+	for each currentNeighbor of aVertex
+	{
+		//check if the neighbor has already been colored with the parent's color
+		if (currentNeighbor.color == aVertex.color)
+		{
+			//if it has, then the graph is not bipartite
+			result = false;
+			//break because we're done
+			break;
+		}
+		else
+		{
+			//if not, color the neighbor
+			result = isGraphBipartiteColor(currentNeighbor, aVertex.color);
+			
+			//check if the neighbor was colored successfully
+			if (!result)
+			{
+				//if not, then break because we're done
+				break;
+			}
+		}
+	}
+
+	//return result
+	return result;
+}
+
+%ENDCODE%
+---++ b
+<VERBATIM>
+Provide your pseudocode here.
+</VERBATIM>
+
+This algorithm has nodes with 3 separate colors, WHITE, GREY, & BLACK. WHITE is unprocessed, GREY is being processed, and BLACK is been processed. It goes through all the vertices, and if they're white, it recursively tries to color it's neighbors and it's neighbors neighbors and so on. If while color it finds a node that has already been colored, that means that it has found a cycle.
+
+%CODE{"cpp"}%
+
+bool graphHasCycle(vertex[] V)
+{
+	//we haven't found a cycle yet
+	bool result = false;
+	
+	//go through each vertex (assumes all the vertexes start with WHITE)
+	for each currentVertex in V
+	{
+		//see if the vertex is already been colored
+		if (currentVertex.color == WHITE)
+		{
+			//if it hasn't, then we should try and color it to see
+			//if it has a cycle
+			result = graphHasCycleColor(currentVertex);
+			//check if we found a cycle
+			if (result)
+			{
+				//if we did then we're done
+				break;
+			}
+		}
+	}
+
+	return result;
+}
+
+bool graphHasCycleColor(vertex aVertex, vertex aParent)
+{
+	//we haven't found a cycle yet
+	bool result = false;
+	
+	//color the current vertex with GREY
+	aVertex.color = GREY;
+	
+	//go through all the neighbors of the vertex
+	for each currentNeighbor of aVertex
+	{
+		//skip the parent
+		if (currentNeighbor != aParent)
+		{
+			//check if the neighbor has already been colored
+			if (currentNeighbor.color == GREY)
+			{
+				//if it has, then we've found a cycle
+				result = true;
+				//break because we're done
+				break;
+			}
+			else if (currentNeightbor.color == WHITE)
+			{
+				//try and find one in the children
+				result = graphHasCycleColor(currentNeighbor);
+			
+//check if we found a cycle
+				if (result)
+				{
+					//if we did, then break because we're done
+					break;
+				}
+			}
+		}
+	}
+
+	//color the vertex black
+	aVertex = BLACK;
+
+	//return result
+	return result;
+}
+
+%ENDCODE%
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+---++ 3b.
+Attach your solutions to this topic.
+
+0[0]: 0 1 2 3 4 5 7 
+
+1[0]: 0 2 3 5 6 
+
+2[0]: 0 1 3 5 6 7 
+
+3[0]: 0 1 2 4 5 6 7 
+
+4[0]: 0 3 5 7 
+
+5[0]: 0 1 2 3 4 6 
+
+6[0]: 1 2 3 5 7 
+
+7[0]: 0 2 3 4 6 7 
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+`  |  a  b  c  d  e  f  g  h <br>
+____________________________<br>
+ 1 |  R  N  B  -  K  B  N  R <br>
+ 2 |  P  P  P  -  P  P  P  n <br>
+ 3 |  -  -  -  -  -  -  -  - <br>
+ 4 |  -  -  -  P  -  -  -  - <br>
+ 5 |  r  -  -  -  -  -  -  - <br>
+ 6 |  -  -  p  -  -  -  -  - <br>
+ 7 |  -  -  -  p  p  p  p  p <br>
+ 8 |  -  -  Q  -  k  b  -  r <br>
+<br>
+Please enter your move: c8-e8<br>
+<br>
+Game Over:  White wins!<br>
+Program ended with exit code: 0<br>
+---+++ ii.  
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+`  |  a  b  c  d  e  f  g  h <br>
+____________________________ <br>
+ 1 |  K  -  -  p  k  p  -  -  <br>
+ 2 |  -  -  -  p  p  p  -  -  <br>
+ 3 |  -  -  -  -  -  -  -  -  <br>
+ 4 |  -  -  -  -  -  -  -  -  <br>
+ 5 |  -  -  -  -  -  -  -  -  <br>
+ 6 |  -  -  -  -  -  -  -  -  <br>
+ 7 |  -  -  -  -  -  -  -  -  <br>
+ 8 |  -  -  -  -  -  -  -  -  <br>
+---++ 4b.  Main task [20 points]
+Provide a description of your approach here.  Upload your code online.
+
+My algorithm uses minimax with alpha-beta pruning. I created a ChessBoardGraph data structure to evaluate various moves. To speed up computations, I made modifications to the chessboard class such as making an array to represent the board and access to the list of pieces. At each turn, I evaluate the move tree 2 move levels (4 plys) deep.
+
+One of the main parts of this approach is the board scoring function. Boards are evaluated using three scores, a material score, a pawn score, and a mobility score. The material score is calculated by summing up the weights of the pieces left on the board. (I found these weights after doing some research into common weights). The pawn score is calculated by evaluating the positions of each of the pawns on the board. These special positions, such as isolated pawns and pawns on the same column are less favorable and thus are subtracted from the score. Finally, the mobility score is based on the number of possibles moves the player has on the board.
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

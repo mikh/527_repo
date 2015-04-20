@@ -1,0 +1,293 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(NeilSanghrajka),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+O(|E||V|)
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+We need an outer loop :for Vertex in Vertex_list. And an inner loop for Edge in Edge_list. Then we check if Vertex is present in Edge, and find the degree for each vertex.
+
+The two loops give us O(|E||V|)
+
+
+
+
+---++ b
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+O(|V|+|E|)
+
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+We loop over the linked list of all the vertices. This take O(V) time. 
+
+We find the length of each linked list within the outer linked list. Assume that the length of this inner linked list is n. Finding the length of the linked list takes n time.
+
+The maximum length for the longest linked lists is n, the maximum length for the second longest linked lists is (n-1) and so on, because once a edge is mentioned for any of of the vertex, the same edge can not be mentioned for the other vertex. These add up to |E|
+
+This takes O(V). Hence the total time taken is O(|V|+|E|).
+---++ c
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+O(|V|^2)
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+First we need to create an outer loop  which loops through the list which contains our vertices. Using this we can find the index of the vertex in our adjacency matrix. This take O(V) time. Then we need an inner loop for each vertex, and check the number of 1's in the vector. This takes O(V) time. The total time is O(V^2). 
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+Provide your pseudocode here.
+</VERBATIM>
+
+bool Bipartite(G,v)  //G is adjacency list of graph, v is any starting vertex on the graph
+
+{
+
+    for vertex in G  //setting all vertices' color to Grey, and their visited state to false.
+
+    {
+
+        vertex[0].color ="Grey";
+
+        vertex[0].visited = false;
+
+    }
+
+    
+
+    Stack S;  //create a stack S
+
+    v.color ="White" //setting a default color to starting vertex
+
+    S.push(v)  //adding the starting vertex to the stack
+
+    
+
+    while S.empty()== false;
+
+    {
+
+        u=S.top();  //getting last element added to stack
+
+        S.pop();  //remove top element of the stack
+
+        for vertex in adjacent(u)  //looping over all vertex adjacent to u
+
+        {
+
+            if vertex.visited=false;
+
+                {
+
+                 S.push(vertex) //add an unvisited neighbour to top of stack
+
+                 vertex.visited=true;  //set the state of that vertex to visited
+
+                }
+
+           
+
+            if vertex.color=="Grey";  //If color is Grey, compare with parent node.
+
+                {
+
+                if u.color=="White";
+
+                   { vertex.color="Black";}
+
+               
+
+                if u.color=="Black";
+
+                    {vertex.color="White";}
+
+            else if vertex.color="White";  //if vertex is colored but not grey
+
+                {if u.color!="Black";  //If it has the same color as parent node retur false.
+
+                return false;}
+
+
+
+            else if vertex.color="Black"; //if vertex is colored but not grey
+
+                {if u.color!="White";
+
+                return false;}
+
+        }
+
+    }
+
+    //Check if graph is disjointed. 
+
+    for vertex in G
+
+    {
+
+        if vertex.color=="Grey"  //If any vertex is still grey it implies that the graph is disjointed.
+
+            {Bipartite(G,vertex);}  //Recursively call the function to test if the other parts of graph is Bipartite.
+    
+}
+
+    return true;
+
+}
+
+
+---++ b
+<VERBATIM>
+Provide your pseudocode here.
+</VERBATIM>
+
+
+
+boolean DFSmain(G,v) // G is graph stored as linked list, v is any vector in the graph.
+
+{
+
+...... for each vertex in G // resetting all vertex to non visited
+
+......{
+
+...........vertex.color="white" //assume a vertex has a bool member variable called visited.
+
+...........vertex.parent=null
+
+......}
+
+
+
+...... for each vertex in G // resetting all vertex to non visited
+
+......{
+
+...........if vertex.color=="white" 
+
+...............if DFS(vertex)==true
+
+...................return true;
+
+......}
+
+......return false;
+
+
+
+boolean DFS(v)
+
+{
+
+......v.color="gray"
+
+......for each vertex in adj[v)
+
+......{
+
+.............if color[vertex) =="white"
+
+.................vertex.parent=v;
+
+.................DFS(vertex)
+
+.............else if(vertex.color =="gray" and vertex.parent!=v)
+
+.................return true;
+
+......}
+
+......v.color=black;
+
+......return false;
+
+}
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+
+code is attached as problem3a.cpp
+---++ 3b.
+Attach your solutions to this topic.
+
+The output was as follows:
+
+1[1]: 2 3 4 5 6
+
+2[1]: 4 5 
+
+3[1]: 1 5
+
+4[1]: 1 3 4 6
+
+5[1]: 4 6
+
+6[1]: 1 3 5
+
+The code is attached as a zip, it contains Graph.h, Graph.cpp and my sample main.cpp I used to test the code.
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+Provide a description of your approach here.  Upload your code online.
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

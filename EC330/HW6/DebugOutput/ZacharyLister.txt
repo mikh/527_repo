@@ -1,0 +1,158 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(ZacharyLister),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+
+<latex>\Theta(E)</latex>
+
+---+++!! Brief explanation
+<VERBATIM>
+You have to go through all of the edges to keep track of which vertex has the max degree. There are E edges, so the edge-list will have E values. Keep an int array of size V to keep track of each degree. Use a temp variable to keep track of the vertex with the max degree. With each edge, compare the degrees of the two vertices that were updated. At the end, return the vertex with the max degree.
+</VERBATIM>
+---++ b
+---+++!! Running time
+<latex>\Theta(V^{2})</latex>
+---+++!! Brief explanation
+<VERBATIM>
+This run time is the worst case because there are V vertices that have to be searched through, and there could be V-1 neighbors connected to each vertex. Searching through this would take V^2 time.
+</VERBATIM>
+---++ c
+---+++!! Running time
+<latex>\Theta(V^{2})</latex>
+---+++!! Brief explanation
+<VERBATIM>
+Since the size of the array is V^2 and you have to search each row of the matrix to get the degree of each vertex.
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>Question 1 Results:
+
+Total Grade: 24
+
+	10        		
+	4         		You can get it down to O(V+E) time
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+Use an adjacency matrix called G
+Also plug in the first node S
+isBipartite(G,S)
+
+for all the vertices in G
+   make each one of them have "no color" (-1)
+
+color S with the first color
+
+use a queue Q
+Q.push(S)
+
+while the queue has items in it
+   get the row (r) of the adjacency matrix of the front value of the queue and get rid of it
+   Q.pop()
+   for all of the columns (c) in the adjacency matrix
+      if G[r][c] == 1 && color[c] == -1   // if the two vertices share an edge and the other vertex has not been colored
+         color[c] = 1 - color[v]
+         Q.push(c)        // enqueue the newly colored vertex
+      else if G[r][c] == 1 && color[r] == color[c]    // if the colors of two adjacent vertices match then its not bipartite
+         return false
+return true  // if the function makes it through to complete BFS without a single pair of vertices matching, then it is bipartite
+
+This is linear with respect to the size of the adjacency matrix which is of size V^2. 
+</VERBATIM>
+---++ b
+<VERBATIM>
+Use a stack for DFS
+Use a adjaceny graph G
+DFS(G,S)
+   mark all vertices as unvisited
+   pop the first vertex onto the stack
+   while (stack has items in it)
+      get the top vertex (V) and pop it off the stack
+      for (each connected vertex (v) of V)
+          if (the vertex is connected to V && {V,v} is not a back edge)
+             push v onto the stack
+          else if (the vertex is connected to V && {V,v} is a back edge)  // this means there is a cycle
+             return false
+   return true // make it through every vertex in G and find no back edges
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 20
+
+	10        		
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+---++ 3b.
+Attach your solutions to this topic.
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  -  -  B  Q  K  B  N  R 
+ 2 |  -  -  P  P  P  P  P  P 
+ 3 |  -  P  -  -  -  -  -  - 
+ 4 |  -  -  -  -  N  -  -  - 
+ 5 |  -  -  -  -  -  -  -  p 
+ 6 |  -  p  -  -  p  p  -  - 
+ 7 |  -  -  p  p  -  -  p  n 
+ 8 |  -  -  -  R  k  b  -  r 
+
+Please enter your move: d8-e8
+Game Over:  White wins!
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  k  p  -  Q  K  B  N  R 
+ 2 |  p  p  -  P  P  P  P  P 
+ 3 |  -  -  -  -  -  -  -  - 
+ 4 |  -  -  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  -  -  -  -  -  - 
+ 7 |  -  -  -  -  -  -  -  - 
+ 8 |  -  -  -  R  -  -  -  - 
+
+Black has no more moves because the king cannot move out of the corner
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+Created a recursive function score that will try all potential moves. A copy of the internal board is needed because there is no delete move function. The score function takes a copy of the board and the depth. For each depth, every possible move is checked. If the move results in the taking of an opponent's piece, then weigh the piece taken. For each potential move, a copy of the board is made and the potential move is placed on this copy board then the recursive call is made. This recursive call is from the position of the opponent so the best score returned will be negated when adding up the final best score. After all of the potential moves have run and all recursive calls are made, the best score and move are saved. There is a member variable in myPlayer that stores a variable of type move. This is set then it is returned in the getMove() function.
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

@@ -1,0 +1,167 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(BrettMoretzky),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+Theta(E)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Go through the linked list and make a tally of how many times each vertex shows up. 
+Whichever shows up the most often has the highest degree, 
+and the amount of times it shows up is the maximum degree.
+There are E pairs of vertices to look through.
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+Theta(V)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Go through vertex linked list, find the size of each vertex's linked list. 
+Largest size is largest degree.
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+Theta(V^2)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Go through matrix row by row and seeing how many 1's are in each row.
+The size of the matrix is V x V so you would be checking V^2 indices.
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+bool Bipartite(Graph g)	//Submitted as adjacency list
+{
+	array of colors size V;
+	set all indices to color 0;
+	colors[0] = 1;	//Color first vertex
+	queue of vertices vertex_queue;	//Store queue of vertices to investigate
+	enqueue vertex 1;	//Start with first vertex
+	while queue is not empty
+	{
+		v = dequeue top vertex from q;
+		loop from n = 0 to number of neighbors in list for first vertex in queue
+		{
+			if colors[n] == 0	//Uncolored
+			{
+				colors[n] = alternate color;
+				enqueue n;
+			}
+			else if colors[n] == colors[v]	//Same color as neighboring vector. Not bipartite
+			{
+				return false;
+			}
+			//Else the colors are already different and in that case do nothing
+		}
+	}
+	return true;	//Bipartite if it makes it this far
+}
+</VERBATIM>
+---++ b
+<VERBATIM>
+bool IsCycle(Graph g)
+{
+	stack s;
+	int visited [number of vertices];	//0 means unvisited, 1 means visited
+	push vertex 0 to stack;
+	parent = 0;
+	while stack is not empty
+	{
+		v = top vertex on stack;
+		if v is not visited
+		{
+			visited[v] = 1;     //Visit it
+		}
+		loop through all neighbors n
+		{
+			if visited[n] == 1 && n != parent     //If neighbor is visited but it's parent is not the vertex you just came from, then there's a cycle
+			{
+				return true;
+			}
+			else if visited[n] == 0     //If neighbor is not visited, push onto stack, break the loop
+			{
+				push n onto stack;
+				break;
+			}
+			if all of the neighbors are visited
+			{
+				pop v off stack
+			}
+		}
+		parent = v;   //The parent for the neighbor that you will be investigating is the current vertex
+	}
+	return false;    //If you made it this far then there is no cycle
+}
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+---++ 3b.
+Attach your solutions to this topic.
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+R N B Q K B N b
+P P P - - p - p
+- - - - - - - -
+- - - p - - - -
+- - - - n - - -
+p - - - - - - -
+r p - - p P p p
+- - - - k b n r
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+- - - - - - - -
+- - - - - - - -
+- - - - - - - -
+- - - - - - - -
+- - - - - - - -
+- - - P - P - -
+- - P - P - P -
+- - - P k P - -
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+Provide a description of your approach here.  Upload your code online.
+Used minimax. For each move, it inspects the moves of the opponent after that, sees which one will be minimal of my score since that's the goal of the opponent, then returns the highest of the low scores. Then I pick the move that resulted in the highest of my minimized scores. For my evaluate function to evaluate the current board it goes through every square and assigns either a positive value to each piece or a negative value depending on if it's mine or theirs. It also encourages forward movement by giving extra points when pieces are in desired locations. This part of encouraging movement to desired locations was partially based on this article, although very simplified. https://chessprogramming.wikispaces.com/Simplified+evaluation+function
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

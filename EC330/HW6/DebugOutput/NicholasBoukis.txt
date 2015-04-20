@@ -1,0 +1,186 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(NicholasBoukis),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+Theta(VE)
+---+++!! Brief explanation
+If you have another array keeping track of what the degree is at each vertex, for each of those vertices you would need to traverse every element of the edge-list to check if the current vertex is contained in an edge.
+---++ b
+---+++!! Running time
+Theta(V)
+---+++!! Brief explanation
+For each vertex simply find the size of the list associated with it and compare all the sizes.
+---++ c
+---+++!! Running time
+Theta(V<sup>2</sup>)
+---+++!! Brief explanation
+For each vertex you need to traverse its array to find the most amount of 1's in that row. If you have an extra column that contains the sum of that row (the degree of each vertex) this can be done in Theta(V).
+---++!! Grader comments *[/30]*
+<VERBATIM>Question 1 Results:
+
+Total Grade: 21
+
+	4         		Invalid runtime, should just be O( E)
+	7         		In some cases, you will have O(V+E) which could be greater than O(V)
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+%CODE{"cpp"}%
+bool isBipartite()
+{
+color S blue;
+ENQUEUE S;
+
+while(QUEUE is not empty)
+{
+
+H = HEAD OF QUEUE;
+for(each neighbor N of H)
+{
+
+//Opposite is defined as:
+//Red if H is blue
+//Blue if H is red
+
+if(N is not colored)
+{
+color N opposite color of H;
+}
+
+if(N is colored as same color of H)
+{
+//NOT BIPARTITE
+return false;
+}
+
+ENQUEUE N;
+}
+
+DEQUEUE H;
+}
+
+//BIPARTITE!
+return true;
+}
+%ENDCODE%
+---++ b
+%CODE{"cpp"}%
+cycleDetect(node n)
+{
+
+//If we're visiting a node that was already in the process of being looked at
+if(n.color == grey)
+{
+//CYCLE EXISTS
+}
+
+n.color = grey;
+for(each child node)
+{
+if(child.color == white)
+{
+cycleDetect(child);
+}
+}
+
+n.color = black;
+return;
+}
+%ENDCODE%
+---++!! Grader comments *[/20]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 20
+
+	10        		
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+---++ 3b.
+Attach your solutions to this topic.
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+Please enter your move: d2-d3
+I move: f7 - f6
+
+Please enter your move: d1-d2
+I move: b8 - a6
+
+Please enter your move: d2-c3
+I move: a6 - c5
+
+Please enter your move: c3-c5
+I move: a8 - b8
+
+Please enter your move: c5-f5
+I move: h7 - h6
+
+Please enter your move: f5-g6
+I move: c7 - c6
+
+`  |  a  b  c  d  e  f  g  h
+____________________________
+ 1 |  R  N  B  -  K  B  N  R
+ 2 |  P  P  P  -  P  P  P  P
+ 3 |  -  -  -  P  -  -  -  -
+ 4 |  -  -  -  -  -  -  -  -
+ 5 |  -  -  -  -  -  -  -  -
+ 6 |  -  -  p  -  -  p  Q  p
+ 7 |  p  p  -  p  p  -  p  -
+ 8 |  -  r  b  q  k  b  n  r
+
+Please enter your move: g6-e8
+
+Game Over:  White wins!
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+`  |  a  b  c  d  e  f  g  h
+____________________________
+ 1 |  -  -  -  -  K  -  N  R
+ 2 |  P  P  -  -  P  P  -  P
+ 3 |  -  P  -  -  -  -  -  -
+ 4 |  -  -  -  -  p  R  -  -
+ 5 |  -  -  -  B  -  -  -  -
+ 6 |  -  -  -  -  -  -  P  -
+ 7 |  -  -  -  -  p  k  r  -
+ 8 |  Q  -  -  -  N  -  r  -
+</VERBATIM>
+I'm not sure what it means by not being able to make any more moves, but in this case the king has four options: e6 [B at d5 would take it], f6 & f8 [R at f4 would take it], and e8 [Q at a8 would take it].
+---++ 4b.  Main task [20 points]
+The main aspect of my code is its ability to evaluate the current chess board. By researching a concept called Piece-Square Tables (Source: https://chessprogramming.wikispaces.com/Simplified+evaluation+function) and using those tables to evaluate the board after each available move for the current board, I was able to quantify each move with a score based on the position of each piece, both on the side of the player and on the side of the computer you're running against. For each move that the program is considering, it goes through all the possible enemy responses. If any of those enemy moves result in a loss, the current score is significantly reduced. After going through all the available moves, the move with the highest "score" is chosen.
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

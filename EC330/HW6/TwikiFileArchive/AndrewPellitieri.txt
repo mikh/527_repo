@@ -1,0 +1,227 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(AndrewPellitieri),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<latex>
+\theta (E)
+</latex>
+---+++!! Brief explanation
+<VERBATIM>
+Make a temp counter int array of size V, with each element initialized to zero.  
+Go through each edge list element and increment the temp counter for each of the two named vertices.  
+At the beginning you should also declare a maxDegree = 0 temp variable.  
+Say you get to edge {a,b} in the edge list, increment the array counter for a, then for b, then check that the a counter and the b counter are < max.  
+If one of them are > than max, replace max with degree count value in that array holder.  
+</VERBATIM>
+---++ b
+---+++!! Running time
+<latex>
+\theta (V^2)
+</latex>
+---+++!! Brief explanation
+<VERBATIM>
+Breif Explain:
+Worst case is a complete graph where the # of edges in each row is (V-1), in linked list it takes V time for access to row 
+(row being another linked list) so complexity comes to V^2
+
+Implementation
+Have an int array of counters initialized to 0 for size V.  
+Go through the list of vertices in the adjacency list and increment the counter array corresponding
+to each vertexID once for each neighbor(to count), aka so long as the secondary neighbor array/list
+is != NULL or end() go through and increment for each neighbor.
+Compare this count to the temp variable maxDegree declared at the beginning and assigned to 0.
+If maxDegree is smaller than the counter for any vertex, set maxDegree = to that value
+return maxDegree
+</VERBATIM>
+---++ c
+---+++!! Running time
+<latex>
+\theta (V^2)
+</latex>
+---+++!! Brief explanation
+<VERBATIM>
+Similar to the previous implementations iterate through each row totaling the 1's as the degree count.
+at the end of each row when total is reached compare to max, sub in as necessary, and return max at end.
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+//Method for this part was to use graph coloring to check if any edges and color all connected 
+//vertices oposite colors, as soon as we hit a visited vertex that is colored same as the one
+//we are currently operating on we return false as it violates bipartiteness
+// collab with Max Li, resources used: ece.northwestern.edu slides 
+//Assuming graph input is a 2d array and an origin
+
+bool bipartiteCheck(G[ ][V], origin)      // takes 2d array, and the origin node
+{
+  int colorArr[V]
+
+  for i = 0 to V        // -1 represents no color at that node, 0 represents the first color, and 1 represents the second color
+    colorArr[i] = -1
+
+  colorArr[origin] = 0          // set the origin node to be the first color
+  vector temp;         // make a vector, name it temp
+  temp.push_back(origin)         // insert the origin node into the vector
+
+  while(temp isn't empty)         // run the while loop while the temp vector isn't empty
+  {
+    int u = temp.front()       // set a local variable to be the front of the vector
+    delete first element of the vector
+
+    for j = 0 to V                                 //go through and find all adjacent vertices that exist
+    {
+      if (G[u][j] and colorArr[j] == -1)      // checks to see if the node is colored
+      {
+        colorArr[j] = 1 - colorArr[u]       // if it's not colored, then color it the opposite color of the previous node
+        temp.push_back(j)                                          //add j to the end vector
+      }
+      else if (G[u][j] and colorArr[j] == colorArr[u])     // checks to see if this node is the same color as the previous node
+      {
+        return false;     //since the node was the same color as the previous node, return false, becasue the graph is not bipartite 
+      }
+    }
+  }
+
+  return true;   //if it makes it here, that means it went through every node, and colored every node the alternate color of the previous node. this means the graph is bipartite
+}
+
+</VERBATIM>
+---++ b
+<VERBATIM>
+// so use a depth first search, and look for back edges
+// the complexity is O(V) because we look through only the vertices and see if there is a backedge. If none of them have a backedge, then we know that it does not contain a cycle
+bool containsCycle(G , origin )   // pass in a graph, and the origin point
+{
+  stack s;       // start with an empty stack
+  for each vertex leaf v     // look at the leafs only, because those are the only cycles that
+     visited(v) is false;      // haven't visited any vertices
+     s. push(v);           // add v to the stack
+  while(s isn't empty)   //run the while loop while s isn't empty
+  {
+    s. pop(v)
+    if (visited(v) and not connected to ancestor)    // looks to see if any leaf is connected to a previous one. if not, then we continue looking.
+         continue
+    else    // if there is a backedge, then that means it is a cycle. once there is a cycle, then automatically means graph contains a cycle, so we can say false
+         return false
+  }
+  return true;   //if it makes it here, that means there were no backedges, and so it doesn't contain a cycle, in which case we would return true
+}
+
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attached, Collaborated with Max Li for this HW
+---++ 3b.
+Attached, the output for the random generated appeared as follows:
+<VERBATIM>
+bash-4.1$ ls
+Graph.cpp  Graph.h  main3b.cpp
+bash-4.1$ g++ Graph.cpp main3b.cpp 
+bash-4.1$ ./a.out 
+0[0]: 2 3 4 5 8 
+1[3]: 0 4 6 9 12 
+2[2]: 6 10 11 12 
+3[7]: 0 4 7 8 9 10 12 
+4[9]: 2 5 6 7 8 9 12 
+5[2]: 0 2 3 4 6 9 11 12 
+6[8]: 0 2 4 5 7 12 
+7[1]: 0 1 4 6 11 12 
+8[1]: 0 1 2 7 10 11 
+9[2]: 6 7 8 11 12 
+10[10]: 2 3 5 
+11[4]: 2 3 4 6 9 
+12[1]: 0 2 6 9 10 11 
+
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+Using 4 move win strat I ended with the following in terminal view:
+
+I move: d7 - d6
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  -  K  -  N  R 
+ 2 |  P  P  P  P  -  P  P  P 
+ 3 |  -  -  -  -  P  -  -  - 
+ 4 |  -  -  B  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  p  p  -  -  -  - 
+ 7 |  p  p  -  -  p  Q  p  p 
+ 8 |  r  n  b  q  k  b  n  r 
+
+Please enter your move: f7-e8
+
+Game Over:  White wins!
+drew@druBuntuHP:~/Downloads/Chessboard/Chessboard$ ^C
+
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+
+Black now can no longer move any of it's pawns, can't move it's king, and is stuck in the corner with no moves
+
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  -  -  -  p  -  -  p  k 
+ 2 |  -  -  -  -  -  -  p  p 
+ 3 |  -  -  -  -  -  -  -  - 
+ 4 |  -  -  K  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  -  -  -  -  -  - 
+ 7 |  -  -  -  -  -  Q  -  - 
+ 8 |  P  P  -  -  -  -  -  - 
+
+
+drew@druBuntuHP:~/Downloads/Chessboard/Chessboard$ ^C
+
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+I was able to do a minimax approach, look at my potential moves and have a potential gain, then look at opponents values and project that as a loss.  With this method I was able to consistently beat random player and even occasionally beat player #2.  I tried to add layers to it, checking 3 or 4 layers in advance and thus constructing multiple board models, these began to time out though due to the large workload.  Then I looked at trying to "prune" some of these options but could not get it to ever beat 2 or 3 consistently.
+
+I spent about 15 hours on this and am not sure which code to include. so I included a functioning version that does fairly well against 1/2, and then another version that also works but not as well but has the work for my more elaborate/deep versions commented out.
+
+I also did some tricky stuff with the way I force a move if a kind could be taken.
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---
+
+   * [[%ATTACHURLPATH%/problem3a.zip][problem3a.zip]]: 3a and 3b code
+
+   * [[%ATTACHURLPATH%/problem3b.zip][problem3b.zip]]: 3a and 3b code
+
+   * [[%ATTACHURLPATH%/4b.zip][4b.zip]]: problem4b two versions both functioning, one better than the other, but one theoretically more in depth

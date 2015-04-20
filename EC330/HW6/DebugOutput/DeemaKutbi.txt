@@ -1,0 +1,139 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(DeemaKutbi),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>Question 1 Results:
+
+Total Grade: 0
+
+	0         		
+	0         		
+	0         		
+
+
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+Provide your pseudocode here.
+</VERBATIM>
+---++ b
+<VERBATIM>
+Provide your pseudocode here.
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 0
+
+	0         		
+	0         		
+
+
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+---++ 3b.
+Attach your solutions to this topic.
+0[0]: 1 2 4 8 
+1[0]: 3 5 9 
+2[0]: 3 6 10 
+3[0]: 7 11 
+4[0]: 5 6 12 
+5[0]: 7 13 
+6[0]: 7 14 
+7[0]: 15 
+8[0]: 9 10 12 
+9[0]: 11 13 
+10[0]: 11 14 
+11[0]: 15 
+12[0]: 13 14 
+13[0]: 15 
+14[0]: 15 
+15[0]: 
+
+2
+
+
+0[1]: 1 2 4 8 
+1[2]: 3 5 9 
+2[2]: 3 6 10 
+3[1]: 7 11 
+4[2]: 5 6 12 
+5[1]: 7 13 
+6[1]: 7 14 
+7[2]: 15 
+8[2]: 9 10 12 
+9[1]: 11 13 
+10[1]: 11 14 
+11[2]: 15 
+12[1]: 13 14 
+13[2]: 15 
+14[2]: 15 
+15[1]: 
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+Provide a description of your approach here.  Upload your code online.
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

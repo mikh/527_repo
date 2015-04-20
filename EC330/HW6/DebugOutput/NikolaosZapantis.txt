@@ -1,0 +1,211 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(NikolaosZapantis),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+Theta(E)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Since the main thing is the edges you only really need to store each edge, and since you have E edges it should take theta(E) to make a linked list with all of it.
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+Theta(V+2E).
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+First you have to make a linked list of the vertices which is theta(E) and then you need to link those vertices with their edges which should be theta(2E) since each edge is saved twice for each of its vertices.
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+Theta(V+EV)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+The first vector is just a vector of the vertices which should just be V, and then for each vertice you make another vector that is as long as the amount of edges, and you go through each one and mark it 1 and 0 so thats E edges V times.
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>Question 1 Results:
+
+Total Grade: 24
+
+	10        		
+	10        		
+	4         		Incorrect answer
+
+
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+Assume we can get vertices and edge based on vertex
+for i = 0 to #vertices
+	vector visited[i] = false
+	vector color[i] = gray
+	
+while i < #vertices & visited[i] = false
+	visited[i] = true
+	color[i] = white
+	
+	stack S = vertices
+	while S != empty
+		u = pop(S)
+		for all edges of u, v = connected vertice
+			if visited[v] = false
+				visited[v] = true
+				push(S,v)
+			if color(v) = gray
+				if color(u) = black
+					color(v) = white
+			else if color(v) = white
+				if color(u) != black
+					return false
+			else if color(v) = black
+				if color(u) != white
+					return false
+			
+	return true
+</VERBATIM>
+---++ b
+<VERBATIM>
+Assume we can get vertices and edges based on vertex
+
+	for all vertices
+		visited[v] = false;
+	start_v = random vertex;
+	second_v = vertex connected to start_v
+	visisted[second_v] = true;
+	v = second_v;
+	while( all visisted[v] != true && v != start_v)
+		if( visisted[edge of v] = false)
+			v = edge of v;
+	
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 15
+
+	10        		
+	5         		algorithm needs more definition
+
+
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+---++ 3b.
+0[31]: 1 2 4 5 8 10 
+
+1[45]: 0 2 5 7 8 9 10 11
+
+2[32]: 0 1 3 5 8 9
+
+3[32]: 2 4 5 7 8 9 10 11
+
+4[7]: 0 3 6 11
+
+5[32]: 0 1 2 3 6 7 11
+
+6[50]: 4 5 7 8 9 11
+
+7[1]: 1 3 5 6 8
+
+8[44]: 0 1 2 3 6 7 10 11
+
+9[13]: 1 2 3 6 11
+
+10[32]: 0 1 3 8
+
+11[19]: 1 3 4 5 6 8 9
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+`  |  a  b  c  d  e  f  g  h
+
+____________________________
+
+ 1 |  R  -  B  Q  K  B  -  R
+
+ 2 |  P  P  P  P  P  P  P  P
+
+ 3 |  -  -  -  -  -  -  -  -
+
+ 4 |  -  -  -  -  -  -  -  -
+
+ 5 |  p  -  -  -  -  -  -  p
+
+ 6 |  -  p  -  p  -  -  N  n
+
+ 7 |  -  -  p  -  p  -  p  -
+
+ 8 |  r  n  b  -  -  k  -  r
+
+Please enter your move: g6-f8
+
+Game Over:  White wins!
+
+
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+`  |  a  b  c  d  e  f  g  h
+
+____________________________
+
+ 1 |  -  -  -  -  -  -  -  K
+
+ 2 |  -  -  -  -  -  k  -  -
+
+ 3 |  -  -  -  -  -  -  q  -
+
+ 4 |  -  -  -  -  -  -  -  -
+
+ 5 |  -  -  -  -  -  -  -  -
+
+ 6 |  -  -  -  -  -  -  -  -
+
+ 7 |  -  -  -  -  -  -  -  -
+
+ 8 |  -  -  -  -  -  -  -  -
+
+
+
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+
+
+Alright so first of all I made functions that check the cardinal directions for (N,E,W,S and their combined parts) in order to check for enemy pieces that we might run in to, mainly Queens, Rooks, Bishops, and Pawns depending
+on how they move. And then a separate function that would look around for any knights that might be able to attack. Then from that I had a point system where the highest was being able to take a king while the lowest is if we can not attack anything, at which point we pick a random move. But each move also checks to see if moving that piece to that place will but it in danger, and that is worth less points than if we can move it without putting it in danger.
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

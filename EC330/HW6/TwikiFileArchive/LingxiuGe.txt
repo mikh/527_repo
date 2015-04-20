@@ -1,0 +1,363 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(LingxiuGe),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+<latex> T(n) = E</latex>
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+Go through all the edges to find the vertex with the most edges connected.
+---++ b
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+<latex> T(n) = \Theta (V+E)</latex>
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+First scan the edges to compute the degree for each vertex. Then scan the vertices to get the largest value.
+---++ c
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+<latex> T(n) = \Theta (V^2)</latex>
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+Matrix has V rows and V columns. First go through the rows to compute the number of degrees. Then go through the degrees to find the maximum one.
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+Provide your pseudocode here.
+</VERBATIM>
+%CODE{"cpp"}%
+//breadth first search
+//Queue
+CheckBipartite(G)
+{
+set up a new queue Q;
+start at a random node N, color it black, and put N in Q;
+while (Q is not empty)
+{
+x = pop(Q);
+for every neighbor n of x
+{
+if (n is not black)
+{
+color n white and put n in Q;
+}
+else if (n is black)
+{
+break;
+G IS NOT BIPARTITE;
+}
+}
+}
+G IS BIPARTITE;
+}
+
+
+%ENDCODE%
+---++ b
+<VERBATIM>
+Provide your pseudocode here.
+</VERBATIM>
+
+%CODE{"cpp"}%
+//Depth First Search
+//Data structure: Stack
+DFS-visit(v)
+{
+color v grey;
+for each node n adjacent to v
+{
+if(n is white)
+{
+DFS-visit(n);
+}
+else
+{
+FOUND A CYCLE;
+}
+}
+color black;
+}
+CycleDetection(G)
+{
+color all vertices white;
+for each vertex v
+{
+DFS-visit(v);
+}
+}
+
+%ENDCODE%
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+---++ 3b.
+Attach your solutions to this topic.
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+%CODE{"cpp"}%
+Welcome to Homework Six simplified chess.
+  Please enter your moves in the format 'e2-e3'.
+  You are playing White.
+
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  Q  K  B  N  R 
+ 2 |  P  P  P  P  P  P  P  P 
+ 3 |  -  -  -  -  -  -  -  - 
+ 4 |  -  -  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  -  -  -  -  -  - 
+ 7 |  p  p  p  p  p  p  p  p 
+ 8 |  r  n  b  q  k  b  n  r 
+
+Please enter your move: f7-f6
+f7 - f6 is an invalid move!
+Valid moves were: 
+b1 - c3
+b1 - a3
+g1 - h3
+g1 - f3
+a2 - a3
+b2 - b3
+c2 - c3
+d2 - d3
+e2 - e3
+f2 - f3
+g2 - g3
+h2 - h3
+
+
+Game Over:  Black wins!
+wireless1x-168-122-0-100:chessboard Lily$ ./test 
+Welcome to Homework Six simplified chess.
+  Please enter your moves in the format 'e2-e3'.
+  You are playing White.
+
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  Q  K  B  N  R 
+ 2 |  P  P  P  P  P  P  P  P 
+ 3 |  -  -  -  -  -  -  -  - 
+ 4 |  -  -  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  -  -  -  -  -  - 
+ 7 |  p  p  p  p  p  p  p  p 
+ 8 |  r  n  b  q  k  b  n  r 
+
+Please enter your move: f2-f3
+I move: f7 - f6
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  Q  K  B  N  R 
+ 2 |  P  P  P  P  P  -  P  P 
+ 3 |  -  -  -  -  -  P  -  - 
+ 4 |  -  -  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  -  -  -  p  -  - 
+ 7 |  p  p  p  p  p  -  p  p 
+ 8 |  r  n  b  q  k  b  n  r 
+
+Please enter your move: f3-f4
+I move: f6 - f5
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  Q  K  B  N  R 
+ 2 |  P  P  P  P  P  -  P  P 
+ 3 |  -  -  -  -  -  -  -  - 
+ 4 |  -  -  -  -  -  P  -  - 
+ 5 |  -  -  -  -  -  p  -  - 
+ 6 |  -  -  -  -  -  -  -  - 
+ 7 |  p  p  p  p  p  -  p  p 
+ 8 |  r  n  b  q  k  b  n  r 
+
+Please enter your move: g2-g3
+I move: e8 - f7
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  Q  K  B  N  R 
+ 2 |  P  P  P  P  P  -  -  P 
+ 3 |  -  -  -  -  -  -  P  - 
+ 4 |  -  -  -  -  -  P  -  - 
+ 5 |  -  -  -  -  -  p  -  - 
+ 6 |  -  -  -  -  -  -  -  - 
+ 7 |  p  p  p  p  p  k  p  p 
+ 8 |  r  n  b  q  -  b  n  r 
+
+Please enter your move: e2-e3
+I move: a7 - a6
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  Q  K  B  N  R 
+ 2 |  P  P  P  P  -  -  -  P 
+ 3 |  -  -  -  -  P  -  P  - 
+ 4 |  -  -  -  -  -  P  -  - 
+ 5 |  -  -  -  -  -  p  -  - 
+ 6 |  p  -  -  -  -  -  -  - 
+ 7 |  -  p  p  p  p  k  p  p 
+ 8 |  r  n  b  q  -  b  n  r 
+
+Please enter your move: a2-a3
+I move: d7 - d6
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  Q  K  B  N  R 
+ 2 |  -  P  P  P  -  -  -  P 
+ 3 |  P  -  -  -  P  -  P  - 
+ 4 |  -  -  -  -  -  P  -  - 
+ 5 |  -  -  -  -  -  p  -  - 
+ 6 |  p  -  -  p  -  -  -  - 
+ 7 |  -  p  p  -  p  k  p  p 
+ 8 |  r  n  b  q  -  b  n  r 
+
+Please enter your move: d2-d3
+I move: a8 - a7
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  Q  K  B  N  R 
+ 2 |  -  P  P  -  -  -  -  P 
+ 3 |  P  -  -  P  P  -  P  - 
+ 4 |  -  -  -  -  -  P  -  - 
+ 5 |  -  -  -  -  -  p  -  - 
+ 6 |  p  -  -  p  -  -  -  - 
+ 7 |  r  p  p  -  p  k  p  p 
+ 8 |  -  n  b  q  -  b  n  r 
+
+Please enter your move: d3-d4
+I move: a7 - a8
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  Q  K  B  N  R 
+ 2 |  -  P  P  -  -  -  -  P 
+ 3 |  P  -  -  -  P  -  P  - 
+ 4 |  -  -  -  P  -  P  -  - 
+ 5 |  -  -  -  -  -  p  -  - 
+ 6 |  p  -  -  p  -  -  -  - 
+ 7 |  -  p  p  -  p  k  p  p 
+ 8 |  r  n  b  q  -  b  n  r 
+
+Please enter your move: d4-d5
+I move: a6 - a5
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  Q  K  B  N  R 
+ 2 |  -  P  P  -  -  -  -  P 
+ 3 |  P  -  -  -  P  -  P  - 
+ 4 |  -  -  -  -  -  P  -  - 
+ 5 |  p  -  -  P  -  p  -  - 
+ 6 |  -  -  -  p  -  -  -  - 
+ 7 |  -  p  p  -  p  k  p  p 
+ 8 |  r  n  b  q  -  b  n  r 
+
+Please enter your move: h2-h3
+I move: g8 - f6
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  Q  K  B  N  R 
+ 2 |  -  P  P  -  -  -  -  - 
+ 3 |  P  -  -  -  P  -  P  P 
+ 4 |  -  -  -  -  -  P  -  - 
+ 5 |  p  -  -  P  -  p  -  - 
+ 6 |  -  -  -  p  -  n  -  - 
+ 7 |  -  p  p  -  p  k  p  p 
+ 8 |  r  n  b  q  -  b  -  r 
+
+Please enter your move: d1-h5
+I move: e7 - e6
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  -  K  B  N  R 
+ 2 |  -  P  P  -  -  -  -  - 
+ 3 |  P  -  -  -  P  -  P  P 
+ 4 |  -  -  -  -  -  P  -  - 
+ 5 |  p  -  -  P  -  p  -  Q 
+ 6 |  -  -  -  p  p  n  -  - 
+ 7 |  -  p  p  -  -  k  p  p 
+ 8 |  r  n  b  q  -  b  -  r 
+
+Please enter your move: h5-f7
+
+Game Over:  White wins!
+
+
+%ENDCODE%
+---+++ ii.  
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+%CODE{"cpp"}%
+
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  -  B  Q  K  B  N  R 
+ 2 |  P  P  P  P  P  P  P  P 
+ 3 |  -  -  -  -  -  -  -  - 
+ 4 |  p  -  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  -  -  -  N  -  - 
+ 7 |  -  p  p  p  p  p  p  p 
+ 8 |  r  n  b  q  k  b  n  r 
+
+
+
+%ENDCODE%
+---++ 4b.  Main task [20 points]
+Provide a description of your approach here.  Upload your code online.
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

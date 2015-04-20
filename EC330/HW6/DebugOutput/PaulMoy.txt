@@ -1,0 +1,207 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(PaulMoy),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+Theta(E)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Initialize V pairs of two integers, where the first integer is the vertex key and the second integer corresponds to the degree count of that vertex. 
+Initialize a max_counter to zero (hold the current max degree).
+Start at the beginning of the list. Each element in the edge list has two vertices. For each of these two vertices, add one to its degree count (second integer in pair).
+Then check if the vertex's degree count is higher than max_counter. If it is, set max_counter to the degree count and save the vertex as the current max.
+This is a constant amount of work done E times (once per edge), thus it is Theta(E).
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+Theta(E )
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Again, take V pairs of integers, with the first integer being the key of the vertex and the second being the degree count of that vertex.
+We will need to iterate through each vertex in the linked list and look at its neighbors. For each neighbor, we add one to the degree count
+of the neighbor and the original vertex. Then, check if either of the two degree counts we just updated are higher than the max count.
+If so, set max count to the higher degree count and save that as the vertex as the current max.
+This is a constant amount of work done 2E times (we have 2E neighbors), thus it is Theta(E).
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+Theta(V^2)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+There are V^2 entries in the adjacency matrix. We need to look at each entry and then if it is one, add to the degree of each vertex
+connected to that entry. Then, check if either of the two degree counts we just updated are higher than the max count.
+If so, set max count to the higher degree count and save that as the vertex as the current max. If it is zero, do nothing. 
+This is constant word done V^2 times. Thus it is Theta(V^2).
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>Question 1 Results:
+
+Total Grade: 27
+
+	10        		
+	7         		The actual runtime is O(V+E), and in some cases O(V) will be larger than O( E)
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+bool is_bipartite( graph (V,E) )
+    mark every element in V as not having been visited and color them all grey. 
+    while there is a vertex s that has not been visited:
+        mark s as having been visited
+        color s white
+        make stack S and push u onto it
+        while S is not empty
+            u = pop(S)
+            for each neighbor v of u:
+                if v has not been visited: 
+                    mark v as having been visited
+                    push v onto the stack S
+                if v is grey
+                    if u is black
+                        color v white
+                    if u is white
+                        color v black
+                else if v is white:
+                    if u is not black:
+                        return false // Couldn't color graph with only white and black!
+                else if v is black:
+                    if u is not white:
+                        return false // Couldn't color graph with only white and black!
+    return true // Succeeded in coloring the graph with only two colors.
+
+This algorithm is from http://www.ece.northwestern.edu/~dda902/336/hw3-sol.pdf.
+
+This algorithm assumes that the graph is represented as an adjacency list with the vertices in an array,
+and the neighbors in a linked list. Each vertex is only considered when it has not been visited, thus
+every vertex is considered exactly one time, then each of its neighbors are also considered so the
+running time of the graph is linear in the amount of vertices plus the amount of edges.
+
+</VERBATIM>
+---++ b
+<VERBATIM>
+DFS( G (V,E) )
+    Color each vertex v in V white
+    for each vertex u in V
+        if u is white
+            DFS-VISIT(u)
+
+DFS-VISIT(u)
+    color u grey
+    for each neighbor v of u (excluding u itself):
+        if v is white
+            DFS-VISIT(v)
+        else
+            return false // Two separate paths to same vertex -> cycle
+
+This algorithm is O(V) because after considering V edges we will either have returned false or ran out of edges
+to consider, thus terminating the algorithm. (Idea from http://stackoverflow.com/questions/526331/cycles-in-an-undirected-graph,
+basic algorithm from the text).
+
+Assumptions: graph represented as an adjacency matrix, vertices stored in an array with a pointer to the index where the last
+white vertex was found (discussed in class - this allows finding the white vertices to be only linear time in V). The neighbors are
+stored in a linked list.
+        
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 20
+
+	10        		
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+I have attached problem3a.cpp
+---++ 3b.
+<VERBATIM>
+Output on a random graph of six vertices:
+
+0[0]: 1 2 5 
+1[1]: 0 4 5 
+2[2]: 3 
+3[3]: 1 2 4 
+4[4]: 0 1 3 5 
+5[5]: 0 1 3 4 
+
+I have attached my code as problem3b.zip
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  -  K  B  N  R 
+ 2 |  P  P  P  P  -  P  P  P 
+ 3 |  -  -  -  -  P  -  -  - 
+ 4 |  -  b  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  -  -  Q  -  p  - 
+ 7 |  p  p  p  p  -  p  -  p 
+ 8 |  r  n  b  q  k  -  n  r 
+
+Move #7: White moves e6 - e8
+Game Over!
+White player wins
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  -  p  k  p  -  -  -  - 
+ 2 |  -  p  p  p  -  -  -  - 
+ 3 |  -  -  -  -  -  -  -  - 
+ 4 |  -  B  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  -  -  Q  -  K  - 
+ 7 |  -  -  -  -  -  -  -  - 
+ 8 |  -  -  -  -  -  -  -  - 
+
+Here black still has a king, but cannot move any of the pawns or the king, so black has no moves.
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+I used a very simple approach - I assigned weights to each piece as follows:
+K = 100, Q = 20, R = 10, B = N = 5, P = 1.
+
+I then created a copy of my chessBoard and made every single possible move on the copy board.
+I calculated the score for each player after each move was done, by calling chessBoard.print() and
+then going through the output string one character at a time, looking for characters that represented
+chess pieces and then adding those pieces' points to the appropriate player's score. For instance, if output_str[10] == 'n',
+I would increment black's score by 5 (knight = 5). If I was the white player, I would return current_best = white_score - black_score, else I would return current_best = black_score - white_score. I then chose the move that maximized current_best. I made that move on my chessBoard (not the copy!) and returned that move.
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

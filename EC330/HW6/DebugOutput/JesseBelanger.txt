@@ -1,0 +1,231 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(JesseBelanger),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+Theta(E)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+With an edge list implemented as a linked list, you would go through the linked list node by node
+and count up how many edges involved a certain vertex. You could increment a counter for each
+vertex every time you saw it in an edge pair or something. The size of the linked list (number of 
+nodes) would be the number of edges in the graph, so this would take Theta(E) time.
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+Theta(V+E)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+With an adjacency list implemented as a linked list of linked lists, you have to go to all V 
+nodes of the outer linked list and traverse their associated linked lists node by node (E of them in total).
+You will have to look at V + E nodes. For each node of the outer linked list you will have to count how
+many nodes the associated inner linked list has to get the degree of that vertex. Theoretically you 
+wouldn't even have to traverse the entire inner linked list, you could just call size() on the LL, but 
+that would still take linear time, which would be E in total for the entire graph.
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+Theta(V^2)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Using a 2D vector to implement an Adjacency Matrix would mean constructing an outer vector
+containing V inner vectors with V elements each. To figure out how many edges a vertex had,
+ you would need to look at all V elements in its associated inner vector and count which were 
+1s and which were 0s. Doing that V times would lead to V^2 total elements inspected. 
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>Question 1 Results:
+
+Total Grade: 30
+
+	10        		
+	10        		
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+Assume graph is given as an edge list in the form of an array of two-element arrays. e.g. [ [1,2] , [3,4] ]
+(since it's pseudocode, to make it easier to read, array[first] = array[0] and array[second] = array[1]).
+
+Return false if not bipartite, true if it is.
+
+vector set1;
+vector set2;
+
+for i=0 to edgeArray.size() - 1:
+	if edgeArray[i[first]] not in set1 or set2 and edgeArray[i[second]] not in set1 or set2
+		add edgeArray[i[first]] to set1
+		add edgeArray[i[second]] to set2
+
+	if edgeArray[i[first]] in set1
+		if edgeArray[i[second]] in set1
+			return false;
+		if edgeArray[i[second]] not in set2
+			add edgeArray[i[second]] to set2
+
+	if edgeArray[i[first]] in set2
+		if edgeArray[i[second]] in set2
+			return false;
+		if edgeArray[i[second]] not in set1
+			add edgeArray[i[second]] to set1
+
+	if edgeArray[i[second]] in set1
+		if edgeArray[i[first]] in set1
+			return false;
+		if edgeArray[i[first]] not in set2
+			add edgeArray[i[first]] to set2
+
+	if edgeArray[i[second]] in set2
+		if edgeArray[i[first]] in set2
+			return false;
+		if edgeArray[i[first]] not in set1
+			add edgeArray[i[first]] to set1
+
+return true;
+</VERBATIM>
+---++ b
+<VERBATIM>
+Assuming graph represented as an Adjacency List in the form of a map which maps the vertex number (int) to an array containing connecting vertices.
+
+adjList = Adjacency List
+V = adjList.size()        // a.k.a. number of vertices
+edges = 0
+
+for i = 0 to V-1:
+	if adjList[i].size() == 0
+        V = V - 1       // If the vertex's sub array of edges is empty, that means it's not connected
+    					// we discount it so it doesn't break the rule below
+   edges += adjList[i].size();   // #edges connected to vertex i is the number of elements in its associated array
+edges /= 2;   //In previous step, edges are double counted since graph is undirected
+
+if (edges <= V-1)
+   return false;   //No Cycles in graph (an acyclic connected graph - a tree - will have v-1 edges)
+else
+   return true;   //Graph contains cycles
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 20
+
+	10        		
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Shown below in the attachments table.
+---++ 3b.
+<VERBATIM>
+I purposefully start my vertices numbered at 1 rather than 0.
+
+Output of one run:
+
+1[9051580]: 2 3 4 8 9 11
+2[9205723]: 6 9 13
+3[11948868]: 5 7 8 10 12
+4[1631626]: 5 9 10 12 13
+5[7060482]: 1 3 8 9 10 12
+6[11962166]: 1 3 4 5 7 9 13
+7[13138263]: 1 3 4 9 10 11
+8[2125148]: 1 5 6 7 10 12 13
+9[1000394]: 4 6 10 12
+10[7714547]: 1 5 6 7 12 13
+11[8993269]: 3 6 9 12
+12[1600475]: 3 4 5 7 9 13
+13[3888178]: 4 5 7 8 9 10
+
+</VERBATIM>
+
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+`  |  a  b  c  d  e  f  g  h
+____________________________
+ 1 |  R  N  B  Q  K  B  N  R
+ 2 |  P  P  P  P  P  P  -  P
+ 3 |  -  -  -  -  -  -  -  -
+ 4 |  -  -  -  -  n  -  -  -
+ 5 |  -  -  -  -  -  -  -  -
+ 6 |  -  p  -  -  -  -  -  -
+ 7 |  p  -  p  p  p  P  p  p
+ 8 |  r  n  b  q  k  b  -  r
+
+Please enter your move: f7-e8
+
+Game Over:  White wins!
+
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+`  |  a  b  c  d  e  f  g  h
+____________________________
+ 1 |  R  N  B  -  K  -  N  R
+ 2 |  P  P  n  P  -  P  P  P
+ 3 |  -  -  -  -  -  -  -  -
+ 4 |  -  -  B  -  -  -  -  -
+ 5 |  -  -  -  -  -  P  -  -
+ 6 |  -  -  -  -  -  n  -  -
+ 7 |  p  p  p  p  p  Q  p  p
+ 8 |  r  -  b  q  k  b  -  r
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+I had a very hard time trying to work with the given code, so I wrote a very basic player that always 
+tries to achieve a Scholar's Checkmate (a.k.a four move checkmate). If it doesn't get the initial checkmate, 
+it will just play randomly after that until the game ends somehow. Sometimes this four move checkmate 
+works and my player wins, but other times the random player gets their pieces out of the way, or a smarter 
+player sees through the act and kills my queen. This is very much like how I actually would play chess.
+
+If I could have understood better how to use the many different functions I would have written much better code. 
+My getMove function would instead make a tree and traverse it to find the best move it could possibly make. It 
+would do this by taking all the moves available to it and organizing them as nodes in a tree. Any moves which 
+were immediately very stupid relative to where the other player's pieces were (I think you are somehow supposed 
+to be able to know that with the enemyMove function), would be deleted from the tree - so that my tree would not 
+be huge, since you can't possible create a full tree for a chess game. For the moves that were left, I would check 
+what the other player's most likely moves would be (e.g. best, since I assume they play to win). I think there is a way
+I'd be able to pretend that I made the move I was considering, and then using my same best-strategy function that 
+got me that position, try to guess what the player's next move would be based on that. If a series of my moves and 
+their moves led to me being in a good position or winning, I would choose that initial move. If not, i would have to 
+evaluate my other moves. This is all based on the minimax idea.
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---
+
+   * [[%ATTACHURLPATH%/problem3a.zip][problem3a.zip]]: Problem 3a Upload
+
+   * [[%ATTACHURLPATH%/problem3b.zip][problem3b.zip]]: Problem 3b Source Code

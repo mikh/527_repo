@@ -1,0 +1,125 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(MariaKromis),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+Theta_E
+Where E is the number of edges
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+In an edge-list implemented as a linked-list you have to look through every node of the list and compute the amount of times a edge is incident of each vertex. Since there are E nodes and you have to look at each once it will take Theta_E time to go through the whole list and find the maximum degree 
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+Theta_V+E
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+with a adjacency-list implemented as a linked list of linked lists you need to go through each node of the primary linked list and at each node find the size of the secondary linked list connecting it - meaning that you need to traverse every node of each secondary linked list as well.
+Since the primary linked list has V nodes and the summation of all the nodes in all the secondary linked lists is E, and you must look at each of these nodes once, it will take you Theta_V+E time. 
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+Theta_V^2
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+When an adjacency matrix is implemented as a two-dimensional vector you need to sum all the elements in one dimension of the array for each vertex. This means that you will need nested for loops and look at every element in the two-dimensional array which has a size of V^2.
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+//This is a modification of a BFS
+ //Assuming that the Graph is implemented in a adjacency list two-dimensional array
+
+colors[v]      //create array to store colors of vertices 
+enqueue first vertex in Q;
+while Q is not empty
+     h = front of Q
+     pop front of Q off Q
+     for all neighbors of h
+          if not colored
+              color opposite color to h
+          if colored
+              return false                    //graph is not bipartite
+          pop this neighbor off queue
+
+</VERBATIM>
+---++ b
+<VERBATIM>
+//This is a modification of a DFS
+ //Assuming that the Graph is implemented as an adjacency list represented as an adjacency matrix Graph[V][V]
+
+colors[v]      //create array to store colors of vertices 
+visit(node n)    //create funciton to be recursively called on nodes
+    if(n is colored)
+         return true     //graph contains a cycle
+    else
+         color n as seen
+         for all V
+              if Graph[n][v]               //for all vertices that are adjacent to V
+                   visit(v)            //recursively call visit on this node
+           
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Solutions attached
+---++ 3b.
+solutions attached
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+see attached screen shot.
+Done using code submitted for part 4b
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+see attached screen shot.
+Done using code submitted for part 4b
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+I implemented a mini-max that looks one step into the future without pruning.
+I implemented an evaluation that takes creates a sum based on a weighted ranking of the value of the different pieces. Each opponent will want to choose the boards that give it more valueable pieces compared to its opponent
+
+I used a recursive function to first find create temporary chessBoard objects that represent each of the possible moves. I then evaluated the board and stored the evaluations in an dynamically allocated array. This array is of the same size as the array of possible moves and it is indexed in the same manner so nthMoveEval[ii] is the evaluation of the board that results from the move in nthMove[ii].
+
+This evaluation array is then traversed to find the smallest evaluation (if player is white) and the largest evaluation (if player is black) and then it chooses the move that corresponds to that evaluation
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

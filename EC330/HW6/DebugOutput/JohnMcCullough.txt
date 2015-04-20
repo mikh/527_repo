@@ -1,0 +1,214 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(JohnMcCullough),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+<latex>\Theta(E)</latex>
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+
+Using a linked-list you have to start at the beginning of the array and iterate through to find any information
+in the middle. Because you are using an edge list, the way to compute the maximum degree is to look
+through the entire list and count the number of instances of each vertex. Looking through entire edge list 
+of size E takes Theta(E) time.
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+<latex>\Theta(V + E)</latex>
+
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+
+In order to find the maximum degree of the graph, you have to look through both entire
+linked lists. You have to check every vertex, of which there are V, and then check each 
+linked list that is associated with the vertex of which there are 2E. Therefore Theta(V + 2E) =
+Theta(V + E)
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+<latex>\Theta(V)</latex>
+
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+
+To find the maximum degree of the graph, you have to look at every vertex (V) and then look
+at each associated vector and count the number of 1's. Size V vector with another size V vector
+associated. Theta(2V) = Theta(V)
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>Question 1 Results:
+
+Total Grade: 24
+
+	10        		
+	10        		
+	4         		Incorrect answer
+
+
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+Provide your pseudocode here.
+ASSUME:
+V = number of vertices
+Create an adjacency matrix (mat(V, V)) and set all connected vertices to 1.
+
+
+int color[V];
+for (int i = 0; i < V; ++i)
+      color[i] = 0;
+
+// Assign first color to source
+color[0] = 1;
+int count = 0;
+
+queue <int> q;
+q.push(0);
+ 
+while q is not empty
+{
+     count++;
+     int u = q.front();
+     q.pop();
+ 
+     // Find all non-colored adjacent vertices
+     for int a = 0 to V
+     {
+            // An edge from u to v exists and destination v is not colored
+            if mat[u][a] == 1 && color[a] == 0
+            {
+                // Assign alternate color to this adjacent v of u
+                color[a] = 1;
+                q.push(a);
+            }
+ 
+            //  An edge from u to v exists and destination v is colored with same color as adjacent u
+            else if mat[u][a] == 1 && color[v] == color[u]
+                  return false;
+        }
+    }
+   
+    // All vertices have been looked at and therefore there are no unconnected parts
+    if count  = V
+    {
+          // If we reach here, then all adjacent vertices can be colored with alternate color
+          return true;
+    }
+    else 
+          // Two unconnected parts in one graph so not bipartite
+          return false
+}
+
+
+</VERBATIM>
+---++ b
+<VERBATIM>
+Provide your pseudocode here.
+
+Assume an Adjacency List which is constructed from two sorted arrays
+
+DFS {
+       color all Vertices white
+       for each white vertex V
+                  DFS_visit(V)
+
+       // If all nodes have been visited
+       return true
+}
+
+DFS_visit(V) {
+       color V grey
+       for each node n adjacent to V
+               if n is white
+                         DFS_visit(n)
+               else if n is black                  // Can get to a processed node from node you're at now implies a cycle
+                         return false
+       color V black
+}
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 20
+
+	10        		
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+
+ATTACHED BELOW.
+---++ 3b.
+Attach your solutions to this topic.
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+Provide your answer here.
+
+PICTURE ATTACHED BELOW.
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+Provide your answer here.
+
+
+PICTURE ATTACHED BELOW.
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+Provide a description of your approach here.  Upload your code online.
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---
+
+   * [[%ATTACHURLPATH%/problem3a.cpp][problem3a.cpp]]: Graph.cpp -- Included commented main function
+
+   * 4a.i) White Wins: <br />
+     <img src="%ATTACHURLPATH%/WhiteWins_3Moves.PNG" alt="WhiteWins_3Moves.PNG" width="267" height="538" />
+
+
+   * 4a.ii) Black King is there but has no moves. I forced it into checkmate before but I realized thats not what you wanted.: <br />
+     <img src="%ATTACHURLPATH%/KingNoMoves.PNG" alt="KingNoMoves.PNG" width="250" height="181" />

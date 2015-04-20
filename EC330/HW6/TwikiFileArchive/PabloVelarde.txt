@@ -1,0 +1,175 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(PabloVelarde),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+Theta(E*V)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+To determine the maximum degree of a vertex it is needed to go through the linked list at least
+ once and since the linked-list has E links it will take Theta(E) to go through it once. Since there are
+V vertices it is necessary to go through the list V times to keep track of each vertex. There will be V-1
+ comparisons to find the largest vertex. In total the running time will be Theta(E*V+(V-1)) which is
+ equal to Theta(E*V).
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+O(V^2)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+If an adjacency list is used it will take O(V) time to get through the first row.
+ There are V rows in the list so it will take O(V^2).
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+Theta(V^2)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Since it takes constant time to access an element in a vector and we want to determine the maximum 
+degree of all vertices it will take Theta(V^2) time to go through all elements and it will take V-1 comparisons
+ to find the vertex with the largest degree. Overall it will be Theta(V^2+(V-1)) but the V^2 will dominate which
+ makes it Theta(V^2).
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+use a depth first search type of algorithm
+uses stack like depth first search
+
+bipartite(start_node)
+   color start_node black
+   while(neighbors exist)
+      check neighbor color
+         if uncolored
+            color opposite of self
+            bipartite(neighbor)
+         if colored
+            check if color is same as self
+               if color == self
+                   return false // not bipartite
+               else
+                   return true // go to next neighbor
+   
+
+
+</VERBATIM>
+---++ b
+<VERBATIM>
+Should work faster for dense graphs as it can find cycles quickly
+
+DFS:
+	color all vertices white
+	for each white vertex V
+		DFS-VISIT(V)
+
+DFS-VISIT(V):
+	color V gray
+	for each node n adjacent to V:
+		if n is white:
+			DFS-VISIT(n)
+                if n is gray or black
+                        cycle exists
+	color V black
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+---++ 3b.
+Attach your solutions to this topic.
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+Please enter your move: f5-c5
+I move: a8 - a7
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  -  -  K  B  -  R 
+ 2 |  P  -  P  P  -  P  P  P 
+ 3 |  -  P  -  -  -  -  -  - 
+ 4 |  -  -  -  P  -  -  -  - 
+ 5 |  -  -  Q  -  -  -  -  - 
+ 6 |  p  -  -  -  -  -  -  - 
+ 7 |  r  p  -  -  -  p  p  p 
+ 8 |  -  n  -  -  -  k  n  r 
+
+Please enter your move: c5-f8
+
+Game Over:  White wins!
+
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+
+Black has not moves through a checkmate:
+
+I move: g8 - b8
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  -  -  -  -  K  -  -  R 
+ 2 |  -  -  P  P  P  P  -  P 
+ 3 |  -  -  -  -  -  -  P  - 
+ 4 |  -  -  -  -  -  -  p  - 
+ 5 |  -  -  Q  -  -  p  p  - 
+ 6 |  -  k  -  B  N  -  -  b 
+ 7 |  R  -  -  -  -  -  -  - 
+ 8 |  -  r  -  -  -  -  -  - 
+
+Or a place where black has no moves and a king:
+
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  -  -  -  p  k  p  -  - 
+ 2 |  -  -  -  p  p  p  -  - 
+ 3 |  -  -  -  -  -  -  -  - 
+ 4 |  -  -  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  P  - 
+ 6 |  -  -  -  -  -  -  -  P 
+ 7 |  P  -  -  -  -  -  -  - 
+ 8 |  -  -  -  K  -  -  -  - 
+
+
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+Provide a description of your approach here.  Upload your code online.
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

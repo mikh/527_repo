@@ -1,0 +1,185 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(AlexWong),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+Directed Graph: BigTheta(E). 
+Undirected Graph: BigTheta(V)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Edge list stores edges as pairs where the values are the vertexes the edge connects (i.e. an edge between A and B would be stored as {A,B}; the number of vertices is also stored. Edges are only represented once, even in undirected graphs, so edge lists for both undirected and directed graphs will have the same time complexity.
+
+To find the maximum degree of all vertices in a graph, you need to figure out how many edges are connected to each vertex; in a linked list with no random access, that means you need to go through the entire edge list one by one, count the number of edges for each vertex and then return the highest number of edges connected to a single vertex. Since the edge list stores the number of vertices, we can construct an integer array of size (V) and initialized to zero, where the index of the array corresponds to a particular vertex. Then we go through the edge list one by one, and for each item in the linked list we figure out what the starting vertex is and add one to the appropriate element in the integer array. At the end, we simply return the largest item in that integer array as the maximum degree. 
+
+Time to get number of vertices: Theta(1)
+Time to initialize array: Theta(V)
+Time to go through edge list: Theta(E)
+Time to find largest item in the array: Theta(V)
+
+An undirected graph can have at most V-1 edges, so worst case V dominates and time complexity is Theta(V)
+A directed graph can have at most 2*(V-1) edges, so worst-case E dominates and time complexity is Theta(E)
+
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+Directed Graph: BigTheata(V+E)
+Undirected Graph: BigTheat(V*2E)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+In an adjacency list with a linked list of linked list, each element of the first linked list is a vertex. The second linked list within the elements of the first linked list are the vertices connected by an edge to the original vertex. To find the maximum degree out of all the vertices, we need to iterate over the first linked list of vertices; for each vertex, count the number of elements in their linked lists of vertices. For a directed graph, this is BigTheta(V+E); for an undirected graph, this is BigTheta(V+2*E), since edges would be stored twice (i.e. for an edge between vertices A and B, A would have B listed as a neighbor and B would have A listed as a neighbor).
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+BigTheta(V^2)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+An adjacency matrix is a VxV-sized matrix where connections between two vertexes are symbolized by a 1 in the matrix indices and no connection is indicated by a 0 (i.e. if there is an edge between A and B, then matrix[A][B] = 1 and matrix[B][A] = 1). To figure out the degree of a vertex, we need to figure out how many edges are connected to the vertex; this can be done by simply selecting the row or column in the matrix and counting the number of 1's, and the sum is the degree of the vertex. Since there are V vertices to find the degree of and V-1 possible neighbors for each vertex, there must be V*(V-1) = V^2 - V comparisons, which translates to a time complexity of BigTheata(V^2).
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>Question 1 Results:
+
+Total Grade: 30
+
+	10        		
+	10        		
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+Variant of Breadth-first Search with worst-case time complexity O(V+E), which is linear based on the input. 
+
+bool is_bipartite() {
+    ENQUEUE starting vertex S
+    vertex_color = 0
+    S.color = 0
+    while QUEUE is not empty:
+        H = head of QUEUE
+        for each neighbor N of H    //done using an adjacency matrix
+            if N's color == H's color
+                return false  //neighbor has same color as N, so color false
+            else
+                color N ((vertex_color+1)% 2)  //N should have different color than H
+                ENQUEUE N
+        DEQUEUE H
+        vertex_color += 1 //neighbors have different color nodes
+    return true   //if this is reached it means graph was successfully two-colored and therefore bipartite
+
+</VERBATIM>
+---++ b
+<VERBATIM>
+Another variant of Breadth-First Search, with time complexity Theta(V).
+
+bool exists_cycle() {
+    ENQUEUE starting vertex S
+    while QUEUE is not empty:
+        H = head of QUEUE
+        for each neighbor N of H    //done using an adjacency matrix
+            if N is grey
+                return true  //N has been marked as a neighbor of an already-visited node, so cycle exists
+            else if N is white
+                color N gray
+                ENQUEUE N
+        DEQUEUE H
+        color H black  //mark H as checked
+    return false   //if this is reached it means graph does not contain cycle
+
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 20
+
+	10        		
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+---++ 3b.
+Attach your solutions to this topic.
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+    a   b   c   d   e   f   g   h
+1   R   -   B   Q   -   B   -   R
+2   P   P   P   -   K   P   -   P
+3   -   -   b   -   -   p   -   -
+4   -   -   -   p   p   -   -   -
+5   -   -   -   -   p   -   -   -
+6   n   p   -   -   -   -   -   p
+7   p   -   -   p   -   -   N   -
+8   r   -   b   -   k   -   -   N
+</VERBATIM>
+
+
+
+Winning move: g7-e8
+
+</VERBATIM>
+
+
+---+++ ii.  
+<VERBATIM>
+    a   b   c   d   e   f   g   h
+1   R   B   -   -   -   p   r   n
+2   -   -   -   -   -   p   k   b
+3   -   -   -   -   -   p   p   p
+4   -   P   P   -   -   -   -   -
+5   -   -   -   -   -   -   -   -
+6   -   K   -   -   Q   -   -   -
+7   -   -   -   -   -   -   -   -
+8   -   N   -   -   -   -   R   -
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+Each piece is given a point value as follows:
+
+Pawns: 1 point
+
+Knight or Bishop: 3 points
+
+Rook: 5 points
+
+Queen: 9 points
+
+King: 100 points
+
+In the minimax graph each board gets a value derived from the piece values. If a piece is taken, that board gets the value of the piece taken with the appropriate sign (i.e. if it's White's turn and one of the possible moves results in the capture of a black knight, that board is assigned a value of 3; a board that leads to Black taking a White rook, on the other hand, will have a value of -5). This way, white tries to maximize the points while black tries to minimize the points. Of course, the king is worth the most, as losing the king must be avoided at all costs since losing the king means losing the game. That way, white will always try to make a move if possible that either captures the king or prevents his own king being captured.
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

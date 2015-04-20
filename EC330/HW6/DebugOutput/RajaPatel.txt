@@ -1,0 +1,194 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(RajaPatel),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+a(n) = BigTheta(E)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+An edge list, in this case, is a linked list where each index holds the value of an edge (combination of two vertices) for a given graph. To compute which vertex has the maximum number of edges, the program must iterate through every single index of the linked list, from the very beginning all the way to the complete end of the linked list, computing the maximum number of edges for each vertex. Therefore, the access time has to be big theta of E; the program cannot directly access any index it wants, it must iterate from the very beginning in order to find the addresses of the subsequent edges.
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+a(n) = BigTheta(V)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+
+An adjacency list represents a graph as a table of vertices and its neighbors; in this case, this is programmed as a main linked list that represents all possible vertices where each main index holds sub-linked lists that represent the total number of edges the particular vertex has. Computing the vertex with the maximum number of edges requires the program to once again iterate through every element of the main linked list. A program can compute the size of each sub-link lists simultaneously; to access these sizes, you then just need to iterate through each individual index of the main linked list. Therefore, the access time is just big theta of V, which represents the total number of vertices.
+
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+a(n) = BigTheta(1)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+
+The adjacency matrix is a programming style where the rows and columns are the source and test vertices of the graph. The content is 1 if and only if there is an edge from the source to the destination, otherwise it's zero. The adjacency time to find the maximum number of edges of a vertex is a constant value of big theta of 1. This is plausible because it vectors, we do not need to iterate through every array to find or compute something. We could have a program that adds up the total amount of edges per row of the matrix and then use a max() function to find which vertex has the highest degree of edges, thus solving this in a constant time. 
+
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>Question 1 Results:
+
+Total Grade: 21
+
+	10        		
+	7         		The actual runtime is O(V+E), and in some cases O(V) will be larger than O( E)
+	4         		Incorrect answer
+
+
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+Provide your pseudocode here.
+
+bool bipartite( int Graph[vertices][vertices], source){
+     int color[vertices];
+     for (int i = 0 to vertices; i++){
+          color[i] = -1; // not colored in
+     }
+
+     color[source] = 1;
+     create queue variable, queue;
+     queue.push(source); // add an index space before the source in the queue
+
+     while (queue is not empty){
+          int front = queue.front();
+          queue.pop();
+
+          // Find all adjacent vertices that are not colored
+          for (int i = 0 to vertices; i++){
+               if (edge in Graph[][] exists and color[i] is not colored in){
+                    //invert the color
+                    color[i] = 1 - color[front];
+                    queue.push(i);
+               } else if (position of Graph[][] exists and current color[] == color[front]){
+                    return false;
+               }
+          }
+     }
+     return true;
+}
+</VERBATIM>
+---++ b
+<VERBATIM>
+Provide your pseudocode here.
+// If undirected graph contains cycle
+
+
+bool isCycle(){ //checks if given graph is cyclic
+     // mark all vertices as 'unvisited'
+     bool marked[] = new array[vertex];
+     for (int i = 0 to vertex; i++){
+          marked[i] = false;
+     }
+     for (int i = 0 to vertex; i++){
+          if (marked[i] is actually already marked){
+               if (marked graph is colored){
+                    return true;
+               }
+          }
+     }
+     return false;
+}
+
+
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 20
+
+	10        		
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+
+Code is attached.
+---++ 3b.
+Attach your solutions to this topic.
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+Provide your answer here.
+
+I move: e7 - d6
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  -  -  K  -  -  - 
+ 2 |  -  -  -  -  -  P  -  - 
+ 3 |  -  Q  -  B  P  -  -  N 
+ 4 |  -  -  -  P  -  B  -  P 
+ 5 |  -  -  -  p  -  p  -  - 
+ 6 |  P  -  P  k  p  -  p  - 
+ 7 |  -  -  -  -  -  -  -  - 
+ 8 |  -  -  -  -  r  b  R  - 
+
+Please enter your move: f4-d6
+
+Game Over:  White wins!
+
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+Provide your answer here.
+
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  -  -  -  -  -  -  -  - 
+ 2 |  -  -  -  N  -  -  -  - 
+ 3 |  -  -  -  -  -  -  -  - 
+ 4 |  p  -  -  -  -  -  -  K 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  -  Q  -  -  -  - 
+ 7 |  -  -  -  -  -  -  -  - 
+ 8 |  -  -  -  k  -  -  R  - 
+
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+Provide a description of your approach here.  Upload your code online.
+
+The main objective of this code was to modify the getMove() function defined in the myPlayer.h and adding other functions that would optimize how the chess pieces would move and attack the opponent's pieces. Firstly, the getMove() function iterated through the total possible moves a particular piece could make and detected which moves could result in a possible capture. If the for-loop does detect a capturing move, it will activate the flagbit that will in turn cause the capturing piece to attack the opponent. Once the attack is completed, the flagbit will deactivate (equal back to zero) and the entire process will repeat. If the for-loop does not process a capturing move, the any given chess piece will just exhibit a random move. The capturing detection system is further optimized by using a 'findRank()' function that seeks all possible capturing moves and ranks which capture has the highest priority. This then allows the player to attack higher valued chess pieces than any arbitrary piece. The find rank uses a switch case system that finds what the possible capturing piece is and gives the 'rankValue' variable a particular value; the least valued chess piece is assigned a 1 (pawn) and the highest valued chess piece is assigned a 12 (king).
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

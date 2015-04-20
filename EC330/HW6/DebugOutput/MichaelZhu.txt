@@ -1,0 +1,223 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(MichaelZhu),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+a(n)=big theta(E)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Because we don't know the maximum degree of a vertex until we've traversed the entire linked list. Since we're traversing edges, we have to go through the whole linked list, from pointer to pointer sequentially since we can't offset the indices as we would in an array. Therefore, adjacency time is big theta(E).
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+a(n) = big theta (V)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Adjacency time is big theta (V) because in the worst case, we have an unsorted linked list of linked lists. Each node in the linked list represents a vertex, which is the beginning of a sub-linked-list of neighboring vertices and hence gives the edges.
+
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+a(n) = big theta (V)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Adjacency time is big theta (V) because in order to find the maximum degree, we have to either traverse all the rows or all the columns to add up the number of edges for each vertex. 
+
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>Question 1 Results:
+
+Total Grade: 21
+
+	10        		
+	7         		In some cases, you will have O(V+E) which could be greater than O(V)
+	4         		Incorrect answer
+
+
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+// This function determines whether a graph is bipartite or not, and returns a boolean accordingly. 
+bool isBipartite(int G[][V], int source)
+{
+    int colors[V]; // Create 
+    for (int i = 0; i < V; ++i) // Initialize the values in colors[]. 
+        colors[i] = -1; // We use -1 to flag that no color is assigned to vertex i in colors. 
+			// When we assign the first color, we set the colors[] entry to 1,
+			// then to 0 when we assign the second color. 
+ 
+   
+    colors[source] = 1; // The source is set to the default color 1 and should be first into the queue. 
+ 
+    // Create a queue of vertex numbers and enqueue source vertex for BFS traversal
+    queue<int> q;
+    q.push(source); 
+ 
+    // Run while there are vertices in queue still. Once each vertex is processed, pop it. 
+    while (!q.empty())
+    {
+        // Dequeue a vertex from queue
+        int u = q.front(); 
+        q.pop();
+ 
+        for (int v = 0; v < V; ++v) // Now taking the vertex at u and compare against all of the adjacent vertices. 
+        {
+            if (G[u][v] && colors[v] == -1) // If an edge from u to v exists, and destination v's value is -1 (yet to be colored), then we assign the color. 
+            {
+                colors[v] = 1 - colors[u]; // Assign alternate color to this adjacent v of u
+                q.push(v);                 // colors[v] will either be 0 or 1. 
+            }
+ 
+            else if (G[u][v] && colors[v] == colors[u]) // If an edge from u to v exists and destination v is colored with same color as u, then return false. 
+                return false; // If the color is in the same as that of u, we know the graph is non-bipartite. 
+        }
+    }
+ 
+    return true; // This means we avoided "return false" and thus the graph is bipartite. 
+}
+</VERBATIM>
+---++ b
+<VERBATIM>
+
+// This function takes in a graph and returns whether it contains a cycle or not. 
+bool isCyclic() // call on Graph 
+{
+    // stack
+    bool *visited = new bool[V]; // Create an array of booleans to contain whether the vertices have been visited or not. (TRUE = visited, FALSE = visited)
+    for (int i = 0; i < V; i++){
+        visited[i] = false;
+        }
+ 
+    // Call the recursive helper function to test cycles on . 
+    for (int u = 0; u < V; u++)
+        if (!visited[u]) // Don't call isCyclicRecur for u if it is already visited
+          if (isCyclicRecur(u, visited, -1)){
+             return true;  
+          }
+    return false;
+}
+
+// This is our recursive helper function: 
+
+// A recursive function that uses visited[] and parent to detect. 
+// Takes the array of booleans that tell whether the vertex has been visited or not, and the parent. 
+
+bool Graph::isCyclicRecur(int v, bool visited[], int parent)
+{
+    // Mark the current node as visited
+    visited[v] = true;
+ 
+    // Recur for all the vertices adjacent to this vertex
+    list<int>::iterator i;
+    for (i = adj[v].begin(); i != adj[v].end(); ++i)
+    {
+        if (!visited[*i]) //  If an adjacent vertex has not been visited, then recursively call this function on that node. 
+        {
+           if (isCyclicRecur(*i, visited, v))
+              return true;
+        }
+ 
+        else if (*i != parent) // If an adjacent is visited and not parent of a current vertex, return true. The graph is indeed cyclic. 
+           return true;
+    }
+    return false;
+} 
+
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 20
+
+	10        		
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+---++ 3b.
+Attach your solutions to this topic.
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+Provide your answer here.
+
+I move: f7 - f6
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  -  -  B  Q  K  B  N  R 
+ 2 |  -  -  P  -  -  P  -  - 
+ 3 |  R  P  -  -  P  -  -  P 
+ 4 |  -  -  -  -  -  -  -  P 
+ 5 |  -  -  -  -  p  -  -  - 
+ 6 |  -  P  p  N  -  p  -  p 
+ 7 |  P  b  -  p  -  -  p  - 
+ 8 |  r  -  -  -  k  -  r  - 
+
+Please enter your move: d6-e8
+
+Game Over:  White wins!
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  -  -  -  K  B  N  R 
+ 2 |  -  -  -  P  -  -  -  P 
+ 3 |  -  -  -  -  -  -  -  - 
+ 4 |  -  -  -  -  -  -  B  - 
+ 5 |  -  -  -  -  p  -  -  - 
+ 6 |  -  -  n  -  -  N  p  - 
+ 7 |  p  -  p  -  n  p  -  p 
+ 8 |  r  -  -  q  k  b  -  r 
+
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+Provide a description of your approach here.  Upload your code online.
+
+To improve on the AI, we implement a very rudimentary strategy. Currently, the getMove method chooses a move in the movVect through the use of rand. Since the move is arbitrary, this leads to a very weak and harmless computer player. We would improve upon it by running a check on all possible movements and checking which of them will result in a capture if taken. We do this by iterating through the moveVect through the use of nthMove(i) where i is our iterator value in a for loop. 
+
+We don't use moveVect[i] since this leads to a disastrous thread access error that crashes the program. Instead, we call nthMove because it has access to moveVect and is usable as it is a public member of chessBoard. This allows us to prevent the thread access error.
+
+For each move in moveVect, we run an evaluation. We extract the 'to' value of the move and see if it is NOT an empty square. If it isn't, we then call a helper function called findRank which determines which enemy piece is present in the square. We return this ranking for the move and compare it to a running highestRank. If findRank > highestRank, we update the current i as the bestMove to make and set highestRank to the returned value. 
+
+This ranking is based on the relative value system, attributing 1 point for a pawn, 3 for a knight or bishop, 5 for a rook, 9 for a queen, and 12 for a king. This ensures that what is passed into makeMove, if there are multiple moves that can be taken that result in a capture that turn, is the move that takes the most valuable piece. So we will always prioritize taking a queen over a pawn. This reduces the randomness element.
+
+If there are no moves that result in a capture, we then resort to the randomness code. 
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

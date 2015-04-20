@@ -1,0 +1,130 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(ThomasBurke),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+<latex> \theta (E) </latex> worst case runtime
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+You only need to search the list once which is E time, and since each piece of the oinked list only has 2 vertices that will be constant time. so theta (E) time
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+theta (V^2)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+worst case you have a full graph with V vertices and you must go through all those and then you have V vertices it could be
+ connected to if the verge can connect with itself, so V*V is V^2
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+theta (V^2) runtime
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+for this all you have to do is find all  the edges of every vertex and finding the degree of one vertex in the two dimensional matrix is V time so finding V degrees will take V^2 time
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>Question 1 Results:
+
+Total Grade: 24
+
+	10        		
+	4         		You can get it down to O(V+E) time
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+start at any node and color it white
+put  in queue
+
+while queue not empty
+p = pop(queue)
+for every neighbor n of p
+	if (n doesn't have a color)
+		color it the opposite color of p and put it in the queue.
+	if (n has color && n.color()==p.color())
+		stop and cout ("NOT BIPARTITE")
+
+output  IS BIPARTITE
+
+runtime is theta (V+E)
+</VERBATIM>
+---++ b
+<VERBATIM>
+modified DFS:
+color all of the vertices white
+for each white vertex v
+	DFS-Visit(v)
+DFS-Visit(v)
+	color v grey
+	if edge unexplored
+		for each node n adjacent to v
+			if n is white
+				DFS-Visit(n)
+			else
+				stop and cout ("CYCLE FOUND")
+	color v black
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 20
+
+	10        		
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+---++ 3b.
+Attach your solutions to this topic.
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+Provide a description of your approach here.  Upload your code online.
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

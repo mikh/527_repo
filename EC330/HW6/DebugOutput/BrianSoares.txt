@@ -1,0 +1,132 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(BrianSoares),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+Theta(E)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+The algorithm would go through the edge list incrementing counters every time a vertex is seen.  Therefore it would go through the list of edges once which is Theta(E)
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+Theta(V+E)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+In order to find the max degree of a vertex using an adjacency list we must search through every vertex and search through their individual lists.  We end up searching through every edge and every vertex therefore Theta(V+E)
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+Theta(V^2)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+The size of an adjacency matrix is V^2.  Since we must search through the whole matrix to find the max degree of a vertex, the algorithm would run in Theta(V^2) time.
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>Question 1 Results:
+
+Total Grade: 30
+
+	10        		
+	10        		
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+We can use BFS
+queue q, any vertex x, graph G
+q.enqueue(x)
+while q is not empty
+   h = q.dequeue()
+   for each vertex v  in h's adjacent list
+      if v.color = NULL
+      v.color = (h.color == 1) ? 0 : 1
+    	    q.enqueue(v)
+      else if v.color == h.color
+            NOT BIPARTITE
+return bipartite    
+
+</VERBATIM>
+---++ b
+<VERBATIM>
+Using DFS
+DetectCycle()
+   for node in graph
+     
+      set all visited to false
+      DetectCycle(n, n, visited)
+
+
+DetectCycle(v,origin,visited)
+   for every neighbor of v
+      if neighbor == origin
+         cycle is found
+      if neighbor is not visited
+       visited[neighbour] = true
+       DetectCycle(neighbour, visited)
+       visited[neighbour] = false
+      
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 15
+
+	10        		
+	5         		This will not find all cycles
+
+
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+---++ 3b.
+Attach your solutions to this topic.
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+Look at attached picture of winning board.
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+This is possible when Black is in check mate.  This can be seen in the example picture given on the assignment.  All moves for black still result in a loss.
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+Provide a description of your approach here.  Upload your code online.
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

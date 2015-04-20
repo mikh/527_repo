@@ -1,0 +1,298 @@
+ ---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(ZhannaKaufman),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+
+Collaborator for this homework ****** Chris Feldman
+
+Theta(V*E)
+
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+
+An edge list is a list of the vertex endings of every edge. In order to find the degree of a vertex, 
+one would need to look at every edge and see if the aforementioned vertex was one of the two 
+values contained for that edge. This comparison would take Theta(1) time, so altogether this 
+computation would take Theta(E) time. In order to find the maximum degree, one would need to 
+do this for every vertex, and then compare. Comparison takes Theta(1) time, so altogether the 
+complete computation would take Theta(V*E) time.
+
+</VERBATIM>
+---++ b
+---+++!! Running time
+
+<VERBATIM>
+Provide your answer here.
+
+Theta(V*V)
+
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+
+
+An adjacency list implemented as a linked list of linked lists would have each element in the
+main linked list refer to a certain vertex, with the linked list that comprises the element consist of 
+all of the neighbors of that vertex. A program would need to find the size of the neighbors list for each
+vertex in the main linked list, and then compare them. The maximum size of a neighbors list is V-1, and 
+so finding the size of each would take Theta(V) time. This would need to be done for the list pertaining 
+to each vertex, taking Theta(V*V) time. Comparison would take Theta(1) time, so altogether the computation
+should take Theta(V^2) time.
+
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+
+Theta(V*V)
+
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+
+Now, this is an adjacency matrix, so a computation would need to compare the vertices in either
+the rows all columns. If columns are compared, all of the 1s in each column would need to be summed, and if 
+it rows are being compared, all of the 1s in each row would need to be summed. These indicate how many 
+vertices each vertex is connected to. Doing this sum would take Theta(V) time, and it would have to be done
+V times for V vertices, so the complete computation would take Theta(V*V) time.
+
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+Provide your pseudocode here.
+
+This algorithm is uses breadth-first-search through a queue to parse the graph.
+For this algorithm, one color is assigned to a source node. Then, to 
+each of its neighbors, a second color is assigned. Then, to each
+neighbors' neighbors, the first color is assigned. If it is seen that 
+one node shares another node of the same color, the graph is not
+bipartite. The input to this graph is an adjacency matrix and a source
+node.
+
+bool Bipartite(int G[U][V], int src)
+{
+   //array to store colors
+    int colorarray[V];
+
+   //initialize color array
+    for (i = 0 ; i< V;i++)
+    {
+    collorarray[i] = 0;
+    }
+
+    // Assign first color to source
+    colorArr[src] = 1;
+ 
+    // queue for breadth first search traversal
+    queue <int> q;
+   //start with source
+    q.push(src);
+ 
+    // while there are still vertices in queue
+    while (!q.empty())
+    {
+        // take vertex element from queue
+        int u = q.front();
+       //pop element from queue (delete)
+        q.pop();
+ 
+         // find all 'blank' neighbors
+        for (int v = 0; v < V; v++)
+        {
+            // if an edge from u to v exists and destination v is 'blank'
+            if (G[u][v] && colorarray[v] == 0)
+            {
+                // assign an alternate color to v
+                if (colorarray[u] == 1)
+                        colorarray[v] = 2;
+               else colorarray[v] = 1;
+               // add vertex to queue so it can be checked in the same way
+                q.push(v);
+            }
+ 
+            //  If an edge from u to v exists and they are both the same color
+            else if (G[u][v] && colorarray[v] == colorarray[u])
+                //the graph is not bipartite
+                return false;
+        }
+    }
+ 
+    // If the false condition was never experienced, the graph is bipartite
+    return true;
+}
+
+
+Reference: http://www.geeksforgeeks.org/bipartite-graph/
+
+</VERBATIM>
+---++ b
+<VERBATIM>
+Provide your pseudocode here.
+
+I assume I will assume the graph for this problem is undirected.
+
+This algorithm uses depth-first-search to parse the graph, traversing each branch of the graph
+until a cycle is found.
+
+The input to this function is an adjacency list implemented as an array of lists, and the number of 
+vertices V. 
+
+The function also keeps track of vertices that have already been visited.
+
+The function iterates through the vertices of the graph (indices of the array containing adjacency
+lists). For each vertex, it begins a recursive function. This recursive function looks at all of the vertices
+in the adjacency list that share an edge with the main vertex. If a vertex has not been visited, then the 
+function sets this vertex as the current vertex, the previous vertex as the 'parent', and begins to examine
+the adjacent vertices in this vertex's adjacency list. If a vertex has been visited, then it looks to see whether
+this vertex is the parent that the function is recursing from. If it is not, then we have come back to some original
+vertex through a list.
+
+//INITIALIZE ADJACENCY LIST 
+// if V = the number of vertices
+list<int> *adjlist; //array creating adjacency lists
+adjlist = new list<int>[V]; //create as many adjacency lists as there are vertices
+
+//add adjacent vertices into adjacency lists
+for int(i=0; i<V; i++)
+{
+   adjlist[i].push_back(some number);
+   adjlist[i].push_back(some other number);
+   etc.
+}
+
+//recursive function run by main cycle function
+bool IsaCycle(int v, bool visited[], int parent, list *adjlist);
+
+//input adjacency list, and number of vertices
+bool HasaCycle(list *adjlist, int V)
+{
+     //initialize array of "visited" nodes
+     bool *visited = new bool[V];
+
+    //mark all vertices as not visited
+     for (int i=0; i<V; i++)
+    {
+    visited[i] = false;
+    }
+
+    //call function to traverse branch using Depth First search
+    for (int i = 0; i < V; i++)
+        //if the vertex has already been visited, do not traverse from here
+        //it is obviously not part of a loop
+        if (visited[i] == false)
+          {
+          //otherwise, begin recursion from this vertex to look for a cycle
+          //recursive function defined after this one
+          if (IsaCycle(u, visited, -1, adjlist))
+             return true;
+          }
+    //if true has never been returned, there are no cycles
+    return false;
+}
+
+//recursive function
+bool IsaCycle(int v, bool visited[], int parent, list *adjlist)
+{
+    // Mark the current node as visited
+    visited[v] = true;
+ 
+    //Iterate through all the vertices adjacent to this vertex
+    for (int i = 0; i < sizeof(adjlist[v]); i++)
+    {
+        //if an adjacent node is not visited, then recur for this adjacent
+        if (!visited[adjlist[v][i]])
+        {
+           //set current node as parent
+           //if next recurrence returns true, return true
+           if (IsaCycle(adjlist[v][i], visited, v, adjlist))
+              return true;
+        }
+ 
+        // If an adjacent vertex has been visited, and is not the vertex we are 
+        //coming from, then there is a cycle
+        else if (adjlist[v][i] != parent)
+           return true;
+    }
+    //if no cycles have been found, and all nodes have been visited, then there are no cycles
+    return false;
+}
+
+reference: http://www.geeksforgeeks.org/detect-cycle-undirected-graph/
+
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+---++ 3b.
+Attach your solutions to this topic.
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+Provide your answer here.
+
+`  |  a  b  c  d  e  f  g  h
+____________________________
+ 1 |  R  N  B  Q  K  B  N  R
+ 2 |  P  P  P  P  -  -  -  -
+ 3 |  -  -  -  -  -  -  -  -
+ 4 |  -  -  p  -  P  -  -  -
+ 5 |  -  -  n  -  -  P  -  -
+ 6 |  -  p  -  p  p  p  -  p
+ 7 |  p  -  -  -  -  -  P  -
+ 8 |  r  b  b  q  -  k  P  -
+
+
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+Provide a description of your approach here.  Upload your code online.
+
+The analysis of this board was done via negamax, which works through the understanding that ta move of a certain value to one player in the game has the opposite value to their opponent. It was used to recursively analyze values for moves for each player and determine the move of the greatest value to the user - this was based on the value of pieces currently on the board. To make the algorithm more robust and gain the ability to see multiple moves ahead, alpha-beta pruning was used. 
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

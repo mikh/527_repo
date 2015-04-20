@@ -1,0 +1,245 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(SparshKumar),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+ O(E + V)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+For the edge list, we will run through the entire list once, using an array to find the of a vertex. 
+When a vertex appears in the first slot of the ordered pair, we add one to that vertex's position in the array.
+The largest element of the array will be the biggest vertex. 
+Because the linked list is the size of the edges and the array will be of magnitude V (and we will find the max in O(n) = O(V) time), 
+this will run in O(E + V) time.
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+O(V + E)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+For the adjacency list, we will run through the entire linked list and all the sub linked lists once. 
+The first-tier linked list with the largest sub linked list has the largest out-degree. 
+To find this, we will store as a variable max-out, and replace it if we find a larger out-degree. 
+We will store all the incidences of the sub linked lists vertices in an array,
+which will be the vertex with the greatest in-degree. We will have to run through all the vertices (the entirety of the first linked list) 
+and all of the edges (only named once per edge, in the sub linked lists) once, and the in-degree array will have magnitude E, 
+so this will run in O(V+E+E) = O(V + 2E) = O(V + E) time. 
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+ O(E*V)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+For the adjacency matrix, we will go through the entire matrix. For every vertex, 
+we will cycle through the edges and increment a variable for out-degree when we see a positive number, 
+and increment a separate in-degree variable when we see a negative number. 
+We will then store this as our max in and out-degrees, and replace them if we find either an in-degree or out-degree larger. 
+Because we have to go through every edge for every vertex, this will run in O(E*V) time. 
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>Question 1 Results:
+
+Total Grade: 18
+
+	4         		Invalid runtime, should just be O( E)
+	10        		
+	4         		Incorrect answer
+
+
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+BIPARTITE_TEST(G, s)
+	for each vertex u in G.V - {s}
+	    u.color    = WHITE
+	    u.distance = INFINITY
+	    u.parent   = NIL
+	    u.label    = NIL
+	s.color    = GRAY
+	s.distance = 0
+	s.parent   = NIL
+	s.label    = 0
+	Q = NULL
+	ENQUEUE(Q, s)
+	while Q != NULL
+	    u = DEQUEUE(Q)
+	    for each v in G.Adj[u]
+	        if v.color == WHITE
+	            v.color    = GRAY
+	            v.distance = u.distance + 1
+	            v.parent   = u
+	            v.label    = !(u.label)
+	            ENQUEUE(Q, v)
+	        else if u.label == v.label
+	            return FALSE
+	    u.color = BLACK
+	return TRUE
+
+
+
+The Breadth First Search (BFS) algorithm can be used to determine bipartiteness. 
+The pseudocode above is similiar to the BFS found in CLRS with only minor differences. 
+First, there is a new addition to the vertex structure, namely a label field. 
+This field is either a 1 or a 0. The label of the root vertex, s, is assigned a 0 arbitrarily. 
+When adjacent vertices are traversed, those that have not been visited yet (color = WHITE) are assigned values based on it's parent vertex. 
+Most importantly, the labels of adjacent vertices that have not been visited are asigned values opposite of it's parent. 
+If an adjacent vertex has already been visited (color ~= WHITE), their labels will be compared. 
+If they are the same, then the graph is not bipartite and the function returns FALSE. 
+Otherwise, all edges are checked and the function returns TRUE.
+
+Since this is a slight modification of BFS with no addition of loops 
+(i.e. only adding lines of code that take constant time), the algorithm runs in linear time O(V + E). 
+</VERBATIM>
+---++ b
+<VERBATIM>
+global variable CYCLE = FALSE
+
+CYCLE_TEST(G)
+	for each vertex u in G.V
+	    u.color  = WHITE
+	    u.parent = NIL
+	time = 0
+	for each vertex u in G.V
+	    if (CYCLE)
+	        break
+	    if u.color == WHITE
+	        DFS-VISIT(G, u)
+	return CYCLE
+
+DFS-VISIT(G, u)
+	time = time + 1
+	u.distance = time
+	u.color = GRAY
+	for each vertex v in G.Adj[u]
+	    if v.color == WHITE
+	        v.parent = u
+	        DFS-VISIT(G, v)
+	    else if v.color == GRAY
+          CYCLE = TRUE
+	        break
+	u.color = BLACK
+	time = time + 1
+	u.final = time
+
+The Depth First Search (DFS) algorithm can be used to determine whether a given undirected graph contains a cycle in time O(V). 
+The pseudo code above is essentially the DFS algorithm from CLRS with a couple of modifications. 
+I created a global variable because it was more simple than passing a local variable to the recursive function, 
+The reason I use it is so I can break out of the recursive calls if a cycle is discovered. 
+Cycles are detected in lines 4 through 10 of DFS-VISIT. 
+Here, each adjacent vertex, v, of u is examined. 
+If the vertex is WHITE, it has not been visited and the program assigns all the necessary values for it and recursively calls DSF-VISIT. 
+However, if the vertex is GRAY, not only does this mean the current vertex, u, has already visited v, 
+it also means that u is v_'s ancestor and _u is backtracking (i.e. it is cyclical). 
+Thus, the CYCLE is set to true and we break out of the for loop. The last case is if an adjacent vertex is BLACK. 
+This simply means the vertex has already been visited and backtracked because all of its adjacent vertices have been traversed. 
+If DFS supported multiple parent vertices, we could show that u is also a predecessor of a BLACK vertex.
+
+
+A graph without cycles is essentially a tree or a forest. As such, the number of tree edges it can contain is at most |V| - 1. 
+If a graph contains no cycles, then all vertices and edges have been traversed taking O(V + V - 1) = O(2V) = O(V).
+
+
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 20
+
+	10        		
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+See attached file
+---++ 3b.
+See attached file. I wrote this function in the main.cpp
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+[ ] [ ] [ ] [ ] [b] [ ]  [ ] [ ] 
+[ ] [ ] [k] [ ] [ ] [P]  [ ] [ ] 
+[ ] [ ] [ ] [ ] [Ki] [ ] [ ] [ ] 
+[ ] [ ] [ ] [ ] [ ] [ ]  [q] [ ] 
+[ ] [ ] [ ] [ ] [ ] [ki] [ ] [ ] 
+[ ] [ ] [ ] [ ] [ ] [ ]  [ ] [ ] 
+[ ] [ ] [ ] [ ] [ ] [ ]  [ ] [ ] 
+[ ] [ ] [ ] [r] [ ] [ ]  [ ] [ ] 
+
+Lower Case: White
+Upper Case: Black King
+CheckMate Scenario 
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+This is known as a stalemate.
+[ ] [ ] [ ] [K]
+[ ] [K] [ ] [ ]
+[ ] [ ] [Q] [ ]
+
+The black king is in the corner. If it moves in one of the three spaces,
+then the either the white queen or king can get the king.
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+http://ai-depot.com/articles/minimax-explained/
+http://www.dreamincode.net/forums/topic/100664-chess-ai-logic/
+I was unable to get a working code for this part, but my approach would have been:
+
+Using the minimax approach, you can generate a tree of all the possible moves
+the computer can make.
+
+"
+Create a value for all pieces. ie 10000 for the king, 5000 for the queen, 2500 for rooks, 1500 for bishops
+	750 for knights and 100 for pawns
+	 
+	For each of the computer's pieces
+	    Find each possible move for the piece.
+	    For each move of the piece
+	         Create a weight for the move
+	         if the move puts the computer's king in check, assign a extremely high negative weight and stop checking
+	                  these moves
+	        if the move is a pawn reaching the player's last row assign a very high weight to the move
+	        If the move will leave one of the computer's valuable pieces vulnerable give that move a high negative weight
+	        If the move will take a valuable piece, ie the queen, give that move a high weight, such as the value of the          
+	                  piece       
+	        If the move will place the king in check give it a very high weight
+	        If the move will place the king in checkmate give it the highest possible weight
+
+"
+
+This would my general idea to solve this problem
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

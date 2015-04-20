@@ -1,0 +1,185 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(ZacharyChapasko),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+<latex>\Theta(E + V)</latex>
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+First assume that each node in the linked list represents an edge and has two data storage parameters, int origin and int terminal. origin stores the origin vertex of the edge and terminal stores the terminal vertex of the edge. For this problem V counters need to be implemented. The linked list must be completely traversed and the V counters are incremented when its particular vertex appears in either the origin or terminal of an edge (i.e. v1_counter would be incremented if v1 is either an origin or terminal vertex of the edge, but it would not be incremented if v2 is an origin or terminal vertex). After the linked list is traversed the counters contain the degree of each vertex, and they need to be compared to see which is the highest. It takes <latex>\Theta(E)</latex> time to traverse the linked list and build the counters, and <latex>\Theta(V)</latex> time to perform all of the comparisons. Therefore this runs overall in <latex>\Theta(E + V)</latex> time.
+---++ b
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+Depends on which implementation of linked list you are using (I will explain the explanation section):<br><br>
+
+Best case: <latex>\Theta(V)</latex><br>
+Worst case: <latex>\Theta(V^{2})</latex>
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+First assume the nodes of the linked lists represent vertices. A integer int max would be initialized to zero before any list traversal. Then one must iterate through the entire outer linked list, calling size()** on each element. The size of each element would be compared to the current max value; if larger, the value of max would be replaced by the new maximum. After the outer linked list has been traversed int max will contain the maximum number of degrees of any vertex.<br><br>
+
+**In the C++ STL the "list" container (a linked list) has a size() function that gives the number of elements in the container. In C++98 it operates in linear time whereas in C++11 it operates in constant time. This is responsible for the difference in the best and worst cases. The worst case is derived from running the algorithm on the complete graph K<sub>n</sub> with the C++98 size() function. The best case is derived from running the algorithm on any graph with the C++11 size() function.
+---++ c
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+<latex>\Theta(V^{2} + V)</latex>
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+In this problem you have to look through V arrays with V elements each to determine the degree of each vertex. After the degree of each vertex is determined, (V - 1) comparisons must be made to see which degree is the highest. Therefore this is <latex>\Theta(V^{2} + V)</latex> time.
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+Provide your pseudocode here.
+</VERBATIM>
+
+This algorithm uses a BFS-style algorithm implementing a queue, which should run in <latex>\Theta(E + V)</latex> time. The graph is represented as an adjacency list represented by a vector of linked lists. Each node of the vector corresponds to a vertex and each node in the linked lists corresponds to a neighboring vertex.<br><br>
+
+%CODE{"cpp"}%
+
+bool isBipartite(graph, start_vertex){
+color each vertex white;
+color start_vertex blue;
+enqueue start_vertex;
+while (queue is not empty){
+    h = head(queue)
+    for (each neighbor n of h){
+        if (n is white){
+            color n opposite h
+            enqueue n
+        }
+        else if (n is the same color as h){
+            return false
+        }
+    }
+    dequeue the head
+}
+return true
+}
+
+%ENDCODE%
+---++ b
+<VERBATIM>
+Provide your pseudocode here.
+</VERBATIM>
+
+This algorithm uses an implementation similar to that found in 1b. The graph is represented as a vector of adjacency lists. Each node in the vector represents a connected component. Each adjacency list is represented by a linked list of linked lists, where the outer linked list is each vertex and the inner linked list contains neighboring vertices. So the entire graph is represented as a vector of linked lists of linked lists. The algorithm basically  checks if the graph is a forest or not.<br>
+IMPORTANT NOTE: This algorithm implements the C++11 size() function of the STL "list" container. Each size() function used runs in constant time.<br><br>
+
+%CODE{"cpp"}%
+bool containsCycle(graph){
+    int vertices = 0;
+    int edges = 0;
+    for(i = 0; i < graph.size(); i++){
+        subComponent = graph[i];
+        vertices += subComponent.size()
+        for(iterator = subComponent.begin; iterator < subComponent.end; ++iterator){
+            edges += iterator -> size()
+        }
+    }
+    if(edges == (vertices - graph.size())){
+        return true
+    }
+    return false
+}
+%ENDCODE%
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+---++ 3b.
+Attach your solutions to this topic.
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+Move #50: Black moves b7 - c8<br>
+`  |  a  b  c  d  e  f  g  h <br>
+____________________________<br>
+ 1 |  -  R  B  -  -  Q  N  - <br>
+ 2 |  -  P  P  -  N  P  -  - <br>
+ 3 |  -  -  -  P  K  -  P  - <br>
+ 4 |  -  -  p  -  -  -  -  R <br>
+ 5 |  P  q  -  -  -  -  -  P <br>
+ 6 |  -  p  -  -  -  -  n  p <br>
+ 7 |  p  -  -  B  p  p  p  r <br>
+ 8 |  r  -  k  -  -  b  n  - <br>
+<br>
+Move #51: White moves d7 - c8<br>
+Game Over!<br>
+White player wins<br>
+<br>
+Playing against smarter player ...<br>
+---+++ ii.  
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+`  |  a  b  c  d  e  f  g  h <br>
+____________________________<br>
+ 1 |  -  -  -  -  -  -  p  k <br>
+ 2 |  -  -  -  -  -  -  p  p <br>
+ 3 |  -  -  -  -  -  -  -  - <br>
+ 4 |  -  -  -  -  -  -  -  - <br>
+ 5 |  -  -  -  K  -  -  -  - <br>
+ 6 |  -  -  -  -  -  -  -  - <br>
+ 7 |  -  -  -  -  -  -  -  - <br>
+ 8 |  -  -  -  -  -  -  -  - <br>
+<br>
+---++ 4b.  Main task [20 points]
+Provide a description of your approach here.  Upload your code online.<br><br>
+
+I first started with taking the random player that Professor Trachtenberg coded. I then added in more functionality: if the program sees a winning move, it takes it. At this point the program was good enough to beat the random player, but not the second player. I ran the program several times to see how to beat the second player and I hard-coded the moves so I could study the third player. While I was hard-coding more moves to get better games out of the third player, I ended up beating the third player, thereby completing the assignment.
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

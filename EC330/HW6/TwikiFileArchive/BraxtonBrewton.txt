@@ -1,0 +1,141 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(BraxtonBrewton),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+<latex> \Theta (E) </latex> ; E = number of edges
+
+
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+It takes E time to go through the linked list and count the number of times each vertex appears. The max degree is equivalent to the highest count.
+
+
+---++ b
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+<latex> O(V^2) </latex> 
+
+
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+The number of linked lists representing the vertices is V. The number of neighbors for each vertex is at most V. Therefore, to iterate through V linked lists with at most V neighbors takes <latex> O(V^2) </latex> time.
+
+
+---++ c
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+<latex> O(V^2) </latex>
+
+
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+There are V columns and V rows for an adjacency matrix. In order to determine the maximum degree, each row needs to be traversed, and all the 1's or 0's (representing an edge between two vertices) must be added up. This takes <latex> O(V^2) </latex> time.
+
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+Provide your pseudocode here.
+</VERBATIM>
+
+E = edges, U = source set, V = destination set, 0 = not colored, 1 = blue, -1 = red, Adj[U][V] = an adjacency matrix representing all the existing edges of the graph
+
+%CODE{"cpp"}%
+
+bool isBipartite(Adj[U][V], int start) {
+
+int colorOfVertices[V];
+
+for i = 0 to V-1
+colorOfVertices[i] = 0 // set all vertices to 0
+colorOfVertices[start] = 1 //color the start blue
+
+for j = 0 to U-1 {
+for k = 0 to V-1 {
+if Adj[j][k] && colorOfVertices[k] == 0 // if there exists an edge between the two vertices and the destination vertex is not colored
+colorOfVertices[k] = -1 * (colorOfVertices[j]) // color the destination vertex the opposite color of the source vertex
+
+else if Adj[j][k] && colorOfVertices[k] == colorOfVertices[j] //if the neighbors have the same color then its not bipartite
+return false;
+}
+}
+return true // if the function has made it here then the graph is bipartite
+}
+
+%ENDCODE%
+---++ b
+<VERBATIM>
+Provide your pseudocode here.
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attached.
+---++ 3b.
+Attached.
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+Picture Attached, titled "I Win".
+
+---+++ ii.  
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+Picture Attached, titled "Black King No Moves".
+
+---++ 4b.  Main task [20 points]
+Provide a description of your approach here.  Upload your code online.
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

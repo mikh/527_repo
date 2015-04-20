@@ -1,0 +1,195 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(ZacharyGanger),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+theta(E)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+-Represent each vertex with an integer. Create a vector of integers in which the indices of the vector will match the vertex integer, and the number of occurrences of that number
+will be the value contained in that index of the vector. Iterate through the edges, increment value at the the index corresponding to the vertex value. Check with each iteration that 
+the new value is not larger than max. If it is, this becomes max. return max.(E time)
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+theta(V)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Cycle through the list of lists, find the size of the list housed at each space in the primary list, compare it to the current max. Store the largest list 
+size. When at the end of the primary list (the one that holds the other lists), return max.
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+theta(V^2)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Cycle through and find both the max number of 1s in a row and the max number of 1s in a column. compare these maxes, and return the larger. We need to go both 
+directions in case the graph is directed (not diagonally symmetrical). V^2 time to cycle through each space. We run twice so full time is 2V^2 -> V^2
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+struct Node
+{
+	bool color = NULL;	  //color of the node 
+	list<Node> adjacencyList; 	//each node adjacent to this node will be in this list 
+}
+
+queue<Node> Graph; 	//this is filled with the nodes of the graph
+
+
+bool Bipartite(list<Node> Graph)  //returns true if graph is bipartite
+{
+	Graph[0].color = true 	//since bipartite, true is one color, false is the other. Null has not yet been visited.
+	while Graph not empty
+	{
+		current = pop(Graph)
+		if current.color = null
+			if current.adjacencyList.size = false
+				current.color = true
+			else
+				for adj in current.adjacencyList
+					if all colors of adjacent nodes identical or null
+						current.color = !current.adj[0].color
+		else
+			for every node adj in current.adjacencyList
+				if adj.color= null
+					adj.color = !current.color
+				if adj.color = current.color
+					return false  	//a neighbor's color matches, so the graph cannot be bipartite
+	}
+	return true   //all vertices have colors and the check has not been tripped. return true.
+	
+}
+
+// Runtime of BFS is O(V+E). We do constant work for each vertex V to insert into the queue and pop from the queue. 
+// Then, for each value in the AdjacencyList of each V, we run a comparison. This compares another O(E) times, for a total of O(V+E). 
+</VERBATIM>
+---++ b
+<VERBATIM>
+// Since "An undirected graph has a cycle if and only if a depth-first search (DFS) finds an edge that points to an already-visited vertex (a back edge)," 
+// all we need is a working DFS with a check that none of the adjacent nodes have been visited before.
+
+struct node
+{
+     bool visited = false;     //false until visited, then becomes true. 
+     list<node> adjacencyList;    //each node adjacent to this node will be in this list 
+}
+
+map<node> Graph
+stack<node> Stack
+Stack[0] = Graph[0]
+
+bool Cycle(stack<node> Stack)  //returns true if a cycle is found
+{
+     current = pop(Stack)
+     current.visited = true
+     while Stack not empty
+     {
+          for adj in current.adjacencyList
+          {
+               if adj.visited = true
+                     return true
+               Stack.push(adj)
+          }
+     }
+     for vertex in Graph
+         if !vertex.visited
+              Stack[0] = Graph[vertex]
+              Cycle(Stack)
+}
+
+// this is O(V) time, because it each unvisited vertex to the stack, then checks that it has no previously visited neighbors.
+
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attached.
+---++ 3b.
+Code is attached in zip file. titled Graph.cpp, Graph.h (unedited), and output.txt.
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+Please enter your move: f1-c4
+I move: a7 - a6
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  -  N  -  Q  K  -  -  R 
+ 2 |  -  B  R  P  -  N  -  P 
+ 3 |  -  P  -  -  P  -  P  - 
+ 4 |  -  P  B  -  -  P  -  - 
+ 5 |  P  -  -  -  -  -  -  - 
+ 6 |  p  p  -  p  -  p  p  - 
+ 7 |  -  -  p  -  p  k  -  p 
+ 8 |  -  -  r  q  -  b  n  r 
+
+Please enter your move: c4-f7
+
+Game Over:  White wins!
+wireless1x-155-41-127-33:Chessboard Original zganger$ 
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  -  N  -  Q  K  -  -  - 
+ 2 |  -  B  -  P  -  N  -  P 
+ 3 |  -  P  -  -  P  -  -  - 
+ 4 |  -  P  B  -  -  P  -  - 
+ 5 |  -  -  -  -  -  -  R  - 
+ 6 |  -  -  -  -  -  -  -  - 
+ 7 |  R  -  -  -  -  -  -  - 
+ 8 |  -  -  -  -  -  -  -  k 
+
+Stalemate
+</VERBATIM>
+---++ 4b.  Main task [20 points]
+We tried to test good moves using a scoring system (weighting prices so that capturing them would be a priority) but it didn't function properly, 
+so that is commented out. The current iteration runs random moves.
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---
+
+   * [[%ATTACHURLPATH%/problem3a.cpp][problem3a.cpp]]: Problem 3A
+
+   * [[%ATTACHURLPATH%/problem3b.zip][problem3b.zip]]: Contains edited graph.cpp, unedited graph.h, and output.txt
+
+   * [[%ATTACHURLPATH%/myPlayer.cpp][myPlayer.cpp]]: Problem 4b(random)
+
+   * [[%ATTACHURLPATH%/myPlayer.h][myPlayer.h]]: Problem 4b(random)

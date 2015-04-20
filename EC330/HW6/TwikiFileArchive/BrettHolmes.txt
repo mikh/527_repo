@@ -1,0 +1,118 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(BrettHolmes),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+O(V+E)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+create int array of size V (each index corresponds to a vertex, initialized as 0's)
+for each edge (time E) increment values of the two verticies in the array.
+return max(vertex array) (time V)
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+O( V * E )
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+assumptions: undirected graph, ‘outer’ linked list contains vertices, ‘inner’ linked lists contains edges.
+
+iterate through list of vertices (V), for each vertex: iterate through list of edges (E) incrementing a counter for each one, save max counter value (max degree) and return it.
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+O( V ^ 2 )
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+assumptions: undirected graph
+
+iterate through each row (V), for each row iterate through each item (V) and count number of 1's (edges).
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+
+Assuming:
+Vertex exists as a data structure with members: int flag, bool visit 
+Graph is given as an adjacency-list (so input size is V+E)
+
+for each V in AdjacencyList
+		V.visit = false
+for each V in AdjacencyList
+		if ( !V.visit ) DepthFirst(v,0)
+		
+DepthFirst(Vertex V, int n){
+		V.visit = true
+		V.flag = n
+		for each A in Adjacent_to_V //iterate through adj-list to get these vertices
+				if( !A.visit )
+						DepthFirst(A,1-n)
+				else if( A.flag == V.flag )
+						"NOT BIPARTITE"
+
+
+reference used from cs.cmu.edu
+</VERBATIM>
+---++ b
+<VERBATIM>
+//use DFS to identify any back-edges. If any back-edges found return cyclic. else return acyclic.
+
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+---++ 3b.
+Attach your solutions to this topic.
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+Provide a description of your approach here.  Upload your code online.
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

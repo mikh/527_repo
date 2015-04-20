@@ -1,0 +1,239 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(WonjaeKim),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+O(V+E)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+The vertex with the max degree will have the greatest number of associated edges - it is the vertex that is referenced by the greatest number of rows in the edge list. 
+
+Create a linked list "list" of size V, all elements initialized to 0. 
+For each row in the edge list, its linked list has only 2 elements, so "get" is constant. For each element encountered, increment the corresponding element in "list" by 1. //O(E)
+In "list", find the max element and return as the max degree. //O(V)
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+O(VE)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+The max degree vertex is the element of the primary linked list with the longest length secondary linked list. In other words, it is essentially a find_max on the primary list where each element value is the secondary list's length. 
+
+For each of the V rows in the primary list, find the length of its secondary list, which can be up to E.
+
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+
+O(V^2)
+
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+
+The max degree vertex is the row in the adjacency matrix with the greatest number of neighbors. For each of the V rows, one can compute the sum of the V elements in that row which takes O(V), and return the row number with the greatest associated sum.
+
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+
+Let there be a tree "DFS_tree" which is a spanning tree of the graph, defined in the function, and let the n vertices of the graph be numbered 0 to n-1, as well as having a color RED or BLUE associated with each vertex, represented as 0 and 1 respectively. 
+Let there also be an 
+
+bool isBipartite(Graph) {
+
+insert_key(some_Vertex) //this is the root key of DFS_tree
+color_current_key = 0;
+
+while (#_unexplored_vertices > 0) {
+if (#_unexplored_neighbors_of_current_key == 0) {
+current_key = successor_key;
+} else {
+insert_key(unexplored_neighbor_of_current_key);
+current_key = unexplored_neighbor_of_current_key;
+color_current_key = 1 - successor_color; //this gives each key the color opposite its parent.
+}
+}
+
+//The above creates "DFS_tree" and assigns each vertex a color opposite that of its parent - in other words, every vertex has a color opposite those directly adjacent to it.
+
+for (i = 0 to #edges) {
+if (edge_i_endpoint_1_color == edge_i_endpoint_2_color) return false; //if the two endpoint colors of any edge on the graph are the same, then they make an odd cycle and therefore the graph cannot be bipartite
+
+
+return true; //if there are no such odd cycles, then the two colors must be disjoint and therefore the graph is bipartite
+
+}
+
+
+
+
+
+
+</VERBATIM>
+---++ b
+<VERBATIM>
+
+Consider the case of a graph with 2 vertices and 1 edge connecting them. Can another vertex and some number of edges be added such that a loop is not created? This is only possible if it does not connect to any 2 of the original vertices - in other words, it can only be connected by one edge. This holds true for any positive number of vertices. 
+
+This means that any graph which does not contain a loop is comprised of V vertices and V-1 edges, and vertices with only 1 neighbor can be recursively stripped away V-1 times until there are no edges remaining. If a vertex with only 1 neighbor cannot be found for V > 1, it must contain a loop. In other words, for V vertices, a graph containing a loop must have more than V-1 edges. 
+
+For a graph implemented as an adjacency list with each vertex assigned a linked list, 
+
+bool hasCycle(Graph) {
+
+if (no vertices with only 1 neighbor) return true;
+if (no vertices with any neighbors) return false;
+
+for (i = 0 to V) {
+if (Vertex_i only has 1 neighbor) delete neighbor in own list; delete self in neighbor's list;
+}
+
+return hasCycle(Graph)
+
+}
+
+
+
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+%CODE{"cpp"}%
+#include "Graph.h"
+#include <iostream>
+Graph::Graph() {}
+int Graph::addVertex(int color) {
+  int vnum = vertices.size();
+  vertices.insert(vnum);
+  colors[vnum] = color;
+  return vnum;
+}
+void Graph::addEdge(directedEdge newEdge) {
+  if (newEdge.first >= 0 && newEdge.first < vertices.size() &&
+      newEdge.second >= 0 && newEdge.second < vertices.size()) {
+    edges.insert(newEdge);
+  } else cout << "Error: invalid vertex ids.\n";
+}
+
+
+int Graph::getColor(int vertex) {
+  if (vertex >= 0 && vertex < vertices.size()) {
+    return colors[vertex];
+  } else cout << "Error: invalid vertex id.\n";
+}
+bool Graph::isEdge(directedEdge newEdge) {
+  for (set<directedEdge>::iterator i = edges.begin();i != edges.end();i++) {
+    if (newEdge.first == (*i).first &&
+	newEdge.second == (*i).second) {
+      return true;
+    }
+  }
+  return false;
+}
+
+string Graph::print() {
+	stringstream result;
+	for (vertexIterator vert1=vertices.begin(); vert1 != vertices.end(); vert1++) {
+		result << *vert1 << "[" << getColor(*vert1) << "]: ";
+		for (vertexIterator vert2 = vertices.begin(); vert2 != vertices.end(); vert2++)
+			if (isEdge (directedEdge(*vert1, *vert2)))
+				result << *vert2 << " ";
+		result << endl;
+	}
+		return result.str();
+}
+%ENDCODE%
+---++ 3b.
+
+
+
+0[0]: 0 1 3 7 9
+1[0]: 1 2 3 4 6 7
+2[0]: 0 2 6 7 9
+3[0]: 0 2 4 9
+4[0]: 2 3 9
+5[0]: 0 3 4 5 6
+6[0]: 4 6 8
+7[0]: 2 3 7 8 9
+8[0]: 0 1 6 8
+9[0]: 0 2 4 5 6 7 8 9
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+
+`  |  a  b  c  d  e  f  g  h
+____________________________
+ 1 |  R  N  B  Q  K  B  N  R
+ 2 |  P  P  P  -  P  P  P  P
+ 3 |  -  -  -  -  -  -  -  -
+ 4 |  -  -  -  -  -  -  -  -
+ 5 |  -  -  b  -  -  -  -  -
+ 6 |  p  -  -  -  -  -  -  p
+ 7 |  -  p  p  k  -  p  p  -
+ 8 |  r  n  b  q  -  -  n  r
+
+
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+
+`  |  a  b  c  d  e  f  g  h
+____________________________
+ 1 |  -  N  -  -  K  B  N  -
+ 2 |  -  P  P  -  P  P  P  -
+ 3 |  -  -  -  -  -  -  -  -
+ 4 |  P  -  -  -  -  -  -  P
+ 5 |  -  -  -  -  -  -  -  -
+ 6 |  R  -  -  -  -  -  -  -
+ 7 |  -  Q  -  k  -  -  -  -
+ 8 |  -  -  -  -  -  -  R  -
+
+
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+Provide a description of your approach here.  Upload your code online.
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---
+
+   * [[%ATTACHURLPATH%/problem3b.zip][problem3b.zip]]: problem3b.zip
+
+   * [[%ATTACHURLPATH%/problem3a.cpp][problem3a.cpp]]: problem3a.cpp

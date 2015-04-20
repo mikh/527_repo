@@ -1,0 +1,221 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(VinayKrishnan),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+E*V
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+We have to read through all the Edges first, and then read through the Vertexes inside them in order to find the max vertex.
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+E
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+With an adjacency list, since all the vertexes are listed out, we could just go through the vertexes, but then the vertexes will be repeated across the list. It is therefore easier, and much faster to just to the edges, since they will be included in the list anyways. (two vertexes make an edge).
+
+Hence, E should be the run time.
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+V^2
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Since we have a matrix now, we will need to iterate through the list of vertices for the rows, then one more time for the columns. Therefore we iterate through V twice, hence V*V = V^2
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>Question 1 Results:
+
+Total Grade: 21
+
+	4         		Invalid runtime, should just be O( E)
+	7         		The actual runtime is O(V+E), and in some cases O(V) will be larger than O( E)
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points] *
+---++ a
+<VERBATIM>
+#include <vector>
+#include <queue>
+#include <iostream>
+
+using namespace std;
+
+isBipartite()
+{
+
+	Start with one vertex v in V and assign is a colour e.g. (Red)
+		q.enqueue(s);
+
+	while (!q.empty)
+	{
+		a = q.dequeue();
+		for (; v <= a.adjList; V++)
+		{
+			if (v.color == NULL)
+			{
+				v.color = (a.color == RED) ? BLACK : RED;
+				q.enqueue(v);
+			}
+			else if (v.color == a.color)
+			{
+				cout << "Not Bipartite"< endl;
+				return;
+			}
+
+
+		}
+	}
+	cout << "G is Bipartite" << endl;
+	return 0;
+}
+
+int main()
+{
+	isBipartite(G);
+}
+
+</VERBATIM>
+---++ b
+<VERBATIM>
+#include <lists>
+#include <iostream>
+
+using namespace std;
+
+int isCyclic(int v, bool visited[], int root)
+{
+	
+	visited[v] = true; // Check if we have visited this node already or not.
+
+	list<int>::iterator i;
+	for (i = adj[v].begin(); i != adj[v].end(); i++)
+	{
+		if (!visited[*i])
+		{
+			if (isCyclic(*i, visited, v))
+				return 0;
+		}
+
+		else if (*i != root)
+		{
+			cout << "CYCLE EXITS" << endl;
+		}return 0;
+	}
+	cout << "No Cycle" << endl;
+	return 0;
+}
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 20
+
+	10        		
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+---++ 3b.
+1[1]: 6 7
+2[1]: 1 3 4 6
+3[1]: 1 3 4
+4[1]: 1 2 3
+5[1]: 4
+6[1]: 3 4 6 7
+7[1]: 1
+8[1]:
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+
+R:a1
+N:b1
+B:c1
+Q:b5
+K:e1
+B:f1
+N:g1
+R:h1
+P:a2
+P:b2
+P:c2
+P:d2
+P:e3
+P:f2
+P:g2
+P:h2
+r:a8
+n:b8
+b:f5
+q:d8
+k:e8
+b:f8
+n:g8
+r:h8
+p:a7
+p:b7
+p:c7
+p:d5
+p:e7
+p:f7
+p:g7
+p:h7
+
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+`  |  a  b  c  d  e  f  g  h
+____________________________
+ 1 |  k  p  -    K  -  -  R
+ 2 |  p  p  - -  -  -  -  -
+ 3 |  -  -  - P -  -  -  -  Q
+ 4 |  -  -  -  -  -  P  -  -
+ 5 |  -  -  N - -  - --  -  -
+ 6 |  -  -  -  -  -  -  -  -
+ 7 |  -  -  -  -  -  -  -  -
+ 8 |  -  -  -  -  -  -  -  -
+
+Here, black has no moves, but the King is still alive.
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+Provide a description of your approach here.  Upload your code online.
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

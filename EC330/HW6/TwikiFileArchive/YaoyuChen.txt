@@ -1,0 +1,159 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(YaoyuChen),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+theta(E)
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+Edge list lists all the vertex that linked by the edges. So we go through all the edges and record the times that all the vertexes appear in the edges and store the largest number in one variable. When a new largest degree vertex found, we change the variable with the largest degree of vertex. Finally, the number in that variable is the maximum vertex.
+---++ b
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+theta(V+E)
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+The adjacent list lists all the vertexes with their neighbors. So we go through the list and every edges of the vertex and find the one with the largest number of neighbors.
+---++ c
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+theta(V^2)
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+the size of the matrix is V^2. So for each vertex, we need to go through V times to collect all the neighbors for that vertex. And we have V vertex. So the total time is V^2.
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+Provide your pseudocode here.
+</VERBATIM>
+%CODE{"cpp"}%
+bool isBipartite(graph,vertice){
+Breadth-first search(graph,vertice){
+if two adjacent vertice{
+set them in different color
+}//This takes theta(V) time
+if two adjacent pair conflict{
+return false
+}
+else{
+return true
+}//This takes theta(E) times
+}
+}//Total takes theta(E+V) times.
+
+%ENDCODE%
+---++ b
+<VERBATIM>
+Provide your pseudocode here.
+</VERBATIM>
+%CODE{"cpp"}%
+Bool isCycle(graph, vertice){
+cycle = 0;
+Depth-first Search(graph,vertice){
+if color(next vertice) == black{
+cycle ++;
+}//Omega(V)
+if cycle == 0{
+return false;
+}
+else{
+return true;
+}//theta(1)
+}
+}
+
+%ENDCODE%
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+---++ 3b.
+Attach your solutions to this topic.
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+
+
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  -  K  B  N  R 
+ 2 |  P  P  P  P  -  P  P  P 
+ 3 |  -  -  -  -  P  -  -  - 
+ 4 |  Q  -  -  -  -  -  n  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  -  p  -  -  -  - 
+ 7 |  p  p  p  -  p  p  p  p 
+ 8 |  r  n  b  q  k  b  r  - 
+
+Please enter your move: a4-e8
+
+Game Over:  White wins!
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+Provide your answer here.
+
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  -  K  B  N  R 
+ 2 |  P  P  -  P  -  P  P  P 
+ 3 |  -  -  -  -  P  -  -  - 
+ 4 |  Q  -  -  -  -  -  n  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  -  p  -  -  -  - 
+ 7 |  p  p  P  -  p  p  p  p 
+ 8 |  r  n  b  -  k  b  r  - 
+
+</VERBATIM>
+
+
+---++ 4b.  Main task [20 points]
+Provide a description of your approach here.  Upload your code online.
+
+First we mark different characters in different points. King with highest points, then queen, then knight, etc. Then we apply chess board, the origin place and their legal move for each characters. The program will come up with all the legal moves for different characters. When some characters are eaten by the enemy, their points will be removed. After several turns, We calculate the total points of the chessboard. What we try to do is to keep the score higher and higher. So the program will keep the score as high as possible as opponents make their moves.
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

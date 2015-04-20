@@ -1,0 +1,142 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(YassineElYousfi),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+Theta(V+E)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+We must go through the entire linked list of length E to compute the degree of every vertex. Then we must go through the entire data structure of length V where every element contains the degree of a vertex to the find the max.
+
+Therefore, it is Theta(E + V)
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+Theta(V)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Assume that list A has a list Bi at every node of list A
+
+It takes Theta(V) because we traverse list A and find the length (the length function of lists are Theta(1)) of the inner lists, B0 through BV-1. We assume there is a variable that stores the max length as we loop through the list. If the length of the current list B is larger than we any of the previous ones we overwrite it. When the list A has been traversed our variable would contain the max degree.
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+Theta(V^2)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+We count the number of edges (ie the number of true's/1's) in each row so there is V counts and each count takes Theta(V) to calculate. After each row has been counted we find the max of those counts.
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>Question 1 Results:
+
+Total Grade: 21
+
+	4         		Invalid runtime, should just be O( E)
+	7         		In some cases, you will have O(V+E) which could be greater than O(V)
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+bool isBipartite(graph  G){
+  
+    for all edges in G{ // go through all the edges on the graph
+        if G.getColor(edge->first) == G.getColor(edge->second) //in other words: if two connecting vertices have the same color
+              return false;
+    }
+      
+ return true;
+}
+</VERBATIM>
+---++ b
+<VERBATIM>
+bool detectCycle(){
+
+    for node in graph{
+        visited = bool[N]
+        set all visited to false
+        detectCycle(n, n, visited)
+    }
+}
+
+bool detectCycle(n, origin, visited){
+    for adjacent in graph[n]{
+
+        if adj == origin //adj is just a connecting node
+            cycle detected
+
+        if not visited[adj]
+            visited[ad] = true
+            detectCycle(adj, visited)
+            visited[adj] = false
+    }  
+}
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 10
+
+	5         		algorithm needs more definition
+	5         		algorithm needs more definition
+
+
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+   * [[%ATTACHURLPATH%/problem3a.zip][problem3a.zip]]: Problem 3a and 3b, both zips are really the same.
+
+---++ 3b.
+Attach your solutions to this topic.
+   * [[%ATTACHURLPATH%/problem3b.zip][problem3b.zip]]: Problem 3a and 3b, both zips are really the same.
+
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+Provide a description of your approach here.  Upload your code online.
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---
+
+

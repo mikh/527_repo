@@ -1,0 +1,164 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(DamilolaOrikogbo),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+<latex>
+\Theta(E)
+
+</latex>
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+The list is by edges you simply count the amount of edges and tabulate how many times a vertex is listed
+---++ b
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+<latex>
+\Theta(V+E)
+
+</latex>
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+In this list for every vertex you simply count how many connections are in the list/ associated with it and report back the greatest one
+---++ c
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+<latex>
+
+\Theta(V)
+
+</latex>
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+In the matrix you must count each mark the is representative of an edge being present and report back which has the highest amount of edges 
+---++!! Grader comments *[/30]*
+<VERBATIM>Question 1 Results:
+
+Total Grade: 24
+
+	10        		
+	10        		
+	4         		Incorrect answer
+
+
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+Provide your pseudocode here.
+</VERBATIM>
+//running a modified BFS 
+//using a Queue
+//using pink and blue
+
+ColorGraph(G)
+
+start at any node S color it pink 
+put s in queue Q
+
+while (Q is not empty)
+   x = pop(Queue)
+   for every neighbor n of x
+      if n isn’t colored, color it blue
+      put n in Q
+      if n is colored && is the same color as x, 
+           stop and output NOT BIPARTITE
+
+output G IS BIPARTITE
+---++ b
+<VERBATIM>
+Provide your pseudocode here.
+</VERBATIM>
+
+//use a pointer
+
+count = 0
+DFS
+color all vertices white
+for each white vertex v
+   DFS VISIT(v)
+
+-------------------------
+
+DFS VISIT(v)
+color v gray
+ for each node n adjacent to v
+   if n is white
+      DFS VISIT(n)
+     count ++
+   if n is gray
+      return Cycle
+ color v black
+
+---++!! Grader comments *[/20]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 10
+
+	5         		algorithm needs more detail
+	5         		algorithm needs more definition
+
+
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+---++ 3b.
+Attach your solutions to this topic.
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+Provide a description of your approach here.  Upload your code online.
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

@@ -1,0 +1,159 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(SinanEren),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+Big Theta(E) 
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+This would take E time to detect the number of edges in couples in a way that would not repeat itself using linked lists. As in linked lists we iterate from the beginning to the end, it takes E time. </VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+Big Theta(V) 
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Since the lists are sorted, and each vertex has around a number of 2 edges, it would take a runtime of lg(V) 
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+Big Theta(1)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+In an adjacency matrix, connections between vertices are represented with 1's and 0's. In order to reach the end of the matrix, it would be enough to enter the indeces of the desired value. 
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+
+
+// First of all, we would have to put all the elements of the vertices in an data structure and paint them with the same brush. Once we list them all, we now need to check if the adjacent ones to see whether they have the same color with their neighbors. 
+
+// We would have two colors: black(visited) and white (unvisited)
+
+// We can start off by coloring all the colors to white
+ 
+biPartCheck(vertices, first)
+
+	integer colored[vertices];
+	for ii=0 step 1 to vertices 
+		colored[ii] = 0;
+	end for
+
+	colored[first] = 1 // assigning black to first
+	create stack s;
+	s.push(first);
+
+	while s is not empty, do
+		int black = s[first];
+		pop the first element;
+
+		for jj=1 step 1 to vertices 
+			if colored[jj] == 0 then 
+				colored[jj] =  1 + s[black]
+				s.push(jj);
+			end if
+			else
+				not bipartite
+		end for
+	end while
+
+	bipartite
+
+end biPartCheck
+
+
+</VERBATIM>
+---++ b
+<VERBATIM>
+// Very similar to previous method, we can use a DFS algorithm recursively
+
+dfs(vertex)  
+         create stack s;
+         for ii=0 step 1 to vertices 
+		colored[ii] = 0;
+	end for
+
+        S.push(vertex);
+         while S is not empty, do
+            S.pop[ii];
+            if (not visited[ii]) then
+               visited[ii] = 1;
+               for neighbor = 1 step 1 to vertices 
+                  S.push(neighbour);
+               end for
+            end if
+         end while
+end dfs()
+
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+I move: a2 - e2
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  -  -  -  -  -  -  -  k 
+ 2 |  -  -  -  -  -  r  -  - 
+ 3 |  -  -  -  P  -  n  -  P 
+ 4 |  -  -  -  P  -  P  -  p 
+ 5 |  -  -  -  p  -  p  -  - 
+ 6 |  P  -  R  -  k  -  -  - 
+ 7 |  p  -  -  -  -  -  -  - 
+ 8 |  -  -  -  -  -  -  -  -
+
+ Please enter your move: c1 - e6
+
+ Game Over: White wins!---++ 3b.
+
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+Provide a description of your approach here.  Upload your code online.
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

@@ -1,0 +1,224 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(ShantanuBobhate),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+
+Worst-case Run-time: theta(E)
+
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+
+An Edge-List implemented as a linked-list would be something as follows:
+
+     [{1, 2}] ---> [{2, 3}] ---> ... ---> [\]
+
+Therefore, to compute the maximum degree of a vertex we will have to traverse through the entire list which would take
+worst case theta(E) time.
+
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+
+Run-time: theta(V^2)
+
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+
+Worse-case runtime for an Adjacency List implemented as a linked list would be when we would want to find the 
+degree of the last vertex which is connected to all the other vertices. We would them have to traverse to the first 
+list and then the traverse the entire of the second list yielding a runtime time of theta(V^2).
+
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+
+Runtime: theta(V^2)
+
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+
+An Adjacency Matrix implemented as a two-dimensional array would look like something as follows:
+
+[ [0, 1, 0, 1, 0], [1, 0, 1, 1, 0], [0, 1, 0, 0, 0], [1, 1, 0, 0, 1], [0, 0, 0, 1, 0] ]
+
+So, in order to find the max order of a vertex it would take V time to index through the outer array and 
+linear time V to index through all the corresponding vertices in the inner array.
+
+Therefore, it would take theta(V^2) time.
+
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+Provide your pseudocode here.
+
+Note: This implementation assumes the graph stored as an adjacency matrix implemented a two-dimensional array.
+Note: This implementation uses '-1' to signify not colored, '0' for white, '1' for black.
+Note: This implementation uses a variant of the Breadth First Search to check the nodes of each vertex
+
+check_if_barpitite(root, graph[1 ... n-1][1 ... n-1]):
+begin
+     colors = array of size n
+     for i from 1 to n-1
+        color[i] = -1                 // -1 is for if vertex is not colored
+     i = 1
+     current_color = 0
+     alternate_color = 1
+     frontier = [root]
+     color[root] = current_color
+     while frontier:
+          next = {}
+          for u in frontier:
+               for v in graph[u]:
+                    if color[v] == current_color
+                         return false
+                    else if color[v] == -1
+                         color[v] = alternate_color
+                         next.append(v)
+           frontier = next
+           i++
+     return true
+end
+
+</VERBATIM>
+---++ b
+<VERBATIM>
+Provide your pseudocode here.
+
+Note: This implementation assumes the graph to be stored as an Adjacency list implemented using an array of ints.
+
+ifCycle(graph[V]):
+begin
+     int check;
+     for i from 0 to V-1:
+     begin
+          check += graph[i]
+     end
+     if check == string of 2's of size V
+          return true
+     else
+          return false
+end
+
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+<VERBATIM>
+Attached.
+</VERBATIM>
+---++ 3b.
+Attach your solutions to this topic.
+<VERBATIM>
+Files are Attached.
+
+Following is the output for generateRandom(6) vertices:
+
+++++++++++++++++++++++++++++++++++++++++++++++++++
+Printing Graph: 
+0[0]: 1 2 5 7 
+1[1]: 2 3 4 7 
+2[2]: 1 3 4 5 6 7 
+3[3]: 1 5 
+4[4]: 0 1 3 5 7 
+5[5]: 0 2 4 
+6[6]: 1 3 4 
+7[7]: 1 3 4 
+--------------------------------------------------
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+Provide your answer here.
+
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  -  B  -  K  -  N  R 
+ 2 |  P  P  -  P  P  P  -  P 
+ 3 |  -  -  -  -  -  -  P  - 
+ 4 |  -  -  P  -  -  -  -  - 
+ 5 |  -  -  -  N  -  -  -  - 
+ 6 |  -  p  Q  p  p  p  -  p 
+ 7 |  p  -  -  B  -  -  p  - 
+ 8 |  r  -  -  q  k  b  n  r 
+
+Please enter your move: d7-e8
+
+Game Over:  White wins!
+
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+Provide your answer here.
+
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  -  -  B  -  K  -  N  - 
+ 2 |  P  P  -  P  P  P  -  P 
+ 3 |  -  -  -  -  -  -  P  - 
+ 4 |  -  -  P  -  -  -  -  R 
+ 5 |  -  -  -  N  -  -  R  - 
+ 6 |  -  -  Q  -  -  -  -  - 
+ 7 |  -  -  -  B  -  -  -  - 
+ 8 |  -  -  -  -  -  -  -  k 
+
+</VERBATIM>
+---++ 4b.  Main task [20 points]
+Provide a description of your approach here.  Upload your code online.
+<VERBATIM>
+
+Note: The implementation beats the first 2 players and runs out of time whilst playing the third player.
+
+This implementation looks 1 layer deep to decide which move to make. The weights used are:
+{ King = 20, Queen = 10, Rook = 5, Bishop = Knight = 3, Pawn = 1}
+The weight of any board position is calculate by adding the weight of my pieces and subtracting the weights
+from the enemy player. The move with the highest such value is made. If multiple moves have the same value
+then one of them is played at random.
+
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

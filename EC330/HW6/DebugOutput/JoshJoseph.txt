@@ -1,0 +1,190 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(JoshJoseph),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+This should be Theta(edges)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+first, we we must traverse the entire list of edges, which will take (edges) time.
+To figure out the maximum degree, we need a running tally of outgoing edges, the safest way to do this is via a
+table or vector of vertices, which have corresponding edge counts. (access and incrementing is in constant time).
+every time we increment an entry, we can compare it to a running max degree value (constant).
+When we traverse the last edge and update the max degree, that will be it.
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+Average case (V + E)
+Worst case O(V^2)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+We have to traverse every vertex (V), then every edge originating from it (E/V, V times = E).
+We can maintain a maximum degree variable and update it only when it is surpassed.
+However, our worst case involves a graph in which all vertices are connected, 
+meaning that the number of edges will be equal (or double for a directed graph) to the number of vertices.  
+Thus, we would have to traverse V lists of length V.
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+Theta(V^2)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Adjacency matrices require calculating every row to determine a vertex's degree.
+V rows, V columns
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>Question 1 Results:
+
+Total Grade: 30
+
+	10        		
+	10        		
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+Let G be a graph, v is a vertex of G)
+
+BFS(G,v) is
+      let Q be a queue
+      Q.enqueue(v)
+      parityFlag = false;
+      label v as discovered - class parityFlag;
+      while Q is not empty
+         v <- Q.dequeue()
+         for all edges from v to w in G.adjacentEdges(v) do
+             if w is not labeled as discovered
+                Q.enqueue(w)
+                if parityFlag enabled, label w as discovered and class parityFlag
+                
+          else if w is labeled as discovered and it's class != parityFlag - return false -- has been traversed by a member of the other group
+
+Time complexity = O(|V | + |E|).
+</VERBATIM>
+---++ b
+<VERBATIM>
+This is a DFS fundamentally - we will pass down each path of the graph, until we reach a dead end.
+
+When it finds a back edge, it will be found before seeing |V| edges. 
+In an acyclic forest, |E| <= |V | + 1
+
+Uses a stack to keep 
+G = graph, v = vertex
+
+bool isTreeOrForest(G , v) 
+{
+      let S be a stack
+      S.push(root)
+      while S is not empty
+            v = S.pop() 
+            if v is not labeled as discovered:
+                label v as discovered
+                for all edges from v to w in G.adjacentEdges(v) do
+                    S.push(w)
+            else if v is already discovered
+               return false  // we've discovered a cycle
+      return true // we've exhausted the daughter nodes, and no cycle was found
+}
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 20
+
+	10        		
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+https://algorithmics.bu.edu/twiki/pub/EC330/HomeworkSixJoshJoseph/problem3a.zip
+---++ 3b.
+https://algorithmics.bu.edu/twiki/pub/EC330/HomeworkSixJoshJoseph/problem3b.zip
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+Please enter your move: d1-h5
+I move: c8 - d7
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  -  -  B  N  R 
+ 2 |  P  P  -  K  -  -  -  P 
+ 3 |  -  -  P  P  P  -  -  - 
+ 4 |  -  -  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  Q 
+ 6 |  p  -  p  P  p  -  -  p 
+ 7 |  r  p  -  b  -  k  -  - 
+ 8 |  -  n  -  -  -  b  -  r 
+
+Please enter your move: h5-f7
+
+Game Over:  White wins!
+
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  -  -  K  Q  -  p  b  k  
+ 2 |  -  -  -  -  -  p  p  p
+ 3 |  P  P  -  -  -  -  P  - 
+ 4 |  -  -  P  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  -  -  -  -  -  - 
+ 7 |  -  -  -  -  -  -  -  - 
+ 8 |  -  -  -  -  -  -  -  - 
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+Provide a description of your approach here.  Upload your code online.
+<VERBATIM>
+Implementation - sort of an alpha-beta approach, though I was having difficulty implementing the alpha cut-off
+(Step 0 - preparation - I needed to find the way in which the internal chess board in the myPlayer class operated. 
+This board list contains a move list -- which is essentially a pre-existing graph already holding a set of legal moves - essentially a depth 1 graph).
+Step 1 - compare all available moves - assign a point value to any move which takes material.
+Step 2 - subtract opponent moves.
+Step 3 - go down one level to move 3 (always do the first time). find a maximum and minimum value.
+Step 4 - if moves at level two are better, try seeing if they actually are for the second opponent move. If they are already below minimum, stop.
+Step 5 - take the highest scoring move.
+Step 6 - repeat the level one and two moves - if any is equivalent to the highest scoring move, check it's next level down
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---
+
+   * [[%ATTACHURLPATH%/problem3a.zip][problem3a.zip]]: Graph.cpp for problem 3a
+
+   * [[%ATTACHURLPATH%/problem3b.zip][problem3b.zip]]: Graph.cpp and Graph.h for problem 3b

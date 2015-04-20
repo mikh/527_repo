@@ -1,0 +1,345 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(DimitriosTsitsirigkos),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+big Theta (E)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+In the case of edge list in order to find the maximum degree of a vertex we basically have to go through each edge list (each element on the list)
+and find how many times a specific element(vertex) of an edge is repeated. then we just compare to see which vertex is repeated most times and this
+will be the largest. We basically have to loop through all edges and find the number of vertices. (it takes constant time to see the elements of a single list)
+therefore it is just Theta(E)
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+big Theta(V+E)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+For an andjancy list, it is easy to find the maximum degree of a vertex. We basically have to loop through the entire adjacecny list.
+This happens because we will go through each vertex for each vertex we will have to look and count all the neighbours of that particular vertex.
+By looking through all the neighbours we can can find the vertex that has the maximum number of neighbours which is basically the number of edges.
+Therefore, we have to go through all vertices and find all edges connected to each vertice. This will take Theta(V+E)
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+Theta(V^2)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+For the matrix we basically have to go through all the elements of the matrix that is why it is Theta(V^2).
+This is required because for example if we go row by row we will have to loop all the rows and find for each row
+how many ones we have. Therefore, that means that for each row we do as many iterations as the number of columns.
+but because columns and rows are the same thing in this matrix (both are the same vertices) then we basically have to loop through 
+all the elements which will take Theta(V^2) time.
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+
+//the goal here is basically the following:
+// I start with an element at a time and assign a "color" to the neighbouring elements
+// i keep doing that until the end
+//afte I check if the assgined colors have any conflict from one loop to another
+//if they do then graph is not bipartite
+
+int vertexnum; // number of vertices
+int edgenum; //number of edges
+int part[SOME BIG NUMBER];  //like 1000  this is a partition
+int visited[SOME BIG NUMBER]; //like 1000 here are the visited elements
+
+vector<int> matrix[SOME BIG NUMBER]; //this is an adjacency matrix (helps to make algorithm run in linear time)
+
+bool mybfs(int begin)
+{
+    int start,end;
+    queue <int> myqueu; //is a queue structure that contains the vertices
+    myqueu.push(begin);
+    part[begin] = 1; //1 left
+    visited[begin] =1; //set my matrix
+    
+    while(myqueue is NOT empty)
+    {
+        start = myqueu.front();
+        myqueu.pop();
+        
+        for(i=0; i<size of matrix[start]; i++)
+        {
+            end = matrix[start][i];
+            if (part[start] == part[end])
+                return false;
+            
+            if (visited[end] == 0)
+            {
+                visited[end] = 1;
+                part[end] = 3 - part[start] //this changes 1 and 2 subsets
+                myqueue.push(end);
+            }
+            
+        }
+ 
+    }
+    
+    return true;
+}
+
+
+//the above function is a version of bfs algorithm
+//it basically goes through the elements and assings "colors" (0 and 1) to the elements
+
+
+bool chechbipartite()
+{
+    for(i=0 i<vertexnum; i++)
+    {
+        if (visited[i]==0 && mybfs(i) == false)
+            return false;
+        
+    }
+    
+    return true;
+    
+}
+
+
+//so here we are doing all the work.
+
+// in order to implement the algorithm above we have to call these two functions with
+//a given graph.
+
+// for example:
+
+int main()
+{
+    for(i=0; edgenum; i++)
+    {
+        get origin and destination of given graph
+        
+        matrix[origin].push_back(destination);
+        matrix[destination].push_back(origin);
+        
+        //so now chech if it is bipartite
+        if(mybfs is true)
+        {
+            // IT IS BIPARTITE
+        }
+        
+    }
+    
+    
+    
+}
+
+
+
+</VERBATIM>
+---++ b
+<VERBATIM>
+
+
+
+//represent graph as an adjacecny list
+//if we assume that the graph is already stored in an adjacecny list it is ok
+// if not then the following has to be done:
+
+//add graph into adjacency list
+//use a similar approach with problem4a
+class Graph
+{
+    int V;    //vertices
+    list<int> *adj;    // Pointer to the array that contains the adjacecny lists
+
+public:
+    Graph(int V);  
+    void addEdge(int v, int w);  
+
+};
+ 
+Graph::Graph(int V)
+{
+    this->V = V;
+    adj = new list<int>[V];
+}
+ 
+void Graph::addEdge(int v, int w)
+{
+    adj[v].push_back(w); 
+    adj[w].push_back(v); 
+}
+
+
+
+//I did it as an object because it is easier conceputally and it made more sense to me after doing problem4a
+// Bellow is where the actual algorithm will be implmented (to find if it has any cycle)
+
+int main()
+{
+   MYadjlist; // the list that contains every vertex and the conecting verrtices to it
+   
+
+   for(i=0; i<number of vertices; i++)
+  {
+
+ int mysize = MYadjlist[i].size();  //finds number of edges for vertex i
+ 
+ mysize = mysize/2;  //divides it by two
+        if(mysize < number of vertices  - 1  && mysize !=0)
+         {  ACYCLIC  }
+        else    //have to check one more case here
+       {
+                   if(mysize==0)                                        //if a vertex is completely unconnected (by itself)
+                    {                                                           //it will make this algorithm not work so,
+                          if(mysize < number of vertices -2)      //subtract one more because now I wont have v-1 edges                                               
+                             {ACYCLIC}
+                        
+                          else
+                           { THERE IS AT LEAST A CYCLE }
+                    }
+
+       } 
+
+  }
+
+
+ }
+
+
+Here is a small summary of my algorithm
+stores grapgh as adjancy list
+for i=0  to V-1 and take the size of inner array to get how many edges it is connected
+divide it by 2
+if that is less than V-1 is acyclic
+else cycle
+
+however special case:
+if size is 0 (for some i) then it is special case and I have to subtract 1 from V because I know that for that particular vertex i, there is no other vertex connected to it.
+
+
+this algorithms also runs in O(V) because we are looping through all the vertices (V time) and we are getting the size of each element of the adj list.
+Taking the size runs in constant time and it gives us all the information we want (number of edges for that particular vertex)
+
+
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+---++ 3b.
+Attach your solutions to this topic.
+
+
+I have also attached a txt file with the output on my problem3b.zip file.
+
+Note:
+The coloring does not matter for this problem so I just picked a color of 5 for all vertices
+ (although this is against to the coloring rule (that two connected vertices cannot have the same color) )
+We were told though that coloring does not matter for this problem.
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+
+
+I have pasted the result that I got on my terminal when running main.cpp
+
+
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  -  -  K  B  N  R 
+ 2 |  P  P  P  -  -  P  P  P 
+ 3 |  -  -  -  P  -  -  -  - 
+ 4 |  -  -  -  -  -  -  -  - 
+ 5 |  -  -  -  P  -  -  -  p 
+ 6 |  p  -  -  -  -  p  p  b 
+ 7 |  -  p  -  -  Q  -  -  - 
+ 8 |  r  n  b  k  -  -  n  r 
+
+Please enter your move: e7-d8
+
+Game Over:  White wins!
+
+So for this one my Queen is moving to d8 and takes off the opponent's King.
+
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+I have pasted the result that I got on my terminal when running main.cpp
+
+
+
+
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  -  K  B  N  R 
+ 2 |  P  P  P  P  -  P  P  P 
+ 3 |  -  -  -  -  P  -  -  - 
+ 4 |  -  -  -  -  -  -  -  - 
+ 5 |  -  p  -  -  -  -  -  - 
+ 6 |  n  -  p  -  -  p  p  - 
+ 7 |  p  -  -  p  p  -  -  p 
+ 8 |  r  -  b  q  k  -  Q  - 
+
+
+So for this one I checkmate the opponent's King, who has no available moves.
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+I was not able to make my code work, so I am going to give here an explanation of my approach:
+
+So for this problem my idea was to create a huge graph which contains for every single piece(vertices) all the possible moves(edges).
+ Each branch/edge of this graph will basically lead the board to a different arrangement of pieces which will then be examined again
+as a new case/graph that all the vertices(pieces) are connected to edges(all posiible moves)
+
+Basically, the idea was that I have a tree that the nodes are specific positions on the chessboard and they are connected to all the
+other possible possitions that the board can take (always according to the pieces' possible moves)
+
+The my approach is the following:
+This tree eventually leads to a result someone wins (either king is off or king has no moves)
+Therefore, I go to the end of the tree (there are thousands of possible arrangement on the board that can make me win, I will discuss this in a second)
+and I get an arrangement that wins. Then I go back a step and find a position close to my current one. Then afain the same thing until I get to my current position.
+If that happens then I know exactly the path to victory.
+
+However, as I mentioned above, the posibilites are thousands. The goal is to try to discard some cases (Basically isolate parts of the grapgh/tree and use only
+the ones that are related to the current position, and not go through all the possible cases)
+This applies for every step/level of the tree and therefore I am saving a lot of time and space.
+
+In addition, I havent uploaded any code because I was not able to figure out how to implement exactly my idea, and it wouldnt actually work.
+So, above is the approach that I tried to implement
+
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

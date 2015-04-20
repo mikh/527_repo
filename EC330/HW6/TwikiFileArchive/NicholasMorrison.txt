@@ -1,0 +1,136 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(NicholasMorrison),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+
+<latex> \Theta(E) </latex>
+---+++!! Brief explanation
+
+First instantiate an array of length V. Iterate through Edge List (<latex> \theta(E) </latex>), incrementing the appropriate element of the vertex array whenever that vertex is found. Then find the maximum element of the vertex array (<latex> \theta(V) </latex>).
+
+---++ b
+---+++!! Running time
+
+<latex> \Theta(V + E) </latex>
+---+++!! Brief explanation
+<VERBATIM>
+To find the highest degree vertex in an adjacency list, one can simply find the element of the outer linked list with the most adjacent linked lists associated with it. 
+
+On average, this will take V time to go through the outer list, and then a maximum of 2E time to go through the inner lists. Therefore the overall asymptotic running time of this algorithm is </VERBATIM><latex> \Theta(V + E) </latex>
+---++ c
+---+++!! Running time
+
+<latex> \Theta(V^2) </latex>
+---+++!! Brief explanation
+<VERBATIM>
+An adjacency matrix is a matrix of size VxV. To obtain the vertex with the highest degree, first create an array of size V. Sum the rows of the matrix, and then insert the values of the row sums into the appropriate index in the vertex array.
+
+Since the adjacency matrix has V^2 elements, and every element must be checked, this will run in V^2 time.
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+Assume graph is represented by an adjacency list utilizing a linked list of linked lists. Algorithm is simply a BFS with the addition of an array to represent the color of each vertex. As vertices are discovered, they are colored the opposite of the parent vertex.
+
+If they are found again, as the child of another vertex, their color is checked. If it is the same as the parent, then the graph cannot be bipartite and the program will exit the BFS and return False. If none of these cases are found, it will return True.
+
+BFS on a graph represented by an adjacency list takes O(V+E), since this does not add anymore than a check to the array C (constant time), the overall asymptotic runtime of the algorithm will remain linear with respect to the size of the graph.
+
+isBipartite(G,v)
+      let Q be a queue
+      Q.enqueue(v) //v is starting vertex
+      Array C[V]{0} //array to represent color of vertices
+      label v as discovered and set C[v] = 1; //colors represented as int 1 or 2
+      while Q is not empty
+         v <- Q.dequeue()
+         for all edges from v to w in G.adjacencylist(v)
+             if w is not labeled as discovered
+             	Q.enqueue(w)
+               	label w as discovered
+                if C[v] == 1
+                	set C[w] = 2
+                else C[w] = 1
+             if w is labeled as discovered
+             	if C[v] == C[w]
+             		return False;
+             		Exit
+             	else
+             		do nothing and continue
+
+      return True
+
+</VERBATIM>
+---++ b
+<VERBATIM>
+Assume v is vertex in undirected graph G, represented by an adjacency list implemented as a linked lists of linked lists. This is an implementation of DFS, with the addition of returning True when vertex has been found again.
+
+DFS usually takes O(V + E) to traverse a graph, however, this implementation will exit as soon as a vertex is found twice - indicating a cycle. Therefore, as long as the graph is cyclic it will run in O(V) time.
+
+isCyclic(G,v):
+	let S be a stack
+	S.push(v)
+    while S is not empty
+    	v = S.pop() 
+        if v is not labeled as discovered:
+        	label v as discovered
+                for all edges from v to w in G[v]{} do
+                        S.push(w)
+        if v is labeled as discovered:
+        	return True
+        	exit
+
+      return False
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+---++ 3b.
+Attach your solutions to this topic.
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+Provide a description of your approach here.  Upload your code online.
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

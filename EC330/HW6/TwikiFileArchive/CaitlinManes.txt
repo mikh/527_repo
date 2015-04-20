@@ -1,0 +1,237 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+---++_Sources:_
+   * http://www.cplusplus.com/reference/set/set/
+   * http://www.cplusplus.com/reference/map/map/
+   * _Introduction to Programming with C++_ 2nd edition by Y. Daniel Liang
+   * http://stackoverflow.com/questions/4286670/how-do-i-insert-into-a-map
+   * http://www.cplusplus.com/reference/utility/pair/
+   * http://www.cplusplus.com/reference/cstdlib/rand/
+   * http://www.cplusplus.com/reference/vector/vector/
+   * http://en.cppreference.com/w/cpp/language/goto
+   * http://www.geeksforgeeks.org/bipartite-graph/
+   * http://www.geeksforgeeks.org/graph-and-its-representations/
+   * http://stackoverflow.com/questions/3074646/how-to-catch-unknown-exception-and-print-it
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(CaitlinManes),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<latex> \Theta(V + E) </latex>
+---+++!! Brief explanation
+<VERBATIM>
+Assuming I already know the number of vertices V and that the vertices start at 0 and increase by 1 for each new vertex added.
+Make an array of ints initialized to 0 to count the number of edges per vertex.
+Go through linked list once and increase the count if an edge with the proper index is encountered.
+Example: edge found is 1->2. count[1]++
+Then to find the max go through all the vertices to find the max.
+This gives V + E.
+</VERBATIM>
+---++ b
+---+++!! Running time
+<latex> \Theta(V + E) </latex>
+---+++!! Brief explanation
+<VERBATIM>
+Use the same method and assumptions as in a.
+Except go through each linked list's linked list.
+This still gives V + E.
+</VERBATIM>
+---++ c
+---+++!! Running time
+<latex> \Theta(E^2 + V) </latex>
+---+++!! Brief explanation
+<VERBATIM>
+Make same assumptions as in a.
+Use same count array too.
+To go through the adjacency matrix will take E^2
+Going through the count array to find the max vertex will take V.
+This gives V + E^2.
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+Assumptions: 
+(1) Graph is represented by adjacency list called aList that is an array of linked lists.
+      The array holds vertices that point to edges.
+(2) Each vertex has variable color that can be read and can be changed.
+(3) Size of array of vertices is known.
+(4) All vertex colors are initially set to white.
+
+----algorithm----
+
+color red = "red";
+color blue = "blue";
+color white = "white";
+
+aList[0].color = red; // start out with red
+
+for xx = 0 to array_size:
+    vertex = aList[xx];
+    next_vertex = vertex.next;
+    
+    // check to see if connected vertex is the same color; if it is, graph is not bipartite
+    while next_vertex != NULL:
+        if vertex.color == next_vertex.color:
+            return "not bipartite"
+
+    // color all the vertices connected to the current vertex the opposite color
+    while vertex.next != NULL:
+        if vertex.color == red:
+            vertex.next = blue;
+         if vertex.color == blue:
+            vertex.next = red;
+        vertex = vertex.next;
+return bipartite;    // completed coloring with no problems so bipartite.
+
+------Explanation-------
+The idea is to pick the starting vertex, color it red.
+Color all the vertices connected to it the opposite color.
+Continue doing this until (1) all vertices are colored OR
+(2) two connected vertices are found to have the same color.
+If option (1), graph is bipartite. If option (2), graph is not bipartite.
+            
+</VERBATIM>
+---++ b
+<VERBATIM>
+
+----algorithm----
+
+bool foundCycle = false;  // determine if cycle has been found
+startCycle = NULL;    // record start of cycle
+vector<vertex> vert;    // add all vertices in cycle
+int counter = 0;       // helps with vert storage
+int current_counter;    // helps with vert storage
+
+// based off DFS-visit described in class
+DFS-visit(V):
+    color V grey;
+    for each node n adjacent to V:
+        current_count = counter;    // store start count
+        if startCycle == n:         // found the end of the cycle
+            foundCycle = true;
+            break;
+        if n is white:
+            DFS-visit(n);
+            color V black;
+            vert.push_back(V);    // add vertex to vert vector
+            counter++;                 // keep track of how many added
+
+        // remove vertices down path that does not have a cycle
+        from current_count to counter:
+            erase vertices;
+            counter = current_count;
+        
+
+color all vertices white;
+for each white vertex V:
+    startCycle = V;  // reset start cycle whenever starting down a new vertex
+    DFS-visit(V);
+    if foundCycle:
+        break;
+
+// used foundCycle bool to determine if cycle was found.
+return vert;    // will hold all the vertices in the cycle
+
+----Explanation----
+Use depth first search to find cycles.
+Use modified depth first search described in class.
+For each vertex, record the start vertex in startCycle.
+While DFS-visit is recursively called, add vertices to vert vector.
+If the end of a path is reached, and it is not a cycle, all the vertices are removed from the vert vector until it starts the recursion again.
+if a vertex equals the start vertex, a cycle has been found, and it's time to break out of the recursion.
+At the end all the vertices in the cycle are in vert.
+    
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+---++ 3b.
+Attach your solutions to this topic.
+
+Output from 1 run:
+
+0[0]: 5
+
+1[0]: 2 3 6
+
+2[0]: 0 3 6
+
+3[0]: 1 2 3 4 6
+
+4[0]: 0 1 3 4
+
+5[0]: 3 4 5 6
+
+6[0]: 2 3 6
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+`  |   a   b   c   d   e   f   g   h
+____________________________________
+ 1 |   -   -   -   Q   K   -   -   -
+ 2 |   -   R   P   P   P   R   -   -
+ 3 |   -   -   -   -   -   N   P   -
+ 4 |   -   -   -   -   -   -   -   -
+ 5 |   P   -   -   N   -   -   p   P
+ 6 |   -   -   P   -   n   -   -   -
+ 7 |   p   -   p   -   p   p   -   -
+ 8 |   -   -   r   -   -   -   -   -
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+`  |   a   b   c   d   e   f   g   h
+____________________________________
+ 1 |   -   -   -   Q   K   -   -   R
+ 2 |   -   B   P   P   P   -   -   -
+ 3 |   -   -   -   -   -   -   -   -
+ 4 |   -   -   -   -   -   P   -   -
+ 5 |   -   -   -   -   -   -   -   -
+ 6 |   P   -   B   P   -   -   P   -
+ 7 |   -   -   P   -   k   -   -   N
+ 8 |   -   R   -   -   -   N   -   -
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+Provide a description of your approach here.  Upload your code online.
+
+<VERBATIM>
+My code works by first finding a black move.
+The findMove() funciton is used. If a piece can take a high ranking piece, then that piece is selected.
+The higher rank of the piece to take, the more likely it is to be taken.
+If none of the higher ranks are found, a piece to move will be chosen at random.
+A copy of the board is used to make the chosen move.
+Then, the best move for white is chosen.
+This is done until a high ranking piece is chosen that does not result in a bad move for black.
+Whatever first move led to the last good move, is chosen as the move.
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

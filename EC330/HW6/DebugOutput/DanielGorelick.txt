@@ -1,0 +1,231 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(DanielGorelick),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+\Theta(E)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+The maximum degree vertex can be found by iterating once through the edge list. An array of each vertices' count is created, and each time a vertex is seen one is added to the respective vertex. To avoid having to iterate through the array of vertices at the end, a max count global variable can be created, so on each edge there will only be two operations. This reduces it down to O(2E), or in other words O(E).
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+\Theta(E)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+The adjacency list will be all of the connected vertices, which is the same as listing the edges. In order to find the largest degree vertex, just iterate through all of the linked lists once, keeping a counter (similar to part a). There should be E iterations to go through, making this run in O(E) time.
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+\Theta(V^2)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+The adjacency matrix is a 2 dimensional array, each side being V. To iterate through all of the array it will take V^2 time since each side is V. A counter can be kept for the max vertex degree.
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>Question 1 Results:
+
+Total Grade: 27
+
+	10        		
+	7         		The actual runtime is O(V+E), and in some cases O(V) will be larger than O( E)
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+
+%CODE{"cpp"}%
+int color1 = 0, color2 = 1;
+bool visited = false;
+bool bipartite = true;
+//each node starts with a false visited flag, and no color
+while(!(node == visited) && bipartite == true){
+   //depth first search
+   //whenever end of a DFS path is found, start on the next unvisited node (accounts for disjoint nodes)
+  (last_node == color1) ? current_node = color2 : current_node = color1;
+  (next_node.color == current_node.color) ? bipartite = false : bipartite = true;
+  current_node.visited = true;
+  if(!bipartite) break;
+}
+
+(bapartite) ? print(graph is bipartite) : print(graph is NOT bipartite);
+
+%ENDCODE%
+---++ b
+%CODE{"cpp"}%
+bool visited = false;
+bool cycle = false;
+//each node starts with a false visited flag
+while(!(node == visited) && cycle == false){
+   //depth first search, coloring in each node as it is passed
+   //whenever end of a DFS path is found, start on the next unvisited node (accounts for disjoint nodes)
+  if(next_node == visited) cycle = true;
+  current_node.visited = true;
+  if(cycle) break;
+}
+
+cycle ? print(graph has a cycle!) : print(graph does NOT have a cycle!);
+
+%ENDCODE%
+---++!! Grader comments *[/20]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 15
+
+	10        		
+	5         		algorithm needs more definition
+
+
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+---++ 3b.
+Attach your solutions to this topic.
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+%CODE{"cpp"}%
+//Beating the computer with 4 move checkmate
+Please enter your move: e2-e3
+I move: g8 - h6
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  Q  K  B  N  R 
+ 2 |  P  P  P  P  -  P  P  P 
+ 3 |  -  -  -  -  P  -  -  - 
+ 4 |  -  -  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  -  -  -  -  -  n 
+ 7 |  p  p  p  p  p  p  p  p 
+ 8 |  r  n  b  q  k  b  -  r 
+
+Please enter your move: d1-h5
+I move: c7 - c6
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  -  K  B  N  R 
+ 2 |  P  P  P  P  -  P  P  P 
+ 3 |  -  -  -  -  P  -  -  - 
+ 4 |  -  -  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  Q 
+ 6 |  -  -  p  -  -  -  -  n 
+ 7 |  p  p  -  p  p  p  p  p 
+ 8 |  r  n  b  q  k  b  -  r 
+
+Please enter your move: f1-c4
+I move: h6 - g4
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  -  K  -  N  R 
+ 2 |  P  P  P  P  -  P  P  P 
+ 3 |  -  -  -  -  P  -  -  - 
+ 4 |  -  -  B  -  -  -  n  - 
+ 5 |  -  -  -  -  -  -  -  Q 
+ 6 |  -  -  p  -  -  -  -  - 
+ 7 |  p  p  -  p  p  p  p  p 
+ 8 |  r  n  b  q  k  b  -  r 
+
+Please enter your move: h5-f7
+I move: g4 - f2
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  -  K  -  N  R 
+ 2 |  P  P  P  P  -  n  P  P 
+ 3 |  -  -  -  -  P  -  -  - 
+ 4 |  -  -  B  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  p  -  -  -  -  - 
+ 7 |  p  p  -  p  p  Q  p  p 
+ 8 |  r  n  b  q  k  b  -  r 
+
+Please enter your move: f7-e8
+
+Game Over:  White wins!
+
+%ENDCODE%
+---+++ ii.  
+%CODE{"cpp"}%
+//Creating a situation where black has no more possible moves, but still has a king
+
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  p  k  p  -  -  -  -  -   
+ 2 |  p  p  p  -  -  -  -  - 
+ 3 |  -  -  -  -  -  -  -  - 
+ 4 |  -  -  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  -  -  -  -  -  - 
+ 7 |  -  -  -  -  -  -  -  - 
+ 8 |  -  -  -  -  K -  -  -  
+
+%ENDCODE%
+---++ 4b.  Main task [20 points]
+Working code to beat first 2 computers. This code will always take a move if it sees one. The header is identical to the sample "myPlayer.h" in the GUI folder.
+
+%CODE{"cpp"}%
+#include "chessBoard.h"
+#include "myPlayer.h"
+
+chessBoard::move myPlayer::getMove() {
+chessBoard::move random = myBoard.nthMove(rand() % myBoard.numMoves());
+for (int i = 0; i < myBoard.numMoves(); i++)
+    if(!(myBoard.emptySquareQ(myBoard.nthMove(i).to))) random = myBoard.nthMove(i);
+    myBoard.makeMove(random);
+    return random;
+}
+%ENDCODE%
+
+To beat the third computer I implemented a mini-max strategy. I gave the kinds each values of 1000, queens 500, rooks 50, knights 50, bishops 50, and pawns 10. The code looks for path that will yield the highest max for the player and reduce the value of the computer's move. This is done by adding or subtracting from the max and min respectively when that was the piece being captured. This keeps track of the board because by only looking at the pieces captured, it can be determined which side is ahead. 
+
+A sample from the code submitted to implement the mini-max strategy: 
+
+%CODE{"cpp"}%
+max_one = 1000;
+min_one = -1000;
+//look at all options for space being captured
+       if(board_one.atSquare(board_one.nthMove(ii).to).print()=='K'){
+       max_one += 1000;
+       cout << "K" << endl;
+       }
+//later in the code 
+                if(max_one + min_one > max_best){
+                    max_best = max_one + min_one;
+                    cout << max_best << endl;
+                    best_move = board_one.nthMove(ii);
+                }
+
+%ENDCODE%
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

@@ -1,0 +1,228 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+Worked with Shane McCormack
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(AlexandraNero),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+BigTheta[E+V]
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+An edge list would first take E times to go through. You could store each instance of a vertices in a separate int array, increasing their place in the int array by one each time the vertex was used by an edge,
+After storing all the instances, you would have to loop through the array and find the maximum to return.=V
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+BigTheta[2V+E]
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+First we have to go through the outer portion of the linked lists, V times
+Then for each point along searching through that, we also search through each of the edges.
+This does not solve for redundancies so we are going through each of the vertices and its edges, which means we are going through the edges twice
+So V+2E
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+BigTheta[V^2]
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+The adjacency matrix is basically a 2 dimensional array, where you have to cycle through V times to get all the lists, and then in each of those lists, (going through the possible connection which = V) you would have to add up the number of vertices represented in each space. 
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+Provide your pseudocode here.
+I am using an adjacency list with the heads having an integer to say what vertex they are as well as a vector for neighbors, Anodes which has its own color
+struct Alist{
+//the 0th postition of nodes is the vertex itself, containing its color
+int pos;
+vector <Anodes> nodes;
+}
+
+struct Anodes{
+int pos;
+int color = 0
+}
+
+bool isBipartite(Alist* heads){
+
+for (int j = &heads; j <head.size(); j++){
+//get the vertex color
+int color1 = *(j).nodes[0].color;
+if (color1==0)
+{ 
+*(j).nodes[0].color=1;
+neighborColor = 2;
+}
+else if (color ==1)
+{
+neighborColor = 2;
+}
+else
+{
+neighborColor = 1;
+}
+for (int i = 0; i < *(j).nodes.size(); i++)
+{
+if (*(j).nodes[i].color != 0)
+  if (*(i).nodes[i] !=neighborColor)
+     return false;
+
+*(j).nodes[1].color = neighborColor;
+}
+}
+return true;
+}
+
+Explanation: 
+This code works by going through each vertices and their edges. It starts at the first vertex and assigns the color then it colors all the neighbors and moves on to the next vertices.
+This goes through all the graphs, until it either reaches a conflict with the coloring system (either 1 or 2), returning false for a vertex being a color that conflicts with a neighbor or it finishes and returns true. 
+
+Time:
+Since this code goes through all the vertices it is V; but then it goes through every neighbor for V, which would be E (actually 2E bec]ause there is redundancies in checking both sides of an edge)
+=BigTheta[V+2E]
+
+</VERBATIM>
+---++ b
+<VERBATIM>
+Provide your pseudocode here.
+I am using an adjacency link list
+Assuming the list is made out of int, the node lists are in order, and they are connected in sequence
+
+struct Alist{
+vector <Anodes> nodes;
+}
+struct Anode{
+int color = 0;
+}
+bool checkCyclic(Alist *heads){
+
+int* colored = new int(heads.size());
+
+for ( i = 0; iter <heads.size(); i++){
+colored[i] = 0;
+}
+
+int count = heads.size();
+iterator check = heads.begin();
+for(iterator i = heads.begin; i <heads.end; i++){
+if ((*i).nodes.size() != 2)
+return false;
+else{ 
+int temp = (*i).nodes[0];
+if ((*i).nodes[0].color == 1)
+return false;
+else{
+(*i).nodes[0].color == 1;
+}
+}
+return true;
+}
+
+Explanation:
+So I take in an array of my struct, Alist which just contains a list of values they are connected to.
+Next I go through the array of Alist (would be V times)
+each time I check if the list of nodes at each head in the adjacency list has a size of 2, if it does it cannot be a cyclic graph.
+I check if I have visited the graph before by check if its place is a 1. Going around in a cycle graph 
+Then I "color" in the vertex by putting a one in place of the 0 and continue on until I have reached all the vertices.
+If I visit them without conflict, I end the loop and return true;
+
+Time:
+Since I go through V times to visit the whole graph, the function is BigTheta(V)
+
+
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+See bottom of page
+---++ 3b.
+Attach your solutions to this topic.
+See bottom of page.
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+Provide your answer here.
+The screenshot is posted below
+
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+Provide your answer here.
+So, if the king is in a corner
+like this:
+He can only move to the right or down.
+Both would result in checkmate
+K__
+_q_
+___
+
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+Provide a description of your approach here.  Upload your code online.
+
+Analysis based off of alpha-beta with a depth of 2
+The code starts off by looking at all of the possible moves for me and my opponent
+Then the board is analyzed after every move; the pieces are counted up based on arbitrary values 
+most points were given to the king, then the king, then the rook, then the bishop, then the knight, and finally the pawn. 
+After each evaluation assuming my opponent takes the best move, the code loops through and finds the best solution for white, based on looking at the points on the board.
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---
+
+   * [[%ATTACHURLPATH%/problem3a.zip][problem3a.zip]]: Problem 3 Files
+
+   * [[%ATTACHURLPATH%/problem3b.zip][problem3b.zip]]: Problem 3 Files
+
+   * [[%ATTACHURLPATH%/myPlayer.cpp][myPlayer.cpp]]: myPlayer.cpp
+
+   * [[%ATTACHURLPATH%/myPlayer.h][myPlayer.h]]: myPlayer.h
+
+   * 4ai_-_win.png: <br />
+     <img src="%ATTACHURLPATH%/4ai_-_win.png" alt="4ai_-_win.png" width="842" height="552" />
+
+   * [[%ATTACHURLPATH%/myPlayer.cpp][myPlayer.cpp]]: myPlayer.cpp

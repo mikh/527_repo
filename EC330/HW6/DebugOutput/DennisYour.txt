@@ -1,0 +1,190 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(DennisYour),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+
+---+++!! Running time
+<VERBATIM>
+Theta(E*V)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Takes Theta(E) time to run through the entire edge list. Could take an integer list representing the vertices to keep track of the degrees as it traverses the edge list. Therefore , it should take theta(E*V), as for each edge, it must also go through the vertices list. However, if the number of vertices is known, then that can be reduced to theta(E).
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+Theta(E+V)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Needs to scan through the all the lists to check if there is an edge pointing to itself, otherwise, it would just need to call size on all of the lists. Can just use an array to hold degree values at each vertex, so changing values would be constant time. Therefore, it would only go through all the edges plus all the vectors once, which would be Theta(E+V) running time. If we can assume that there are no vertices with edges pointing to itself, or the edge is included twice in the list, the running time becomes Theta(V), as all we would need to do is access the size of each list.
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+Theta (V^2)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+The 2D vector is basically a vector of vectors. In the scenario, we would have to add up the total number of degrees in each vertex. This would mean that it would take Theta(V) to scan through each vector, with V vectors. Therefore It would take Theta(V^2) running time.
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>Question 1 Results:
+
+Total Grade: 24
+
+	4         		Invalid runtime, should just be O( E)
+	10        		
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+using a adjacency list to provide running time of Theta(V+E)
+
+bool isBipartite (Graph G, int start){
+
+    int colorArray [V] = {-1...-1}
+    colorArray[start] = 1
+
+    queue <int> Q
+    Q.push(start)
+
+    while (Q is not empty){
+        int U = Q.front()
+        Q.pop()
+
+        for (int i in V){
+            if (edge exist between U and V and V is not colored(-1))
+                 colorArray[V] = 1- colorArray[U]
+            else if (edges exists and U and V are the same color)
+                 return false;
+         }
+     }
+     return true;
+}
+</VERBATIM>
+---++ b
+<VERBATIM>
+Adjacency list to get a running time of Theta(E+V)
+
+note that lower case v is the index, V is the total vectors
+
+bool isCycleRecursive (int v, bool visted[], int parent){
+    visited[v] = true;
+    for (iterator i in adjacency list){
+        if (adjacency[*i] not visited)
+            if (isCycleRecursive(*i,visited,v))
+                return true;
+        else if (*i is not parent)
+                return true;
+    }
+    return false;
+}
+
+bool is Cycle(Graph G){
+    *visited = new bool[V]
+    visited = {true.....true}
+    for (i in V){
+        if (i not visited)
+            if (isCycleRecursive(u,visited,-1))
+                return true;
+    }
+    return false;
+}
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 20
+
+	10        		
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+---++ 3b.
+Attach your solutions to this topic.
+Print Results:
+
+0[1]: 0 1 5
+
+1[1]: 0 2 3 5
+
+2[1]: 3 5
+
+3[1]: 0 1 5
+
+4[1]: 1 3
+
+5[1]: 1 3 5
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+
+Please enter your move: h4-f4
+I move: d7 - e7
+`  |  a  b  c  d  e  f  g  h
+____________________________
+ 1 |  R  -  -  K  -  -  N  -
+ 2 |  P  -  -  -  B  P  -  -
+ 3 |  -  P  N  P  -  -  -  -
+ 4 |  -  -  -  -  -  R  -  -
+ 5 |  -  -  p  -  -  -  B  -
+ 6 |  p  -  -  p  p  -  -  P
+ 7 |  -  -  -  -  k  -  -  -
+ 8 |  P  n  -  -  -  -  -  -
+
+Please enter your move: g5-e7
+
+Game Over:  White wins!
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+`  |  a  b  c  d  e  f  g  h
+____________________________
+ 1 |  R  -  -  K  -  -  p  k
+ 2 |  -  -  -  -  B  -  p  p
+ 3 |  -  -  -  -  -  -  -  -
+ 4 |  -  -  -  -  -  R  -  -
+ 5 |  -  -  -  -  -  -  B  -
+ 6 |  -  -  -  -  -  -  -  -
+ 7 |  -  -  -  -  -  -  -  -
+ 8 |  P  -  -  -  -  -  -  -
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+Basic chess AI. Assigned values to pieces (pawn=1, bishop=knight=3, rook=5, queen = 10, king = 100). Went through all the possible moves that turn to evaluate if there could be any piece taken. If there is, the piece would be taken. If there are multiple pieces, possible, the one with the highest value would be taken. If all moves do not take a piece, move a pawn forward. Otherwise, make a random move. Tried to read in opponent's possible moves to evaluate and high value pieces in danger, and potentially branch into offensive or defensive moves, but it kept returning invalid moves and causing the game to end.
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

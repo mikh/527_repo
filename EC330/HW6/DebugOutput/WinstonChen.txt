@@ -1,0 +1,193 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(WinstonChen),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+O(E) 
+
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+Each node of the linked list contains the pairs. Since linked lists do not have random access, to find a specific pair of edges, you would have to reiterate through the node. Worse case is O(E). 
+---++ b
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+
+Worse case: O(V^2) for completely connected graphs, O(V+E) for average case, omega(V) for unconnected graphs
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+Adjacency-Lists are implemented with a set of vertices on on axis and set of its neighbors on another axis. In order to find a specific node and one of its edges, you would have to traverse the linked list containing the vertices to get to the vertex you want. The for the edge, you have to traverse its edge linked list to get the edge you want. To find a the maximum degree of a vertex, you would have to go through a vertex and through each of its own edges. Which takes E times, but you have to go through each V vertices as well, so you are guaranteed to find the largest degree. For a completely connectd graph, every vertices is connected to all other vertices, which makes the running time O(V^2). For unconnected graphs, if there is no edge, you still traverse to each vertex to make sure there is no edge. Runtime of omega(v). Also This assumes you keep track of where you are in the vertex linked list, so you don't restart all the way at the beginning of the linked list.
+---++ c
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+O(V^2) 
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+
+Adjacency Matrix is a set of vertices on both axis and keeps track of whether is true or false for being connected to another vertex. It is always a false for connecting ot itself. To find the maximum degree, you would look through one axis of vertex(V) and then the other vertex(V). Thus the running time of finding the maximum degree is O(V^2).
+---++!! Grader comments *[/30]*
+<VERBATIM>Question 1 Results:
+
+Total Grade: 30
+
+	10        		
+	10        		
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+Provide your pseudocode here.
+</VERBATIM>
+
+
+bipartite()
+    start at node called root
+    BFS(root)
+
+BFS(v)    
+    center node = v
+    enqueue center node
+    while queue is not empty
+    h = head of of queue
+        for each of its neighbor
+            if a node of queue color == one of its neighbor's color
+                return false
+            else 
+                dequeue(node)
+                return BFS(neighbor)
+---++ b
+<VERBATIM>
+Provide your pseudocode here.
+</VERBATIM>
+
+
+no_cycle()
+    map.insert(node, white)
+    start at start node
+    is_cycle = false
+    DFS visit(v)
+    if is_cycle == true
+        this graph has a cycle
+    else 
+        find a white node
+
+
+
+DFS visit(v)
+    if color of v = white
+        color v black
+    else
+        return true;
+    for each node adjacent to V
+        DFS visit(v)
+    return false
+---++!! Grader comments *[/20]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 10
+
+	5         		algorithm needs more definition
+	5         		algorithm needs more definition
+
+
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+attaached below as problem3a.cpp
+---++ 3b.
+Attach your solutions to this topic.
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+
+I move: f7 - g7
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  Q  K  B  N  R 
+ 2 |  P  P  P  P  -  P  P  P 
+ 3 |  -  -  -  -  -  -  -  - 
+ 4 |  -  -  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  -  -  -  P  p  - 
+ 7 |  p  p  p  p  p  -  k  p 
+ 8 |  r  n  b  q  -  b  n  r 
+
+Please enter your move: f6-g7
+
+Game Over:  White wins!
+
+ps - also got a screen shot as well.
+---+++ ii.  
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+
+
+Please enter your move: e7-e8
+I move: h6 - g5
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  -  N  B  -  K  B  N  - 
+ 2 |  -  -  P  P  -  P  P  - 
+ 3 |  P  -  -  -  -  -  -  - 
+ 4 |  P  -  -  -  -  -  -  P 
+ 5 |  -  -  -  -  -  -  k  Q 
+ 6 |  -  -  -  -  -  -  R  - 
+ 7 |  -  -  -  -  -  -  -  - 
+ 8 |  -  -  -  -  P  -  -  - 
+
+---++ 4b.  Main task [20 points]
+Provide a description of your approach here.  Upload your code online.
+
+My progrm is largely unfinished. I created an evaluation function to weigh the board, based on pieces remaining on the board. I also attempted a recursivve function that would go as deep as it can on a set of moves and evaluate the board. Currently I did not complete the full recusion on every possible move. I also never implemented s way to keep track of the weight I want and the moves to get to the weight.
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

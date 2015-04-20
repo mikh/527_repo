@@ -1,0 +1,216 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(DeanShi),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+Theta(E) where E is the number of edges
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+This is because if you have an edge list implemented as a linked list, you will get something similar to:
+
+a -> b -> c
+b -> c -> d
+c -> d
+
+For this linked list implementation, you will have to check each of the edges to check the nodes are connected, connected to a node that has already been checked or not connected at all.
+This means, that for the worst case, you will have go through every single edge in order to find the MAXIMUM degree, because you will not know what the maximum length is unless you check
+which nodes are connected and which are not.
+
+
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+O(V^2) and BigOmega(V)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+This is because for the worst case scenario, your linked list size will be V * E = V^2 due to E = V - 1.  
+
+
+
+This means that in order to check the maximum depth, you have to go through every single node, with every single neighbour(including itself because you can have a vertex connected to itself) in order to check the depth. So worst case, you will always have O(V^2).
+
+But best case, you will have a list where there are no edges, so you will only have to go through the vertices, meaning the best case running time will be V. 
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+O(V^2)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+This is because for an adjacency matrix, you  have to check every single row and every single column in order to find which ones are connected, and therefore finding which is the maximum. 
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>Question 1 Results:
+
+Total Grade: 28
+
+	10        		
+	8         		Close bounds
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+
+//Inputing a Graph with [][] indexes. Returns true if Graph is bipartite, returns false if not. 
+//Graph is a matrix that contain the verticies, with two adjacent vertices being an "edge"
+
+
+bool bipartiteChecker(int Graph[][V], int source) {
+
+int colorGraph[V]; //Populating an array effectively initializing it. 
+
+for (i up to length V-1) {
+      colorGraph[i] = -1;
+}
+
+colorGraph[source] = 1; //Making the source value a color
+
+queue <int> colorQueue; //Create a queue to allow for pushing of the nodes in the graph
+colorQueue.push(source);
+ 
+while (the queue is not empty) { // Running similar to BFS
+         
+        int u = colorQueue.front 
+        colorQueue.pop(); // Dequeue
+ 
+        for (int v up to the value V, number of verticies) //Trying to find verticies that are non colored
+        {
+            if (there is an edge, and the vertex is not colored) //If the edge exists and it is not colored
+            {               
+                Assign the vertex and different color than the vertex we are on.
+                colorQueue.push(vertex);
+            }
+
+            else if (there is an edge, and the vertex is the SAME color as the current vertex) 
+                return false;
+        }
+    }
+ 
+    return true; //If you can color every single vertex
+
+}
+
+
+
+NOTE: I use a queue, similar to using it for a BFS for the problem.
+For help, I used this source: http://www.geeksforgeeks.org/bipartite-graph/
+
+
+
+</VERBATIM>
+---++ b
+<VERBATIM>
+
+//Note, to check if there is a cycle, all you need to do is a DFS to check for cycles. If the DFS reveals that there is a connected edge from (x,y) and (y,x), that means there is a cycle
+
+
+bool cycleFinder(Vertex beginning) {
+
+Stack dfsStack;
+dfsStack.push(beginning);
+while (dfsStack is not empty) {
+      vertex = dfsStack.pop();
+      for all edges that exist for vertex V
+              if (the edge exists, but backwards (e.g. v -> g and g -> v))
+              return false; //because a cycle exists in the graph
+            
+              else
+              populate a table that holds all of the edges (Edges[v][g])
+
+      if you get to the end of the for loop, meaning you get through all edges
+              return true; //Because you have gotten through the graph, and there are no cycles 
+
+}
+
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 20
+
+	10        		
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Please check problem3a.cpp (and please use an unmodified header file). 
+---++ 3b.
+Please check problem3b.zip for the header file and the problem3b.cpp
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  Q  K  B  N  R 
+ 2 |  P  P  P  P  -  P  P  P 
+ 3 |  -  -  -  -  -  -  -  - 
+ 4 |  -  -  -  -  -  -  -  - 
+ 5 |  -  -  p  -  -  -  -  - 
+ 6 |  p  -  -  -  -  p  -  - 
+ 7 |  r  p  -  P  p  -  p  p 
+ 8 |  -  n  b  q  k  b  n  r 
+
+
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  -  -  -  -  -  -  p  k 
+ 2 |  -  -  -  -  -  -  p  p 
+ 3 |  -  -  -  -  -  -  -  - 
+ 4 |  -  -  -  -  -  -  -  -
+ 5 |  -  K  -  -  -  -  -  - 
+ 6 |  -  -  -  -  -  -  -  - 
+ 7 |  -  -  -  -  -  -  -  - 
+ 8 |  -  -  -  -  -  -  -  - 
+
+
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+For the first approach, I take a naive implementation that checks if you are able to take a piece. If you are able to take a piece, it checks if there is a previous move that takes a better piece. If there isn't, then it sets that as the move.
+
+For the second approach, I use min-max in order to predict which is the best move for the current situation. I iterate through all of the possible moves and pick the best "piece" to take. I then make one step forward in a test board, and then I check
+all of the moves for the opponent and the best piece he can take. Then I go one more step, and I check all of the pieces that I am able to take in the third move. I then calculate the best possible move by adding my pieces together, and subtracting the opponents piece value.
+The value with the LOWEST score will be the best possible move (e.g. I am able to take a queen = 1, opponent takes a pawn = 6 and I can take a pawn = 6, so 1 + 6 - 6 = 1, versus a move where I take a pawn = 6, the opponent takes a pawn = 6 and I take a pawn = 6, so 
+6 + 6 - 6 = 6, which is not as good as a move). In this case however, it actually performs much worse than the first approach, and so I commented the code out and left the first approach in the myPlayer.cpp file. 
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

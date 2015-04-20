@@ -1,0 +1,250 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(TaranaChowdhury),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+<latex>\Theta(E) </latex>
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+
+For an edge-list implemented as a linked-list in order to find the vertex with the maximum degree 
+you need to traverse the entire linked-list and count the vertex that appeared the most. 
+The linked-list would have 2*E elements because there would be two nodes for each edge and so the runtime is  </VERBATIM> <latex>\Theta(E)</latex>.
+---++ b
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+<latex>\Theta( V+E)</latex>.
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+In order to find the maximum degree vertex in an adjacency-list implemented 
+using a linked-list of linked lists you must find the linked-list within the linked-list 
+that contains the most elements, in other words, most neighbors. Which would mean 
+going through V linked-lists with a total of 2E elements across all the linked-lists.  
+So this would be a runtime of  </VERBATIM> <latex>\Theta(V+2E)</latex> which is <latex>\Theta(V+ E)</latex>. 
+---++ c
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+<latex>\Theta (V^ {2})</latex>
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+
+For an adjacency matrix implemented as a two-dimensional vector, finding the max degree vertex
+would require you to add all the rows of the of each vertex and each row would have V elements
+and there are a total of V rows and so summing V elements for V rows takes </VERBATIM> <latex>\Theta(V^{2}) </latex>.
+---++!! Grader comments *[/30]*
+<VERBATIM>Question 1 Results:
+
+Total Grade: 30
+
+	10        		
+	10        		
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+Provide your pseudocode here.
+Description: This an algorithm similar to BFS and uses a queue to store the colored nodes. 
+Color each node of graph alternating colors. Check at every node if any neighbor is colored same color, then graph is not 
+bipartite because it can not be colored with two colors. This algorithm runs at <latex>\Theta(V+E)</latex> because there are
+V vertices (nodes) plus 2E because each edge is counted twice for each node.  
+
+Pseudocode:
+isBipartite(S)
+color node s black, alternate to white for next node
+enqueue s
+while queue Q is not empty
+           h=head of Q
+          for each neighbor n of h
+               if n(color)==NULL //if node n isn't colored
+                  color n opposite of h
+               else if (n(color)==h(color)
+                    return false; //NOT Bipartite
+          dequeue(h)
+return true //if can color entire graph alternating colors then bipartite       
+
+</VERBATIM>
+---++ b
+<VERBATIM>
+Provide your pseudocode here.
+Description: To determine if an undirected graph contains a cycle you can also use a modified DFS algorithm. This algorithm uses the DFS to find a back edge, an edge where one of the nodes of the edge is also an ancestor to the other node. If there exists a back edge then there also exists a cycle. If there are no back edges then there are no cycles. Using DFS simply check if the node color is not white then we have visited the node before and these is a back edge. This would be O(V) complexity because if a back edge were detected it would be before all the vertices were reached. 
+
+isCyclic(graph G, Vertex v) 
+for all edges e in G.incidentEdges(v) do
+if edge e is unexplored then
+w = G.opposite(v, e) 
+if vertex w is unexplored then 
+    label e as discovery edge 
+    return false;//acyclic
+else 
+    label e a a back edge
+    return true//cyclic
+
+sources used:
+http://www.csl.mtu.edu/cs2321/www/newLectures/26_Depth_First_Search.html
+http://www.cs.nyu.edu/courses/summer04/G22.1170-001/6a-Graphs-More.pdf
+</VERBATIM>
+
+
+---++!! Grader comments *[/20]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 20
+
+	10        		
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+---++ 3b.
+Attach your solutions to this topic.
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+Welcome to Homework Six simplified chess.
+  Please enter your moves in the format 'e2-e3'.
+  You are playing White.
+
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  Q  K  B  N  R 
+ 2 |  P  P  P  P  P  P  P  P 
+ 3 |  -  -  -  -  -  -  -  - 
+ 4 |  -  -  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  -  -  -  -  -  - 
+ 7 |  p  p  p  p  p  p  p  p 
+ 8 |  r  n  b  q  k  b  n  r 
+
+Please enter your move: d2-d3
+I move: c7 - c6
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  Q  K  B  N  R 
+ 2 |  P  P  P  -  P  P  P  P 
+ 3 |  -  -  -  P  -  -  -  - 
+ 4 |  -  -  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  p  -  -  -  -  - 
+ 7 |  p  p  -  p  p  p  p  p 
+ 8 |  r  n  b  q  k  b  n  r 
+
+Please enter your move: d3-d4
+I move: f7 - f6
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  Q  K  B  N  R 
+ 2 |  P  P  P  -  P  P  P  P 
+ 3 |  -  -  -  -  -  -  -  - 
+ 4 |  -  -  -  P  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  p  -  -  p  -  - 
+ 7 |  p  p  -  p  p  -  p  p 
+ 8 |  r  n  b  q  k  b  n  r 
+
+Please enter your move: d4-d5
+I move: e8 - f7
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  Q  K  B  N  R 
+ 2 |  P  P  P  -  P  P  P  P 
+ 3 |  -  -  -  -  -  -  -  - 
+ 4 |  -  -  -  -  -  -  -  - 
+ 5 |  -  -  -  P  -  -  -  - 
+ 6 |  -  -  p  -  -  p  -  - 
+ 7 |  p  p  -  p  p  k  p  p 
+ 8 |  r  n  b  q  -  b  n  r 
+
+Please enter your move: d5-c6
+I move: d8 - b6
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  Q  K  B  N  R 
+ 2 |  P  P  P  -  P  P  P  P 
+ 3 |  -  -  -  -  -  -  -  - 
+ 4 |  -  -  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  q  P  -  -  p  -  - 
+ 7 |  p  p  -  p  p  k  p  p 
+ 8 |  r  n  b  -  -  b  n  r 
+
+Please enter your move: c6-d7
+I move: f7 - e8
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  Q  K  B  N  R 
+ 2 |  P  P  P  -  P  P  P  P 
+ 3 |  -  -  -  -  -  -  -  - 
+ 4 |  -  -  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  q  -  -  -  p  -  - 
+ 7 |  p  p  -  P  p  -  p  p 
+ 8 |  r  n  b  -  k  b  n  r 
+
+Please enter your move: d7-e8
+
+Game Over:  White wins!
+
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+Provide your answer here.
+
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  -  N  B  Q  K  -  p  k 
+ 2 |  -  -  -  -  -  P  p  p
+ 3 |  -  -  -  P  -  B  -  -   
+ 4 |  -  P  -  P  P  -  -  - 
+ 5 |  -  -  -  -  -  -  -  -  
+ 6 |  -  -  -  -  -  -  P  -   
+ 7 |  -  P  -  -  -  -  -  -  
+ 8 |  R  -  -  -  -  -  -  - 
+
+
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+Provide a description of your approach here.  Upload your code online.
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

@@ -1,0 +1,150 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(SebastianSoto),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+theta(E)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+go through all the edges incrementing counters any time you come across one each of vertexs
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+Theta(V+E)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Have to go through each vertex's adjacency list taking V+E time
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+Theta(V^2)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+have to read through each of the V rows in the matrix in entirety which have V entries.
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>Question 1 Results:
+
+Total Grade: 30
+
+	10        		
+	10        		
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+for v in unvisited verteces
+    label v discovered and assign it 0
+    go through v's adjacency list labeling those vertex discovered and assigning each 1
+    do same for each node that was in in the original vertex's adjacency list
+    if a 1 and 1 or 0 and 0 are adjacent to each other the graph does not have bipartiteness
+    
+</VERBATIM>
+---++ b
+<VERBATIM>
+findCycles(Graph,vertex,s)
+{
+	push vertex to stack
+	mark vertex as vistited;
+	for i in adjacent verteces to vertex
+		if i exists in stack
+			cycle found;
+		if i not vistited
+			findCycles(Graph,adjacentVertex,s)
+	pop vertex from stack;
+}
+
+int main()
+{
+let s be a stack;
+for v in a list of verteces
+	if v not visited
+		findCycles(graph,vertex, s)</VERBATIM>
+}
+---++!! Grader comments *[/20]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 15
+
+	5         		algorithm needs more definition
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+---++ 3b.
+<VERBATIM>
+
+0[0]: 5 6 8 9 12 13
+1[0]: 1 2 3 4 6 7 10 11 12 13
+2[0]: 0 1 2 5 9
+3[0]: 0 1 5 6 7 8 9 10 11 12 13
+4[0]: 0 1 3 6 9 11 12
+5[0]: 2 5 8 9 10 11 12
+6[0]: 0 1 2 4 7 8 13
+7[0]: 0 1 2 3 6 9 10 12 13
+8[0]: 0 1 3 4 5 7 12
+9[0]: 0 1 4 7 11 13
+10[0]: 0 4 5 6 7 9
+11[0]: 4 5 8 9 10 12
+12[0]: 2 4 5 6 13
+13[0]: 1 2 3 4 7 9 10 12.
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+  a b c d e f g h
+1 R N B Q - B N R
+2 P P P - P P P P
+3 - - - P - - - -
+4 - - - - - - - -
+5 - - - - - - - -
+6 n p - - p - p b
+7 p - p K q p - p
+8 r - b - k - n r
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+black's kind in the top right corner, surrounded by three black pawns blocking movement
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+Look ahead by simulating boards with each possible move. Evaluate each of these boards judging by amount of pieces left, which pieces are left, their position on the board and the possible amount of moves that can be made next. The best move was made until victory.
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

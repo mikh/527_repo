@@ -1,0 +1,165 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(PatrickFant),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<latex title="running time">
+  \Theta (E)
+</latex>
+---+++!! Brief explanation
+<VERBATIM>
+An edge-list by definition has E ordered pairs, and we essentially need to
+count the instances of each vertex over all ordered pairs.  Worst case here is
+that a pair containing our vertex is at the end of the list,so we need to
+iterate through every pair.  Therefore, running time is linear with respect to
+E.
+</VERBATIM>
+---++ b
+---+++!! Running time
+<latex>
+\Theta (V+E)
+</latex>
+---+++!! Brief explanation
+<VERBATIM>
+To get the maximum degree of a vertex in a(n), we need to get the size of each
+inner list and compare to find the max.  This requires iterating through each
+inner list.  Notice that all non-root elements of the inner lists refer to a unique
+ordered pair.  It logically follows that the running time is bounded by V+E.
+</VERBATIM>
+---++ c
+---+++!! Running time
+<latex>
+\Theta (V^2)
+</latex>
+---+++!! Brief explanation
+<VERBATIM>
+A 2d array has fixed height and width, which limits our options significantly.
+As with the adjacency-list, we iterate through each line and compare their
+degrees.  However, since each subarray has length V, our only option is to sum
+the values of each row and compare.  This leaves us with Theta(V^2).
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>Question 1 Results:
+
+Total Grade: 30
+
+	10        		
+	10        		
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+// assuming v is a vertex in a graph represented by an array of linked adjacency_lists
+bool is_bipartite() {
+  Q = queue
+  Q.enqueue(v)
+  v.color = red
+  while !(Q.empty) {
+    v = Q.dequeue()
+    v.child.color = opposite of v.color
+    for i in v.adjacency_list {
+      if (i.colored == true && i.color != v.child.color)
+        return false;
+      if (i.colored == false) {
+        Q.enqueue(i)
+        i.color = v.child.color
+      }
+    }
+  }
+  return true;
+}
+</VERBATIM>
+---++ b
+<VERBATIM>
+// assuming v is a vertex in a graph represented by an array of linked adjacency_lists
+bool is_cyclic() {
+  s = stack
+  s.push(v)
+  while (s.not_empty) {
+    v = s.pop()
+      if (v.discovered == false) {
+        v.discovered = true
+        for i in v.adjacency_list
+          s.push(i)
+      }
+      else { return true; }
+  }
+  return false;
+}
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 20
+
+	10        		
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+---++ 3b.
+Attach your solutions to this topic.
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+`  |  a  b  c  d  e  f  g  h
+____________________________
+ 1 |  R  -  -  -  K  B  N  R
+ 2 |  P  P  P  -  P  P  P  P
+ 3 |  -  -  -  P  Q  -  -  -
+ 4 |  -  p  -  -  -  -  -  -
+ 5 |  -  -  -  -  -  -  -  -
+ 6 |  p  -  -  -  p  N  p  -
+ 7 |  -  b  p  p  -  p  -  p
+ 8 |  r  n  -  B  k  b  n  r
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+`  |  a  b  c  d  e  f  g  h
+____________________________
+ 1 |  -  -  -  -  -  -  -  -
+ 2 |  -  -  -  -  -  -  -  -
+ 3 |  -  P  -  -  -  -  -  -
+ 4 |  -  p  -  -  -  -  -  -
+ 5 |  -  -  -  -  -  P  -  -
+ 6 |  -  -  -  K  -  Q  P  -
+ 7 |  -  -  -  -  -  -  -  -
+ 8 |  -  -  -  k  -  -  -  R
+
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+Provide a description of your approach here.  Upload your code online.
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

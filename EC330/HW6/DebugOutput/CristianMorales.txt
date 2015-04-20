@@ -1,0 +1,123 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(CristianMorales),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+Theta(E)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Since the size of a edge-list implemented as a linked-list is Theta(E), and the way to determine the degree for a vertex is to go through the linked list and count how many times that vertex appears in all the links, all of the links must be traversed, which would take Theta(E) time.
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+Theta(v+E)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+To determine the degree of a vertex using a adjacency-list implemented as a linked-list of linked-lists, you must traverse the first linked list to find the vertex you're examining and then traverse its corresponding linked list and count how many links there are to determine the degree. Since the size of this linked list of linked list is Theta(v+E), the time to traverse it would also be Theta(v+E).
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+Theta(v)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Determining the degree of a vertex using an adjacency matrix stored as a two-dimensional vector is done by using the vertex as one of the indeces and incremeting through the second index (effectively, for one axis of the graph, holding the index constant at the vertex and examining the other axis for this given index), counting up how many times a 1 shows up. Since the size of the vector is Theta(v^2), incrementing through one axis of the vector would take Theta(v) time.
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>Question 1 Results:
+
+Total Grade: 24
+
+	10        		
+	10        		
+	4         		Incorrect answer
+
+
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+Firstly, the data structure used to represent the graph being examined is an edge-list, and whether it's implemented as an list, array or vector doesn't matter. It's assumed that each edge is represented by two vertices, called vertex1 and vertex2.
+Secondly, to ensure this algorithm operates in linear time, the method for determining if a vertex is in a set is not by indexing through an array or list but by using an if-statement.
+For example, if setA is vertices A, C, and E, then "if vertex1 in setA" would be "if vertex1 = A or vertex1 = C or vertex1 = E". It's not pretty, but it'll keep it linear by avoiding having to index through arrays and using a for-loop.
+
+setA = The first of the 2 sets making up the bipartite graph
+setB = The second of the 2 sets making up the bipartite graph
+for (edge 1 through E) {
+    if( (vertex1 in setA & vertex2 in setA) or (vertex1 in setB & vertex2 in setB) {
+        return false;
+    }
+}
+return true;
+
+</VERBATIM>
+---++ b
+<VERBATIM>
+The graph being examined will be stored in an adjacency list, where the vertices 1 through v are stored in a 2D array or vector, called listVertices, which will contain v rows and 2 columns, where column one holds the vertex number and column 2 contains a pointer to an array or vector holding a list of its neighbors, called listNeighbors.
+
+for(ii = 1 through v){
+    if( (*listVertices[ii][2]).size != 2)     // So if a given vertex doesn't have exactly 2 neighbors
+        return false;
+}
+return true;
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 10
+
+	5         		how do you separate the sets
+	5         		algorithm needs more definition
+
+
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+---++ 3b.
+Attach your solutions to this topic.
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+I attached a picture of the layout of the chessboard when I won, but if a text description is needed...
+Black has a Knight at c6, a Rook at b8, a Pawn at e6, a Bishop at e7, and a King at e8. I have a Pawn at f7.
+I use this Pawn to capture the King at e8.
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+One example in which a black King is unable to move would be if the King is in a corner, let's say a1, and on its three surrounding squares a2, b1, and b2, there are black Pawns. If that was the case, the Pawns would be unable to move forward as they are already at the other side of the board, and the King can't leave the corner without capturing one of its own Pawns, which isn't allowed.
+</VERBATIM>
+---++ 4b.  Main task [20 points]
+
+My solution for Problem 4b simply relies on creating a Minimax graph with alpha-beta pruning. Each leaf (which is a possible move) is given a score according to whether or not it can result in the capture of an enemy piece, and if so which piece would be captured. After that, it's just a standard Minimax w/ alpha-beta pruning graph. The one drawback that I didn't have enough time to address is that when trying to predict the enemy's moves (which corresponds to the minimizers in the graph) the enemy is only trying to minimize my score, and doesn't care about maximizing its own. Also, quick side note, instead of creating the minimax graph using recursion, I just created 3 nested for-loops because ain't nobody got time for recursion.
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

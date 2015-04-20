@@ -1,0 +1,210 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(MinyingLu),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+Theta(E)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+Because the edge list is stored as linked list, 
+we have to look at every edge to check the total number of degree of a vertex.
+Therefore we need to look at all the edges to find the max degree.  
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+It takes Theta(V)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+Adjacency list only requires constant time to find how the degree of one vertex. 
+So we only need to look at all the vertex and find the max degree. 
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+Theta(V^2)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Provide your answer here.
+Because the matrix is implemented as a 2D array, every vertex has one row and one column. 
+To find the degree of one vertex, I need to look at the row of the vertex 
+and look at each column elements in the row, and add up all the '1's. 
+And I need to look through every row to find the max degree. 
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>Question 1 Results:
+
+Total Grade: 27
+
+	10        		
+	7         		In some cases, you will have O(V+E) which could be greater than O(V)
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+Provide your pseudocode here.
+Because a bipartite graph can be color with only 2 colors. 
+Assume the graph representation is Adjacency list 
+
+///////beginning of pseudo code//////////
+
+set a queue U to store vertex
+pick a beginning vertex V0 color it with RED and store V0 in U 
+(The opposite color is BLUE)
+
+while U not empty{
+    current = U.pop() 
+    look at all neighbors of current
+        if neighbor not color 
+               color it with the opposite color 
+               store this neighbor in U
+        if neighbor is color with the same color 
+               output NOT BIPARTITE
+        if neighbor is color with the opposite color
+               look at the next neighbor
+}
+output IS BIPARTITE 
+
+////////////end of pseudo code///////////////
+
+The running time will be Theta(V + E)
+</VERBATIM>
+---++ b
+<VERBATIM>
+Provide your pseudocode here.
+The graph contains a cycle if we do depth first search and find a back edge.
+
+/////////////beginning of pseudo code//////////////////
+
+make a stack S to store vertices
+set all vertices v to visited(v) = false;
+
+push first v into S (any v)
+
+while(S is not empty){
+    u = S.pop();
+    if visited(u) == false
+        visited(u) = true;
+        for every neighbor (children) w of u
+            if visited(w) == true
+                found a cycle
+            if visited(w) == false
+                push w in S
+    if visited(u) == true;
+        found a back edge, i.e. found a cycle.
+}
+
+///////////////////end of pseudo code/////////////////////
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 20
+
+	10        		
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+
+See attachment. 
+---++ 3b.
+Attach your solutions to this topic.
+<VERBATIM>
+Example output: 
+1[0]: 
+2[1]: 1 2 5 6 7 8 9 11 12 13 
+3[2]: 1 2 5 6 7 8 9 11 12 13 
+4[3]: 1 2 5 6 7 8 9 11 12 13 
+5[4]: 1 2 5 6 7 8 9 11 12 13 
+6[5]: 
+7[6]: 1 2 5 6 7 8 9 11 12 13 
+8[7]: 1 2 5 6 7 8 9 11 12 13 
+9[8]: 
+10[9]: 
+11[10]: 1 2 5 6 7 8 9 11 12 13 
+12[11]: 
+13[12]: 1 2 5 6 7 8 9 11 12 13 
+14[13]: 1 2 5 6 7 8 9 11 12 13 
+15[14]: 
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+Provide your answer here.
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  -  B  -  K  B  -  R 
+ 2 |  P  -  P  P  -  P  P  P 
+ 3 |  -  -  N  -  P  -  -  N 
+ 4 |  -  P  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  Q 
+ 6 |  n  -  -  p  -  p  -  p 
+ 7 |  p  p  p  -  p  k  p  - 
+ 8 |  -  r  b  q  -  b  n  r 
+
+Please enter your move: h5-f7
+
+Game Over:  White wins!
+
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+Provide your answer here.
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  Q  K  B  N  R 
+ 2 |  P  P  P  -  -  -  P  P 
+ 3 |  -  -  -  -  -  -  P  k 
+ 4 |  -  -  -  -  -  -  P  P 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  -  -  -  -  -  - 
+ 7 |  p  p  p  p  p  p  p  p 
+ 8 |  r  n  b  q  -  b  n  r 
+
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+Provide a description of your approach here.  Upload your code online.
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

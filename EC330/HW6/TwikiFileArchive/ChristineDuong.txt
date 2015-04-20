@@ -1,0 +1,189 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(ChristineDuong),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+
+<latex>\Theta(E)</latex>
+---+++!! Brief explanation
+Let there be an array =degrees= of size V which keeps track of the degree of each vertex and an integer =max_degree= which holds the maximum degree. 
+
+If we run through the edge list, that will take <latex>\Theta(E)</latex> time; for every edge, we increment the corresponding vertices/indexes in =degrees= and compare both values to =max_degree=. If it's greater than =max_degree=, we switch. Accessing the array takes constant time so we should only have <latex>\Theta(E)</latex>
+---++ b
+---+++!! Running time
+
+<latex>O(V^{2}), \Omega(V)</latex>
+---+++!! Brief explanation
+
+It takes <latex>\Theta(V) </latex> time to go through the outer linked list (each vertex); worst case a vertex is connected to every other vertex so the inner linked lists can be <latex>O(V)</latex>. This means we will have in total <latex>O(V*V) = O(V^{2})</latex>. Even in best case, we have V vertices not connected by any edges, we'd have to run through the outer list which takes <latex>\Omega(V)</latex>
+---++ c
+---+++!! Running time
+
+<latex>\Theta(V^{2})</latex>
+---+++!! Brief explanation
+
+For every vertex, we need to go through the inner vector (which is size V), and count the number of 1's. So that's going through V size vectors V times which gives us <latex>\Theta(V^{2})</latex>
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+%CODE{"cpp"}%
+//For graph G[V][V]
+//Basically modified BDS to work for connected graphs
+//Slightly modified from http://www.geeksforgeeks.org/bipartite-graph/
+bool isBipartite(int G[][V], int start)
+{
+    
+    colorArr[V];                                //An array that will store the colors of the vertices
+                                                //Let vertex number = index in this array.
+                                                //Let us color our graph red and blue.
+    for each element in V:
+        color it white                          //Just to make it's not red or blue
+    
+    colorArr[start] = red;
+
+    queue <int> traveled;                       //Have a queue to keep track of traversal
+    traveled.push(start);
+    
+    // Run while there are vertices in queue (Similar to BFS)
+    while (!traveled.empty())
+    {
+        int head = traveled.front();
+        traveled.pop();                         //Grab the head of the queue and pop it off
+        
+        // Find all non-colored adjacent vertices
+        for each vertex v
+        {
+            if (there is an edge from v to head && v is not colored)
+            {
+                
+                color the v opposite of head;
+                traveled.push(v);                   //Add it to our queue
+            }
+
+            else if (there is an edge from v to head && they are already the same color)
+                return false;
+        }
+    }
+    
+    return true;
+}
+%ENDCODE%
+---++ b
+
+We can just run DFS to find a cycle. If we come across a grey node, save for the one that we just came from, that means we never finished the "branch" and resulted in visiting one of our previous ancestors. This will run in O(V) because E < V+1 (Euler's Formula).
+
+%CODE{"cpp"}%
+DFS(G) {
+    color all the vertices white
+    make each edge unmarked             //We can only take an edge in one direction for DFS
+    for each white vertex v:
+        if visit(G, v)
+            return true;
+}
+
+visit(G, v) {
+    color v gray;
+    for each edge (v, v1):
+        if v1 is grey and edge is unmarked:
+            return true
+        else if v1 is white:
+            mark edge
+            if visit(G, v1)
+                return true
+        
+    color v black
+    return false
+}
+%ENDCODE%
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Graph.cpp is attached to this topic renamed as "problem3a.cpp".
+---++ 3b.
+<VERBATIM>
+1[0]: 2 3 4 5 8 9 
+2[0]: 1 3 9 
+3[0]: 2 3 5 6 7 10 11 12 
+4[0]: 1 2 3 5 7 8 9 10 
+5[0]: 1 8 10 11 
+6[0]: 2 4 5 6 8 9 10 12 
+7[0]: 1 2 7 10 11 
+8[0]: 2 4 5 6 8 10 11 
+9[0]: 2 3 7 8 9 
+10[0]: 1 3 5 6 7 9 10 11 12 
+11[0]: 2 3 4 5 12 
+12[0]: 1 2 4 5 8 
+</VERBATIM>
+
+The code that produced this is attached to this topic as problem3b.zip.
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  Q  K  B  N  R 
+ 2 |  P  P  P  P  -  -  P  P 
+ 3 |  -  -  -  -  -  -  -  - 
+ 4 |  -  -  -  n  -  -  -  - 
+ 5 |  -  p  -  -  -  P  -  - 
+ 6 |  b  -  -  -  -  -  -  - 
+ 7 |  p  -  p  p  p  P  p  p 
+ 8 |  -  -  r  q  k  b  n  r 
+
+Please enter your move: f7-e8
+
+Game Over:  White wins!
+</VERBATIM>
+
+---+++ ii.  
+<VERBATIM>
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  -  -  p  k  p  -  -  -  
+ 2 |  -  -  p  p  p  -  -  - 
+ 3 |  -  -  -  -  -  -  -  - 
+ 4 | -  -  -  -  -  -  -  - 
+ 5 | -  -  -  -  -  -  -  - 
+ 6 | -  -  -  -  -  -  -  - 
+ 7 |  -  -  -  -  -  -  -  - 
+ 8 | -  -  -  -  -  -  -  - 
+
+</VERBATIM>
+
+White can be anywhere else in the board. 
+---++ 4b.  Main task [20 points]
+
+My main approach was to basically make a 3 level min-max tree with the current board being the node of the tree. I first weighted all of the pieces, placing them as constants inside of my class. Afterwards, I look at all available moves and go through all of them, and then from there, checking each move the other player can make if I make that move. For each one of those given moves, I check again what available moves will give me the highest potential score. I then go back and make the first move out of that branch. 
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

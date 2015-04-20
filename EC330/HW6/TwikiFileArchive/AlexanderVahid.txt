@@ -1,0 +1,172 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(AlexanderVahid),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+\Theta(E) + \Theta(1) time
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+In order to find the number of edges incident on a specific vertex, you need to check every element in the linked list, which is E elements long.
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+\Theta(V) + \Theta(E) + \Theta(1)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+In order to find the number of edges incident on a specific vertex, you need to find that vertex in the outer linked list, which would take \Theta(V) time.
+Next, you would need to iterate through all of the neighbors in the the nested linked list, which would take \Theta(E) time.
+All together this is \Theta(V) + \Theta(E)
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+Provide your answer here.
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+In order to find the number of edges incident on a specific vertex, you would have to find that vertex in the first dimension of the two dimensional vector, which would take constant time.
+Next, you would have to iterate through each vertex in the second dimension to see if it is incident on it, which would take \Theta(V) time.
+Together that is \Theta(V) + \Theta(1)
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+//assuming all vertices can be reached from s
+//Q is a queue
+//G is an adjacency list
+Bipartite(G,s)
+    foreach vertex u in (G - s)
+        u.color = white
+        u.distance = infinity
+    s.color = grey
+    s.distance = 0
+    Q = empty
+    ENQUEUE(Q,s)
+    while Q != empty
+        u = DEQUEUE(Q)
+        foreach v in G.Adj[u]
+            if v.color == grey and v % 2 == u % 2
+                return false
+            if v.color == white
+                v.color = grey
+                v.distance = u.distance + 1
+                ENQUEUE(Q,v)
+        u.color = black
+    return true
+</VERBATIM>
+---++ b
+<VERBATIM>
+//assuming G is represented in an adjacency list
+//returns true if a vertex has been seen in DFS Visit
+DFS(G)
+    foreach vertex u in G.vertices
+        u.color = white
+        u.parent = nullptr
+    time = 0
+    for each vertex u in G.vertices
+        if u.color == white
+            DFSVisit(G,u)
+
+DFSVisit(G,u)
+    time = time + 1
+    u.d = time
+    u.color = grey
+    foreach v in G.Adj[u]
+        if u.color == grey
+            return true
+        if v.color == white
+            v.parent == u
+            DFSVisit(G,v)
+u.color = black
+time = time + 1
+u.f = time
+return false
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+---++ 3b.
+Attach your solutions to this topic.
+<VERBATIM>
+0 [0]: 1 4 6 
+1 [0]: 4 5 
+2 [0]: 0 2 6 
+3 [0]: 0 1 4 5 6 
+4 [0]: 2 3 4 
+5 [0]: 0 3 4 5 
+6 [0]: 0 1 2 4 6
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  -  B  Q  K  B  N  R 
+ 2 |  P  P  P  P  P  P  P  P 
+ 3 |  -  -  -  -  -  -  -  - 
+ 4 |  -  -  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  -  p  -  N  -  n 
+ 7 |  p  p  p  k  p  p  p  p 
+ 8 |  r  n  b  q  -  b  -  r 
+
+Please enter your move: f6-d7
+
+Game Over:  White wins!
+
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  -  K  B  N  R 
+ 2 |  -  -  -  -  P  P  P  P 
+ 3 |  -  -  -  -  -  -  -  - 
+ 4 |  P  P  -  -  -  -  -  - 
+ 5 |  k  Q  -  -  -  -  -  - 
+ 6 |  P  P  -  -  -  -  -  - 
+ 7 |  -  -  -  -  -  -  -  - 
+ 8 |  -  -  -  -  -  -  -  - 
+
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+My code analyzes each possible current move the player can make, then rates it based on several things. If the move captures a piece the rating is increased based on what piece is being taken, if the move brings the piece closer to the enemy king the rating is increased, if the enemy can then take that piece the rating is decreased according to which piece is being taken.
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

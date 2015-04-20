@@ -1,0 +1,218 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(EddyLuo),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+\Theta(E)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+For each edge, note which vertex it points to and add 1 to a counter counting how many times the pointer is used.
+Then find the maximum value out of all of the pointers.
+This will take at least time E, including some time to calculate the maximum pointer value.
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+\Theta(V^2)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+For each linked list, count the amount of links in the linked list (not the amount of elements).
+Store the largest value.
+This will take time V^2, since the upper bound is the maximum number of edges for a vertex, V.
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+\Theta(V^2)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Iterate over the two-dimensional vector, adding 1 whenever a 1 is found in a one-dimensional vector to another vector.
+Then find the maximum value of all of them.
+Since a two-dimensional vector has V^2 edges, this has complexity (V^2).
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>Question 1 Results:
+
+Total Grade: 24
+
+	10        		
+	4         		You can get it down to O(V+E) time
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+Use a depth-first search of the graph. Start at a vertex and mark it with color 1. 
+For each edge of the vertex, travel to the vertex along that edge and mark it with color 2.
+Then travel to a vertex along an edge connecting to the second vertex and mark it with color 1, and then repeat until 
+all vertices are marked with alternating colors.
+If two colored vertices are connected by an edge, check if the color is the same. If so, return false.
+Otherwise, iterate through the entire graph and return true if no two identically-colored vertices are connected by an edge.
+</VERBATIM>
+---++ b
+<VERBATIM>
+Use a depth-first search of the graph.
+Each vector visited is colored to color 1.
+If depth-first search reaches another vertex of color 1,
+return true.
+Otherwise, return false.
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 10
+
+	5         		need psuedocode
+	5         		need psuedocode
+
+
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+   * [[%ATTACHURLPATH%/problem3a.cpp][problem3a.cpp]]: Answer for 3a
+<VERBATIM>
+#include "Graph.h"
+#include <iostream>
+
+using namespace std;
+
+Graph::Graph() {
+
+}
+
+int Graph::addVertex(int color) {
+  int vertexNo = 0;
+  bool foundNumber = false;
+  while (foundNumber == false) {
+    if (this->vertices.find(vertexNo) == this->vertices.end()) {
+      foundNumber = true;
+    } else {
+      vertexNo++;
+    }
+  }
+  this->vertices.insert(vertexNo);
+  this->colors.insert(pair<int, int>(vertexNo, color));
+  return vertexNo;
+}
+
+void Graph::addEdge(directedEdge newEdge) {
+  this->edges.insert(newEdge);
+}
+
+int Graph::getColor(int vertex) {
+  return this->colors[vertex];
+}
+
+bool Graph::isEdge(directedEdge newEdge) {
+  return (this->edges.find(newEdge) != this->edges.end());
+}
+
+string Graph::print() {
+	stringstream result;
+	for (vertexIterator vert1=vertices.begin(); vert1 != vertices.end(); vert1++) {
+		result << *vert1 << "[" << getColor(*vert1) << "]: ";
+		for (vertexIterator vert2 = vertices.begin(); vert2 != vertices.end(); vert2++)
+			if (isEdge (directedEdge(*vert1, *vert2)))
+				result << *vert2 << " ";
+		result << endl;
+	}
+		return result.str();
+}
+</VERBATIM>
+---++ 3b.
+<VERBATIM>
+0[1]: 1 2 4 5 
+1[1]: 3 
+2[1]: 1 3 6 
+3[1]: 1 3 4 5 6 
+4[1]: 1 3 5 6 
+5[1]: 5 6 
+6[1]: 0 4 6 
+</VERBATIM>
+
+   * [[%ATTACHURLPATH%/problem3b.zip][problem3b.zip]]: Answer for 3b
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+Please enter your move: h5-f7
+I move: a8 - a7
+`  |  a  b  c  d  e  f  g  h
+____________________________
+ 1 |  R  N  B  -  K  -  N  R
+ 2 |  P  P  P  P  -  P  P  P
+ 3 |  -  -  -  -  P  -  -  -
+ 4 |  -  -  B  -  -  -  -  -
+ 5 |  -  -  -  -  -  -  -  -
+ 6 |  p  -  p  -  -  -  -  p
+ 7 |  r  p  -  p  p  Q  p  -
+ 8 |  -  n  b  q  k  b  n  r
+
+Please enter your move: f7-e8
+
+Game Over:  White wins!
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+I move: e3 - e2
+`  |  a  b  c  d  e  f  g  h
+____________________________
+ 1 |  K  -  -  p  k  p  -  -
+ 2 |  Q  -  -  p  p  p  -  -
+ 3 |  -  -  -  -  -  -  -  -
+ 4 |  -  -  -  -  -  -  -  -
+ 5 |  -  -  -  -  -  -  -  -
+ 6 |  -  -  -  -  -  -  -  -
+ 7 |  -  -  -  -  -  -  -  -
+ 8 |  -  -  -  -  -  -  -  -
+
+Please enter your move: a1-b2
+
+Game Over:  White wins!
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+My algorithm was created with a focus on defense: it identifies how in any way the king can possibly be in check and then takes steps to block or dodge it.
+
+Otherwise, its moves are mostly random, apart from attempting to take the highest-value piece whenever it is available.
+
+If given a choice between taking the Queen and avoiding check from a bishop, it'll dodge the bishop. If given the choice between taking the King and avoiding check, it'll take the King, since that is the victory condition.
+
+   * [[%ATTACHURLPATH%/myPlayer.cpp][myPlayer.cpp]]: Chess files
+
+   * [[%ATTACHURLPATH%/myPlayer.h][myPlayer.h]]: Chess files
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---
+
+
+
+

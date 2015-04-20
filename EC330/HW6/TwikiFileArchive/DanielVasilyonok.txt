@@ -1,0 +1,170 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(DanielVasilyonok),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+theta(E)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+Because it is a edge-list, each node in the linked list represents one edge. At each node, you can increment a counter for the degree of the vertex on each 
+side of the edge. Once you've looked through the whole linked-list once, the vertex with the highest degree is the one with the highest count. Looking through
+the linked-list once take theta(E) time.
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+theta(V)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+The adjacency list stores V vertices, and at each vertex you can obtain the size of the linked list in constant time. The size of the linked list is the degree at that vertex. The
+max degree can be continuously reset until the end is reached, which will take V time.
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+theta(V^2)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+every vertex V could potentially be connected to another vertex V, so for every V we have to check V, meaning 
+the running time is theta(V^2)
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+Start at any node V, color blue, put V in a queue. 
+While(Q not empty)
+U = pop(Queue)
+for every neighbor n of U
+     if(n isn't colored)
+         color opposite of U
+         put in queue
+     if(n is colored same as U)
+         return false
+return true
+
+//data structures: graph represented as adjacency list implented as linked list of linked lists, and queue
+//This will allow the algorithm to take linear time theta(V+E) to go through all 
+//verticies. 
+</VERBATIM>
+---++ b
+<VERBATIM>
+vector graph;
+graph[i]= set seti; // graph[i] corresponds to the i-th vertex; it holds seti, 
+populated with with all the graphs's indexes, that correspond to vertices directly connected to the "i" vertex.
+If vertex from graph[2]. directly connected to vertices from graph [3], [6], [7], then the graph[2] set will hold { 3, 6, 7 };
+We can think of seti as the edges set for i-th vertex, i.e. for i=2, edges are 2-3, 2-6, 2-7.
+We'll design a graph traversal procedure, using the information in the "graph" vector. 
+The procedure would try to build the longest path first, i.e. Depth First. 
+The procedure would use each edge only, once when building the traversal path.
+Suppose, we're using the edge 2-3, from graph[2] set. Then we would erase the element "2" from graph[2] set, and the element [2] from
+the graph[3] set.
+Our procedure will use a stack, "stack path" to push onto this stack each sequential i-vertex onto the stack.
+If we are unable to increase the length of the path from the current i positon, then we would pop the i from the stack.
+Alongside stack, we'll use a set, "set used". Every push(i) onto the path stack will be followed by used.insert(i) into the set.
+Every time before path.push(i) we'll find out if the element is already in the "used" set, i.e. already in the "path".
+If the element is on the "path" already, the procedure would stop, because the cycle is found.
+Otherwise, the procedure would continue, until the path is finished without cycles, i.e. there is nothing to pop from the "path".
+
+It could be that the graph is made up of several disconnected components, and our traversal procedure answer the cycle question 
+only about one of the components.
+
+So, after the traversal procedure returned with no cycles found, then we'll check if all graph[i] sets are empty, and therefore all the
+edges are used up. Suppose, there graph[i] is not empty. Then we'll try to traverse this graph component starting from the i-vertex.
+
+//graph represented as adjacency list, ~ theta(V) time
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attached, 
+make sure to include "-std=c++0x" when compiling,
+g++ -std=c++0x problem3a.cpp
+---++ 3b.
+Attached, make sure to include "-std=c++0x" when compiling, g++ -std=c++0x Graph.cpp 
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+
+
+
+
+---+++ i.
+<VERBATIM>
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  -  K  B  N  R 
+ 2 |  P  P  P  P  -  P  P  P 
+ 3 |  -  -  -  -  P  -  -  - 
+ 4 |  -  -  -  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  Q 
+ 6 |  -  -  -  -  -  p  -  - 
+ 7 |  p  p  p  p  p  k  p  p 
+ 8 |  r  n  b  q  -  b  n  r 
+
+Please enter your move: h5-f7
+Game Over:  White wins!
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+4a (ii)
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  -  -  -  -  -  -  b  k 
+ 2 |  -  -  -  P  -  P  p  p 
+ 3 |  -  -  -  p  P  p  -  - 
+ 4 |  -  -  -  -  p  -  R  Q 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  -  -  -  -  -  - 
+ 7 |  -  -  -  -  -  -  -  - 
+ 8 |  -  -  -  -  -  -  -  - 
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+I would create a graph, with each vertex representing a state in the game, and each edge representing a move to a vertex. Each state will have a value based on how good
+that move is. The score of each player will be held as an int and it will be calculated by the the current pieces it has, and the board position.
+The values given to each piece will be as such: (based on standard valuations) http://en.wikipedia.org/wiki/Chess_piece_relative_value
+pawn: 1
+knight: 3
+bishop: 3
+rook: 5
+queen: 9
+king: 100
+Also, each row on the board will have a value. Values towards the center will have higher point values because a player is in a better state if they have control of the 
+board in the center. The column values will be as such:
+a:1 b:2 c:3 d:4 e:4 f:3 g:2 h:1
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

@@ -1,0 +1,140 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(JiehongBrandonChung),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+</VERBATIM>
+&#952;(E)
+---+++!! Brief explanation
+<VERBATIM>
+Looping through each edge and keeping track of how many times a vertex appears will take E time because the linked list has to go through each edge once to see all the vertices.
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+O(V + E)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+It will take at most V time to get to the vertex you want the degree of, then it will take at most E time to get how many neighbors it has.
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+</VERBATIM>
+&#952;(V)
+---+++!! Brief explanation
+<VERBATIM>
+It takes constant time to get to the target vertex, then checking all V vertices for any given vertex in order to get the degree will take V time.
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+//for a graph represented by adjacency list implemented with vector< vector<int> >, runs in O(V + E) time
+isBipartite(graph G)
+for each vertex in G
+    for each adjacent vertex
+        if color of adjacent vertex = color of this vertex
+            return false
+return true
+</VERBATIM>
+---++ b
+<VERBATIM>
+//for a graph represented by adjacency list implemented with vector< vector<int> >, runs in O(V) time
+dfs_visit(v)
+    //if the vertex is already black it has already been visited so there is a cycle
+    if v black
+        return true
+    color v gray
+    for each node n adjacent to v
+         if n white
+            dfs_visit(n)
+    color v black
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+   * [[%ATTACHURLPATH%/problem3a.cpp][problem3a.cpp]]: implementation of Graph as specified in Graph.h
+---++ 3b.
+   * [[%ATTACHURLPATH%/problem3b.zip][problem3b.zip]]: implemented static method to generate random graph with given number of vertices
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+`  |  a  b  c  d  e  f  g  h
+____________________________
+ 1 |  R  N  B  -  K  -  N  R
+ 2 |  P  P  P  P  -  P  P  P
+ 3 |  -  -  -  -  P  -  -  -
+ 4 |  -  -  -  -  -  -  -  -
+ 5 |  -  p  -  -  -  -  -  -
+ 6 |  -  -  -  -  -  p  -  -
+ 7 |  -  p  p  p  p  -  p  p
+ 8 |  r  n  b  q  Q  b  n  r
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+`  |  a  b  c  d  e  f  g  h
+____________________________
+ 1 |  R  N  B  -  K  -  N  R
+ 2 |  P  P  P  P  -  P  P  P
+ 3 |  -  -  -  -  P  -  -  -
+ 4 |  -  -  -  -  -  -  -  -
+ 5 |  -  p  -  -  -  -  -  Q
+ 6 |  -  -  -  -  -  p  -  -
+ 7 |  -  p  p  p  p  -  p  p
+ 8 |  r  n  b  q  k  b  n  r
+
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+I used a standard minimax algorithm with alpha-beta pruning, and my evaluation fuction was based on the symmetric evaluation function created by Claude Shannon in 1949. This function <br/>
+can be found at https://chessprogramming.wikispaces.com/Evaluation: <br/>
+%CODE{"cpp"}%
+f(p) = 200(K-K')
+       + 9(Q-Q')
+       + 5(R-R')
+       + 3(B-B' + N-N')
+       + 1(P-P')
+       - 0.5(D-D' + S-S' + I-I')
+       + 0.1(M-M') + ...
+
+KQRBNP = number of kings, queens, rooks, bishops, knights and pawns
+D,S,I = doubled, blocked and isolated pawns
+M = Mobility (the number of legal moves)
+%ENDCODE%
+It basically assigns a numerical value to the attributes described in the blockquote above. I modified it to exclude the special pawn conditions and the number of legal moves to account for <br/>
+the change in rules for the assignment and to improve runtime, at the sacrifice of accuracy to this formula. I only call my minimax function to 2 levels deep, because otherwise it takes too long.
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

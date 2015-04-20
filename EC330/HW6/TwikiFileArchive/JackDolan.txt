@@ -1,0 +1,146 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(JackDolan),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+<VERBATIM>
+theta(e)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+It's theta(e) because you'd have to iterate over each edge and create a counter to see which vertex appeared the most (which would be the value of the counter).
+</VERBATIM>
+---++ b
+---+++!! Running time
+<VERBATIM>
+theta(v)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+You would need to check the length of each list, and the length of the list of lists is V.
+</VERBATIM>
+---++ c
+---+++!! Running time
+<VERBATIM>
+theta (v^2)
+</VERBATIM>
+---+++!! Brief explanation
+<VERBATIM>
+If it's a matrix, the area is v^2, and you need to traverse every element.
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+Assume there is a queue "Q". Assume the graph has nodes containing a boolean variable "bool" that is true if the node has been visited and false if it has not. Each node has a color, all originally set to white. The nodes also have connections to other nodes. 
+
+pick any node to start with
+while(Q != null){
+    if node.bool == false{
+          node.color = black
+          enqueue node.connections to Q
+    }
+    if node.bool== true{
+         dequeue node(i) from Q
+         if node.color == node(connections).color{
+                  return "not bipartite"
+         }
+    }
+    move to next node in Q
+}
+return "bipartite"
+
+Source: http://www.ece.northwestern.edu/~dda902/336/hw3-sol.pdf
+
+</VERBATIM>
+---++ b
+<VERBATIM>
+Assume there is a stack "S", and that each node has a variable "v" which is true if it has been visited before and false if it has not. 
+
+put start node on stack
+while(stack != emptynull){
+     node.v = true;
+     put node.connections onto stack
+     if (any of node.connections.v == true)
+          return "cyclic"
+     else
+         move to next node on stack
+}
+return "acyclic"
+
+Source: http://www.cs.jhu.edu/~xfliu/600.363_F03/hw_solution/midterm2_solution
+
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+---++ 3b.
+Attach your solutions to this topic.
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  -  K  -  N  R 
+ 2 |  P  P  P  P  -  P  P  P 
+ 3 |  -  -  -  -  P  Q  -  - 
+ 4 |  -  -  B  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  p  -  -  -  p  -  - 
+ 7 |  p  -  p  p  p  k  p  p 
+ 8 |  r  n  b  q  -  b  n  r 
+Please enter your move: c4-f7
+Game Over:  White wins!
+
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  -  N  B  -  K   -  R  - 
+ 2 |  -   -   -  P  -   P  -  P 
+ 3 |  P  -  P  -   -   -   -  k 
+ 4 |  -   -  P  -   -   -   -  P 
+ 5 |  -   -  P  -  Q  N  -  - 
+ 6 |  -   -   -  -   -   -  -   - 
+ 7 |  -   -   -  -   -   -  -   - 
+ 8 |  -   -   -  -   -   -  -   -
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+Provide a description of your approach here.  Upload your code online.
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

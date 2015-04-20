@@ -1,0 +1,204 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(JulianTrinh),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+&Theta;(E)
+
+---+++!! Brief explanation
+
+An edge-list will have as many elements as edges in the graph (as the elements are edges) so one would iterate through the list and count the amount of times each vertex appears in the list and take the highest value and associated vertex.
+
+---++ b
+---+++!! Running time
+
+O((V)^2), &Omega;(V)
+---+++!! Brief explanation
+
+Since it is a linked list of linked lists, the amount of time it would take to traverse through the number of edges per vertex is O(E). There are V vertices, so the time it takes to grab all the edges from all the vectors is O(VE). Worst case, there are V-1 edges, making O(VE) = O(V(V-1)) -> O(V^2). There is also the case where the entire graph is disconnected, making the traversal time for each vertex 0. This would mean the algorithm only goes to every vertex, and makes 0 computations at each, leaving it to be &Omega;(V)
+---++ c
+---+++!! Running time
+&Theta;(V^2)
+---+++!! Brief explanation
+Since vectors are random access, getting to the specified vertex would be O(1) time. To get how many edges are connected, you would have to iterate though the corresponding vector, and since the 2nd dimension of an adjacency matrix matrix has V elements, the complexity for getting the degree of any one vertex is &Theta;(V). To go through all the vertices would take &Theta;(V^2) time.
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+
+Use DFS, can only have two colors.
+
+Uses a: Stack for DFS, and a Vector Linked-List implementation of an Adjacency List.
+Adjacency List G and Queue Q.
+
+%CODE{"cpp"}%
+
+vector <list <int> > G;
+
+bool isBipartite(G)
+{
+    vector<int> visited;
+    vector<int> red,blue;
+    int count = 0;
+    stack S;
+    //Add the first vertex into the stack
+    S.push_back(G[0]);
+    while(!S.empty())
+    {
+        With a count, alternate between red and blue (even or odd)
+        //Pulls from stack
+        v = S.pop();
+        if(!visited.find(v))
+        {
+            //Label as visited
+            visited.push_back(v);
+            Add v to associated color
+            
+            //Grabs all neighbors of v
+            for x from 0 to end of v's associated linked list
+            {
+                    //Makes sure nodes aren't already being processed
+                    if(x not in stack)
+                    { 
+                          //Colors the neighbors differently
+                          color v[x] the opposite of above
+                          S.push_back(v[x])
+                    }
+           }
+        }     
+        //Increments the "color counter"
+        counter++;
+        //If there is a violation of the two-color property, it is not bipartite
+        if(anything in blue == anything in red)
+            return false;
+    }       
+
+return true;
+}
+%ENDCODE%
+
+
+---++ b
+
+Use DFS, if a new edge leads to a black node, it has a cycle.
+DFS implemented with a stack and Adjacency List implemented with a Vector-Linked list.
+
+%CODE{"cpp"}%
+
+vector<list<int> > G
+
+bool hasCycle(G)
+{
+    vector<int> visited;
+    stack S;
+    //Add the first vertex into the stack
+    S.push_back(G[0]);
+    while(!S.empty())
+    {
+        //Pulls from stack
+        v = S.pop();
+        if(!visited.find(v))
+        {
+            //Label as visited
+            visited.push_back(v);
+            
+            //Grabs all neighbors of v
+            for x from 0 to end of v's associated linked list
+            {
+                    //Makes sure nodes aren't already being processed
+                    if(x not in stack)
+                    {
+                        //If x is not being processed and has already been seen, it is a cycle
+                         if(x is in visited)    
+                                return true;   
+                         else
+                                 S.push_back(v[x])
+                    }
+          }
+        }     
+       //If visited
+       else
+       return true;
+    }       
+    return false;
+}
+%ENDCODE%
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+Attach your solutions to this topic.
+---++ 3b.
+Attach your solutions to this topic.
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+I move: e7 - c6
+`  |  a  b  c  d  e  f  g  h
+____________________________
+ 1 |  R  N  B  Q  K  B  -  R
+ 2 |  -  P  -  -  -  P  -  -
+ 3 |  P  -  -  -  P  -  P  -
+ 4 |  -  -  P  -  -  N  -  -
+ 5 |  -  -  -  -  -  -  P  p
+ 6 |  p  -  n  -  p  -  p  -
+ 7 |  -  p  p  P  -  p  -  -
+ 8 |  r  n  b  -  k  -  -  r
+
+Please enter your move: d7 - e8
+
+Game Over:  White wins!
+
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+NOTE: This is assuming that the king cannot move itself into check :)
+
+`  |  a  b  c  d  e  f  g  h
+____________________________
+ 1 |  -  N  B  Q  K  B  - 
+ 2 |  -  P  -  -  -  P  -  -
+ 3 |  -  -  -  -  P  -  P  -
+ 4 |  -  -  P  -  -  N  -  -
+ 5 |  -  -  -  -  -  -  P  -
+ 6 |  -  -  -  -  -  -  -  -
+ 7 |  R  -  -  -  -  -  -  -
+ 8 |  -  -  -  -  k  -  -  R
+
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+Provide a description of your approach here.  Upload your code online.
+
+I first gave point values to all the pieces, prioritizing kings, organized into white and black pieces. Based on what color I am, I either subtract white from black or black from white. To get a net score. I then use a two layer system to first evaluate all of my moves, and then to evaluate all of the opponents' for each of my moves. I evaluate scores of both boards and add it to a vector if and only if the opponent's next move does not put the evaluation at a net negative. If the opponent can win from that move, I save it into a dontMove vector. Out of all the net positive moves, I take the max value of each and parse out all other moves of lesser value. Out of this vector of optimal moves, I check to make sure that the move will not make me lose (puts the king in check), if it does, erase it from the vector. I can make this check because the value of the king is vastly greater than the rest, so I can simply check if the move is in the dontMove vector. Now, given the vector of best moves, I randomly choose one of them to use.
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---

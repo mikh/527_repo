@@ -1,0 +1,367 @@
+---+EC330 - Spring 2015 - Homework 6
+%TOC%
+
+---++_Assigned:_  Thursday, March 26
+---++_Due:_  Thursday, April 2 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=3..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(JohnCareaga),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(3+$MOD(%PHI%,3))}%
+-->
+
+---+ Problem 1. Representations. *[30 points]*
+---++ a
+---+++!! Running time
+
+Worst case: <latex>\Theta(E)</latex>
+---+++!! Brief explanation
+<VERBATIM>
+If we have an undirected graph represented as an edge list implemented using a linked list, then we can...
+- First go through the list of edges once. 
+- For each edge (or element in the list), hash each vertex in the edge to get the vertex's unique location in a hash map. For example, if a pair was
+ {'A', 'F'}, then hashing 'F' would return an index to a hash map that corresponds solely to the vertex 'F'. A c++ <map> for example could be used
+ to guarantee that each vertex maps to a unique location. If the vertices were represented as strings, then hashing a vertex would return that same vertex, which would be used as the key in the map.
+- The value associated with a key (vertex) would be an integer representing how many times we've hashed to this location. So, every time we 
+hash to a vertex, we increment the associated counter by 1.
+- Thus, as we go through the linked list, element by element, vertex by vertex, we update the number of occurrences for all vertices in the edge list.
+ If we hash to a brand new vertex (the associated value is empty), we insert it into the map and initialize the counter to zero (this way we don't need
+ to know beforehand how many vertices are in the graph).
+- Once we've ran through the edge list, we can iterate through the hash map and find the vertex with largest counter value. This counter value is the max degree.  
+
+In terms of running time...
+- If we have E edges in our list, then we will have to hash and update 2E vertices. The size of the map will be at most 2E (if each pair consists of 2 new vertices).
+- Since the hash function is simple and fast, it is Theta(1). Inserting/initializing a key/value pair into the hash map is Theta(1), and incrementing a counter is Theta(1)
+- Thus going through the edge-list to generate the complete map is Theta(2E), or Theta(E).
+- Iterating through the map entries to find the max counter is worst case Theta(2E)
+- So.. we have worst case Theta(E)
+</VERBATIM>
+---++ b
+---+++!! Running time
+Worst case (for c++11): <latex>\Theta(V)</latex>
+---+++!! Brief explanation
+<VERBATIM>
+For an undirected graph represented as a list-list adjacency-list
+- Go through the linked list of vertices.
+- For each vertex get the size of the neighbor list (for example A.size() ). In c++11 this operation takes constant time Theta(1).
+- Update the max degree variable if the size of the current neighbor list is larger than the current max degree.
+- By the end, the max degree variable holds the correct value.
+- We are going through the vertex list of size V, checking the size of each vertex's neighbor list. We thus have Theta(V)
+</VERBATIM>
+---++ c
+---+++!! Running time
+Worst case: <latex>\Theta(V^2)</latex>
+---+++!! Brief explanation
+<VERBATIM>
+If the undirected graph is represented by a 2-D vector (vector of vectors) then...
+- We have constant time Theta(1) for element accesses.
+- We can go through V rows, with each row containing V elements (the columns).
+- We can store the max degree in a variable and use a "local" degree-counter variable for each row.
+- When we go through one row, we increment the local degree-counter by 1 each time we find an element of value 1 (indicating an edge existence).
+- After going through one row, we compare the local degree-counter to the max degree variable. If local-degree counter > max degree then.. max degree = local-degree counter.
+- After going through all rows, max degree contains the correct max degree of the graph.
+- Since we are accessing each element in the VxV array once, the worst case runtime is Theta(V^2)
+
+- if we are using c++98 then .size() is up to linear time. Since it's possible for every vertex to be connected to every other vertex, the worst case running time would be Theta(V^2)
+</VERBATIM>
+---++!! Grader comments *[/30]*
+<VERBATIM>Question 1 Results:
+
+Total Grade: 27
+
+	10        		
+	7         		In some cases, you will have O(V+E) which could be greater than O(V)
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 2.  Graph algorithms *[20 points]*
+---++ a
+<VERBATIM>
+Representation assumptions: the graph to be analyzed is an array-list Adjacency list, and is connected
+Relevant data structures: Queue
+Based on: BFS
+
+
+bool is_bipartite(AdjacencyList graph)
+
+    // color each vertex to "white" (-1) to represent uncolored
+    // color is an array where the vertex is the index and the color is the value
+    for each vertex v of graph
+        color[v] = -1
+
+    // start by coloring the first vertex 'S' that has a neighbor to "color zero"
+    color[S] = 0
+
+    // Enqueue first vertex into queue 'Q'
+    ENQUEU(S)
+
+    while Q not empty
+        // get the vertex at the front of the queue 
+        h = HEAD(Q)
+        for each neighbor n of h
+            // if a neighbor vertex is the same color as vertex h, then the bipartite property is broken...
+            if color[n] == color[h]
+                return false
+
+            // else if a neighbor is uncolored, color it with the other color (with respect to vertex h's color)
+            else if color[n] == -1
+                color[n] = color[h] XOR 1
+                // enqueue the neighbor
+                ENQUEUE(n)
+
+        // dequeue the vertex after analyzing its neighbors
+        DEQUEUE(h)
+
+    // if we've colored all vertices and the bipartite property hasn't been broken, the the graph is bipartite
+    return true
+</VERBATIM>
+
+---++ b
+<VERBATIM>
+Representation assumption: graph in question is an array-list adjacency-list
+Relevant data structures: stack
+Based on: DFS
+
+
+
+bool has_cycle(AdjacencyList graph)
+    // color each vertex white to indicate that they are all initially untouched
+    // color array represents whether a vertex has been touched
+    for each vertex v in graph
+        color[v] = white
+
+    // bool that indicates whether the graph has a cycle. assume it doesn't.
+    bool cycle = false
+
+    // initialize pi array to indicate that each vertex doesn't come from anywhere.
+    for each vertex v in graph
+        pi[v] = null
+
+    // for each connected component
+    // if there's no cycle in a component, then all vertices in that component will have been touched
+    // as soon as one component has a cycle, variable "cycle" is switched to true.
+    for each vertex v of graph that is white    // to keep this Theta(V) move a pointer to point to only white vertices 
+        visit(v)
+        if cycle is true 
+            return true
+
+    // if we've gotten this far, then no components have a cycle
+    return false
+
+
+
+visit(vertex v)
+    // color vertex gray to indicate we have touched it
+    color[v] = gray
+
+    for each node n adjacent to v
+        // if a neighbor of v has been touched and its not the vertex where we came from then we have a cycle
+        if color[n] != white & n != pi[v]
+            cycle = true
+
+    for each node n adjacent to v
+        // if a neighbor is untouched, tell the neighbor where it came from, and recursively call visit on this neighbor
+        if color[n] == white
+            pi[n] = v
+            visit(n) 
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>Question 2 Results:
+
+Total Grade: 20
+
+	10        		
+	10        		
+
+
+</VERBATIM>
+
+---+ Problem 3.  Graph implementation *[20 points]*
+---++ 3a.
+See attached .cpp file
+---++ 3b.
+<VERBATIM>
+Example run:
+
+0[0]: 1 
+1[0]: 0 1 3 5 
+2[0]: 0 1 2 
+3[0]: 0 2 3 5 
+4[0]: 2 3 5 
+5[0]: 3 4 
+
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  Simplified Chess *[30 points]*
+---++ 4a
+---+++ i.
+<VERBATIM>
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  -  K  -  N  R 
+ 2 |  P  P  P  P  -  P  P  P 
+ 3 |  -  -  -  -  P  -  -  - 
+ 4 |  -  -  B  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  p  p  -  -  p  n  -  - 
+ 7 |  r  -  p  p  -  Q  p  p 
+ 8 |  -  n  b  q  k  b  -  r 
+
+Please enter your move: f7-e8
+
+Game Over:  White wins!
+</VERBATIM>
+---+++ ii.  
+<VERBATIM>
+`  |  a  b  c  d  e  f  g  h 
+____________________________
+ 1 |  R  N  B  -  K  -  p  k 
+ 2 |  P  P  P  P  -  -  p  p 
+ 3 |  -  -  -  -  P  -  -  - 
+ 4 |  -  -  B  -  -  -  -  - 
+ 5 |  -  -  -  -  -  -  -  - 
+ 6 |  -  -  -  -  -  -  -  - 
+ 7 |  -  -  -  -  -  -  -  - 
+ 8 |  -  -  -  -  -  -  -  - 
+
+</VERBATIM>
+
+---++ 4b.  Main task [20 points]
+Provide a description of your approach here.  Upload your code online.
+<VERBATIM>
+- First I initialize my best move to a random move from the list of options.
+- Set the initial best score to something worse than possible
+- Then for each possible move I can make I get the score of this move by itself based on my evaluateMove function
+- For each possible move I can make I generate a simulated board that represents the board if I had taken this move
+- From this simulated board, I find the best score that the opponent would make (according to the evaluateMove fn)
+- Subtracting my move's score from the opponent's response score gives me a net score.
+- If this net score is greater than my current net score, i update my max score (net score) and best possible move
+- after checking all the possible net scores from my list of moves i have obtained my ideal move
+- I play this move on my actual game board and return the move so that the opponent can record it.
+
+- the evaluateMove function takes in the type of piece at the destination square and returns an int.
+- the return number is highest for a king -> queen -> rook -> night -> bishop -> pawn
+</VERBATIM>
+
+%CODE{"cpp"}%
+    #include "myPlayer.h"
+
+    chessBoard::move myPlayer::getMove() {
+    	
+        // pick a random move to start with 
+    	chessBoard::move bestMove = myBoard.nthMove(rand() % myBoard.numMoves());
+
+        // set the initial bestScore to something worse than possible
+    	int bestScore = -10000000; 
+
+        // for each move I can make
+    	for (int i = 0; i < myBoard.numMoves(); i++){
+
+            // get a possible move and its destination square
+    		chessBoard::move tempMove = myBoard.nthMove(i);
+    		chessBoard::square destSquare = tempMove.to;
+
+            // get score of this move
+    		int score;
+    		try{
+    			chessBoard::piece destPiece = myBoard.atSquare(destSquare);
+    			chessBoard::pieceType destPieceType = destPiece.type;
+    			score = evaluateMove(destPieceType);
+    		} catch (chessBoard::NoPieceException e){
+    			score = 0;
+    		}
+
+            // initialize opponents score to zero
+            int opponentMaxScore = 0;
+
+            // make a board that results from my move
+            chessBoard tempBoard1 = chessBoard::chessBoard(myBoard);
+            tempBoard1.makeMove(tempMove);
+
+            // for each move opponent can make based on my possible move
+            for (int j = 0; j < tempBoard1.numMoves(); j++){
+
+                // get a possible opponent move and its destination square
+                chessBoard::move tempMove1 = tempBoard1.nthMove(j);
+                chessBoard::square destSquare2 = tempMove1.to;
+
+                // get score of this opponent move
+                int score2;
+                try{
+                    chessBoard::piece destPiece2 = tempBoard1.atSquare(destSquare2);
+                    chessBoard::pieceType destPieceType2 = destPiece2.type;
+                    score2 = evaluateMove(destPieceType2);
+                } catch (chessBoard::NoPieceException e){
+                    score2 = 0;
+                }
+                
+                // update the max score the opponent can get based on my move
+                if (score2 > opponentMaxScore) opponentMaxScore = score2;
+            }
+            
+            // update best possible score and move
+            if ((score - opponentMaxScore) > bestScore){
+                bestScore = score - opponentMaxScore;
+                bestMove = tempMove;
+            }
+            //cout << tempMove.print() << "  " << score << "  " << opponentMaxScore << "  " << score - opponentMaxScore << "  " << bestScore << endl;
+
+		}
+        // make the optimal move
+		myBoard.makeMove(bestMove);
+
+        // return the move I made
+    	return bestMove;
+
+    }
+
+    // evaulation function
+    int myPlayer::evaluateMove(chessBoard::pieceType destPieceType){
+        // score to return
+        int score;
+
+        // determine score based on the contents of the destination square
+        switch (destPieceType){
+            case chessBoard::King: {
+                score = 1000000;
+                break;
+            }
+            case chessBoard::Queen: {
+                score = 100000;
+                break;
+            }
+            case chessBoard::Rook: {
+                score = 10000;
+                break; 
+            }
+            case chessBoard::Knight: {
+                score = 1000;
+                break;
+            }
+            case chessBoard::Bishop: {
+                score = 10;
+                break;
+            }
+            case chessBoard::Pawn: {
+                score = 1;
+                break;
+            }
+        }
+        return score;
+    }
+%ENDCODE%
+
+---++!! Grader comments *[/30]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+---
