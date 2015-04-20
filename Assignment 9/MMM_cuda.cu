@@ -115,6 +115,8 @@ int main(int argc, char **argv){
 
 	printf("Running kernel\n");
 	kernel_MMM<<<dimGrid, dimBlock>>>(g_A, g_B, g_C, NN);
+	cudaThreadSynchronize();
+
 	cudaEventRecord(stop_i,0);
 	cudaEventSynchronize(stop_i);
 	cudaEventElapsedTime(&elapsed_gpu_internal, start_i, stop_i);
