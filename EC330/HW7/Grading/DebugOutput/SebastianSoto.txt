@@ -1,0 +1,186 @@
++---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  O(nlog^2(n)  |
+|  c  |  O(1)  |
+|  d  |  O(log^2(n))  |
+---++ Explanation
+<VERBATIM>
+Provide explanation for partial credits
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  57    |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |   8.5  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |   43  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  3.75  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  | 40   |
+
+Does this graph exhibit the triangle inequality? 
+Yes, as there is a shorter distance from each point to photonics than to go somewhere else then go to photonics.
+---++!! 2b
+|  Index  |  Location   |  connected with  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  c, e  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  a  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f, b  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  f, a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  e, d  |
+
+EDGE LIST:
+a, e;
+c, a;
+e, f;
+d, b;
+f, d;
+
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |null  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+
+myMST(G)     // G is weighted undirected graph
+
+Workset set = G.getNodes
+UnionFind disjoint G.getNodes // disjoint  set
+for each n in set {
+
+   Edge e = edge with minimum weight of all out edges in G
+   node v1 = disjoint.find(e.sourceEdge);
+   node v2 = disjoint.find(e.destinationEdge);
+   if(v1!=v2) {
+       add e to minimum spanning tree;
+       node v = disjoint.union (v1, v2);
+       set.add (v);
+   }
+   return minimum spanning tree;
+}
+
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+used a varient of Boruvkas algorithm, used a union find to do the edge contraction.  Edges with the lightest weight are joined together
+ to form a new edge (and not a cycle).  Each edge is joined with its lightest neighbor.  This is then added to the new tree we are building.  This
+ implementation takes O(ElogV) .
+Use union find to do edge contraction. Edges with minimum weight are joined to form a new edge, not creating a cycle. Theta(|E|log|V|).
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+Theta(|E|)
+</VERBATIM>
+---++!! b
+<VERBATIM>
+Does not give minimum spanning tree, counter example: V={1,2,3}, Edge between 1 and 2 of weight 4, between 2 and 3 of weight 1, and between 1 and 3 of weight 5. If the edge of weight 1 is last in the arbitrary order it will not be part of the minimum spanning tree and thus this algorithm does not always work.
+</VERBATIM>
+---++!! c
+<VERBATIM>
+Theta(|E|)
+</VERBATIM>
+
+---++!! Grader comments *[16/20]*
+<VERBATIM>
+First running time is O(E^2); last is O(E(V+E)).
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+Describe and analyze the algorithm.
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+Provide your result here.
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+// paste your code here
+
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+Describe and analyze the modification
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+
+
+---+++!! Grader comments
+<VERBATIM>Question 4 Results:
+
+Total Grade: 0
+
+	0         		
+	0         		
+	0         		
+
+
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle
+
+
+---+++!! Grader comments
+<VERBATIM>Question 5 Results:
+
+Total Grade: 0
+
+	0         		Grades from submission
+	0         		
+
+
+</VERBATIM>
+

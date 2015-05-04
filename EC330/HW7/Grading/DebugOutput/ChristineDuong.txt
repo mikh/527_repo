@@ -1,0 +1,308 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  n<sup>2</sup>logn *log(logn)  |
+|  c  |  n<sup>2</sup>logn  |
+|  d  |  (nlogn)<sup>2</sup>  |
+---++ Explanation
+b. If we have logn copies of numbers from 1 to n, then the height of a tree for any single number is log(logn). Then there are n of these trees which, because of the constant increase in keys, the total height of the tree will be nlog(logn). We then need to do nlogn insertions, so the total time should be O(n<sup>2</sup>logn*log(logn)).<br>
+c. If we add the item to the front of the list, this will take constant time. This means the height of the tree will just be n and with nlogn insertions, the total time should be O(n<sup>2</sup>logn).<br>
+d. Worst case is that they all end up on one side (in a long chain) which will be of height nlogn. With nlogn insertions this is O((nlogn)<sup>2</sup>).
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  54  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  9  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  43  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  40  |
+
+Does this graph exhibit the triangle inequality? 
+Yes
+---++!! 2b
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  Source  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+|  Edge List  |
+|  Vertex 1 |  Vertex 2  |
+|  b  |  d  |
+|  c  |  e  |
+|  d  |  f  |
+|  e  |  a  |
+|  f  |  c  |
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  Source  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+Because the graph is complete Prim's algorithm utilizing a linked list will be suitable for finding a MST.
+
+
+Place all vertices (ordered) in a queue
+key[v]=infinity for all v except the root
+key[root] = 0
+
+while queue!=empty
+    u=extract-min(queue)
+    for each vertex v adjacent to u
+        if v is in queue and w(u,v) <key[v]
+            key[v]=w(u,v)
+            pi[v]=u
+</VERBATIM>
+---+++!! Analysis
+Because it is a dense graph we should utilize a linked list to represent the queue. If we do so the algorithm will run in O(V<sup>2</sup>).
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<latex> O(E log(E)+ E(V + E) )= O(E^{2}) </latex>
+---++!! b
+<VERBATIM>
+           a
+        /      \
+       b--------c
+
+Let w(a,b) = 1
+      w(b,c) = 2
+      w(c,a) = 3
+</VERBATIM>
+
+We can easily see that the minimum spanning tree should have edges {a,b} and {b,c} giving us an overall weight of 3. However, Maybe-MST in this case chooses an edge to add arbitrarily so it is possible it will choose edges {b,c} and {c,a} which would lead to a weight of 5 which is not the MST. 
+---++!! c
+<latex>O(VE) </latex>
+---++!! Grader comments *[20/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+After reading in all of the strings which I will call fragments:
+Make each fragment a vertex in a graph (which I called text).
+If the last four characters of a fragment matches the first four characters of another fragment, let there be a directed edge from the first to the second.
+Then, let there be a stack and a path; both of which are empty:
+-Push onto the stack the first fragment of the overall string (this will be the only fragment with 0 in-degree, which can easily be checked for when we're adding edges to the graph).
+-While the stack isn't empty:
+    -Look at the top of the stack. If this fragment/vertex has a neighbor:
+        -Push the neighbor onto the stack
+        -Delete the edge that you just used to travel to this neighbor
+    -Otherwise (there are no neighbors):
+        -Add this element to our path 
+        -Pop it off the stack 
+
+Go through the path in reverse to get the strings in order. (You can just print the first string, last character of every in between string, and then the last string to get the overall string). 
+
+If V is the number of fragments, and E is the number of directed edges, then it takes O(V<sup>2</sup>) to populate the graph and then O(V+E) to find the path/string. If E is ~V, then it will be O(V<sup>2</sup>) to populate and O(V) to find the path. 
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+In order that every man present his views without penalty there must be spirit of tolerance in the entire population
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+#include <iterator>
+#include <istream>
+#include <set>
+using namespace std;
+
+// In order that every man present his views without penalty there must be spirit of tolerance in the entire population.
+
+using namespace std;
+
+typedef pair<string, string> directedEdge;
+typedef set<string>::iterator vertexIterator;
+
+class Graph {
+public:
+    //Constructor
+    Graph() {}
+    
+    //Add a vertex denoated with [name]
+    void addVertex(string name) {
+        vertices.push_back(name);
+    }
+    
+    //Add an edge to the graph
+    //R: Vertices of edge are in graph
+    void addEdge(directedEdge newEdge) {
+        edges.insert(newEdge);
+    }
+    
+    //Checks to see if there is an edge in the graph
+    bool isEdge(directedEdge newEdge) {
+        return edges.find(newEdge)!= edges.end();
+    }
+    
+    //Deletes an edge from an edge
+    //Requires the edge be in the set edges
+    void deleteEdge(directedEdge newEdge) {
+        edges.erase(edges.find(newEdge));
+    }
+    
+    vector<string> vertices;                    //Vector of all the vertices
+    set< directedEdge > edges;                  //Set of all edges in graph
+    
+};
+
+int main() {
+    ifstream segments;
+    segments.open("text.txt");
+    string line;
+    vector<string> fragments;                   //Contains the strings we read
+    string quote="";                            //Our first string in the quote
+    vector<string> stack;                       //Used as a stack
+    vector<string> path;                        //Our quote
+    Graph text;
+    
+    while (getline(segments,line,']')) {                        //Read in each [string]
+        if (line.length() > 3) {                                //Just in case there's space at the end
+            line=line.substr(2);                                //Take the string -- not the '['
+            fragments.push_back(line);
+            text.addVertex(line);                               //Add the fragment as a vertex
+            if (line[0] >='A' && line[0]<='Z') {                //If we find a capital letter, that's our start!
+                quote+=line;
+            }
+        }
+    }
+    
+    for(int ii=0; ii<fragments.size(); ii++) {                  //For every vertex v1
+        for (int jj=0; jj<fragments.size();jj++) {              //For every vertex v2
+            //If the last four characters of v1 matches the first four characters of v2...
+            if (ii !=jj && fragments[ii].substr(1,4) == fragments[jj].substr(0,4)) {
+                //There's a directed edge from v1 to v2
+                directedEdge newEdge(fragments[ii],fragments[jj]);
+                text.addEdge(newEdge);
+            }
+        }
+    }
+    
+    stack.push_back(quote);
+    while (stack.size()>0) {                                    //While our stack isn't empty
+        int neighbors=0;
+        string current=stack.back();                            //Top of the stack
+        for(int ii=text.vertices.size()-1; ii>=0; ii--) {       //For each pair of vertices
+            directedEdge check(current,text.vertices[ii]);
+            if (text.isEdge(check)) {                           //Check if there's an edge between them
+                stack.push_back(text.vertices[ii]);             //If so, add the 2nd vertex to the stack
+                neighbors++;                                    //Number of neighbors goes up
+                text.deleteEdge(check);                         //Delete the edge we just used
+                break;
+            }
+        }
+        if (neighbors==0) {                                     //If we have no neighbors
+            stack.pop_back();                                   //Pop it off the stack
+            path.push_back(current);                            //Add it to our path
+        }
+    }
+
+    cout << quote;                                      //The first string
+    for (int ii=path.size()-2; ii>0; ii--) {
+        cout << path[ii][4];                            //the last letter of every in between string...
+    }
+    cout << path[0];                                    //except the last. Just print that!
+
+    
+
+}
+
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+This part is very similar to part =a= except if a fragment is a substring of another fragment, do not add it into the graph as a vertex. 
+For vertex v1 and vertex v2:
+-If v1 is smaller than v2: If the v1.length()-1 last characters of v1 match with v1.length()-1 first characters of v2, then make a directed edge from vertex 1 to 2.
+-If v2 is smaller than v1: if the v2.length()-1 last characters of v1 match with the v2.length()-2 first characters of v2, then make a directed edge from vertex 1 to 2. 
+
+This should have the same run time. 
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+Similar to b, if we encounter a string that is a repeat (or substring of another string), just delete/not include it in the graph. 
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+(At least to my knowledge) there's no easy way of knowing what the original string is if there are errors at the end of the reads. If the reads are relatively long, I think we can have a good idea if we see if 90% of the end of read1 matches with the beginning of read2. If that holds true, we can assume there may be a directed edge from read1 to read2. 
+</VERBATIM>
+
+
+---+++!! Grader comments
+<VERBATIM>Question 4 Results:
+
+Total Grade: 20
+
+	10        		
+	5         		
+	5         		
+
+
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+After creating classes to represent the graph and the weighted edges, I used a greedy algorithm -- I looked for the cheapest neighbor to the city I was currently looking at. I would then continue this until I reached the correct number of edges or I noticed a cycle. 
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle
+
+
+---+++!! Grader comments
+<VERBATIM>Question 5 Results:
+
+Total Grade: 5
+
+	0         		Grades from submission
+	5         		
+
+
+</VERBATIM>
+

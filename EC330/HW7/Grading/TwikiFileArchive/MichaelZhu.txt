@@ -1,0 +1,328 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  O(n^2)*log(n) * lg (log(n))   |
+|  c  |  O(n^2*log(n)) |
+|  d  |  O(n*log(n))^2) |
+---++ Explanation
+<VERBATIM>
+Provide explanation for partial credits
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |    57 |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |   8 |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  43  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |   40 |
+
+Does this graph exhibit the triangle inequality? 
+
+The graph does exhibit triangle inequality. All the triangles formed abide by the property A <= B + C where A, B, C, are sides of the triangle. 
+---++!! 2b
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  | source   |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |   a or e |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |   f |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |   a |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |   c |
+
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  source  |
+|  b  |  Chichen Itza, Yuc., Mexico  |   d |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  | a, or e   |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  | a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  | c   |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+Describe your algorithm here. Pseudocode is preferred.
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+Descrbie and analyze your algorithm.
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+This algorithm produces a minimum spanning tree. The running time is O(E*lg(E)) + O(E*lg(V)) for sorting the edges. Using DTF to determine connectivity increases the running time to O(E*lg(V)) + O((E*2) + (E*V))
+</VERBATIM>
+---++!! b
+<VERBATIM>
+This algorithm produces a spanning tree, but not necessarily an MST. Since edges are processed in arbitrary order, this would fail for any tree whose edgelist wasn't sorted since the only checking that occurs is to make sure the graph is acylic. Therfore, it doesn't produce minimum paths all the time.
+</VERBATIM>
+---++!! c
+<VERBATIM>
+This algorithm also produces a minimum spanning tree. Line 3 is O(1). Lines 4 through 6 can take O(V) time and the for loop goes through the whole adjacency list so it is done in O(E) time. This gives the algorithm a total run time of O(E*V). 
+</VERBATIM>
+
+---++!! Grader comments *[20/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+
+#include <iostream>
+#include <fstream>
+#include <stdlib.h>
+#include <string>
+#include <vector>
+#include <cctype>
+
+
+using namespace std;
+
+int main(){
+        ifstream newFile;
+    newFile.open("formatted.txt");
+    
+    
+    //Read file into array
+    vector<string> substrings;
+    string readInput;
+    if(newFile.is_open()){
+        while(getline(newFile,readInput)){
+            substrings.push_back(readInput);
+        }
+    }
+    
+    
+    string decode;
+    // Step 1: Find the beginning of the decoded string.
+    for (int i=0; i<substrings.size(); i++)
+    {
+        string current = substrings[i];
+        if (isupper(current[0]) == true){ // Test if the first character is capitalized.
+            decode = current.substr(0,5);
+        }
+    }
+    
+    
+    
+    
+    while (decode[decode.size()-1] != '.')
+    {
+        // At this point we have the beginning of the sentence.
+        string lastFour = decode.substr(decode.size()-4, 4);
+        cout << "LAST 4(a): "<< lastFour << endl;
+        // Find the next substring.
+        for (int i=0; i<substrings.size(); i++)
+        {
+            string candidate = substrings[i];
+            if ((candidate[0] == lastFour[0]) && (candidate[1] == lastFour[1]) && (candidate[2] == lastFour[2]) && (candidate[3] == lastFour[3])){ // If we have a substring match between lastFour and candidate, we want  to add the fifth character of candidate to decode.
+                decode = decode + candidate[4];
+                lastFour = decode.substr(decode.size()-4, 4);
+            }
+                    }
+        
+    }
+    
+    cout << decode << endl;
+    
+    
+    newFile.close();
+    
+    
+    return 0;
+}
+---+++!! i
+<VERBATIM>
+This algorithm begins by reading in the text file and using grep regex to store all the contents within each set of opening and closing brackets and pushing them onto a vector called substrings. Then we find the beginning of the quote by finding the only string that begins with a capitalized character using isupper(string). We proceed to make this the beginning of the decoded message, which is declared as string decode. 
+
+We then set up a while loop that runs as long as the last character of decode is NOT a period. We extract the last 4 characters of decode (i.e. the last substring added) using the substr() function and perform character matches for the first 4 characters of all the substrings by iterating throguh our vector. If they all match, then we append the 5th character of the substring to decode.  
+
+This while loop terminates when the last substring is added. 
+
+The runtime of this algorithm is O(n^2). 
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+Reading, after a certain age, diverts the mind too much from its creative pursuits.
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+// paste your code here
+
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+
+For variable-length substrings, we read every line into a string, then push every substring into the substrings vector. We adjust by measuring the length of the last substring added, and depending on how long it is compared to the substrings in the vector, we do character matching to the length of the substring, or of the last substring added. We use a counter variable to count up the number of matches. If this counter equals the length of the substring, then we append the new characters to the decoded message. 
+
+The limitation is that if the substring match is for a really short string like 'i', it will match to the next substring that matches to that first character, leading to vulnerabilities. 
+
+This is ultimately the same runtime as part a: O(n^2).
+
+#include <iostream>
+#include <fstream>
+#include <stdlib.h>
+#include <string>
+#include <vector> 
+#include <fstream>
+using namespace std;
+
+int main(){
+	
+	ifstream myfile;
+	myfile.open ("file.txt");
+
+	string word;
+	if(myfile.is_open()){
+		while(getline(myfile,word)){
+			cout << word << endl;	
+		}
+		myfile.close();
+	}
+	cout << word[0] << endl;
+
+    vector<string> substrings; 
+	for(int jj = 0; jj < word.size(); jj++){
+
+		if(word[jj] == '[' && word[jj] != ']'){
+				string mySub; // Build the individual substrings (chars between brackets)
+						int i = 1;
+			 while(word[jj] != ']'){ // Keep reading the string until we hit a closing bracket. 
+			 	mySub = mySub + word[i];
+			 	i++;
+			 }
+			// At this point, substring should contain characters between the brackets. For example " afte". 
+ 			substrings.push_back(mySub);
+ 		}
+	}
+
+// Now we have read all the variable-length substrings into the substrings vector. We can now proceed to decode the message. 
+}
+
+    
+    string decode;
+    // Step 1: Find the beginning of the decoded string.
+    for (int i=0; i<substrings.size(); i++)
+    {
+        string current = substrings[i];
+        if (isupper(current[0]) == true){ // Test if the first character is capitalized.
+// If true, current is the first substring. We now set it to the beginning of decode. 
+            decode = current.substr(0,current.size());
+	          }
+        
+    }
+    
+string lastString = decode; 
+    while (decode[decode.size()-1)]!="."))
+    {
+    // At this point we have the beginning of the sentence.
+    int lastStringLength = lastString.size(); 
+    string lastLetters = decode.substr(decode.size()-lastStringLength, lastStringLength);    // Extract the characters of the last substring added to decode. 
+    for (int i=0; i<substrings.size(); i++)
+    {
+        string candidate = substrings[i];
+        int candLength = candidate.length(); 
+        if (candLength > lastStringLength){ // If candidate is longer than lastString added to decode, then we must string match only up to lastStringLength.
+		int charMatch = 0; 
+         	while(i<lastStringLength)
+           {
+       	  if (candidate[i] == lastFour[i+1]) // Do the character matching until the last character 
+            {
+            charMatch ++; 
+            i++;
+		  }
+            } // end of while loop.
+	if (charMatch == lastStringLength)
+{
+
+            decode = decode + candidate.substr(candidate.size()-lastStringLength, candidate.size()-lastStringLength); // Append the rest of candidate to decode. 
+}
+
+   else {
+         
+            }             lastStringLength = candidate.length(); 
+        }
+              else { // Otherwise, candLength < lastStringLength
+ { 
+ repeat the code in if case, but for i<candidate.length() 
+
+if (charMatch == lastStringLength)
+{
+            decode = decode + candidate.substr(candidate.size()-lastStringLength, candidate.size()-lastStringLength); // Append the rest of candidate to decode. 
+}
+}
+}
+
+    cout << decode << endl; 
+    return 0;
+}
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+
+First, we create a DNA sequence when there is a missing fragment of the DNA, we must:
+i) Read in the text file with standard I/O code. 
+ii) We use the map class to store the contents of the text file. 
+iii) As each value is being stored into the map, find which DNA sequence could possible come next and store that as the array value, in format DNA[current] = nextValue
+iv) If no next value is found for a particular index then assign it a whitespace. 
+v) Use a while loop to iterate through each index of the map and construct the DNA sequence. 
+vi) If the algorithm detects an index with no value, find the value that has a white space for an index value.
+vii) Do character matching on these segments to determine if any of the sequence is identical. If true, then map to this value.
+ix) Continue to map the DNA sequence until all values in the map function are mapped.
+
+We then create a DNA sequence when there are repeating fragments of the DNA:
+
+i) Read in the text file.
+ii) Use the map class to store the contents of the text file
+iii) Also store each index value into a vector to use for repetition detection.
+iv) As each value is being stored into the index, find which DNA sequence could potentially go next and store that as the array value.
+v) While each index value is being stored in the map function, compare it with the vector to see if it is a repeating value.
+vi) If a repeated index value, discard it and continue storing the next index value
+vii) Use a while loop to iterate through each index of the map and construct the DNA sequence. 
+viii) Keep mapping the DNA sequence until all values in the map function are mapped.
+---+++!! i
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle

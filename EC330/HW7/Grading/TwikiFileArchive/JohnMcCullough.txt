@@ -1,0 +1,287 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  <latex>\Theta(n*h*log(n))</latex>  |   
+|  c  |  <latex>\Theta(n*h*log(n))</latex>  |   
+|  d  |  <latex>\Theta(n*h*log(n))</latex>  |   
+
+
+---++ Explanation
+<VERBATIM>
+Provide explanation for partial credits
+
+b: Insert takes Theta(h) time and you have to insert each number n, log(n) times. switching bool flag take const time
+
+c: Same reasoning as above. Also, inserting into a list takes constant time.
+
+d: Same reasoning as above.
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr) (w/out traffic!)  |
+|  Chichen Itza, Yuc., Mexico  |  57  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  8  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  41  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  37  |
+
+Does this graph exhibit the triangle inequality? 
+If you are traveling by car, this graph exhibits the triangle inequality. Any location is more, or as, quickly 
+reachable directly from another city, rather than using a third location as an intermediary. 
+---++!! 2b
+|  Index  |  Location   |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |   
+|  b  |  Chichen Itza, Yuc., Mexico  |   
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |    
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |    
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |    
+
+Using the indices provided:  (vertex -- vertex (weight))
+
+e -- a  (4),
+e -- c (7),
+d -- b (16),
+f -- d (28),
+f -- c (31)
+
+Total Weight: 86
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  Start  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d (end)  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+Assume we start at PHO.
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+Describe your algorithm here. Pseudocode is preferred.
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+Descrbie and analyze your algorithm.
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+Counterexample or Running time
+</VERBATIM>
+
+Running time: <latex>\Theta(E*log(E) + E^2*log(V))</latex>
+
+Using merge sort, sorting the edges into decreasing order takes worst case E*log(E) time. 
+For each edge, you have to check if the resulting graph without the edge is connected. Therefore,
+time is E*log(V) to check for connected components and this is done E times.
+---++!! b
+<VERBATIM>
+Counterexample or Running time
+
+         10
+  * ----------- *
+  |             |
+  |  3          |  1
+  |             |
+  * ----------- *
+          2
+</VERBATIM>
+
+For the above example, if taking edges in arbitrary order, you can use edges 10, 3, and 2
+to produce a spanning tree but not a minimum spanning tree.
+
+---++!! c
+<VERBATIM>
+Counterexample or Running time
+</VERBATIM>
+
+Running time is <latex>\Theta(E^2*log(V))</latex>
+
+E*log(V) to check for connected components and done E times.
+---++!! Grader comments *[16/20]*
+<VERBATIM>
+First running time is O(E^2); last is O(E(V+E)).
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+Describe and analyze the algorithm.
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+Provide your result here.
+
+Do not worry about your difficulties in Mathematics. I can assure you mine are still greater.
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+// paste your code here
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <vector>
+
+using namespace std;
+
+vector <string> suff;
+vector <string> pref;
+
+int foo = 0;
+int bar = 16;
+int start;
+int checkArray[90];
+bool found = false;
+int sentence = 0;
+
+
+string suffix(string read)
+{
+	string suff = read.substr(1, 4);
+	return suff;
+}
+
+string prefix(string read)
+{
+	string suff = read.substr(0, 4);
+	return suff;
+}
+
+void findnext()
+{
+	while (suff[bar] != pref[foo]) {		//while the prefix is not equal to the suffix of another
+		foo++;
+		while (checkArray[foo] == 1) {
+			foo++;
+			if (foo == 90) {
+				foo = 0;
+			}
+		}
+		if (foo == 90) {					//this means we have found the end of the string
+			foo = 0;
+			start = bar + 1;
+			while (found == 0) {
+				if (start >= (pref.size() - 1)) {
+					start = 0;
+				}
+				if (pref[start] == suff[foo]) {		//find a read with a prefix that has no matching suffix
+					start++;
+					foo = 0;
+				}
+				else {
+					foo++;
+					if (foo >= (suff.size() - 1)) {
+						bar = start;
+						checkArray[90] = {};
+						found = 1;
+					}
+				}
+			}
+			//foo = 0;
+		}
+
+	}
+}
+
+void print()
+{
+	string quote = pref[bar] + suff[foo].substr(4, 1);
+	//cout << foo << " " << bar << endl;
+	if (sentence == 0) {
+		cout << quote;
+		sentence = 3;
+	}
+	else {
+		sentence--;
+	}
+	checkArray[bar] = 1;
+	bar = foo;
+	//cout << bar << endl << endl;
+	foo = 0;
+}
+
+int main()
+{
+	ifstream file;
+	file.open("reads.txt");
+	string read;
+	int count = 0;
+
+	if (!file.is_open()) {
+		cout << "Error" << endl;
+		cin.get();
+	}
+	else {
+		while (!file.eof()) {
+			getline(file, read, '[');
+			getline(file, read, ']');
+			suff.push_back(suffix(read));
+			pref.push_back(prefix(read));
+			count++;
+		}
+
+		for (int ii = 0; ii < pref.size(); ii++) {
+			findnext();
+			print();
+		}
+
+	}
+	file.close();
+	cin.get();
+	return 0;
+}
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+Describe and analyze the modification
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle

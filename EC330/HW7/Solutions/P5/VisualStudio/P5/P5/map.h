@@ -7,6 +7,8 @@
 #include <stdio.h>
 #include <iostream>
 #include <fstream>
+#include <time.h>
+#include <math.h>
 
 using namespace std;
 
@@ -17,15 +19,15 @@ public:
 	vector<City*> map;
 	vector<City*> path_list;
 	vector<vector<City*> > p_trix;
-	vector<vector<int> > d_trix;
+	vector<vector<double> > d_trix;
 
-	int roads;
-	float max_distance;
+	double roads;
+	double max_distance;
 
 
 
 	Map();
-	void add_road(string s_city, string e_city, int distance);
+	void add_road(string s_city, string e_city, double distance);
 	void print_statistics();
 	bool set_start_city(string name);
 
@@ -42,7 +44,7 @@ private:
 
 
 	City* find_city(string city_name, vector<City*> &list);
-	int find_distance(string city_name, vector<City*> &c_list, vector<int> &d_list);
+	double find_distance(string city_name, vector<City*> &c_list, vector<double> &d_list);
 	int find_index(string city_name, vector<City *> &list);
 
 	void add_city(string &city_name);
@@ -70,17 +72,21 @@ Map::Map(){
 void Map::FloydWarshall(){
 	printf("Running Floyd-Warshall Algorithm\n");
 	vector<vector<City*> > p_trix_t;
-	vector<vector<int> > d_trix_t;
+	vector<vector<double> > d_trix_t;
 	int N = map.size();
 
 	//initialize matrices
 	printf("Initializing D0 and P0 matrices...\n");
+	double max_distance = 0;
 	for (int ii = 0; ii < N; ii++){
-		printf("%.2f%% done\n", (float)ii / (float)N * 100);
+		printf("%.2f%% done\r", (float)ii / (float)N * 100);
+		cout << flush;
 		vector<City *> p_row;
-		vector<int> d_row;
+		vector<double> d_row;
 		for (int jj = 0; jj < N; jj++){
-			int dd = find_distance(map[jj]->name, map[ii]->o_dest, map[ii]->o_dist);
+			double dd = find_distance(map[jj]->name, map[ii]->o_dest, map[ii]->o_dist);
+			if (max_distance < dd)
+				max_distance = dd;
 			if (ii == jj){
 				d_row.push_back(0);
 				p_row.push_back(NULL);
@@ -97,17 +103,47 @@ void Map::FloydWarshall(){
 		d_trix_t.push_back(d_row);
 		p_trix_t.push_back(p_row);
 	}
+	printf("100.00%% done\n");
+	max_distance*= max_distance;
+	for (int ii = 0; ii < N; ii++){
+		printf("%.2f%% done\r", (float)ii / (float)N * 100);
+		cout << flush;
+		for (int jj = 0; jj < N; jj++){
+			if (d_trix_t[ii][jj] == -1)
+				d_trix_t[ii][jj] = max_distance;
+		}
+	}
+	printf("100.00%% done\n");
 
-	
-	printf("Running algorithm. Requires %.0f iterations.\n", (float)N*(float)N*(float)N);
+	bool timer_started = false, timer_finished = false;
+	time_t timer_start, timer_end;
+	double cur_percent = 0, save_percent = 0;
+	time(&timer_start);
+
+	printf("Running algorithm. Requires %.0f iterations.\n", (double)N*(double)N*(double)N);
 	for (int kk = 0; kk < N; kk++){
-		printf("%.2f%% done\n", (float)kk / (float)N * 100);
+		cur_percent = (float)kk / (float)N * 100;
+		time(&timer_end);
+		double seconds = difftime(timer_end, timer_start);
+		double increments = (100.0 - cur_percent) / (cur_percent - save_percent);
+		seconds *= increments;
+		double minutes = (int)seconds / 60;
+		seconds = (int)seconds % 60;
+		double hours = (int)minutes / 60;
+		minutes = (int)minutes % 60;
+		timer_start = timer_end;
+		save_percent = cur_percent;
+		printf("%.2f%% done %2d:%2d:%2d time remaining                \r", cur_percent, (int)hours, (int) minutes, (int)seconds);
+		cout << flush;
+		
+
 		vector<vector<City*> > p_trix_next(p_trix_t);
-		vector<vector<int> > d_trix_next(d_trix_t);
+		vector<vector<double> > d_trix_next(d_trix_t);
 		for (int ii = 0; ii < N; ii++){
 			for (int jj = 0; jj < N; jj++){
-				int d1 = d_trix_t[ii][jj];
-				int d2 = d_trix_t[ii][kk] + d_trix_t[kk][jj];
+				double d1 = d_trix_t[ii][jj];
+				double d2 = d_trix_t[ii][kk] + d_trix_t[kk][jj];
+				
 				if (d1 <= d2){
 					d_trix_next[ii][jj] = d1;
 					p_trix_next[ii][jj] = p_trix_t[ii][jj];
@@ -121,6 +157,7 @@ void Map::FloydWarshall(){
 		p_trix_t = p_trix_next;
 		d_trix_t = d_trix_next;
 	}
+	printf("100.00%% done\n");
 	
 
 	p_trix = p_trix_t;
@@ -130,7 +167,7 @@ void Map::FloydWarshall(){
 void Map::save_FW_results(string meta_file, string distance_file, string pred_file){
 	ofstream f_d, f_p, m;
 	m.open(meta_file);
-	m << map.size() << "\n" << roads << "\n" << max_distance << "\n";
+	m << map.size() << "\n" << roads << "\n" << (unsigned long)max_distance << "\n";
 	m.close(); 
 
 	f_d.open(distance_file);
@@ -138,7 +175,8 @@ void Map::save_FW_results(string meta_file, string distance_file, string pred_fi
 
 	printf("Saving FW results...\n");
 	for (int ii = 0; ii < d_trix.size(); ii++){
-		printf("%0.2f%% done\n", (float)ii / (float)d_trix.size()*100.0);
+		printf("%0.2f%% done\r", (float)ii / (float)d_trix.size()*100.0);
+		cout << flush;
 		for (int jj = 0; jj < d_trix[ii].size() - 1; jj++){
 			f_d << d_trix[ii][jj] << " ";
 			if (p_trix[ii][jj] != NULL)
@@ -149,6 +187,7 @@ void Map::save_FW_results(string meta_file, string distance_file, string pred_fi
 		if (p_trix[ii][p_trix[ii].size() - 1] != NULL)
 			f_p << p_trix[ii][p_trix[ii].size() - 1]->ID << "\n";
 	}
+	printf("100.00%% done\n");
 
 	f_d.close();
 	f_p.close();
@@ -177,14 +216,15 @@ bool Map::load_FW_results(string meta_file, string distance_file, string pred_fi
 	printf("Loading FW results");
 	while (getline(f_d, line)){
 		ii++;
-		printf("%0.2f%% done\n", (float)ii / (float)map.size()*100.0);
-		vector<int> d_row;
+		printf("%0.2f%% done\r", (float)ii / (float)map.size()*100.0);
+		cout << flush;
+		vector<double> d_row;
 		vector<City *> p_row;
 		string number = "";
 		for (int ii = 0; ii < line.size(); ii++){
 			if (line[ii] == ' '){
 				if (number.length() > 0){
-					d_row.push_back(atoi(number.c_str()));
+					d_row.push_back(strtod(number.c_str(), NULL));
 					number = "";
 				}
 			}
@@ -218,6 +258,7 @@ bool Map::load_FW_results(string meta_file, string distance_file, string pred_fi
 
 		p_trix.push_back(p_row);
 	}
+	printf("100.00%% done\n");
 
 	f_d.close();
 	f_p.close();
@@ -235,7 +276,7 @@ bool Map::greedy_pathing(){
 
 	printf("Starting greedy pathing. Start City = %s. %d cities remaining.\n", cur_city->name.c_str(), remaining_city_list.size());
 	
-	if (!load_FW_results("meta_file.txt", "distance_file.txt", "pred_file.txt")){
+	if (!load_FW_results("meta_file.txt", "distance_matrix.txt", "pred_matrix.txt")){
 		FloydWarshall();
 		save_FW_results("meta_file.txt", "distance_matrix.txt", "pred_matrix.txt");
 	}
@@ -356,7 +397,8 @@ void Map::BellmanFord(vector<City*> &submap, City* source){
 	source->pred_dist = 0;
 
 	for (int ii = 0; ii < submap.size(); ii++){	//for each vertex
-		printf("%.2f%% done.\n", (float)ii / (float)submap.size() * 100);
+		printf("%.2f%% done.\r", (float)ii / (float)submap.size() * 100);
+		cout << flush;
 		for (int jj = 0; jj < submap.size(); jj++){		//for each edge
 			for (int kk = 0; kk < submap[jj]->o_dest.size(); kk++){
 				City* c = submap[jj]->o_dest[kk];
@@ -370,6 +412,7 @@ void Map::BellmanFord(vector<City*> &submap, City* source){
 			}
 		}
 	}
+	printf("100.00%% done\n");
 }
 
 
@@ -435,7 +478,7 @@ bool Map::is_city_null(City &city){
 	return false;
 }
 
-void Map::add_road(string s_city, string e_city, int distance){
+void Map::add_road(string s_city, string e_city, double distance){
 	roads++;
 	max_distance += distance;
 	City* city_s = find_city(s_city, map);
@@ -464,7 +507,7 @@ City* Map::find_city(string city_name, vector<City*> &list){
 	return NULL;
 }
 
-int Map::find_distance(string city_name, vector<City*> &c_list, vector<int> &d_list){
+double Map::find_distance(string city_name, vector<City*> &c_list, vector<double> &d_list){
 	for (int ii = 0; ii < c_list.size(); ii++){
 		if (c_list[ii]->name.compare(city_name) == 0)
 			return d_list[ii];
@@ -486,7 +529,7 @@ void Map::add_city(string &city_name){
 }
 
 void Map::print_statistics(){
-	printf("Map contains: %d cities, %d roads, with a max distance of %d\n", map.size(), roads, max_distance);
+	printf("Map contains: %.0f cities, %.0f roads, with a max distance of %.0f\n", map.size(), roads, max_distance);
 }
 
 void Map::free_map(){

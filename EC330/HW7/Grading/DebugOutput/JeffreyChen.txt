@@ -1,0 +1,295 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+
+Collaborated with Austin Schiller
+
+|  Approach   |  Running time  |
+|  b  |  &Theta;((n^2)*log^2(n))  |
+|  c  |  &Theta;((n^2)*log(n)  |
+|  d  |  &Theta;((n^3)*log(n))  |
+
+
+---++ Explanation
+
+For b, you create a balanced binary tree. You are required to do nlog(n) inserts, and each insert will take on average nlog(n) time
+
+For c, you do nlog(n) inserts, and the tree becomes a line of nodes, so the height of the tree = n, and insert will require O(h) = O(n)
+
+For d, the worst case would be if each copy got put in the same direction, so that the tree is just a line of nodes, and the height of the tree = n. You are required to do nlog(n) inserts.
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  57  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  8.75  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  44  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4.12  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  40  |
+
+Does this graph exhibit the triangle inequality? Yes
+---++!! 2b
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  Statue of Liberty (~4 hrs)  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  Pyramid of the Sun (16 hrs)  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  Statue of Liberty (~8 hrs)  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  Mandalay Bay (29 hrs)  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  NIL  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  CN Tower (33 hrs)  |
+
+MST edge weights: 
+
+Statue of Liberty --> Photonics (~4 hrs)
+
+Statue of Liberty --> CN Tower (~8 hrs)
+
+CN Tower --> Mandalay Bay (33 hrs)
+
+Mandalay Bay --> Pyramid of the Sun (29 hrs)
+
+Pyramid of the Sun --> Chichen Itza (16 hrs)
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  Statue of Liberty (~4hrs)  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  Pyramid of the Sun (16 hrs), Mandalay Bay, CN Tower, Statue of Liberty  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  Statue of Liberty (~8 hrs)  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  Mandalay Bay (29 hrs), CN Tower, Statue of Liberty  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  NIL  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  CN Tower (33 hrs), Statue of Liberty  |
+
+Prim's algorithm results in same MST at Kruskal's algorithm
+---++!! 2d
+---+++!! Algorithm
+Pseudocode for Kruskal's algorithm: (source: http://www.stoimen.com/blog/2012/11/12/computer-algorithms-kruskals-minimum-spanning-tree/)
+
+<Verbatim>
+T (spanning tree) = empty set
+For each vertex V in graph G,
+    Make empty set out of V
+Sort edges in G in increasing order
+For each edge (U,V)
+    If U and V are in different sets
+        Add (U,V) to T
+        Put U and V in the same set
+</Verbatim>
+---+++!! Analysis
+
+The Pseudocode implements Kruskal's algorithm. The graph is initially made into a forest, in which each vertex is a separate tree. The edges are then sorted in increasing order. Looking at the smallest edge first, combine the two vertices into one tree, and do this until the forest forms a minimal spanning tree.
+
+Runtime: &Theta;(E*log(V)) for sparse graph. If the graph is dense, then Prim's algorithm (with a Fibonacci heap) will work better
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+Valid
+
+Running time: &Theta;(E*lg(E))
+
+Takes lg(E) time to delete an Edge, and this is done E times.
+---++!! b
+Invalid
+
+The algorithm looks at each edge in an arbitrary order and checks if T has any cycles. If you start with the heaviest edge in a graph, it will include it in T, even if it is not part of the minimum spanning tree and there are lighter edges to choose from.
+---++!! c
+Valid
+
+Since T always checks if there is a cycle, it will always create a spanning tree. Since T always checks for minimum weights, it will always create a minimum spanning tree.
+
+Runtime is &Theta;(E*lg(V))
+
+Inserting/Deleting an edge in a queue takes lg(V) time, and this is done E times.
+
+---++!! Grader comments *[16/20]*
+<VERBATIM>
+First running time is O(E^2); last is O(E(V+E)).
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+To find a string from length 5 substrings using the pattern above, we can first take the first string (or find a capital letter if we are looking at a sentence) and use that as the starting point. We can then look at the last 4 characters of the first string and try to match it to the first 4 characters of another string in the list. Once a match is found, we can add the last character of the second string to the first string and repeat the process. Next we would be looking at the last 4 characters of the 2nd string and trying to find a match to the first 4 characters of another string in the list. This is repeated until all the substrings are used and the sentence is printed.
+
+Without knowing the starting substring or at least the first character, it is impossible to output with 100% certainty a string made from 5 character substrings using the pattern above. The string will be in the correct order, it will just not necessarily start at the point that is supposed to. 
+
+---+++!! ii
+How on earth can you explain in terms of chemistry and physics so important a biological phenomenon as first love?
+
+
+
+%CODE{"cpp"}%
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+#include <cctype>
+#include <algorithm>
+
+using namespace std;
+
+int main()
+{
+    vector<string> strings;
+    vector<string> stringscopy;
+    vector<string> results;
+    string temp;
+    string out;
+    string swapper;
+    ifstream file;
+    vector<int> indexes;
+    file.open("reads4.txt");
+
+    if(file.is_open())
+    {
+        getline (file,temp);
+        for(int xx = 0; xx< temp.length(); xx++)
+        {
+            if(temp[xx] == '[')
+            {
+                for(int mm = 1; mm <= 5; mm++) // put all 5 character elements into the vector strings
+                {
+                    out += temp[xx+mm];
+                }
+                // cout << out << endl;
+                strings.push_back(out);
+                out = "";
+            }
+        }
+    }
+    for(int dd = 0; dd <strings.size(); dd++) // if there are two substrings with the same first 4 characters, swap them
+    {
+        for(int rr = 0; rr<strings.size(); rr++)
+        {
+            if(strings[dd].substr(0,4)== strings[rr].substr(0,4) && strings[dd] != strings[rr])
+            {
+                for(int uu = 0; uu<indexes.size(); uu++)
+                {
+                    if(dd == indexes[uu])
+                    {
+                        iter_swap(strings.begin() + dd, strings.begin() + rr);
+                    }
+                }
+                indexes.push_back(rr);
+            }
+        }
+    }
+    stringscopy = strings;
+    file.close();
+    string finalout;
+    //string laststring;
+    vector <string> test;
+    vector<string> ending;
+    vector<string> tempp;
+    vector<string> laststring;
+    int counter =0;
+    bool next = true;
+    for(int ii = 0; ii < strings.size(); ii++)
+    {
+        if(isupper(strings[ii][0])) // start the search by looking for a 5 character string starting with a capital letter
+        {
+            finalout+=strings[ii];
+            test.push_back(finalout);
+            laststring.push_back( strings[ii]);
+            ending.push_back( laststring[0].substr(1,5));
+            tempp.push_back(laststring[0]);
+            // cout << laststring << endl;
+            while(next)
+            {
+                next = false;
+                counter = 0;
+                for(int mm = 0; mm < stringscopy.size(); mm++)
+                {
+                    for(int xx =0; xx<tempp.size(); xx++ )
+                    {
+                        if(ending[xx] == stringscopy[mm].substr(0,4) && laststring[xx]!= stringscopy[mm] )
+                            // if the last 4 chars of the first string == the first 4 characters of the 2nd string
+                        {
+                            //   cout << ending[xx] << " " << stringscopy[mm] << endl; // for debugging
+                            finalout+= stringscopy[mm].substr(4,5);
+                            laststring[xx] = stringscopy[mm];
+                            stringscopy.erase(stringscopy.begin() + mm); // erase the element from the array so that there are no repeats
+                            next = true;
+                            counter ++;
+                        }
+                    }
+                }
+                for(int zz = 0; zz < tempp.size(); zz++)
+                {
+                    ending[zz] = laststring[zz].substr(1,5); // loop through the next ending
+                }
+            }
+            if (!finalout.empty())
+                results.push_back(finalout);
+        }
+    }
+    cout << results[0]<< endl;
+
+    return 0;
+}
+
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+Essentially we can use the same algorithm. For each substring of length n, compare the last (n-1) characters to the first (n-1) characters of the other substrings in the list. Once a match is found, add the second substring to the first string and keep doing this until all substrings are searched through. Redundant strings can be ignored (if the substrings entirely match up)
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+Algorithm should still work if not all possible substrings are produced. If replicated substrings are produced, you can just ignore the repeated strings.
+---+++!! ii
+If the reads contain errors, then the algorithm will have to check for repeating words and invalid characters
+
+
+---+++!! Grader comments
+<VERBATIM>Question 4 Results:
+
+Total Grade: 18
+
+	10        		
+	5         		
+	3         		more explanation
+
+
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle
+
+The code uses Prim's algorithm (nearest neighbor) to find the minimum spanning tree. From "Map.txt", all starting nodes, ending nodes, and distances are stored in three separate vectors. The code goes through each city (starting with ETCW) and finds its closest neighbor. It then deletes visited cities from the map. This is done for the next city, and so on and so forth. The last city is then connected back to ETCW. 
+
+Resulting cycle weight: 98390
+
+
+---+++!! Grader comments
+<VERBATIM>Question 5 Results:
+
+Total Grade: 20
+
+	15        		Grades from submission
+	5         		
+
+
+</VERBATIM>
+

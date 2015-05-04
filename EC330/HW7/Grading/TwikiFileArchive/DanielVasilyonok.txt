@@ -1,0 +1,223 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  O(logn*log(logn))  |
+|  c  |  O(logn)  |
+|  d  |  O(logn)  |
+---++ Explanation
+<VERBATIM>
+Provide explanation for partial credits
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+Travel times include traffic, also rounded up if minutes >= 30
+
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  56  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  8  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  43  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  40  |
+
+Does this graph exhibit the triangle inequality? 
+Yes exhibits triangle inequality because for every triangle in connected graph sum(2 edges) >= last edge
+---++!! 2b
+
+edges: a-e, a-c, c-f, f-d, d-b
+
+if assume MST complete and there is a pi for kruskal's:
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  NIL  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  a  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  | NIL  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+A = 0
+for each vertex v in G.V
+    make-set(v)
+sort the edges of G.E into non decreasing order by weight w
+for each edge (u,v) in G.E taken in non decreasing order by weight
+    if find-set(u) != find-set(v)
+        A = A union {(u,v)}
+        union(u,v)
+return A
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+This algorithm should work in the general case to find minimum spanning trees. The overall running time should be ElogV.
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+Yes, always provides minimum spanning tree.
+Adjacency list can be used for implementation for T. Edges can be sorted in ElogE time using merge sort. BFS can be used
+in O(V+E) to check if T- {e} is a connected graph. Edges are sorted once, and BFS is performed E times for each edge.
+Overall running time is O(E^2)
+</VERBATIM>
+---++!! b
+<VERBATIM>
+Consider a graph with 3 vertices w, u, v. w-v(2) u-v(3) w-u(1). Because the edges are in arbitrary order, edges u-v and w-v can be added
+to T and the last edge wont be added because it forms a cycle. The resulting T will have a weight of 5 which is not the MST of this example.
+</VERBATIM>
+---++!! c
+<VERBATIM>
+This will result in an Minimum spanning tree. 
+T can be stored in an adjacency list. Each edge is added to T and then T union {e} is checked for cycles. There can be at most 1 cycle
+so DFS can be used to detect the cycle and output it. If there are no cycles then we are finished with this edge, otherwise we need to output the cycle, find
+the max-weight edge and delete it from T.
+Adding edges - O(1), DFS - O(V+E) ~ O(V),  Find max weight edge - O(V),  deleting edge - O(V)
+Above occurs for each edge, so overall running time is O(EV)
+
+</VERBATIM>
+
+---++!! Grader comments *[20/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+One way to approach this is to treat every substring of length 5 as a vertex in a complete graph. 
+Each edge connecting the vertices is weighted by the amount of overlap from vertex to vertex.
+A DFS can be done to traverse the graph following the path of weight 4. 
+At each vertex a global output string can be appended to, but only the first letter should be taken. 
+Once the whole graph is traversed, the global output string should contain the result.
+It will take O(V) time to iterate through the vertices.
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+In order that every man present his views without penalty  there must be spirit of tolerance in the entire population.
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+
+#include <iostream>
+#include <vector>
+#include <string>
+#include <fstream>
+using namespace std;
+
+
+
+int main(){
+	
+	vector<string> reads;
+	
+	ifstream strInput;
+	strInput.open("reads1.txt");
+	string line;
+	string subString;
+	while(getline(strInput,line)){
+		line = line.substr(line.find('[')+1,line.find(']')-1);
+		reads.push_back(line);
+	}
+	strInput.close();
+	string output;
+	string last;
+	vector<string> valid;
+
+	vector<string>::iterator it2 = reads.begin();
+	last = *it2;
+	valid.push_back(*it2);
+	reads.erase(it2);
+	while(it2 != reads.end()){
+		string tester = *it2;
+		if(last.find(tester.substr(0,4)) != string::npos && tester != last){
+			last = tester;
+			valid.push_back(tester);
+			reads.erase(it2);
+			it2 = reads.begin();
+		}
+		else{
+			++it2;
+		}
+	}
+
+	//cout << endl << endl;
+	//cout << "valid: " << endl;
+	for(vector<string>::iterator it = valid.begin(); it!=valid.end(); ++it){
+		//cout << *it << endl;
+		string temp = *it;
+		output += temp[0];
+		if(it == valid.end() - 1){
+			for(int i = 1; i < temp.length(); i++){
+				output += temp[i];
+			}
+		}
+	}
+	
+	cout << output << endl;
+
+	return 0;
+}
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+Describe and analyze the modification
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+To find the resulting cycle weight, used Kruskal's algorithm to find the minimum spanning tree, and added each weight to a variable. Then I took the edge from the last vertex
+back to the initial vertex and added that weight. The final weight was the shortest path.
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle

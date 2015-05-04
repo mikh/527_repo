@@ -1,0 +1,180 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |    |
+|  c  |    |
+|  d  |    |
+---++ Explanation
+<VERBATIM>
+Provide explanation for partial credits
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  56  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  8  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  42  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  3  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  37  |
+
+Does this graph exhibit the triangle inequality? 
+
+*all driving times were obtained from google maps, and were the times disregarding the current traffic*
+
+No, this graph does not. The triangle inequality states that w(u,v) <= w(u,x) + w(v,x) for vertices u,v, and x. 
+The distance from the Photonics Center to Chichen Itza is 56 hours, and the distance from Photonics to Pyramid of the Sun is 42 
+hours. The distance from Pyramid of the Sun to Chichen Itza is 15 hours. If we say that Photonics is U, Pyramid of the Sun is W,
+and Chichen Itza is V, w(U,V) is not less than or equal to w(U,W) + w(V,W), because 56 is not less than or equal to 42 + 15. 
+---++!! 2b
+
+The edges of my minimum spanning tree are as follows:
+
+Edge:                                                  | Weight:
+
+Photonics -> Statue of Liberty            |  3
+
+CN Tower -> Statue of Liberty           |  7
+
+Chichen Itza -> Pyramid of the Sun   |  15
+
+Pyramid of the Sun-> Mandalay Bay |  29
+
+CN Tower-> Mandalay Bay                |  31
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  a  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  e  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  d  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+sort (E) in ascending order
+empty vector final;
+for (i=0 to i=length of E)
+      final.push_back(E)
+      if (E creates a cycle)
+          check edges of cycle and remove highest  
+return final
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+my algorithm sorts the edges, then goes through and adds each edge, checking if it makes a cycle, 
+and removes the highest edge. The runtime of this algorithm would be Theta(E), because it checks 
+through each edge to see if it can be added, and the runtime to check if it creates a cycle is less than
+the number of edges
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+This Maybe-MST would produce a minimum spanning tree every time. The running time I describe 
+is the running time of the algorithm after sorting, because the runtime of the sort algorithm would 
+depend on which sorting method used. The runtime of this algorithm would be Theta(E^2), because 
+the for loop runs through the amount of edges once, and in each for loop iteration the algorithm would 
+run Theta(E) times. 
+</VERBATIM>
+---++!! b
+<VERBATIM>
+This Maybe-MST would not produce a minimum spanning tree every time. It would 
+produce a spanning tree, but because the algorithm does not sort the edges and 
+they are chosen in "arbitrary order", it depends on what order the edges are in. For 
+example, a complete graph (all sides connected) with 5 vertices and the following weights:
+
+A<->B: 4
+A<->C: 2
+A<->D: 10
+A<->E: 1
+B<->C: 7
+B<->D: 6
+B<->E: 8
+C<->D: 9
+C<->E: 5
+D<->E: 3
+
+and the edge list goes as follows:
+E = 10,9,7,5
+
+this would satisfy the algorithm, but would not be the minimum spanning tree. 
+
+</VERBATIM>
+---++!! c
+<VERBATIM>
+This algorithm will always produce an MST. The runtime would be Theta(E^2). 
+The for loop would run through every edge, and checking if each added edge 
+creates a cycle is Theta(E), making the runtime Theta(E^2). 
+</VERBATIM>
+
+---++!! Grader comments *[20/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+Describe and analyze the algorithm.
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+Provide your result here.
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+// paste your code here
+
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+Describe and analyze the modification
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle

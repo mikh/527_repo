@@ -1,0 +1,633 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  n * log (n) * lg(log(n))  |
+|  c  |  n^2 log n  |
+|  d  |  n^2 * (log(n))^2  |
+---++ Explanation
+<VERBATIM>
+Basic assumption - every input entails nlog(n) entries. Because every number from 1 to n is entered log(n) times here.
+b) the original algorithm will insert n equal elements in O(n log n) time, creating a balanced tree (or subtree).
+- our number of nodes - log(n) nodes per tree (e.g. 10 1's, 10 2's...), n total subtrees (one for each term 1...n).
+- trees are of height lg(nodes per tree), so each subtree is height lg(log(n))
+- each new subtree will go down the right branch (larger than the last subtree)
+-- although subtrees are balanced, the whole tree is not balanced.
+-- so, n subtrees * log(n) entries per tree * max height of lg(log(n)) == n * log (n) * lg(log(n)) -> which is close to n * log^2(n)
+Original:
+         1
+    1        1
+ 1   1    1    1
+ (balanced)
+
+New:
+         1
+    1        1
+ 1   1    1    1
+                     2
+               2          2
+           2     2    2     2
+                                     3
+                                3        3
+                            3     3   3    3 
+                                     ...... n trees of height lg(log(n)), all of which require log(n) entries.
+
+c) the original algorithm gives you a one node tree with a list, and is O(n) for n * list insertion is O(1)
+- insert and search for BST are O(h) or O(lg n), but this won't be balanced.
+- max height of the tree is going to be n, as each successive node will be larger.
+-- this will essentially be a linked list of linked lists.
+-- traversal of the main linked list will be O(n) as the list grows
+--- sublists will only have insertions - O(1)
+- list traversal O(n) * total number of terms O(n log n) * insertion O(1)
+-- total O(n^2 * log (n))
+E.g.
+1111111111...
+  2222222222...
+   33333333333...
+    44444444444...
+     ... eventual height of list - n rows * n log n total entries
+     
+
+
+
+d) worst case is if the probability of choosing one branch is 1.
+-in this case, you essentially get a linked list of all terms.
+-full traversal of a linked list and adding to the end is O(n^2)
+- substitute n log n terms...  O((nlogn)^2) = O(n^2 * log(n)^2)
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  57  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  8  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  43  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  39  |
+
+Does this graph exhibit the triangle inequality? 
+
+For reference, driving times are from Google Maps on 4/18 @ 2330
+
+| Location | Index  |  a   |  b  | c | d | e | f |
+| Photonics  |  a  | 0  |  57  |  8  | 43  |  4  | 39  |
+| Chichen Itza  |  b  |  57 |  0  |  53  |  16 |  54  | 44  |
+| CN Tower |  c  | 8  |  53 |  0  |  38 |  8  | 32  |
+| Pyramid   |  d  | 43  |  16  |  38  | 0  |  40  |  29 |
+| Statue of Liberty|  e  | 4  |  54  |  8  | 40  |  0  | 37  |
+| Mandalay Bay  |  f  | 39  |  44  |  32  | 29  |  37  | 0  |
+
+Example (1 of 6) Testing Photonics - length 1 versus length 2 paths:
+| Location | Index  |  a   |  b  | c | d | e | f |
+| Photonics  |  a  | 0  |  57  |  8  | 43  |  4  |  39  |
+| Photonics->Chichen Itza  |  b  |  114 |  57  |  110  |  100 |  111  |  101  |
+| Photonics->CN Tower |  c  | 16 |  61 |  8  |  46 |  16  |  40  |
+| Photonics->Pyramid   |  d  | 86  |  59  |  71  | 43  |  83  |  72  |
+| Photonics->Statue of Liberty|  e  |  8  |  58  |  12  |  44  |  4  |  41  |
+| Photonics->Mandalay Bay  |  f  |  78  |  83  |  71  |  68  |  76  |  39  |
+
+now repeat for all other locations...
+
+Yes - the inequality holds - we can see from the first row of direct paths, these are shorter than any length 2 path...
+---++!! 2b
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  a (start)  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  a  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+
+For reference, driving times are from Google Maps on 4/18 @ 2330
+
+| Location | Index  |  a   |  b  | c | d | e | f |
+| Photonics  |  a  | 0  |  57  |  8  | 43  |  4  | 39  |
+| Chichen Itza  |  b  |  57 |  0  |  53  |  16 |  54  | 44  |
+| CN Tower |  c  | 8  |  53 |  0  |  38 |  8  | 32  |
+| Pyramid   |  d  | 43  |  16  |  38  | 0  |  40  |  29 |
+| Statue of Liberty|  e  | 4  |  54  |  8  | 40  |  0  | 37  |
+| Mandalay Bay  |  f  | 39  |  44  |  32  | 29  |  37  | 0  |
+
+Kruskal:
+
+(start at A)
+
+add smallest (A->D) 4
+
+Add next smallest (either A->C or E->C, picked A->C) 8
+
+Add next smallest (D->B) 16
+
+Add next smallest without creating a cycle (C->F) 32
+
+Add next smallest without creating a cycle (F->D) 29
+
+(done)
+
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  a (start)  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  a  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+
+For reference, driving times are from Google Maps on 4/18 @ 2330
+
+| Location | Index  |  a   |  b  | c | d | e | f |
+| Photonics  |  a  | 0  |  57  |  8  | 43  |  4  | 39  |
+| Chichen Itza  |  b  |  57 |  0  |  53  |  16 |  54  | 44  |
+| CN Tower |  c  | 8  |  53 |  0  |  38 |  8  | 32  |
+| Pyramid   |  d  | 43  |  16  |  38  | 0  |  40  |  29 |
+| Statue of Liberty|  e  | 4  |  54  |  8  | 40  |  0  | 37  |
+| Mandalay Bay  |  f  | 39  |  44  |  32  | 29  |  37  | 0  |
+
+Prim:
+
+(start at A)
+
+add smallest (A->D) 4
+
+Add next smallest (A->C) 8
+
+Add next smallest to existing tree without creating a cycle (C->F) 32
+
+Add next smallest to existing tree without creating a cycle (F->D) 29
+
+Add next smallest to existing tree  without creating a cycle (D->B) 16
+
+(done)
+---++!! 2d
+For reference, driving times are from Google Maps on 4/18 @ 2330
+
+| Location | Index  |  a   |  b  | c | d | e | f |
+| Photonics  |  a  | 0  |  57  |  8  | 43  |  4  | 39  |
+| Chichen Itza  |  b  |  57 |  0  |  53  |  16 |  54  | 44  |
+| CN Tower |  c  | 8  |  53 |  0  |  38 |  8  | 32  |
+| Pyramid   |  d  | 43  |  16  |  38  | 0  |  40  |  29 |
+| Statue of Liberty|  e  | 4  |  54  |  8  | 40  |  0  | 37  |
+| Mandalay Bay  |  f  | 39  |  44  |  32  | 29  |  37  | 0  |
+---+++!! Algorithm
+<VERBATIM>
+As described by CLRS, here's the trusty PRIM algorithm.
+
+PRIM(V, E,w,r)
+Q <- {empty}
+for each u in V
+  do key[u] <- infinity
+       pi[u] <- NIL
+    INSERT(Q, u) DECREASE-KEY(Q,r,0)
+while Q =/= {empty}
+  do u <- EXTRACT-MIN(Q)
+    for each v in; Adj[u]
+      do if v in Q and w(u, v) < key[v]
+        then pi[v] <- u 
+         DECREASE-KEY(Q,v,w(u,v))
+
+
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+Analysis
+If Q is a binary heap.
+Create Q, run through first for loop -- O(V lg(V))
+Decrease key of r -- O(lg(V))
+while loop -- V x EXTRACT-MIN == O(V lg(V))
+    -- but E x DECREASE-KEY == O(E lg(V))
+    -- given that V < E here, total for while loop is O(E lg(V))
+Total = O(E lg(V))
+
+Fibonacci heaps can do the function DECREASE-KEY in O(1) amortized time, so the while loop would become O(V lg(V) + E).
+...
+There are faster algorithms online (i.e. Fredman-Tarjan) but I don't know how to implement them... yet.
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+The edge removals from Maybe-MST-A keep an MST if the graph remains connected. 
+By definition, each time, we will be removing a potentially larger edge.
+(this is basically a reworking of theorem 23.1 earlier in the chapter).
+
+Check: 
+Establish T via an adjacency list representation for T . 
+Merge-Sort edges -- O(E log E) x one time
+Check whether T - {e} is connected via BFS or DFS -- O(V +E)  x E times
+
+Total = O(E log E + E(V + E))
+==
+O(E^2).
+
+
+</VERBATIM>
+---++!! b
+<VERBATIM>
+No.
+Take a simple cycle graph (A, B, C).
+0  A  B  C
+A  0  4   7
+B  4  0   2
+C  7  2   0
+
+Since Maybe-MST-B adds randomly, if it adds AB and AC, it will end, as BC will create a cycle.
+Except, that T will equal 11, while an MST of BC and BA would have a value of 6 (MST).
+</VERBATIM>
+---++!! c
+<VERBATIM>
+This will work - it's basically an unwieldy version of MST-relaxing.
+
+Use an adjacency list.
+Adding an edge is O(1) 
+Use DFS to check for a cycle O(V + E) = O(V) --- Max number of cycles at any one time = 1, which means every pair of vertices in the graph
+    only has one edge, and the additional edge to form a cycle will mean E = V
+Linear search of the edges to find the the maximum-weight edge on the cycle will be O(V) 
+deleting an edge -- O(V). 
+
+Doing this for all edges will multiply the process by E.
+E * (add(1) + DFS(2V) + (possible linear search(V) + possible delete(V)))
+= E * (1 + 4V)
+= EV
+-------
+Total
+O(EV)
+
+</VERBATIM>
+
+---++!! Grader comments *[20/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+Read in the strings from file.  -- Theta(n)
+Compare the strings to one another - looking for overlap of the last 4 characters and first 4. Record each in a matrix. 
+          -- n strings, n * 4 comparisons each = 4n^2 = Theta(n^2).
+Compare values in the matrix to find an entry that does not serve as a suffix to another character (hacky way of finding the first item). 
+          ----searching every term of nxn matrix - Theta(n^2)
+           --- another hacky way - first string in the quote starts with a capital letter, so you can search the string list for this (Theta n)
+Use this as a kernel to follow every 4 item overlap, and add them to the growing string (n string fragments) - Theta(n)
+ -- run this several times in case we hit a snag and have more than one 4 item overlap for a string -- Theta(n)
+Print the results - Theta(n)
+Total = Theta(n^2)
+
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+In order that every man present his views without penalty there must be spirit of tolerance in the entire population.
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+#include <iostream>
+#include <fstream>
+#include <vector>
+
+using namespace std;
+int main()
+{
+    // phase 1 - read in strings
+    ifstream theFile;
+    theFile.open("reads2.txt");
+
+    vector <string> inputStrings;
+    vector <string> finalString;
+
+    vector <string> strings;
+
+    string input;
+    string nextString;
+    while(!theFile.eof())
+    {
+        getline(theFile, input);
+        nextString.clear();
+        for(int i = 0; i < input.length(); i++) // iterate through each line
+        {
+            if(input[i] == '[')
+            {
+                nextString.clear();
+                continue;
+            }
+            else if (input[i] == ']')
+            {
+                strings.push_back(nextString);
+                nextString.clear();
+                i++; // skip the " "
+                continue;
+            }
+            else
+                nextString += input[i];
+        }
+    }
+
+    vector<string>::iterator it;
+    vector<string>::iterator pt;
+
+    // create matrices
+    int NUMBER_OF_STRINGS = strings.size();
+    int STRLENG = 5;
+    bool trueFlag;
+    int matrix[NUMBER_OF_STRINGS][NUMBER_OF_STRINGS];
+    int predMatrix[NUMBER_OF_STRINGS][NUMBER_OF_STRINGS];
+    int index1, index2;
+    for (int i = 0; i < NUMBER_OF_STRINGS; i++)
+    {
+        for(int j = 0; j < NUMBER_OF_STRINGS; j++)
+        {
+            matrix[i][j] = 0;
+            predMatrix[i][j] = 0;
+        }
+    }
+
+    // search for successors!
+    for(it = strings.begin(); it != strings.end(); ++it)
+    {
+        for(pt = strings.begin(); pt != strings.end(); ++pt)
+        {
+            trueFlag = true;
+            if (*it == *pt)
+                trueFlag = false;
+            if ((it->substr(1,4) == pt->substr(0,4)) && (!((it->substr(0,1) == "n") && (pt->substr(4,1) == "r")))) // this is a hack for the overlap case
+            {
+                index1 = distance(strings.begin(), it);
+                index2 = distance(strings.begin(), pt);
+                matrix[index1][index2] = 1;
+                predMatrix[index2][index1] = 1;
+
+            }
+
+        }
+    }
+    it = strings.begin();
+    for (int i = 0; i < NUMBER_OF_STRINGS; i++)
+    {
+        trueFlag = true;
+        for(int j = 0; j < NUMBER_OF_STRINGS; j++)
+        {
+            if (predMatrix[i][j] == 1)
+                trueFlag = false;
+        }
+        if(trueFlag)
+            pt = it;
+        it++;
+    }
+
+    finalString.push_back(*pt);
+    trueFlag = false;
+    bool theFlag = false; // this is a hack!
+
+
+    for(int i = 0; i < NUMBER_OF_STRINGS; i++)
+    {
+        index1 = distance(strings.begin(), pt);
+        trueFlag = false;
+        for(int j = 0; j < NUMBER_OF_STRINGS; j++)
+        {
+            if(matrix[index1][j] == 1)
+            {
+                pt = (strings.begin()+j);
+                trueFlag = true;
+            }
+        }
+        if(trueFlag)
+        finalString.push_back(*pt);
+
+    }
+
+    for(it = finalString.begin(); it != finalString.end()-1; ++it)
+    {
+        cout << it->substr(0,1); // print out the first character of every entry, minus the last
+    }
+
+    cout << *it; // print the last
+
+    cout << endl;
+}
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+The problem with my original is that it only works for strings of length 5, and assumes that you'll get perfect overlap.
+We can get around this by using the Least Common Subsequence Length function, which works with strings of different length.
+We can use this to compare each pair of strings (this step is n^2 repeats).
+We can then determine predecessors by going with the highest match between sequences, rather than with just overlap of 4. 
+My version here doesn't really use the b matrix, which we could eliminate to save time.
+LCS-Length is O(string-length-1 x string-length-2) because it compares the length of each character in each string.
+Overall, because I still iterate through every entry in the adjacency matrix, this will still be an theta(n^2) algorithm,
+provided that the length of any one string does not approach the overall number of strings, each LCS lookup will be much less than n^2 or n.
+</VERBATIM>
+
+%CODE{"cpp"}%
+int GetLCSLength(string first, string second)
+{
+    int m = first.length();
+    int n = second.length();
+    int b[m+1][n+1];
+    int c[m+1][n+1];
+
+    // initialize matrix
+    for(int i = 0; i < m+1; i++) // column 0 with zeros down
+        c[i][0] = 0;
+
+    for(int j = 0; j < n+1; j++) // row 0 with zeros across
+        c[0][j] = 0;
+
+    for(int i = 1; i < m+1; i++)
+    {
+        for(int j = 1; j < n+1; j++)
+        {
+            //cout << "Comparing " << first[i-1] << " to " << second[j-1] << endl;
+            if(first[i-1] == second[j-1])
+            {
+                c[i][j] = (c[i-1][j-1] +1);
+                b[i][j] = -3; // arbitrary value for diagonal arrow
+            }
+            else if (c[i-1][j] >= c[i][j-1])
+            {
+                c[i][j] = (c[i-1][j]);
+                b[i][j] = -2; // up arrow
+            }
+            else
+            {
+                c[i][j] = (c[i][j-1]);
+                b[i][j] = -1; // left arrow
+            }
+            //cout << "c[" << i << "][" << j << "] is " << c[i][j] << endl;
+        }
+    }
+
+    int LCS_Total = c[m][n];
+    return LCS_Total;
+}
+%ENDCODE%
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+One potential modification that we can make is to use smaller substrings than provided, combining repeats.
+This would entail adding strings (linear time), as well as deleting graph edges (either constant or linear, depending on implementation).
+Although this might not actually be ideal, as the nucleotide sequence itself may contain (or mostly be composed of) repeats.
+Obviously, at least every base pair used in the sequence must be in the substrings at least once, or it actually will be impossible to reconstruct.
+
+One option is to use a De Bruijn graph, which can be constructed as an directed multigraph of the whole sequence.
+This starts with cutting our current fragments down in to smaller pieces (k-mers, such as 2-mers) -- linear time
+We then can create a graph of the k-mers - O(V+E)
+And run LCS-Get-Length or another comparison (i.e. hamming distance) -- LCS is O(string-length-1 x string-length-2), so this step will be ~ V*O(mn)
+Then we can run an APPROX-TSP-TOUR of the existing edges - which is O(V^2) (For total O(V^2))
+
+
+Another option that we could use with my algorithm would be to convert LCS-Get-Length to instead return the Hamming distance,
+which we can calculate in O(mn) time 
+(there are FFT versions of hamming distance for DNA which are in O(|A|nlog n)
+      - n is the length of the larger sequence L and |A| is the size of the alphabet (4 items).
+ </VERBATIM>
+---+++!! ii
+<VERBATIM>
+One potential means of dealing with errors is to compare multiple sequences which overlap.
+For instance, we can potentially look down our overlap matrix to see if there are multiple sequences that
+share a k-mer (k item overlap) with a given string. 
+    --- N x Theta(1) = Theta(N) once the table is established.
+We can then compare the most common variants of the k-mer across this group, and thereby determine
+an "average" value for this k-mer, and change the reads of deviant sequences.
+
+Overall, even with a shortest common substring approach or a de Bruijn graph, this is an NP-complete problem for actual sequencing,
+and more efficient searches (i.e. greedy) won't actually yield an actual shortest common supersequence.
+
+After reworking the problem several times overnight, using my original strategy of LCS (not my original original strategy using single shifts)
+I redid it using the method of my collaborator, Adin Horovitz, which creates unions of fragments based on Hamming distance calculated with KMP.
+entailing the following:
+
+Outline:
+
+Get Reads (fragments) from file
+Merge string with another in list
+  string thisFragment;  // temp string for fragments
+  iterate through all fragments
+    if Fragment == Left-Neighbor
+      create new union string
+      delete old string
+      add new string to list of fragments
+
+    If Fragment == Right-Neighbor
+    create new union string
+    delete old string
+    add new string to list of fragments
+
+get overlap
+   find length of smaller string
+   loop through allowed overlap values
+   calculate Hamming distance 
+       --- via function from (http://stackoverflow.com/questions/557170/bit-operation-for-finding-string-difference)
+-----
+
+
+Load "reads" from text file into linked list<string> fragments           ........................Theta(n)
+
+while( fragments.size() > 1) {                                           ........................Theta(n)
+     string thisRead = fragments.pop_front()                             ........................Theta(n)
+     // Find neighboring string to merge with thisRead
+     // Always successful with simplified problem
+     UNION(thisRead, fragments);                                         .........................Theta(n)
+}
+
+
+bool UNION(string thisRead, list<string> &fragments) {
+     for( all strings in fragments, thisFrag ){
+          //Check for R/L overlap of 4 characters                
+          GET_OVR( thisRead, thisFrag )                                  ..........................O( n^2)
+          if R/L overlap is found  {
+               fragments.push_back( MERGE(thisRead, thisFrag) )          ...........................Theta(n)
+               fragments.erase(thisFrag)                                 ............................Theta(n)
+               return true;
+          }
+     }
+     return false;
+}
+
+
+The GET_OVR() function is called O(n^2) times.  
+KMP, is an O(MN) function, where MN are the lengths of the two strings . 
+
+Therefore, overall worst-case asymptotic runtime = O(n^2 * MN).
+
+
+
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+<verbatim>
+/** noted in my file as well - collaborator == Adin Horovitz **/
+1) Read graph from text file (uses modified Trie to keep city names under control)
+Accomplished by Graph::Graph(string filename) in Graph.cpp
+   
+   --Instantiate one Node for each of the 1500 cities which contain:
+   a) A pointer to the next city (initially NULL)
+   b) Cost of that trip (weight of edge -- initially NULL)
+   c) List of out-edges from that node (used to find min outEdge in step 2)
+   d) Counter of how many times the city has been visited 
+
+2) Plan (loosely) Minimum Cycle to span all cities 
+Done via graph::getMST() function, which:
+   a) Starts from origin city, searches out-edge list for best destination
+   b) Picks the lowest cost edge to an unvisited city
+   c) Updates origin Node dest pointer and cost variable
+   d) Updates destination Node's predecessor Node pointer
+   e) Points "origin" pointer to destination Node
+   f) Repeat a-e on new city until all cities have been visited once
+
+3) Plan return trip to close Cycle
+Uses the existing MST to go backward to the origin (ECTW from our last entry)
+   a) Searches through outEdge list for ECTW outEdge
+   b) If none found, searches neighbor's outEdges 
+
+4) Output Cycle Edges and weights
+This utilizes the existing list of nodes we established with MST
+   --Starting with origin Node, prints out-edge and weight. Then points
+   "origin" pointer at next Node and repeats. Stops when last city has no 
+   outEdge selected.
+   --print return Edges all the way through.
+   --Output total Cost
+
+
+SUMMARY: 1497 of 1497 cities visited
+TOTAL COST = 98390
+
+</verbatim>
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle
+
+   * [[%ATTACHURLPATH%/problem5.zip][problem5.zip]]: Problem 5 with makefile

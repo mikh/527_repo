@@ -1,0 +1,237 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  <latex>\Theta(\lg (n \log (n)))</latex>  |
+|  c  |  <latex>\Theta(\log (n)*\lg (n))</latex>  |
+|  d  |  <latex>\Theta(n\log (n))</latex>  |
+---++ Explanation
+<VERBATIM>
+Provide explanation for partial credits
+</VERBATIM>
+
+b. We are inserting nlog(n) numbers and filling the tree evenly. Tree-Insert is therefore unaffected and still runs in <latex>\Theta(h)</latex>. In terms of n this must then be <latex>\Theta(\lg (n\log (n)))</latex><br><br>
+c. We are inserting n lists of log(n) elements. Insert into a list is constant time, multiplied by log(n) we get log(n) time multiplied by n elements in the tree. Tree-Insert is <latex>\Theta(h)</latex> time which can also be expressed by <latex>\Theta(\lg (n))</latex> time. Therefore this runs in <latex>\Theta(\log (n)*\lg (n))</latex> time.<br><br>
+d. In the worst-case x is always set to either x.left or x.right. Then the height of the tree becomes equal to the number of elements inserted, as each element has its own level. Since we are inserting nlog(n) numbers into the tree and Tree-Insert is <latex>\Theta(h)</latex> time, we can expect this to run in <latex>\Theta(n\log (n))</latex> time.
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  56 hours  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  8 hours  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  42 hours  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  3 hours  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  38 hours  |
+
+Does this graph exhibit the triangle inequality?<br><br>
+
+No, the fastest route from the Pyramid of the Sun to Photonics is achieved by first going to the Statue of Liberty. Pyramid -> Statue -> Photonics is 41 hours (Pyramid -> Statue is 38 hours), while Pyramid -> Photonics is 42 hours. Note that this is probably due to rounding errors in Google Map's calculations.<br><br>
+
+Note: All times listed in the table were tabulated from Google Maps without traffic using the latest version of Safari on a Mac.
+---++!! 2b
+|  Index  |  Location   |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |
+|  b  |  Chichen Itza, Yuc., Mexico  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |
+
+<br>
+Edges:<br>
+
+Photonics Center and Statue of Liberty Monument<br>
+Statue of Liberty Monument and CN Tower<br>
+CN Tower and Mandalay Bay (Las Vegas)<br>
+Mandalay Bay (Las Vegas) and Pyramid of the Sun<br>
+Pyramid of the Sun and Chichen Itza
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  N/A  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+Describe your algorithm here. Pseudocode is preferred.
+</VERBATIM>
+
+tree is a set of edges; completeGraph g is a vector of adjacency lists with elements that are pairs (first element is the index of another vertex, second element is the weight of the edge)
+
+%CODE{"cpp"}%
+tree MST_Special(completeGraph g){
+tree t;
+
+//lightest edge of each vertex is added to tree
+for(each vertex in g){
+    add lightest edge to t;
+    delete lightest edge from adjacency list;
+}
+
+//second lightest edge of each vertex is added to tree
+for(each vertex in g){
+    add lightest edge to t;
+}
+
+//if the tree contains a cycle, remove the heaviest edge contributing to the cycle
+while(t contains a cycle){
+    remove heaviest-weight edge of first cycle;
+}
+
+return t;
+}
+
+%ENDCODE%
+---+++!! Analysis
+<VERBATIM>
+Descrbie and analyze your algorithm.
+</VERBATIM>
+
+As this is an undirected, complete graph looking through the adjacency list twice to find the two lightest edges takes 4E time. Checking if the tree contains a cycle requires V time (as shown in Homework6) and removing edges is constant time. Therefore this operates in <latex>\Theta(E + V)</latex> time. This algorithm should work for a complete graph that exhibits the triangle inequality property.
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+Counterexample or Running time
+</VERBATIM>
+
+Running time: <latex>\Theta(EV)</latex>
+---++!! b
+<VERBATIM>
+Counterexample or Running time
+</VERBATIM>
+
+Counterexample: The graph described in the description of problem 2
+---++!! c
+<VERBATIM>
+Counterexample or Running time
+</VERBATIM>
+
+Running time: <latex>\Theta(EV)</latex>
+---++!! Grader comments *[20/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+Describe and analyze the algorithm.
+</VERBATIM>
+
+This algorithm streams in the reads from a file and stores them into a linked list. The elements of the list are examined for their substrings in order to find the next read in the sequence. The substrings are concatenated and a final sequence is created.<br><br>
+
+
+Best Case: <latex>\Theta(r)</latex><br>
+Worst Case: <latex>\Theta(r^{2})</latex><br>
+*Where r is the number of reads provided<br><br>
+
+This is <latex>\Theta(r)</latex> best-case because reading and inserting the reads into a linked list takes V time. If the list is sorted such that the next expected read is always the first element in the list, then creating the sequence will also take V time.<br>
+This is <latex>\Theta(r^{2})</latex> worst-case because reading and inserting the reads into a linked list takes V time. If the list is sorted such that the next expected read is always the last element in the list, then creating the sequence will take V<sup>2</sup> time.
+---+++!! ii
+<VERBATIM>
+Provide your result here.
+</VERBATIM>
+
+Output: Reading, after a certain age, diverts the mind too much from its creative pursuits.<br>
+
+*NOTE: I modified the given text file. See attached for the text file I used for this problem (labeled substrings.txt).
+
+%CODE{"cpp"}%
+
+#include <list>
+#include <string>
+#include <fstream>
+#include <iostream>
+
+using namespace std;
+
+int main(){
+	string line;
+	bool isFirst = true;
+	list<string> subStrings;
+	list<string>::iterator it;
+
+	ifstream myfile("substrings.txt");
+	if(myfile.is_open()){
+		while( getline(myfile,line) ){
+			if(isFirst){
+				subStrings.push_front(line);
+				isFirst = false;
+			}
+			else{
+				subStrings.push_back(line);
+			}
+		}
+		myfile.close();
+	}
+
+	line = *(subStrings.begin());
+	subStrings.pop_front();
+	string templine = line.substr(1,5);
+	while(subStrings.begin() != subStrings.end()){
+		for(it = subStrings.begin(); it != subStrings.end(); ++it){
+			if(it -> find(templine) != string::npos){
+				templine = it -> substr(1,5);
+				line += it -> substr(4,5);
+				subStrings.erase(it);
+				break;
+			}
+		}
+	}
+
+	cout << line << endl;
+
+	return 0;
+}
+
+%ENDCODE%
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+Describe and analyze the modification
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found:<br><br>
+Cycle weight: 101143<br><br>
+Explanation: For this problem I made a greedy algorithm that always chooses to visit the cheapest available not-yet-visited city. It starts by adding every city to a set and starting off in ETCW. After it determines the cheapest unvisited city it places the current city in the output file, removes it from the set, and moves on to the next city. At the very very end of the file this became problematic as it was impossible to get back to ETCW without using already visited cities, but these cities had already been removed from the set. To remedy the problem I hardcoded the final 4 cities (which were chosen by examining map.txt).<br><br>
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle

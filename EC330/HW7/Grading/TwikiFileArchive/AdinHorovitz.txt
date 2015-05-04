@@ -1,0 +1,516 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+
+All problems in this assignment were completed in collaboration with Josh Joseph
+
+
+|  Approach   |  Running time  |
+|  b  |  n ( log(n) ^2)  |
+|  c  |  n^2 log n  |
+|  d  |  n^2 * (log(n))^2  |
+
+
+---++ Explanation
+<VERBATIM>
+
+Explanation 
+Basic assumption - every input entails nlog(n) entries. Because every number from 1 to n is entered log(n) times here.
+b) the original algorithm will insert n equal elements in O(n log n) time, creating a balanced tree (or subtree).
+- our number of nodes - log(n) nodes per tree (e.g. 10 1's, 10 2's...), n total subtrees (one for each term 1...n).
+- trees are of height lg(nodes per tree), so each subtree is height lg(log(n))
+- each new subtree will go down the right branch (larger than the last subtree)
+-- although subtrees are balanced, the whole tree is not balanced.
+-- so, n subtrees * log(n) entries per tree * max height of lg(log(n)) == n * log (n) * lg(log(n)) -> which is close enough to n * log^2(n)
+
+c) the original algorithm gives you a one node tree with a list, and is O(n) for n * list insertion is O(1)
+- insert and search for BST are O(h) or O(lg n), but this won't be balanced.
+- max height of the tree is going to be n, as each successive node will be larger.
+-- this will essentially be a linked list of linked lists.
+-- traversal of the main linked list will be O(n) as the list grows
+--- sublists will only have insertions - O(1)
+- list traversal O(n) * total number of terms O(n log n) * insertion O(1)
+-- total O(n^2 * log (n))
+
+d) worst case is if the probability of choosing one branch is 1.
+-in this case, you essentially get a linked list of all terms.
+-full traversal of a linked list and adding to the end is O(n^2)
+- substitute n log n terms...  O((nlogn)^2) = O(n^2 * log(n)^2)
+
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+
+All problems in this assignment were completed in collaboration with Josh Joseph
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  57  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  8  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  43  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  39  |
+
+
+
+Does this graph exhibit the triangle inequality? 
+
+Yes - the inequality holds - we can see from the first row of direct paths, these are shorter than any length 2 path:
+
+For reference, driving times are from Google Maps on 4/18 @ 2330
+| Location | Index | a | b | c | d | e | f | 
+| Photonics | a | 0 | 57 | 8 | 43 | 4 | 39 | 
+| Chichen Itza | b | 57 | 0 | 53 | 16 | 54 | 44 |
+| CN Tower | c | 8 | 53 | 0 | 38 | 8 | 32 | 
+| Pyramid | d | 43 | 16 | 38 | 0 | 40 | 29 |
+| Statue of Liberty | e | 4 | 54 | 8 | 40 | 0 | 37 |
+| Mandalay Bay | f | 39 | 44 | 32 | 29 | 37 | 0 |
+---++!! 2b
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  a  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  a  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  NIL  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  a  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+As described by CLRS, here's the trusty PRIM algorithm.
+
+PRIM(V, E,w,r)
+Q <- {empty}
+for each u in V
+  do key[u] <- infinity
+       pi[u] <- NIL
+    INSERT(Q, u) DECREASE-KEY(Q,r,0)
+
+while Q =/= {empty}
+  do u <- EXTRACT-MIN(Q)
+    for each v in; Adj[u]
+      do if v in Q and w(u, v) < key[v]
+        then pi[v] <- u 
+         DECREASE-KEY(Q,v,w(u,v))
+
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+
+If Q is a binary heap:
+
+Create Q, run through first for loop                   -- O(V lg(V))
+Decrease key of r                                              -- O(lg(V))
+while loop -- V x EXTRACT-MIN                       == O(V lg(V))
+    -- but E x DECREASE-KEY                          == O(E lg(V))
+    -- given that V < E here, total for while loop is O(E lg(V))
+Total = O(E lg(V))
+
+Fibonacci heaps can do the function DECREASE-KEY in O(1) amortized time, so the while loop would become O(V lg(V) + E).
+
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+
+All problems in this assignment were completed in collaboration with Josh Joseph
+---++!! a
+<VERBATIM>
+
+MAYBE-MST-A does always produce MST (like reverse-Kruskal's)
+
+The edge removals from Maybe-MST-A keep an MST if the graph remains connected. 
+By definition, each time, we will be removing the largest remaining edge.
+(this is basically a reworking of theorem 23.1 earlier in the chapter).
+
+Check: 
+Establish T via an adjacency list representation for T . 
+Merge-Sort edges                                                                                    -- O(E log E) x one time
+Check whether T - {e} is connected via BFS or DFS                               -- O(V +E)  x E times
+
+Total = O(E log E + E(V + E))
+==
+O(E^2).
+
+
+</VERBATIM>
+---++!! b
+<VERBATIM>
+No. MAYBE-MST-B does NOT always produce MST
+
+Take a simple cycle graph (A, B, C):
+</VERBATIM>
+
+
+|  | A | B | C |
+| A | 0 | 4 | 7 |
+| B | 4 | 0 | 2 |
+| C | 7 | 2 | 0 |
+
+<VERBATIM>
+
+Since Maybe-MST-B adds randomly, if it adds AB and AC, it will end, as BC will create a cycle.
+Except, that T will equal 11, while an MST of BC and BA would have a value of 6 (MST).
+
+</VERBATIM>
+---++!! c
+<VERBATIM>
+
+This will work - it's basically an unwieldy version of MST-relaxing.
+
+Use an adjacency list.                            --Adding an edge is O(1) 
+Use DFS to check for a cycle                 --  O(V + E) = O(V) 
+
+.....Max number of cycles at any one time = 1, which means every pair of vertices in the graph
+    only has one edge, and the additional edge to form a cycle will mean E = V
+
+Linear search of the edges to find the the maximum-weight edge on the cycle will be O(V) 
+deleting an edge -- O(V). 
+
+Doing this for all edges will multiply the process by E.
+E * (add(1) + DFS(2V) + (possible linear search(V) + possible delete(V)))
+= E * (1 + 4V)
+= EV
+-------
+Total
+O(EV)
+
+
+</VERBATIM>
+
+---++!! Grader comments *[18/20]*
+<VERBATIM>
+Last running time is O(EV + E^2).
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+All problems in this assignment were completed in collaboration with Josh Joseph
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+
+/*
+**         This algorithm acts similarly to a disjoint set. Sequence fragments, or "reads" are
+**         stored in a linked list of strings. As comparisons are made, overlapping reads are merged until
+**         only one read remains.
+**
+*/
+
+ 
+Load "reads" from text file into linked list<string> fragments           ........................Theta(n)
+
+while( fragments.size() > 1) {                                                           ........................Theta(n)
+     string thisRead = fragments.pop_front()                                     ........................Theta(n)
+
+     // Find neighboring string to merge with thisRead
+     // Always successful with simplified problem
+     UNION(thisRead, fragments);                                                     .........................Theta(n)
+}
+
+
+bool UNION(string thisRead, list<string> &fragments) {
+
+     for( all strings in fragments, thisFrag ){
+
+          //Check for R/L overlap of 4 characters                
+          GET_OVR( thisRead, thisFrag )                                          ..........................O( n^2)
+     
+          if R/L overlap is found  {
+
+               fragments.push_back( MERGE(thisRead, thisFrag) )     ...........................Theta(n)
+               fragments.erase(thisFrag)                                              ............................Theta(n)
+               return true;
+          }
+     }
+
+     // If no overlapping reads were found (Can't happen with simplified problem)
+     return false;
+}
+
+
+The GET_OVR() function runs in constant time, and is called O(n^2) times. 
+
+Therefore, overall worst-case asymptotic runtime = O(n^2).
+
+
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+In order that every man present his views without penalty 
+there must be spirit of tolerance in the entire population.
+
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+
+#include <iostream>
+#include <string>
+#include <list>
+#include <fstream>
+
+using namespace std;
+
+list <string*> getReads(string filename);
+bool readUnion(string thisRead, list<string*>&fragments);
+
+main(){
+  
+  list <string*> fragments = getReads("quotation.txt");
+  string thisRead;
+
+  while( fragments.size() > 1){
+
+    // pop front Read and merge with another...
+    thisRead = *fragments.front();
+
+    delete fragments.front();
+    fragments.pop_front();
+
+    readUnion(thisRead, fragments);
+  }
+
+  // output result
+  printf("\n%s\n", fragments.front()->c_str());
+
+  return 0;
+
+}
+
+// Get Reads (fragments) from file
+list <string*> getReads(string filename){
+
+  string allReads;                         // raw input data (readS)
+  ifstream infile;                         // input stream for reading file
+  list <string*> fragments; 
+
+  infile.open(filename.c_str());
+  getline(infile, allReads);               // reads are in one long string
+  infile.close();
+  
+  // process reads as disjoint set
+  for(int ii=0; ii<allReads.size(); ){
+    
+    if( allReads[ii] == '['){
+      string *newRead = new string(allReads.substr(ii+1,5));
+      
+      // store as fragment
+      fragments.push_front(newRead);
+
+      // Increment to next read
+      ii += 8;
+    }
+    else{
+      cout << "frameshift" << allReads[ii] << endl;
+      ii++;
+    }
+  }
+  return fragments;
+}
+
+
+// Merge string with another in list
+bool readUnion(string thisRead, list<string*>&fragments){
+
+  string thisFragment;  // temp string for fragments
+
+  // iterate through all fragments
+  for (list<string*>::iterator iter = fragments.begin(); iter != fragments.end(); ++iter) {
+
+    thisFragment = **iter;
+    
+    // If thisFragment == Left-Neighbor
+    if(thisRead.substr(0,4).compare(thisFragment.substr(thisFragment.size()-4,4)) == 0){
+      
+      // create new union string
+      string* mergeStr = new string(thisFragment.substr(0,thisFragment.size()-4) + thisRead);
+
+      // delete old string
+      delete *iter;
+      iter = fragments.erase(iter);
+
+      // add new string to list of fragments
+      fragments.push_back(mergeStr);
+      return true;
+    }
+
+    // If thisFragment == Right-Neighbor
+    if(thisRead.substr(thisRead.size()-4,4).compare(thisFragment.substr(0,4)) == 0){
+      
+      // create new union string
+      string* mergeStr = new string(thisRead + thisFragment.substr(4,thisFragment.size()-4));
+    
+      // delete old string
+      delete *iter;
+      iter = fragments.erase(iter);
+
+      // add new string to list of fragments
+      fragments.push_back(mergeStr);
+      return true;
+    }
+  }
+  
+  cout << "ERROR: no match found for readUnion" << endl;
+  printf("Failed Read: %s\n", thisRead.c_str());
+  return false;
+
+}
+
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+
+How to accommodate multiple read lengths depends on whether overlap of neighboring reads is still constant:
+   If it is, nothing needs to change:
+     -->My original algorithm simply tests for Right or Left overlap of 4 characters,
+     and varying string lengths would make no difference.  Runtime = O(n^2)
+
+   If overlap of neighboring reads is NOT constant, the GET_OVR() function must be rewritten:
+     --> A modified Knuth-Miller-Pratt (KMP) algorithm can be implemented to accommodate 3 situations:
+         1) Partial overlap on the Left -- MERGE like Left neighbor situation in simple case
+         2) Full overlap of smaller read with middle of longer read -- Just throw away smaller Read
+         3) Partial overlap on the Right -- MERGE like Right neighbor situation.....
+       
+     --> KMP runs in Theta (N), where N is the length of the "text," or longer read
+     --> Setup of KMP would take Theta (M) time, where M is the length of the "pattern"
+     --> Some additional processing would be needed to perform "partial KMP" with overlap situations 1,3.
+            This additional computation would be bound by Theta(M).
+
+In summary, this new GET_OVR() function would still be called O(n^2) times, but it is no longer a constant
+function call 
+
+--> total runtime = O(n^2*(N+M))
+
+N and M being the average lengths of "text" and "pattern" reads.
+
+
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i and ii
+<VERBATIM>
+
+
+A rigorous algorithm for shotgun sequencing DNA reads with varying length, single-nucleotide errors (point mutations), and subsequence deletions/over-amplification (frameshift mutations) would be computationally
+intensive. Firstly, the source DNA would need to be digested/spliced at enough distinct sequence positions
+to ensure sufficiently redundant coverage of any given subsequence. This is because some of the reads 
+covering a given subsequence will have errors, and a correction must be made based on consensus among 
+all reads covering the subsequence.
+
+As such, the disjoint-set approach used in the simpler versions of this problem would not
+work. A complete, weighted graph must be constructed with vertices representing the reads, and edge weights
+representing the minimum hamming distance between all read pairs. In addition, the edges would have to track
+relative sequence offsets because an absolute sequence does not exist prior to merging reads.
+
+Building this graph would be similar to the previous exhaustive search with KMP, but vertices won't be merged.
+In addition to KMP, hamming distance calculation would run M time (M = pattern). Therefore, building this graph
+would take O(n^2(M(N+M)) time. n = number reads, N = avg "text" length, M = avg "pattern" length.
+
+Once the graph is constructed, a merge process must be implemented where clusters of reads with minimal 
+hamming distance (set by some arbitrary tolerance threshold) will be compared, and errors can be corrected
+by consensus analysis. Single base-mutations would be simple to correct once identified. Repetitions/Deletions
+could also be potentially identified at this point.......Magic programming would fix these.
+
+.....I doubt the merging process can be accomplished in polynomial time. 
+
+
+
+
+
+
+
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+
+All problems in this assignment were completed in collaboration with Josh Joseph
+
+<VERBATIM>
+
+
+                     TRAVELLING SALESPERSON 
+         (a.k.a. The Siblinghood of the Traveling Sales-Pants)
+             EC330 HW7 Q5 -- Adin Horovitz & Joshua Joseph 04/201/2015
+
+Starting with a text document listing weighted, directed edges between ~1500
+cities, this code plans a Minimish Hamiltoniesque Cycle, starting and ending at
+city with code "ETCW." 
+
+1) Read graph from text file (uses modified Trie to manage city names/pointers)
+   
+   --Instantiate one Node for each of the 1500 cities which contain:
+   a) A pointer to the next city (initially NULL)
+   b) Cost of that trip (weight of edge -- initially NULL)
+   c) List of out-edges from that node (used to find min outEdge in step 2)
+   d) Counter of how many times the city has been visited 
+
+2) Plan (loosely) Minimum Cycle to span all cities 
+
+   --Graph class contains data from step 1, and getMST() function, which:
+   a) Starting from origin city, searches out-edge list for best destination
+   b) Picks the lowest cost edge to an unvisited city
+   c) Updates origin Node dest pointer and cost variable
+   d) Updates destination Node's predecessor Node pointer
+   e) Points "origin" pointer to destination Node
+   f) Repeat a-e on new city until all cities have been visited once
+
+3) Plan return trip to close Cycle
+
+   --Seeks minimum path from final MST path back to origin city
+   a) Searches through outEdge list for ECTW outEdge
+   b) If none found, searches neighbor's outEdges (doesn't occur)
+
+4) Output Cycle Edges and weights
+
+   --Starting with origin Node, prints out-edge and weight. Then points
+   "origin" pointer at next Node and repeats. Stops when last city has no 
+   outEdge selected.
+   --Similarly prints return Edges.
+   --Outputs total Cost
+
+
+SUMMARY: 1497 of 1497 cities visited
+TOTAL COST = 98390
+</VERBATIM>
+
+
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle
+
+   * [[%ATTACHURLPATH%/problem5.zip][problem5.zip]]: EC330_HW7_Q5_Traveling_Salesperson

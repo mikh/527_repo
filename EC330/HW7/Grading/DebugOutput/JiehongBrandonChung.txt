@@ -1,0 +1,283 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  O((log(n))<sup>3</sup>  |
+|  c  |  O((log(n))<sup>2</sup>)  |
+|  d  |  O(n(log(n))<sup>2</sup>)  |
+---++ Explanation
+<VERBATIM>
+b - navigating to x takes O(log(n)), going down left or right (balanced since it alternates) until it doesn't match takes another O(log(n)), and there are log(n) items so the total runtime is O(log(n) * log(n) * log(n)).
+c - navigating to x takes O(log(n)), adding to the list takes O(1), and there are log(n) items so the total runtime is O(log(n) * log(n)).
+d - navigating to x takes O(log(n)), going down left or right (randomly, worst case scenario is all the same so O(n), and there are log(n) items so the total runtime is O(n * log(n) * log(n)).
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  56  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  8  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  44  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  40  |
+
+Does this graph exhibit the triangle inequality? 
+No.
+---++!! 2b
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |    |
+|  b  |  Chichen Itza, Yuc., Mexico  |    |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |    |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |    |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |    |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |    |
+<br/>
+<strong>Edge List:</strong><br/>
+Photonics Center,8 St Marys St, Boston, MA 02215 - Statue of Liberty National Monument, Liberty Island, New York, NY<br/>
+Statue of Liberty National Monument, Liberty Island, New York, NY - CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada<br/>
+Chichen Itza, Yuc., Mexico - Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico<br/>
+Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico - Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119<br/>
+Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119 - CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada<br/>
+<strong>(or, going by indices):</strong><br/>
+a-e<br/>
+e-c<br/>
+b-d<br/>
+d-f<br/>
+f-c<br/>
+
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |    |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+A = empty disjoint-set
+for each vertex v
+    make-set(v)
+for each edge (u, v) in increasing weight
+    if find-set(u) != find-set(v):
+        add the edge (u, v) to A
+        union(u, v)
+return A
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+This is an implementation of Kruskal's algorithm using a the disjoint-set data structure, which runs in O(E log V) time.
+(Sorting the edges takes O(E log E) time, followed by the O(V) disjoint-set operations which takes O(log V) time.)
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+O(E(V + E))
+Sort Edges: can be done in O(E)
+For each edge: theta(E)
+    Check if connected: can be done with DFS in O(V + E)
+</VERBATIM>
+---++!! b
+<VERBATIM>
+Counterexample:
+A graph with vertices A, B, and C that have edges AB, BC, and AC with weights 1, 2, and 4 respectively, when run through this algorithm, might have the incorrect result of AC-BC because edges are taken in arbitrary order.
+</VERBATIM>
+---++!! c
+<VERBATIM>
+O(E(V + E))
+For each edge: theta(E)
+    Check if cycle: can be done with DFS in O(V + E) time
+</VERBATIM>
+
+---++!! Grader comments *[20/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+O(n):    open file and store reads in a vector of strings
+O(n^2):  for each read:
+             for each other read: O(n)
+                 if first 4 characters of next read matches last 4 characters of current read
+                     add next read to adjacency list
+         let R = first read (as a string)
+O(n):    for each read:
+             add the last letter of next read to r
+         return R
+This algorithm runs in O(n^2) time.
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+In order that every man may present his views without penalty there must be spirit of tolerance in the entire population.
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+	const int READ_LENGTH = 5;
+	vector<string> reads;
+
+	//read file into vector of strings
+	ifstream readFile("reads2.txt");
+	readFile >> noskipws;
+	char ch;
+        string read;
+        while(!(readFile.eof()))
+        {
+		readFile >> ch;
+		if(ch == '[')
+		{
+			read = "";
+			for(int i = 0; i < READ_LENGTH; i++)
+			{
+				readFile >> ch;
+				read += ch;
+			}
+			reads.push_back(read);
+		}
+        }
+        readFile.close();
+	
+
+	int numReads = reads.size();
+	vector<int> sequence;
+
+	//find first read
+	for(int i = 0; i < numReads; i++)
+	{
+		if(reads[i][0] >= 'A')
+		{
+			sequence.push_back(i);
+			break;
+		}
+	}
+
+	
+	int lastIndex = sequence[0];
+	string lastString;
+	//generate a list of indices in order of the text
+	while(sequence.size() < numReads)
+	{
+		lastString = reads[lastIndex];
+		for(int i = 0; i < numReads; i++)
+		{
+			//not the same string
+			if(i != lastIndex)
+			{
+				//keep track of smaller string
+				string smaller;
+				reads[i].length() < lastString.length() ? smaller = reads[i] : smaller = lastString;
+
+				//beginning of next read matches end of last read
+				//TODO:account for the same last read having multiple possible next reads
+				if(reads[i].substr(0, smaller.length() - 1) == lastString.substr(lastString.length() - (smaller.length() - 1), smaller.length() - 1))
+				{
+					lastIndex = i;
+					break;
+				}
+			}
+		}
+		sequence.push_back(lastIndex);
+	}
+	
+
+	//generate resulting string
+	string result = reads[sequence[0]].substr(0, reads[sequence[0]].length() - 1);
+        for(int i = 0; i < numReads; i++)
+        {
+                int currentReadLength = reads[sequence[i]].length();
+                result += reads[sequence[i]][currentReadLength - 1];
+        }
+	cout << result << endl;
+	
+	return 0;
+}
+
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+replace this line:
+    if first 4 characters of next read matches last 4 characters of current read
+with this:
+    let sLen = size of smaller read
+    if first sLen characters of next read matches last sLen characters of current read
+So different sized reads will not cause an error since the smaller one is being used for matching.
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+Remove duplicates, store all the reads as a graph, and try to find a TSP solution.
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+Do a probability analysis based on the properties of the DNA extraction process and already-known sequences and adjust each character accordingly.
+</VERBATIM>
+
+
+---+++!! Grader comments
+<VERBATIM>Question 4 Results:
+
+Total Grade: 18
+
+	10        		
+	5         		
+	3         		more explanation
+
+
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Cycle weight: 498562<br/>
+I stored the graph as an adjacency list, then looped through starting from the given start vertex ETCW, finding the minimum<br/>
+weight edge that didn't connect to a vertex that was already added and adding that to the result.
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle
+
+   * [[%ATTACHURLPATH%/problem5.zip][problem5.zip]]: problem5.zip
+
+
+---+++!! Grader comments
+<VERBATIM>Question 5 Results:
+
+Total Grade: 5
+
+	0         		Grades from submission
+	5         		
+
+
+</VERBATIM>
+

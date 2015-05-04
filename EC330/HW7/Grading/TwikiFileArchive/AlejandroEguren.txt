@@ -1,0 +1,275 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+This homework was done with the collaboration of Connor Richmond
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  n*log(n)*log(n*log(n))  |
+|  c  |  (n^2)*log(n)  |
+|  d  |  (n*log(n))^2  |
+---++ Explanation
+For all we assumed the BST was initially empty! We did so since that's the answer the prof. gave on a discussion post.
+
+For method (b) we first looked at finding O((number of inserts)*(time for each step)). The first step was easy since we're inserting up to value n an amount log n times which together is nlogn. Then for the number of steps, starting at an empty tree we see that this algorithm builds a balanced subtree for each value in n. thus we have to always travel log(number of inserts) -> log(nlogn) to insert a new value. The solution is then multiplying these two.
+
+For method (c) we are keeping a list for each given node we repeat. list.pushback() is constant in time and will add to the list of duplicates. now we need to multiply traversal in the tree, which in this case is always right, O(n) times the pushback of all the values (nlogn). 
+
+For method (d) worst case is that everything is always inserted to the right so the time for an insert is the size of the tree. like a list. thus it's number of inserts squared.
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  56  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  9  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  42  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  40  |
+
+Does this graph exhibit the triangle inequality? 
+
+Yes!
+---++!! 2b
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |    |
+|  b  |  Chichen Itza, Yuc., Mexico  |    |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |    |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |    |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |    |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |    |
+
+Since we no longer have to provide the Predecessor array, below is the undirected list of edges that provides a minimum spanning tree:
+
+KRUSKAL
+{A,E}, {E,C}, {B,D}, {D,F}, {F,C}
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  A  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  AECFDB  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  AEC  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  AECFD  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  AE  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  AECF  |
+
+It's important to note that the same minimum spanning tree was produced, below is an edge list in oder starting from node A. Also I chose to begin Prims on node A.
+
+PRIMS 
+{A,E}, {E,C}, {C,F}, {F,D}, {D,B}
+
+AECFDB
+---++!! 2d
+---+++!! Algorithm
+The idea is to use Prim's Algorithm with a heap data structure. bellow is the Pseudocode:
+
+------------------------------------------------------------
+
+Make a heap of (edges, vertices, weights) {
+
+     Initially assign all edges to be infinity.
+
+}
+
+While (MST has less vertices then total V) {
+
+     For given V   
+
+         find given v the e with least weight on heap and add it to MST;
+       
+         min = weight(e).
+
+         Delete from the heap; //Until the minimum has been recorded for sure;
+   
+     Using the newly added edge move on the the next vertex it's connected to.
+
+}
+
+------------------------------------------------------------
+
+---+++!! Analysis
+
+This algorithm is Prim's using a heap data structure to maximize our run time. Because we have dense graph we can assume that E edges is equal to V^2 vertices in the graph. The solution to a speedy algorithm is to find a runtime that is less dependent on E and more on V. 
+
+For this algorithm the first step is to make a heap data structure taking into account vertices, edges, and weights. It was found that if we use a Fibonacci heap it would be a fast way to implement the algorithm. First is to construct the Fibonacci Heap with all the edges, which is constant time for each edge for E edges, this is O(E). Once this heap is made then we pick a vertex and see which is the min edge out that doesn't make a cycle (No backtracking essentially). each search takes O(logV) and since we're doing it for V vertices the runtime for this component is O(VlogV). The total time is the sum of the two which is O(E + VlogV) which in a dense graph is O(V^2 + VlogV). 
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+This algorithm works!
+
+Running time: THETA(E log E)
+
+We reach this conclusion because when we break down the algorithm we see the data structure to include all the edges could efficiently be THETA(E). Next segment is a bit different, the for loop runs E times deleting an edge in the if statement to check and thats THETA(log E). Together they are THETA (ElogE) and since it's greater then the cost to make the data structure we don't even consider it.
+---++!! b
+This algorithm is NO GOOD and will not work! It does make a spanning tree but along the entire algorithm it doesn't strive at all to meet a MINIMUM spanning tree. Here's a small example. A complet triangle graph with nodes A, B, C. with edges AB=100 BC=1 and AC=1. Arbitrary if we pick AB, we check that it's not a cycle and since it's the first it isn't but it already costs 100. then the next one would be either edge left with a total cost of 101. When clearly the minimum spanning tree would be from BC and then AC. c connecting the two.
+
+Example:      (C)<-------(1)-------A-------(100)------B------(1)----------C -------->(A)
+---++!! c
+This one works because we are checking for cycles and always taking away the highest edge. In Kruskal's we add the least cost edge but this is a type of reverse algorithm in which we're adding edges and if it's a cycle subtracting the highest cost edge.
+
+Running time: Theta(ElogV)
+
+This is because the for loop iterates E times for all the edges and to find, remove large member is O(lgV) in a heap for example. Together it is THETA (ElogV). finding the cycle is simply finding out values from the heap which is log V time.
+---++!! Grader comments *[16/20]*
+<VERBATIM>
+First running time is O(E^2); last is O(EV+E^2).
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+
+My code searches through the text file to find a likely starting substring. From there it searches for overlap and once it finds ones that overlap with 4 of the characters, adds the last(un-matching) character to the message in the correct location. Once it finds a match it removes that substring and then starts looking for future matches from the list of substrings.
+---+++!! ii
+<VERBATIM>
+Gravitation cannot be held responsible for people falling in love.
+</VERBATIM>
+
+%CODE{"cpp"}%
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+using namespace std;
+vector<string> get_all_words();
+int main(){
+	vector<char> message(5);
+	//can the next word be placed at the beginning?
+	int start_match = -1;
+	int start_match_word = -1;
+	//can it be placed at the end?
+	int end_match = -1;
+
+	bool found_start_match = false;
+	bool found_end_match = false;
+
+	vector<string> words;
+	words = get_all_words();
+	string start;
+	//looks for a good starting word
+	for(int i =0;i<words.size();i++){
+		start = words[i];
+		if(start[0]<91 && start[0] != ' '){
+			cout<<"START "<<start<<endl;
+			words.erase(words.begin()+i);
+			break;
+		}
+	}
+        //loads in starting word
+	message[0] = start[0];
+	message[1] = start[1];
+	message[2] = start[2];
+	message[3] = start[3];
+	message[4] = start[4];
+	
+	//start at the second word
+	int count = 0;
+
+	int j_st = 1;
+	//loops over all substrings
+	while(count<words.size()){
+
+	string current_word = words[count];
+		int st = 0;
+
+		int match_count = 0;
+		for(int j=j_st;j<message.size();j++){	
+
+			for(int i=st;i<4;i++){
+				if(current_word[i]==message[j]){
+					//cout<<current_word<<endl;
+					match_count++;
+					st = i+1;
+					break;
+				}
+				else{
+					match_count = 0;
+					st=0;
+					break;
+				}
+			}
+		}
+		//if we find a match
+		if(match_count == 4){
+			message.push_back(current_word[4]);
+			match_count = 0;
+			words.erase(words.begin()+count);
+			count = 0;
+			st = 0;
+			j_st++;
+		}
+		else{
+			count++;
+		}	
+	}
+	//prints out the finished message
+	cout<<"Message"<<endl;
+	for(int i =0;i<message.size();i++){
+		cout<<message[i];
+	}
+	cout<<endl;
+}
+
+//returns a vector with every substrings
+vector<string> get_all_words(){
+	
+	vector<string> all_words;
+	ifstream myfile("sample.txt");
+	//removes junk brace and checks if there is a word
+	myfile.get();
+	while(!myfile.eof()){
+		//dummy word
+		string next_word = "$$$$$";
+		for(int i = 0; i<5;i++){
+			next_word[i] = myfile.get();
+		}
+		
+		myfile.get();
+		myfile.get();
+		myfile.get();
+		all_words.push_back(next_word);
+	}
+	return all_words;
+}
+
+%ENDCODE%
+---++ 4b.  Complications [5 points]
+
+This adaptation is relatively simple to account for. We have our existing message string that contains what we have matched so far (starts empty). After we determine the starting string (in the same way as 4a), it doesn't matter how long the new strings are to compare. We know that all possible substrings are included, so we would still check to make sure that in a new substring every character but the start or end character overlap in our current message. If that is true, add the character to the start or end of our message
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+if not all substrings are produced, by creating multiple sub-messages we should be able to account for the lack of overlap. This algorithm would start with one message that is one of the read substrings. From there it would read in each substring and check to see if all but one of the read-in substrings characters match. If they do, add the un-matched character to the start or end of the message, if they don't then create another message with the read-in substring.  If they see a total match, ignore the substring. Continue this process until you have read in all of the substrings. Once all substrings have been read in we will start comparing the messages to one another. We will look through the at most n messages and compare their overlap to each others. The messages with the most overlap will be combined until there is only one remaining message. 
+---+++!! ii
+If there are random errors throughout the substrings, it is difficult to come up with an algorithm with a 100% success rate. We would use the same method as before where we create numerous messages when there is no overlap, and then compare all the messages once all substrings are read in. Except now, if a substring was read in at the beginning or end of a read it will have a marker. If we cannot find any overlap, or if overlap is minimal (one character) it will be flagged to be checked later. Once all non-flagged messages have been combined, we will then compare the flagged unmatching strings to the message. If it is off by 1 or 2 characters we can assume that there was an error and correct for it. This method should help spot errors, and even correct for them
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+I have a Vertex class that stores the vertex's location and all destinations from that vertex and their weights. My algorithm started at the required location. From there it looks at the cheapest weight and travels to that vertex. It continues this pattern, while looking for certain nodes that have been determined to be difficult to reach. For example one node can only be reached by one terminal, so that node is a priority. If it reaches a node that has only visited nodes adjacent to it, it chooses the cheapest next location and travels there. It keeps doing this until all vertices have been reached. At this point it then looks for a path home. If it can't find one it will then go to the next vertex until it returns to the starting location. The weight of the smallest cycle I found was: 114199
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>

@@ -1,0 +1,252 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  bigO( (log n) * (log(log n)) ) |
+|  c  |   bigO(log(n)) |
+|  d  |  bigO(log(n))  |
+---++ Explanation
+<VERBATIM>
+For method b, this should only take bigO(log n * (log (log n))) time.
+For method c, all (log n) copies of that node are put into a list and are inserted into the BST as normal. Thus, this should only take Theta(log n) time.
+For method d, the running time is similar to c because despite the number being distributed randomly, the tree should insert the copies as normal. This should only take Theta(log n) time as well.
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  57h  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |   9h |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  43h  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4h  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  | 40h   |
+
+Does this graph exhibit the triangle inequality? Yes, because the graph is complete, thus any triangle made in the graph must fulfill the requirements.
+---++!! 2b
+Kruskal's Algorithm, based off weight of edges.
+a->c, c-> f, f -> d, d ->  b
+|  Index  |  Location   |  &pi;  | Edge |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  | Nil |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  | f   |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  | c   |
+
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  | Nil   |
+|  b  |  Chichen Itza, Yuc., Mexico  | d   |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  | f   |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  | a   |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  | c   |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+Kruskal's Algorithm is chosen.
+MST-KRUSKAL.G;w/
+1 A D ;
+2 for each vertex  2 G:V
+3 MAKE-SET./
+4 sort the edges of G:E into nondecreasing order by weight w
+5 for each edge .u; / 2 G:E, taken in nondecreasing order by weight
+6 if FIND-SET.u/ ¤ FIND-SET./
+7 A D A [ f.u; /g
+8 UNION.u; /
+9 return A
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+Kruskal's Algorithm is the best method to approach a complete graph with V vertices and E edges. The worst case running time is bigO(E lg V), compared to Prim's algorithm, which has a worst case of bigO(E + V lg V).
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+The MST algorithm should always return a MST. Once the edges are sorted, the algorithm iterates through each edge in non-increasing order and removes it from the list if the outcome is a connected graph.
+The running time is bigO(E^2).
+</VERBATIM>
+---++!! b
+<VERBATIM>
+The MST algorithm does not provide an MST all the time. Because the algorithm takes edges at a vertex in arbitrary order, the algorithm may consider non-optimal edges since it only checks if adding the edge would create a cycle.
+Consider a graph with vertices A, B, and C, with A->B weight being 1, B -> C weight being 2, and C -> A weight being 3. The MST of this graph should be a tree starting from B and extending to A and C, but with this method, the algorithm may reach one vertex and go to the other, because it will not stop unless a cycle is formed. Thus, an invalid tree like C -> A,B may be formed.
+</VERBATIM>
+---++!! c
+<VERBATIM>
+The algorithm always provides a MST. The running time should bigO(VE).
+</VERBATIM>
+
+---++!! Grader comments *[20/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+The list of words exists such that each word is an overlap of another. By identifying which word is a starting word ([In or]), you can easily create a function that concatenates the next one based off of overlap. 
+
+In my function, I create a variable called lastSubstr that remembers which substring I concatenated to the final string. In short: if the next four letters of the next string overlaps the lastSubstr successfully, lastSubstr gets replaced and the new string is concatenated. This repeats until there are no valid substrings left.
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+In order that every man present his views without penalty there must be spirit of toleration in the entire population.
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+#include <cctype>
+#include <algorithm>
+
+using namespace std;
+
+// ***************** NOTE ******************************
+// This code will only work if all the items in reads2 occupy their own newline.
+
+void stringCat(){
+	//open reads and put every substring in a vector
+	vector<string> stringVec;
+	ifstream strInput;
+	strInput.open("reads2.txt"); // Note that reads2.txt has been modified so that each item occupies its own newline.
+	while (!strInput.eof()){
+		string inputLine;
+		getline(strInput, inputLine);
+		string substrInput;
+		if (inputLine.length() > 1){
+			inputLine = inputLine.substr(inputLine.find('[')+1,inputLine.find(']') - 1);
+			stringVec.push_back(inputLine);
+			}
+	}
+	strInput.close();
+	
+	// get a substring that starts with a capital letter.
+	string strOutput;
+	vector<string> validResults;
+	for (vector<string>:: iterator it = stringVec.begin(); it != stringVec.end(); it++){
+		char checkIfUpper = (*it)[0];
+		if (isupper(checkIfUpper) > 0) {	
+			strOutput = (*it); // begin strOutput with Capital Substr
+			string lastSubstr = *it; // remember last substr inputted
+			vector<string> stringVecTest = stringVec; // copy vector over to new vector
+			int counter = 0; // debugging
+			int sizeVector = stringVecTest.size();
+			bool goodstring = true; // goodstring is true if the iterator is able to find the next read
+			while (goodstring == true){
+				goodstring = false;
+				for (vector<string>:: iterator itt = stringVecTest.begin(); itt != stringVecTest.end(); itt++){
+					if (lastSubstr.find((*itt).substr(0,4)) != string::npos and (*itt) != lastSubstr ){ //find if first 4 letters of *itt fit in lastSubstr
+						lastSubstr = *itt; // renew lastSubstr
+						strOutput = strOutput + (*itt).substr(4);
+						stringVecTest.erase(itt);
+						sizeVector = stringVecTest.size();
+						goodstring = true;
+					}
+				}
+			}
+			if (!strOutput.empty()) validResults.push_back(strOutput);
+		}
+	}
+	cout << validResults[0] << endl;
+}
+
+int main() {
+	stringCat();
+	return 0;
+}
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+Currently, my code has an iterator that points to each and every term in the file. If the first four letters of the word can be found in the previously accepted substring, 
+then it becomes the new accepted substring (lastSubstr) and it is then concatenated into the sentence string. This is all done on line 46, in the While loop.
+
+This only works if each substring is five letters, however.
+
+For substrings with more or less than 5 letters, the line should be edited so that it should iterate through the entire list of items to see which one matches the lastSubstr 
+the best. For example, if lastSubstr = [blackberr], then it should prioritize finding a substring that contains the letters 'blackberr'. If no substring is found, it should then 
+delete the first letter of lastSubstr and reiterate through the list of items again (so instead lastSubstr = [lackberr] and the substring would need to be searched for again).
+ This priotizes the more obvious matches and lowers the value of more ambiguous choices like single letter substrings ('a' or 'i' for example.)
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+First, to deal with random substrings, lastSubstr should be changed into a vector holding all previous lastSubstr entries.
+
+For each substring of DNA, the function should first match the substring to each entry in the lastSubstr vector. If it gets a match, the substring should be dumped and the iterator should move on to the next potential candidate.
+
+The substring in lastSubstr vector that should be compared for overlapping should be the last element in the vector. If there are no overlaps detected, and the substring being evaluated is unique and does not already exist in lastSubstr vector,
+a boolean variable (like "uniqueSubstr") should turn true and the function will reiterate through the list of substrings again and put the first available unique substring it finds into the DNA sequence.
+
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+To deal with reads with random errors... uh
+</VERBATIM>
+
+
+---+++!! Grader comments
+<VERBATIM>Question 4 Results:
+
+Total Grade: 18
+
+	10        		
+	5         		
+	3         		
+
+
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+My algorithm implementation incorporates the Nearest Neighbor method, using an adjacency list set up as a graph class. In short, the algorithm first organizes all the items into the graph, with each city being a vertex and applying the edges between them. It then starts itself at ETCW then looks for the smallest edge to the next city. If the city in question has already been visited, it will simply look for the next available cheapest city to go to. Thankfully, the map has no dead ends, so it is nearly guaranteed to always be able to make a round trip to all cities.
+
+The score that I obtained was 100874, not far off from Prof. Trachtenberg's score.
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle
+
+
+---+++!! Grader comments
+<VERBATIM>Question 5 Results:
+
+Total Grade: 20
+
+	15        		Grades from submission
+	5         		
+
+
+</VERBATIM>
+

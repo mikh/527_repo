@@ -1,0 +1,350 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  O (log(n^2 / 4))  |
+|  c  |   O(n) |
+|  d  |  O(n)   |
+---++ Explanation
+<VERBATIM>
+Provide explanation for partial credits
+</VERBATIM>
+
+b.  O (log(n^2 / 4)) - Since there is just a boolean flag to toggle the insert and keep track of the insert, then the flag will toggle which direction you insert the same key, left or right. But to get the location to insert is the height of the tree and go through each list of size m/2, which is O(log n^2 / 4)
+
+c.O(n) - to get to the location of the insert is log(n) or height of the tree. Since we are using a linked list to keep track of the duplicate keys, the insert time is O(n)
+
+d. O(n) simliar to the one in part b. The list is either on the x.left or x.right
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |   57 hours |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  9 hours  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  43 hours  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  | 4 hours   |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  39 hours  |
+
+Does this graph exhibit the triangle inequality?  Yes
+---++!! 2b
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  0  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  16  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |   32 |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  | 16   |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  8  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  28  |
+
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  0  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  16  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |   32 |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  | 16   |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  8  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  28  |
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+Describe your algorithm here. Pseudocode is preferred.
+</VERBATIM>
+
+
+MST(V, E)
+	set visitedVertices
+	vector mst
+	current vertex = start
+	while(visitedVertices.size < number of V)
+		push current vertex into a set of visited
+		push back current vertex to mst
+		for each e of the current vertex
+			choose smallest edge of current vertex
+			if the smallest weight edge != a visited vertex
+				current vertex = smallest edge's vertex
+			else if the smallest weight edge == a visited vertex
+				go to previous vector in vector mst
+				adjust current mst for new smallestedge
+			else 
+				choose next smallest weight edge of an unvisited vertex
+
+
+---+++!! Analysis
+<VERBATIM>
+Descrbie and analyze your algorithm.
+</VERBATIM>
+
+The while loop looks at each vertices' edge. So on this step, before the if statements, the runnign time should be O(V+E). The most important step would be the else if statement, which back tracks to a previous vertex and adds in the new minimum weight edge. The worst care for every iteration of the wile look is another E --> O(V + E^2) --> O(E^2) in a dense graph.
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+Counterexample or Running time
+</VERBATIM>
+
+a. O(E). This algorithm takes an edge in the list. If it can remove the edge without disconnecting the graph, then the graph is still conected. It will remove the edge if the resulting T set of edges still contains a connected graph. This algorithm may not yeild a MST on every function call. Since this algorithm goes through each edge to chekc whether removing the edge still yeilds a connected graph, its running time is O(E)
+---++!! b
+<VERBATIM>
+Counterexample or Running time
+</VERBATIM>
+
+No. This algorithm doesn't yield a MST, because it doesn't add an edge that may have a smaller weight to the current MST. 
+
+there nodes, a,b,c
+
+A--(4)--> B --(16)--> C --(5)-- >A, but according to the algorithm, the edge with weight 5 forms a cycle, so its not used and therefore, since 5 is smaller than 16, the algorithm doesnt yield a MST.
+---++!! c
+<VERBATIM>
+Counterexample or Running time
+</VERBATIM>
+
+O(E*m), where m is the number edges it takes to find the largest edge to swap out.  This algorithm adds the edge of the set T. If the new set T contains a cycle, then it takes out the largest weight edge of the current set T.
+---++!! Grader comments *[16/20]*
+<VERBATIM>
+First running time is O(E^2); last is O(E(V+E)).
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+Describe and analyze the algorithm.
+</VERBATIM>
+
+vector<string> unused
+
+merge(first, item)
+	string answer 
+	first.compare with item
+	if first.compare with item has a match of > 3 characters
+			merge(first, item)
+		else 
+			push item to unused
+	if match found > half of 5
+			merge the two strings with the [0,5/2] of item in front of first
+			answer = merged strings
+			first = answer
+		else
+			merge first to front of item
+			answer = merged strings
+			first = answer
+	return answer
+
+decode()
+	vector<string> substrings
+	for each substring
+		push into substrings
+	string answer 
+	string first = substrings[0]
+	for each item in substrings
+		answer = merge(first, item)
+	while !unused.empty
+		for each item in unsused
+			merge(answer, item)
+	return item
+
+The first for loop pushes all substrings in the vector --> theta(n)
+the second for loop merges the first item wih all the other items in the vector - theta(n)
+the while loop goes through the unused vector which is size m, which may be multiple times until the string is completed. theta(m)
+
+Basically my algorithm takes in a substring and tries to find other substrings that could merge with. Those that cant merge with a skipped to be compared to later, when the merged substring is large enough to compare with. In the end, the sub string should "grow" into the correct string.
+
+running time: theta(M + N)
+---+++!! ii
+<VERBATIM>
+Provide your result here.
+</VERBATIM>
+
+
+Gravitation cannot be held responsible for people falling in love.
+
+%CODE{"cpp"}%
+// paste your code here
+#include <fstream>
+#include <iostream>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+vector<string> substrings;
+
+string decode(){
+	string answer = "";
+	string quote = "";
+	for(int ii = 0; ii < substrings.size() - 1; ii++){
+		string matchOne = substrings[ii];
+		for(int kk = ii + 1; kk < substrings.size(); kk++){
+			string matchTwo;
+			for(int jj = 0; jj < matchOne.size() - 2; jj++){
+				string overlap = "";
+				overlap += matchOne[jj];
+				overlap += matchOne[jj+1];
+				overlap += matchOne[jj+2];
+				size_t found = substrings[kk].find(overlap);
+				if(found < 5){
+					cout << found << ": " << matchOne << ","  << substrings[kk] << endl;
+					string piece = matchOne + (substrings[kk].substr(found+3, substrings[kk].size()));
+					cout << piece << endl;
+				}
+			}
+		}
+	}
+	return answer;
+}
+
+void readFile(){
+	vector<int> starts;
+	vector<int> ends;
+	fstream file;
+	string line;
+	file.open("read5.txt");
+	while(file.good()){
+		getline(file,line);	
+		for(int ii = 0; ii < line.size(); ii++){
+			if(line[ii] == '['){
+				starts.push_back(ii);
+			}
+			if(line[ii] == ']'){
+				ends.push_back(ii+1);
+			}
+		}
+		for(int itr = 0; itr < starts.size(); itr++){
+			string sub = "";
+			int start = starts[itr] + 1;
+			int end = ends[itr] - 1;
+			for(; start < end; start++){
+				sub += line[start];
+			}
+			substrings.push_back(sub);
+		}
+	}
+	file.close();
+}
+
+int main()
+{
+	readFile();
+	decode();
+	// for(int kk = 0; kk < substrings.size(); kk++){
+	// 	cout << substrings[kk] << endl;
+	// }
+	return 0;
+}
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+Describe and analyze the modification
+</VERBATIM>
+
+vector<string> unused
+
+merge(first, item)
+	string answer 
+	first.compare with item
+	if first.compare with item has a match of > 3 characters
+			merge(first, item)
+		else 
+			push item to unused
+	if match found > half of item.size
+			merge the two strings with the [0,item.size()/2] of item in front of first
+			answer = merged strings
+			first = answer
+		else
+			merge first to front of item
+			answer = merged strings
+			first = answer
+	return answer
+
+decode()
+	vector<string> substrings
+	for each substring
+		push into substrings
+	string answer 
+	string first = substrings[0]
+	for each item in substrings
+		answer = merge(first, item)
+	while !unused.empty
+		for each item in unsused
+			merge(answer, item)
+	return item
+
+Same as one above theta(m+n). Except this ignores substrings < 4, because I am assuming that the substring of a smaller size won't yield enough information to merge. 
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+
+
+vector<string> unused
+
+merge(first, item)
+	string answer 
+	first.compare with item
+	if first.compare with item has a match of > 3 characters
+			merge(first, item)
+		else 
+			push item to unused
+	if match found > half of item.size
+			merge the two strings with the [0,item.size()/2] of item in front of first
+			answer = merged strings
+			first = answer
+		else
+			merge first to front of item
+			answer = merged strings
+			first = answer
+	return answer
+
+decode()
+	vector<string> substrings
+	string answer
+	for 0 to size of DNA reading in
+		string substring = DNA.substr(0, DNA.size()% rand() + DNA.size())
+		push substring into substrings
+	for(i to size of substrings - 1)
+		for(i+1 to size of substrings-)
+			answer = merge(substrings[i], substrings[i+1])
+	return answer
+
+
+This algorithm just takes in N random size reads of the DNA, then in a double for loop, it tries to reconstruct the strand using the same merge function in the previous algorithms.
+
+Running time theta(N^2) since it has to try to combine merges to make up for possible errors towards the end and random errors sprinkled thoughout
+---+++!! ii
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle
+
+
+I mostly preprocessed the graph by finding weights < 250 for and edge. From there I tried to go as far as I can without visiting a previously visited city, by using the smllest weight found from each city(Greedy approach). I was able to get through 974 cities, before I ran out of edges, since I delete the edges to visited cities. Then I did some post processing to find the remaining cities and their remaining  edges and from there I just did the same method of finding the next city with smallest weight. I was able to get all 1498 cities and return back to ETCW, which was my start.
+
+I also attempted to go to each city by their smallest weight, but only deleting a visited edge. This way I can revisit the same city over and over again. This didn't work as I reach over 300k and visiting 1300 unique cities. 

@@ -1,0 +1,274 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  <latex> \Theta(log(n) * nlg(n)) </latex>  |
+|  c  |  <latex> \Theta(nlog(n)) </latex>  |
+|  d  |  <latex> \Theta(nlog(n)) </latex>  |
+---++ Explanation
+<VERBATIM>
+Provide explanation for partial credits
+</VERBATIM>
+
+b. Constructs a balanced binary tree because it is alternating between left and right children -> O(nlg(n)) for inserting n, O(log(n) * nlg(n)) for inserting 1..n log(n) times  %BR%
+c. This will still produce a line of nodes -> O(n) for inserting n, O(nlog(n)) for inserting 1..n log(n) times %BR%
+d. Worst case is all one side, which will also be a line of nodes -> O(n) for inserting n, O(nlog(n)) for inserting 1..n log(n) times %BR%
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  57 hours  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  9 hours  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  43 hours  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4 hours  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  39 hours  |
+
+Does this graph exhibit the triangle inequality? 
+
+Yes - drawing the complete graph with all of the driving times confirms this.
+---++!! 2b
+Edges in the MST:
+
+{Pho, St} : 4 %BR%
+{St, CN} : 8%BR%
+{CN, Ma} : 32 %BR%
+{Ma, Py} : 29 %BR%
+{Py, Ch} :15
+
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  nil  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  15  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  8  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  29  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  32  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+Describe your algorithm here. Pseudocode is preferred.
+
+MST-100(G, w)
+	// Kruskal's algorithm with counting-sort
+	A = NIL
+	for each vertex v in G.V
+		Make-Set(V) 
+	sort the edges of G.E USING Counting-Sort // Since we know the weights will only be from 0-100 - sort in linear time
+	for each edge (u,v) in G.E, take in nondecreasing order by weight
+		if Find-Set(u) &#8800; Find-Set(v)
+			A = A U {(u,v)}
+			Union(u,v)
+	return A
+
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+Describe and analyze your algorithm.
+</VERBATIM>
+
+Prim's and Kruskal's algorithm both have a worst case time complexity of  O((V+E) log V) for E edges and V vertices of any weight.  Our problem's modification is that our weights are only from 0 to 100 hours.  This means we can have a more efficient algorithm than normal.  Looking at Kruskal's the most complexity comes from sorting the edges of any weight.  But since we know the range of weights, we can using counting sort which sorts in linear time. So, the algorithm improves to run in O(V+E) = O(E) time.
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+Counterexample or Running time
+</VERBATIM>
+
+Using priority queue
+
+Sorting: O(E) %BR%
+	For loop: O(E) %BR%
+	Check connectivity: O(lg(v)) %BR%
+	Delete: O(lg(E)) 
+
+Total: <latex> \Theta(Elog(E)) </latex>
+
+---++!! b
+<VERBATIM>
+Counterexample or Running time
+</VERBATIM>
+
+This will not always produce a minimum spanning tree because the edges are taken in arbitrary order - so it has no mechanism of choosing the smallest spanning tree.  For example, if we apply this algorithm to the complete graph in problem 2, it can produce the minimum spanning trees found at random, but it will also choose edges of higher weight and thus produce a spanning tree that is not mininum.
+---++!! c
+<VERBATIM>
+Counterexample or Running time
+</VERBATIM>
+
+For loop: O(E)
+	Insert edge: O(lg(v)) %BR%
+	Check cycle: constant %BR%
+	Find max-weight edge: constant %BR%
+	Delete edge: O(lg(v)) %BR%
+
+Total: <latex> \Theta(E * lg(v)) </latex>
+---++!! Grader comments *[16/20]*
+<VERBATIM>
+First running time is O(E^2); last is O(EV + E^2).
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+Describe and analyze the algorithm.
+</VERBATIM>
+
+My algorithm essentially compares the suffix to the prefix of all reads in order to determine which letter to add to the output string next.  There is a major complication when there are multiple possible matches.  This results in a lot of extra complexity to make sure the right path is chosen. I had to have a variable that determines which of the matches to proceed with, and if that path uses all of the reads, it is correct. If it does not use all of the reads, the next path is taken until it is.
+
+That being said, the time complexity can be analyzed as follows:
+
+Assuming all of the reads have been stored in a vector,
+
+for # of reads: %BR%
+erasing from the vector: O(reads)
+
+Total: <latex> \Theta(reads^2) </latex>
+---+++!! ii
+<VERBATIM>
+Provide your result here.
+</VERBATIM>
+
+In order that every man present his views without penalty there must be spirit of tolerance in the entire population.
+
+and
+
+%CODE{"cpp"}%
+#include <iostream>
+#include <string>
+#include <vector>
+#include <fstream>
+
+int main() {
+	// Store the reads into a vector - all reads are five characters
+	std::fstream readsIn("reads2.txt", std::ios::in);
+	std::string line;
+	getline(readsIn, line);
+	readsIn.close();
+
+	std::vector<std::string> reads;
+	std::vector<std::string> allReads;
+	std::string readToAdd = "";
+
+	for (int i=0; i<line.length(); i++){
+		if (line[i] == '[') {
+			for (int j=i+1; j<i+6; j++) {
+				readToAdd += line[j];
+			}
+			reads.push_back(readToAdd);
+			readToAdd = "";
+		}
+	}
+	allReads = reads;
+	
+	std::string output = "";
+	std::string prefix, suffix;
+	std::vector<std::string> branchReads;
+	std::string branchOutput;
+	std::string branchSuffix;
+
+
+	int matchTry = 0;
+	// Start with "In or" because its capital and is likely the beginning of the quotation
+	suffix = "n or";
+	output = "In or";
+	reads.erase(std::find(reads.begin(), reads.end(), output));
+
+
+	while (reads.size() > 0) {
+
+		while (true) {
+			std::vector<int> matches;
+			for (int i=0; i<reads.size(); i++) {
+				prefix = reads[i].substr(0,4); // Position 0, length 4
+				if (suffix == prefix) {
+					matches.push_back(i);
+				}
+			}
+
+			if (matches.size() == 0) {
+				break;
+			}
+			else if (matches.size() > 1) {
+				branchReads = reads;
+				branchOutput = output;
+				branchSuffix = suffix;
+				output += reads[matches[matchTry]].substr(4,1);
+				suffix = reads[matches[matchTry]].substr(1,4);
+				reads.erase(reads.begin()+matches[matchTry]);
+			}
+			else {
+				output += reads[matches[0]].substr(4,1);
+				suffix = reads[matches[0]].substr(1,4);
+				reads.erase(reads.begin()+matches[0]);
+			}
+		}
+
+		if (reads.size() != 0) { // We didn't use all the words signifying that we chose the wrong path
+			// Set the state of variables to when the multiple matches occured
+			matchTry++;
+			reads = branchReads;
+			output = branchOutput;
+			suffix = branchSuffix;
+		}
+	}
+	
+	std::cout << output << std::endl;
+ 
+}
+
+
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+Describe and analyze the modification
+</VERBATIM>
+
+The way I compare the prefix and the suffix wouldn't work anymore with variable read size.  I would have to make it so that the suffix length dynamically changes with the read and prefix we are currently looking at.
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+
+My old algorithm will no longer work when not all substrings are produced.  To be able to do this. I would have to start using a graph representation.
+---+++!! ii
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+
+My algorithm would work for this.  I would do much the same thing I had to do to resolve when there were multiple paths. I would continue adding on reads and if at a certain point the next read cannot be added (presumably because of an error), I would backtrack and try a different read before the step that produced the error. This would add some complexity, at worst case having to traverse all the reads again.
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle
+
+Explanation: %BR%
+I stored the entire graph in a map of maps as a kind of adjacency list. Then I tried to use Prim's algorithm to generate a minimum spanning tree (using a min-priority queue), and then traverse the tree using DFS to produce the final path.
+
+NOTE: I was not able to implement everything working together on time. I was running into many problems when trying to generate the MST that I got stuck on. Please consider my code provided for partial credit.

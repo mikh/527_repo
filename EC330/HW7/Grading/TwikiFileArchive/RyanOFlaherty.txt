@@ -1,0 +1,196 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  O(n*log(n)*log(n)  |
+|  c  |  O(1)  |
+|  d  |  O(log(n)*log(n)  |
+---++ Explanation
+<VERBATIM>
+Provide explanation for partial credits
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  57  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  9  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  43  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  40  |
+
+Does this graph exhibit the triangle inequality? 
+
+Yes this graph exhibits triangle inequality since it is a shorter distance from each point to photonics than to go from one destination to another destination then to photonics.
+---++!! 2b
+|  Index  |  Location   |  connected to:  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  e  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e, f  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f, b  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  c  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  e, d  |
+
+EDGE LIST:
+a - e;
+e - c;
+c - f;
+f - d;
+d - b;
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  NULL (start value)  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+Given a graph with V vertices and E edges, the fastest algorithm I could make is based on boruvkas algorithm:
+
+mst(G(V, E))     // G is weighted undirected graph
+
+// representative nodes
+Workset ws = g.getNodes
+
+// disjoint set
+UnionFind disjoint g.getNodes
+
+
+for each Node n in ws {
+
+   Edge e = minWeight (g.getOutEdges (n))
+   Node v1 = disjoint.find (e.source)
+   Node v2 = disjoint.find (e.destination)
+   if (v1 != v2) {
+      e.addtoMST()
+      Node v = disjoint.union (v1, v2)
+      ws.add (v)
+   }
+}
+
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+In my implementation of Boruvkas algorithm, I used a union find to do the edge contraction.  So the edges with the lightest weight are joined together
+ to form a new edge (and not a cycle).  Each edge is joined with its lightest neighbor.  This is then added to the new tree we are building.  This
+ implementation takes O(ElogV) .
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+Theta(E^2 + VE)
+</VERBATIM>
+---++!! b
+<VERBATIM>
+This does not give a MST.
+
+Counter example: 
+V = {0,1,2}
+Edge List [weight]:
+0 - 1 [5]
+1 - 2 [2]
+0 - 2 [6]
+
+If the edge weight of 2 is last in the arbitrary order it will not be in the MST and therefore the algorithm will not always work.
+</VERBATIM>
+---++!! c
+<VERBATIM>
+Theta(VE)
+</VERBATIM>
+
+---++!! Grader comments *[20/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+My algorithm will build a graph that creates a vertex for each k-mer (read length 5), where i match the prefix of the first four letters 
+of one node to the suffix of the last four letters of another node. This, once we connect the edges, gives us the final decoded 
+message.
+
+// create graph with vertices that are our reads
+read file
+while(file open)
+     Graph.addNode(k-mer read)
+
+// connect nodes that have the same prefix/suffix
+for i = 0 to V
+      prefix = Node.prefix(i)
+      for j = 0 to V
+           suffix = Node.suffix(j)
+           If (prefix == suffix && i != j)
+                Graph.addEdge(i, j)
+                start = i;                   // node that definitely has an edge
+           
+// check Hamiltonian cycle to get our answer 
+// use DFS to check for Hamiltonian cycle, at each node we will concatenate the last letter to our string
+// we will start at node i from above, since it definitely has a directed edge out of it 
+DFS(Graph(V,E), start)           
+
+
+The run time of my algorithm is Theta(V^2 + E)
+
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+Provide your result here.
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+// paste your code here
+
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+Describe and analyze the modification
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle

@@ -1,0 +1,463 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |    n*log(n)*log(n*log(n))|
+|  c  |   n*log(n)|
+|  d  |   (n*log(n)*log(n)*log(n)|
+
+---++ Explanation
+<VERBATIM>
+b)
+in balanced tree, we insert numbers into n-th level only if (n-1) level is completed.
+The height of tree is O(n*log(n)).
+As we insert log(n) copies each of of the numbers from 1 to n:
+it gives us n*log(n)*log(n*log(n))
+
+c) here, based on comparison of z to x.key, we actually insert z to the end of linked list, where insertion time is fixed:O(1)
+we insert nlogn numbers,which gives us O(n*log(n)) 
+
+
+d) since we insert z randomly, we may get an extremely unbalanced tree.
+so the height of each node is log(n).
+searching for a node in the tree takes log(n)(number of nodes)*log(n)
+and we have n*logn insertions on top of that
+
+
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |    57|
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |   9|
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |   44|
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |    4|
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |    40|
+
+Does this graph exhibit the triangle inequality? 
+yes,it does
+---++!! 2b
+|  Index  |  Location   |   provide the edges involved in the MST. |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  e  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  | e   |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  | a   |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  | c   |
+
+
+
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  src  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  | f    |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+*graph is not directed,so we can use 
+Kruskal's algorithm
+
+void Kruskal(Graph &g){
+A=empty set;
+for each in g.vertex
+  create disjoint_set(v)
+sort edges in G in ascending order;
+/consider each edge:
+for (each v1,v2 of one edge)
+  if  find(v1)!=find(v2)
+       then add these vertices to A
+       and unite them (unite(v1,v2)
+return A;
+
+}
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+The algorithm basically creates sets that consist of separate vertices of the graph. 
+than considering the minimal edge, if the vertices of the edge are not in the same set yet, it adds them to the edge
+
+The worst running time is O(E*logE)(-when we sort edges)
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+Yes, the algorithm does always produce a minimum spanning tree
+
+sorting edges takes O(E*log(E)) time (line 1)
+assuming we use BFS to check is the graph is connected, we spend O(V+E) time to check each edge, so, overall, we use E(V+E) time to perform line 4
+
+The running time for the whole algorithm is O(E*log(E)+EV+E*E)=O(EV+E*E).
+
+
+
+</VERBATIM>
+---++!! b
+<VERBATIM>
+
+No, it produces a spanning tree. msp is not guaranteed
+
+Counterexample:
+say you have a graph with three vertices a,b and c with [a,b]=5; [b,c]=18; [a,c]=14
+because we are choosing edges in an arbitrary order, it may happen that we choose edges [b,c] and [a,c] which give a path of the weight 32; instead of choosing [a,b] and [a,c] when weight would equal to 19
+
+</VERBATIM>
+---++!! c
+<VERBATIM>
+The algorithm finds MST
+
+Let's assume they use adjacency list (array,linked-list) for graph representation
+then
+line 3: inserting into adjacency list takes O(1) amortized time, overall, the implementation of this line will take E*O(1) time
+line 4: using DFS will give us O(V) running time
+line 5: finding the maximum-weight edge will take O(V) time
+line 6: deleting the maximum-weight edge in the adjacency list will take O(V) time 
+
+Overall, the running time is O(E*V)
+
+</VERBATIM>
+
+---++!! Grader comments *[20/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+
+1)each vertex is a substring;
+2)the edge to the next vertex that should be followed  is the edge with maximum weight;
+3)Weight corresponds to overlap between the two vertices;
+4) so I sorted edges by length (max->min) and put them into the
+current set if they don't form a cycle with the edges chosen (sort of Kruskal's)
+P.s: my saying.txt is modified input. 
+       after endless trials to split the line by "[" and "]" and then store it, i just decided to split it into separate lines and then store it
+
+P.s
+
+The worst running time is given by
+ sort(g.E.begin(), g.E.end(), [](Edge x, Edge y){return x.weight > y.weight; });
+which give O(E*logE) time
+(E=number of edges=number  of given substrings)
+
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+In order that every man present his Views without penalty there must be spirit of tolerance in the entire population.
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+
+#include<iostream>
+#include<vector>
+#include<unordered_map>
+#include<algorithm>
+#include <fstream>
+#include <string>
+
+using namespace std;
+
+struct Edge{
+string ver1, ver2;
+int weight;
+Edge(string v1, string v2, int w) :ver1(v1), ver2(v2), weight(w){}
+
+};
+
+struct Graph{
+vector<string> V;
+vector<Edge> E;
+};
+
+unordered_map<string, string> Parent;
+unordered_map<string, int> Rank;
+
+string find(string V){
+	if (Parent[V].compare(V) == 0){
+
+		return Parent[V];
+	}
+	else{
+		return find(Parent[V]);
+	}
+}
+
+void Union(string r1, string r2){
+	if (Rank[r1] > Rank[r2]){
+		Parent[r2] = r1;
+	}
+	else if (Rank[r1] < Rank[r2]){
+		Parent[r1] = r2;
+	}
+	else{
+		Parent[r1] = r2;
+		Rank[r2]++;
+	}
+}
+
+
+
+void make_set(string v){
+	Parent[v] = v;
+	Rank[v] = 0;
+	//cout << Parent[v] << "  " << Rank[v] << endl;
+}
+
+
+void part4(Graph &g){
+	vector<Edge> A;
+	for (auto c : g.V){
+		make_set(c);
+		
+	}
+	sort(g.E.begin(), g.E.end(), [](Edge x, Edge y){return x.weight > y.weight; });
+	for (Edge e : g.E){
+		string r1 = find(e.ver1);
+		string r2 = find(e.ver2);
+		//cout << r1 << "    " << r2 << endl;
+		if (r1.compare(r2) != 0){
+			A.push_back(e);
+			Union(r1, r2);
+		}
+	}
+	//cout << "Hello" << endl;
+	ofstream outputFile;
+	outputFile.open("output.txt");
+	for (Edge e : A){
+		
+		outputFile << e.ver1<<"  " << e.weight<<"  "<<e.ver2 <<endl;
+	}
+	outputFile.close();
+}
+
+int wt(string s1,string s2){
+	int c = 0;
+	int c1 = 0;
+	int count = 0;
+	int case1, case2;
+	int n = s1.length();
+	int arr[5];
+	for (int i = 0; i < n; i++){
+		if (s1[i] == s2[c]){
+			//cout << "case1 " << s1[i] << " " << s2[c] << endl;
+			c++;
+			count++;
+			arr[i] = count;
+		}
+		else{
+			arr[i] = count;
+			count = 0;
+			c = 0;
+		}
+		
+	}
+
+	string s1_1 = s2;
+	string s2_1 = s1;
+	int count1 = 0;
+	int arr2[5];
+	for (int i = 0; i < n; i++){
+		if (s1_1[i] == s2_1[c1]){
+			//cout << "case2 " << s1_1[i] << " " << s2_1[c1] << endl;
+			c1++;
+			count1++;
+			arr2[i] = count1;
+		}
+		else{
+			arr2[i]= count1;
+			count1 = 0;
+			c1 = 0;
+
+		}
+		
+	}
+	sort(arr, arr + 5);
+	sort(arr2, arr2 + 5); 
+	case1 = arr[4];
+	case2 = arr2[4];
+	
+	if (case2 > case1){ return case2; }
+	else { return case1; }
+
+
+}
+
+int main(){
+	
+	string line;
+	string t[113];
+	ifstream myfile("saying.txt");
+	int c = 0;
+	
+	if (myfile.is_open())
+	{
+		while (getline(myfile, line)){
+			int bracket = line.find(']');
+			string s = line.substr(1, bracket-1);
+			t[c] = s;
+
+			c++;
+			
+		}
+	}
+	myfile.close();
+	Graph g;
+	g.V = vector<string>(t, t + sizeof(t) / sizeof(t[0]));
+	for (int i = 0; i < 113; i++){
+		for (int j = i + 1; j < 113; j++){
+			g.E.push_back(Edge(t[j], t[i], wt(t[j], t[i])));
+	//cout << t[j] << " " << t[i] << "  " << wt(t[j],t[i]) << endl;
+		}
+	}
+	
+	
+	
+
+	part4(g);
+	
+	system("Pause");
+	return 0;
+
+}
+//help frpm https://www.youtube.com/watch?v=5xosHRdxqHA
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+Technically, I already used this in part a
+
+function wt that evaluates weights of edges works for different length reads (assuming that every read has the same length)
+This runs in Theta (n) time
+n = s1.length();
+
+int wt(string s1,string s2){
+        int c = 0;
+        int c1 = 0;
+        int count = 0;
+        int case1, case2;
+        int n = s1.length();
+        int arr[n];
+        for (int i = 0; i < n; i++){
+                if (s1[i] == s2[c]){
+                        //cout << "case1 " << s1[i] << " " << s2[c] << endl;
+                        c++;
+                        count++;
+                        arr[i] = count;
+                }
+                else{
+                        arr[i] = count;
+                        count = 0;
+                        c = 0;
+                }
+                
+        }
+        
+        string s1_1 = s2;
+        string s2_1 = s1;
+        int count1 = 0;
+        int arr2[n];
+        for (int i = 0; i < n; i++){
+                if (s1_1[i] == s2_1[c1]){
+                        //cout << "case2 " << s1_1[i] << " " << s2_1[c1] << endl;
+                        c1++;
+                        count1++;
+                        arr2[i] = count1;
+                }
+                else{
+                        arr2[i]= count1;
+                        count1 = 0;
+                        c1 = 0;
+                        
+                }
+                
+        }
+        sort(arr, arr + n);
+        sort(arr2, arr2 + n); 
+        case1 = arr[n-1];
+        case2 = arr2[n-1];
+        
+        if (case2 > case1){ return case2; }
+        else { return case1; }
+        
+        
+}
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+the algorithms should pretty much remain the same
+the edge that needs to be followed would still be determined by the it's maximum weight
+however, in the input i would need to filter out all of the repeated substrings to avoid a serious increase of running time. 
+'filtering out' would increase the consumption of memory as I will use a vector of size n, where n-number of substrings
+and running time:O(n) as well, as i will need to find if the element already exist in the vector
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+
+So i basically use Prim's algorithm
+with the source ETCW
+Prim's algorithm:
+you start with an empty set
+then for each Vertex 
+   you make the key for the vertex=infinity
+   and the parent is null
+then you identify the source 
+   Key[src]=0;
+   Q=Vertices;
+while Q is not empty
+  you find the u= minimum (Q) by value of Key
+  Then you delete it from Q (Q-u)
+  if parent(u)!=null then add u to A
+  for each vertex in adjacent(u)
+     if (vertex is in Q) and key[vertex]>edge between u and vertex 
+         then Parent[vertex]=u
+                 key[vertex]=w;
+thats it. then you only return A
+
+
+I checked my code for smaller maps and it works,
+but when i run in for the given one-it takes forever (it has been 2 hours already-(cant use enggrid-no unordered_map)
+
+I've attached my code as problem5.cpp 
+P.s. so it finally compiled
+I tried uploading it, but apparently I dont go through every vertext
+Ive attached my cycle (answer.txt) 

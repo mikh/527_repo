@@ -1,0 +1,225 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  | <img src="%ATTACHURLPATH%/CodeCogsEqn.gif" alt="CodeCogsEqn.gif" width="206" height="24" />  |
+|  c  |  <latex>O \left ( n^{2}\log n \right )</latex>  |
+|  d  |  <latex>O \left ( n^{2} \log^{2}\left ( n \right )  \right )</latex>  |
+---++ Explanation
+<VERBATIM>
+insertion takes O(h) time where h is the height of the tree at the point of insertion
+b.
+First insert a group of 1s going to the left first and then alternate left and right.
+Then place a 2 to the right of all the 1s. The location of the next number is at layer
+m*ceil(log2(x+2)), where m is the current number being used and x is the number of copies.
+For example, the location of the 2 is on layer 1*ceil(log2(10+2))=1*4=4 if there are 10 copies.
+The time it takes to insert log(n) copies of 1 is worst-case O(log(n)^2).
+The time it takes to insert log(n) copies of m is worst-case O(m*log2(log(n))*log(n)^2).
+Therefore the time it takes to do this for n numbers is O(n^2*log2(log(n))*log(n)^2).
+
+c.
+Adding new nodes only takes O(1) time once x is reached. Therefore, the time it takes to reach a node is m time, where m is the number to reach. To fill a number up takes m*log(n) time. Since log(n) is constant, the optimum time is O(n^2 log(n)).
+
+d.
+Randomly, it's possible that x is always x.right.
+There are n*log(n) numbers to insert. This means that the worst case is the sum
+of all numbers from 1 to n*log(n).
+Therefore the worst-case is O(n^2*log^2(n)).
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  56  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  8  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  43  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  39  |
+
+Does this graph exhibit the triangle inequality? 
+Yes.
+---++!! 2b
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  N/A  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  | a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  N/A  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+// Kruskal's Algorithm
+
+class edge {
+  public:
+    vertex left; // vertex 1 of graph
+    vertex right; // vertex 2 of graph
+    int weight;
+};
+
+vector<edge> sortedEdges = allEdges.sort(); // sort all edges by weight. Best results through radix sort due to the small weight maximum, given that all weights are integers.
+// takes 2E time to sort them
+
+vector<edge> minTree;
+vector<trees> allTrees;
+for (vertex in Tree) { // V time
+    allTrees.push_back(tree(vertex)); convert all vertices to trees
+}
+
+for (edgeIterator it = allEdges.begin(); it != allEdges.end(); it++) { // E time
+    if (it->left.getTree() != it->right.getTree()) { // if trees are different 
+        minTree.push_back(*it);
+    }
+}
+
+return minTree;
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+All of the procedures are done in linear time, so this runs in O(E) time.
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+creates a MST
+
+1. sort the edges takes E log E time
+2. checks each edge: E time
+3. checks if T - {e} is a connected graph (using DFS or BFS: V+E time)
+
+This takes O((V+E)(E^2 log E)) time.
+</VERBATIM>
+---++!! b
+<VERBATIM>
+Doesn't always produce a minimum spanning tree.
+
+Let's say there's a graph with 3 vertices. The weight from 1 to 2 is 10. The weight from 1 to 3 is 2. The weight from 2 to 3 is 3.
+The best algorithm would connect 1 and 3, then 2 and 3 to make a minimum spanning tree.
+However, this algorithm may possibly take the 10-weight edge first, which would not create a minimum spanning tree, 
+although it creates no cycles.
+</VERBATIM>
+---++!! c
+<VERBATIM>
+1. take each edge: E time
+2. checks for cycle: E time
+3. finds maximum weight edge: E time
+
+This takes O(E^3) time.
+</VERBATIM>
+
+---++!! Grader comments *[16/20]*
+<VERBATIM>
+First running time is O(E^2); last is O(E(V+E)).
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+1. Extract the reads from the text file. 
+2. Split each word into two nodes connected in a directed graph.
+3. Find where one end-node is equal to a beginning node.
+4. Find the beginning of the graph.
+5. Determine an Eulerian path from the beginning to the end, building the string along the way.
+
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+In order that every man present his views without penalty there must be spirit of tolerance in the entire population.</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+// paste your code here
+
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+To deal with different-length reads, use different lengths.
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+
+
+---+++!! Grader comments
+<VERBATIM>Question 4 Results:
+
+Total Grade: 5
+
+	5         		no code
+	0         		
+	0         		
+
+
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle
+
+Explanation: Uses the Dijkstra algorithm to find the shortest path to the next unused vertex.
+
+After visiting all vertices successfully, the program returns back to the original vertex.
+
+   * [[%ATTACHURLPATH%/problem5.zip][problem5.zip]]: Final solution to problem 5
+
+
+---+++!! Grader comments
+<VERBATIM>Question 5 Results:
+
+Total Grade: 18
+
+	15        		Grades from submission
+	3         		need more explanation
+
+
+</VERBATIM>
+

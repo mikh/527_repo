@@ -1,0 +1,224 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  theta log(n)(log(log(n)))  |
+|  c  |  theta log(n)  |
+|  d  |  theta log(n)  |
+---++ Explanation
+<VERBATIM>
+b. It will construct a balanced binary tree. Each time it creates left child first, then right child. since each node has two children, time is log(n)
+c. This algorithm produces a line of nodes,  each having one child to the right. Since only one child, it takes n time.
+d. Same as C, inserts in a linear fashion. n time.
+</VERBATIM>
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+//Round up/down, >= 30 mins rounds up
+
+//Google provides time estimates INCLUDING traffic
+
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  56 Hours  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  8 hours 25 minutes (8 hours) |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  43 hours  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  3 hours 51 minutes (4 hours) |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  40 hours  |
+
+Does this graph exhibit the triangle inequality? 
+
+The graph does satisfy the triangle inequality because no triangle contains two edges whose sum are less than that of the last.
+---++!! 2b
+//placed as though there is a pi
+
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  nil  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  a  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+//Undirected edges, in order created by Kruskal's algorithm: { (a, e), (a, c), (d, b), (d, f), (c, f) }
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  nil  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+Create a forest of one-node trees, one for each vertex in V
+Create a priority queue containing all the edges in E, ordered by edge weight
+While fewer than |V|-1 edges have been added to the forest:
+{
+      Delete the smallest-weight edge, ( v i , v j ), from the priority queue.
+      If v i and v j already belong to the same tree in the forest, go to delete smallest weight edge. (Adding this edge would create a cycle.)
+      Else, v i and v j are in different trees. Join those vertices with that edge (this joins their trees, reducing the number of trees in the forest by 1), and continue.
+}
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+Elog(E) because: Sort edges by weight (ElogE) + add/remove as necessary (ElogE) = 2ElogE --> theta (Elog(E))
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+Maybe-MST-A creates a valid minimum search tree.
+
+Sort edges into non increasing order using merge sort on an adjacency list: theta(Elog(E))
+Use DFS to sort through edges: theta(E(E+V))
+Total: theta(E^2)
+</VERBATIM>
+---++!! b
+<VERBATIM>
+Maybe-MST-B produces a spanning tree, but one that is not necessarily minimum. Since the edges are taken in arbitrary order, even though
+we check to make sure there are no cycles so we are sure it is a tree, edges of lower weight have no more priority than those of higher weight.
+For example, in a triangular graph (A complete graph of three vertices), in which the vertices have weights 1, 5, and 10, though we will cycle through 
+all the edges and not take the third because it creates a cycle, we could select the edges of weights 1 and 10 rather than weights 1 and 5.
+</VERBATIM>
+---++!! c
+<VERBATIM>
+Since we run through for each edge, all possible cycles will be built, and therefore all possible highest edges removed.
+
+Sort through all edges with DFS: theta(V) since we remove any edges that form cycles (only enough edges to connect the graph at any time)
+Do this for each edge: theta(E)
+Total: theta(EV)
+</VERBATIM>
+---++!! Grader comments *[20/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+This runs through all the entries and finds the beginning (starts with a capital letter). It then runs through the remaining entries and adds the remainder if 
+four letters overlap. Since there are enough entries, we find a full statement.
+
+Running time is theta (n) for running through the pieces to find the first entry and to enter the pieces into the vector from the file + theta (log(n)) to construct 
+the full statement since each time we make the vector we need to run through smaller. however, we also need to consider that substr takes linear time to 
+complete for each check, so log(n) becomes log(n) where m is the length of each entry (5). since this is a constant, however, we can ignore it. Thus the total time
+is theta (n + log(n)).
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+Reading, after a certain age, diverts the mind too much from its creative pursuits.
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+// paste your code here
+
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <sstream>
+#include <vector>
+
+using namespace std;
+
+vector<string> pieces;
+int main()
+{
+    ifstream infile;
+    infile.open("input.txt");
+    string line;
+    while(getline(infile,line)){
+        line = line.substr(line.find('[')+1,line.find(']')-1);
+        pieces.push_back(line);
+    }
+    infile.close();
+    string output = "";
+    string prevAddition;
+    for(int ii = 0; ii < pieces.size(); ii++)
+    {
+        if(int(pieces[ii][0]) > 64 && int(pieces[ii][0]) < 91) //begins with a capital letter.
+        {
+            output += pieces[ii];
+            prevAddition = pieces[ii];
+            pieces.erase(pieces.begin() + ii);
+        }
+    }
+    while(pieces.size() > 0)
+    {
+        for(int ii = 0; ii < pieces.size(); ii++)
+        {
+            if(prevAddition.substr(1, 4).compare(pieces[ii].substr(0,4)) == 0)
+            {
+                prevAddition = pieces[ii];
+                output += pieces[ii].substr(4, 1);
+                pieces.erase(pieces.begin() + ii);
+                break;
+            }
+        }
+    }
+    cout << output << endl;
+}
+
+%ENDCODE%
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+We would need rather than checking the last 5 letters added against the new 5 being entered, checking the (length of the new string)-1 digits, against that many of the
+new string.
+Thus, the m from the above time would become relevant as the substring could be any length m so total time would be theta (n + mlog(n))
+</VERBATIM>
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+First, we would run through and remove any identical patterns. this would take n^2 time.
+Then we would have to run through and try the same pattern as above, except rather than only checking (length of string -1) to match, we would have to cycle
+through from there to (length of string - (length of string -1)) such that if we had a string abcdef we could match not only cdef or def but also efgh or if the only 
+overlap began with an f. We could break at the highest overlap, but worst case time would be (m^2)log(n). (m for the changing overlap amounts, m for substr,
+log(n) for going through all entries).
+Total would now be (n^2 + (m^2)log(n)) time.
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+To eliminate errors, we could add only one character at once, rather than the remainder of a string. Thus if our total so far was abcdef, we could add only a g in defgh,
+in case the end of the read is an error. This way we minimize the chance of errors since only the end of the last read will be included. This does not change running time,
+so our total time remains (n^2 + (m^2)log(n))
+</VERBATIM>
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+First, I sorted through and ordered the paths between vertices by cost. Then I found my minimum path by starting at the beginning of the list and taking the shortest paths, then removing any remaining unnecessary paths from the list, until I had made it all the way around. Then I took that resulting list and put it all in order. Keep in mind that this takes a VERY long time to run, but should give a path of low cost. Total cost: 60687. Note that this does not consider cases in which all paths to a vertex might be thrown out before we reach them. Thus, this solution produced an incomplete hamiltonian cycle (it missed some vertices).
+
+Path is attached in file result.txt in problem5.zip
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle
+
+   * [[%ATTACHURLPATH%/problem5.zip][problem5.zip]]: Problem5 (with a makefile that hopefully works)
+
+   * [[%ATTACHURLPATH%/problem5.zip][problem5.zip]]: Problem5 (with a makefile that hopefully works)

@@ -1,0 +1,447 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+
+|  Approach   |  Running time  |
+|  b  |  O(n*log(n))  |
+|  c  |  O(n^2)  |
+|  d  |  O(n*log(n))  |
+---++ Explanation
+<VERBATIM>
+
+b. The tree is filled in a balanced manner. The height of the tree is log of the number of elements inserted in the tree, but you are adding log(n) of each number in the tree
+
+c. Since all the repeated values are added to the tree, adding to the list give n*(n-1) + the height of the tree (log(n)). n^2 grows faster than log(n), so O(n^2). 
+
+d. In the worst case, all the numbers would be inserted to the left or to the right. 
+</VERBATIM>
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  56  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  08  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  43  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  04  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  40  |
+
+Does this graph exhibit the triangle inequality? 
+<VERBATIM>
+Yes, this graph exhibits the triangle inequality.
+</VERBATIM>
+---++!! 2b
+|  Index  |  Location  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |
+|  b  |  Chichen Itza, Yuc., Mexico  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |
+
+Edges involved in the minimum spanning tree:
+<VERBATIM>
+a - e
+c - a
+b - d
+f - d
+c - f
+</VERBATIM>
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  04  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  00  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  08  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  16  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  37  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  29  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+sort edges into increasing order of edge weights w
+G = graph
+for each edge e taken in increasing order by weight, with vertices v1 and v2
+  if removing this edge forms a cycle of removed edges
+    move to the next edge
+  else
+    new_G += e
+if each vertex has been visited once
+      return new_G
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+I tried to implement this algorithm in the way that I step through the problem in my head/on paper. So first, create a list of the edges in increasing order. I then go through each edge in the list, and if that edge creates a cycle with the edges that have already been used to create the MST, I skip that edge and move to the next edge in the list. I iterate through this process until I have selected all of the edges that allow me to visit each vertex one time. 
+
+Worst-case running time: O(lg(V)) --> constant time to visit the min-weight edge, constant time to detect cycle, and O(lg(V)) to remove an edge
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+Line 1: Run O(E) times (implemented as a priority queue)
+	Line 3: Runs for each edge --> O(E) 
+		Line 4: Checks connectivity in O(lg(V)) time --> O(E*lg(V))
+		Line 5: Deletes edge in O(lg(E)) time --> O(E*lg(E))
+		
+Thus, the total running time is O(E*lg(E))
+</VERBATIM>
+---++!! b
+<VERBATIM>
+This algorithm doesn't always produce a minimum spanning tree; it looks at edges in arbitrary order, and only adds edges (never removes or switches edges). The arbitrary order means that it is possible to add heavier edges at the expense of lighter edges.
+</VERBATIM>
+---++!! c
+<VERBATIM>
+Line 2: Runs O(E) times (implemented as priority queue)
+		Line 3: Insert edge --> O(lg(V)) 
+		Line 4: Checks for cycle in constant time (O(1))
+			Line 5: Finds max-weight edge in constant time (O(1))
+			Line 6: Deletes edge --> O(lg(V)) time
+			
+Total running time --> O(E*lg(V))
+</VERBATIM>
+
+---++!! Grader comments *[16/20]*
+<VERBATIM>
+First running time is O(E^2); last is O(E(V+E)).
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+I tried to implement an algorithm that works as close to the way that I solve this particular problem in my head or on pen and paper. 
+
+This algorithm creates a queue of reads by going through each read and tries to match the maximum number of characters to the previous read in the queue, with a particular shift value. If there are no matches, the read is sent to the bottom of the queue. 
+
+
+ANALYSIS
+
+To go through the reads takes linear time --> O(r), with r being the number of reads
+To find the shift amount (worst case is length of current string built by the previous reads + 2*(length of read - 1)) --> O(s); the two is for checking two cases for the positioning of the read within the string
+
+Running time is O(r*s).
+
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+My result: In orde ent hat every man must be spire penalty t his in thation present of entirit of tolerance in the e mus views withe ent his vithout pirit pentire mulatiopulathat popul
+
+The result should be:  in order that every man present his views without penalty there must be a spirit of tolerance in the entire population.
+
+My code works with the "World Wide Web" example, but not with my string. I even added an initial condition to the reads that we given to me (The first read is the read that goes at the beginning of the sentence), and that got me closer to the quote, but still not the exact quote. 
+</VERBATIM>
+
+%CODE{"cpp"}%
+// collaborated with Igor de Paula
+
+#include <iostream>
+#include <vector> 
+#include <string>
+
+using namespace std;
+
+string place_string(string currentString, string read, int shiftAmt) {
+	// this string combines 2 strings (read and the current string, or two reads) in their respective positions, given the shift amount
+	
+	if(shiftAmt < 0) { // the read comes before the string
+		for(int ii = 0; ii > shiftAmt; ii--) {
+			currentString = "_" + currentString;
+		}
+	} 
+	
+	for (int jj = 0; jj < read.size(); jj++) {
+		if(shiftAmt < 0) {
+			currentString[jj] = read[jj];
+		} else if ((shiftAmt + jj) >= currentString.size()) {
+			currentString += read[jj];
+		} else {
+			currentString[jj + shiftAmt] = read[jj];
+		}
+	}
+	return currentString;
+}
+
+int read_position(string sentence, string read, int& parity) { 
+	int start_size;
+	
+	int parity_2 = read.size(); 
+	int shiftAmt_2 = read.size(); 
+	int size_2 = read.size() + 1;
+	
+	int parity_3 = read.size(); 
+	int shiftAmt_3 = read.size(); 
+	int size_3 = read.size() + 1;
+
+	// there are 3 possibilities: read is within the sentence, read is before sentence, or read is after sentence
+	
+	// Case 1: Read is within the sentence
+	int shiftAmt = sentence.find(read); 
+	if(shiftAmt > sentence.size()) {
+		parity = 0;
+	} else {
+		parity = shiftAmt; 
+		return shiftAmt;
+	}
+
+	// Case 2: Read is before current sentence
+	shiftAmt = 0;
+	start_size = read.size();
+	
+	for(int ii = 0; ii < read.size(); ii++) {
+		string currStr_frag = sentence.substr(0,start_size); 		string fragCheck = read.substr(shiftAmt,start_size);
+		
+		if( currStr_frag.compare(fragCheck) == 0 ) {
+			parity_2 = shiftAmt*-1; 
+			shiftAmt_2 = shiftAmt*-1; 			
+			size_2 = start_size; 
+			goto case3;
+		}
+			shiftAmt++; 
+			start_size--;
+	}
+	
+	case3:
+	
+	// Case 3: Read is after current sentence
+	shiftAmt = sentence.size() - read.size(); 
+	start_size = read.size();
+	
+	for(int ii = 0; ii < read.size(); ii++) {
+		string currStr_frag = sentence.substr(shiftAmt,start_size); 
+		string fragCheck = read.substr(0,start_size);
+		
+		if( currStr_frag.compare(fragCheck) == 0 ) {
+			parity_3 = shiftAmt; 
+			shiftAmt_3 = shiftAmt; 
+			size_3 = start_size; 
+			goto verify;
+		}
+		
+		shiftAmt++;
+		start_size = sentence.size() - shiftAmt;
+	}
+	
+	verify:
+	
+	if(shiftAmt_2 == read.size() && shiftAmt_3 == read.size()) { // read cannot attach to any part of the current string
+		parity = -1; 
+		return 0;
+	}
+	
+	if(shiftAmt_2 == read.size()) { 
+		parity = parity_3;
+		return shiftAmt_3;
+	} else if (shiftAmt_3 == read.size()) {
+		parity = parity_2; 
+		return shiftAmt_2;
+	} else {
+		if (true){
+			parity = parity_3;
+			return shiftAmt_3;
+		} else { 
+			parity = parity_2; 
+			return shiftAmt_2;
+		} 
+	}
+	
+}
+
+int main() {
+
+vector<string> reads;
+
+	/*reads.push_back(" Wide"); 
+	reads.push_back("Wide "); 	
+	reads.push_back("World"); 
+	reads.push_back("d Wid"); 	
+	reads.push_back("de We"); 
+	reads.push_back("e Web"); 	
+	reads.push_back("ide W"); 
+	reads.push_back("ld Wi"); 	
+	reads.push_back("orld "); 
+	reads.push_back("rld W");*/
+	
+	reads.push_back("In or");
+	reads.push_back(" be s"); 
+	reads.push_back(" enti"); 
+	reads.push_back(" ever"); 
+	reads.push_back(" his "); 
+	reads.push_back(" in t"); 
+	reads.push_back(" man "); 
+	reads.push_back(" must"); 
+	reads.push_back(" of t"); 
+	reads.push_back(" orde"); 
+	reads.push_back(" pena"); 
+	reads.push_back(" popu"); 
+	reads.push_back(" pres"); 
+	reads.push_back(" spir"); 
+	reads.push_back(" that"); 
+	reads.push_back(" the "); 
+	reads.push_back(" ther"); 
+	reads.push_back(" tole"); 
+	reads.push_back(" view"); 
+	reads.push_back(" with"); 
+	reads.push_back("alty "); 
+	reads.push_back("an pr"); 
+	reads.push_back("ance "); 
+	reads.push_back("at ev"); 
+	reads.push_back("ation"); 
+	reads.push_back("be sp"); 
+	reads.push_back("ce in"); 
+	reads.push_back("der t"); 
+	reads.push_back("e ent"); 
+	reads.push_back("e in "); 
+	reads.push_back("e mus"); 
+	reads.push_back("e pop"); 
+	reads.push_back("e spi"); 
+	reads.push_back("enalt"); 
+	reads.push_back("ent h"); 
+	reads.push_back("entir"); 
+	reads.push_back("er th"); 
+	reads.push_back("eranc"); 
+	reads.push_back("ere m"); 
+	reads.push_back("ery m"); 
+	reads.push_back("esent"); 
+	reads.push_back("every"); 
+	reads.push_back("ews w");
+	reads.push_back("f tol"); 
+	reads.push_back("hat e"); 
+	reads.push_back("he en"); 
+	reads.push_back("here "); 
+	reads.push_back("his v"); 
+	reads.push_back("hout "); 
+	reads.push_back("iews "); 
+	reads.push_back("in th"); 
+	reads.push_back("ire p"); 
+	reads.push_back("irit "); 
+	reads.push_back("is vi"); 
+	reads.push_back("it of"); 
+	reads.push_back("ithou"); 
+	reads.push_back("latio"); 
+	reads.push_back("leran"); 
+	reads.push_back("lty t"); 
+	reads.push_back("man p"); 
+	reads.push_back("must "); 
+	reads.push_back("n ord"); 
+	reads.push_back("n pre"); 
+	reads.push_back("n the"); 
+	reads.push_back("nalty"); 
+	reads.push_back("nce i"); 
+	reads.push_back("nt hi"); 
+	reads.push_back("ntire"); 
+	reads.push_back("of to"); 
+	reads.push_back("olera"); 
+	reads.push_back("opula"); 
+	reads.push_back("order"); 
+	reads.push_back("out p"); 
+	reads.push_back("penal"); 
+	reads.push_back("pirit"); 
+	reads.push_back("popul"); 
+	reads.push_back("prese"); 
+	reads.push_back("pulat"); 
+	reads.push_back("r tha");
+	reads.push_back("rance"); 
+	reads.push_back("rder "); 
+	reads.push_back("re mu"); 
+	reads.push_back("re po"); 
+	reads.push_back("resen"); 
+	reads.push_back("rit o"); 
+	reads.push_back("ry ma"); 
+	reads.push_back("s vie"); 
+	reads.push_back("s wit"); 
+	reads.push_back("sent "); 
+	reads.push_back("spiri"); 
+	reads.push_back("st be"); 
+	reads.push_back("t be "); 
+	reads.push_back("t eve"); 
+	reads.push_back("t his"); 
+	reads.push_back("t of "); 
+	reads.push_back("t pen"); 
+	reads.push_back("that "); 
+	reads.push_back("the e"); 
+	reads.push_back("there"); 
+	reads.push_back("thout"); 
+	reads.push_back("tion."); 
+	reads.push_back("tire ");
+	reads.push_back("toler");
+	reads.push_back("ty th");
+	reads.push_back("ulati");
+	reads.push_back("ust b");
+	reads.push_back("ut pe");
+	reads.push_back("very ");
+	reads.push_back("views");
+	reads.push_back("witho");
+	reads.push_back("ws wi");
+	reads.push_back("y man");
+	reads.push_back("y the");
+
+
+	int shiftAmt;						// amount to shift when place on the current string
+	int pickRead;						// index value for read vector
+	int parityCheck;					// check parity
+	string currString = reads[0]; 		// start with first read
+	reads.erase(reads.begin() + 0);		// remove 0 element since it has already been placed on current string
+	
+	do {
+		shiftAmt = read_position(currString, reads[0], parityCheck);
+		
+		// insert read in correct location
+		if(parityCheck == shiftAmt) {
+			currString = place_string(currString, reads[0], shiftAmt);
+			cout << "- " << currString << endl;
+			reads.erase(reads.begin());
+		} else {
+			reads.push_back(reads[0]);			// place read at bottom of queue
+			reads.erase(reads.begin());			// remove top read
+		}
+	}
+	
+	while(reads.size() > 0);
+	
+	return 0;
+	
+}
+
+%ENDCODE%
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+The algorithm is generalized to handle reads of different lengths, so no modifications are necessary.
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+No modifications are necessary to the algorithm. 
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle

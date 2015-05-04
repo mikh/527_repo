@@ -1,0 +1,207 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  O(n^2*log(n)+log(n)) | 
+|  c  |  O(n^2*log(n)) |
+|  d  | O(n^2*log(n))  | 
+
+
+Inserting each item takes O(n+1) time and there are n*log(n) items so, O(n^2*log(n)+log(n)) time.
+
+Inserting each item takes O(n) time and there are n*log(n) items so, O(n^2) time.
+
+Inserting each item takes O(n) time and there are n*log(n) items so, O(n^2+n) time.
+---++ Explanation
+<VERBATIM>
+Provide explanation for partial credits
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a ]
+Driving time was taken from google maps using the driving time without traffic. 
+
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  56  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  8  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  42  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  37  |
+
+Does this graph exhibit the triangle inequality? 
+
+As all points are physical points in metric space, this graph has no short cuts or wormholes and therefore satisfies the triangle inequality theorem. 
+
+---++!! 2b
+To simplify explanation, each location or vertex is labeled with a letter as such: 
+
+A = Chichen Itza, Yuc., Mexico
+
+B = CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada
+
+C = Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico
+
+D = Statue of Liberty National Monument, Liberty Island, New York, NY
+
+E = Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119
+
+F = 8 St. Mary's Street, Boston, MA  02215
+
+Here is a table where each row and collumn represents a vertex and the intersecting cell holds the driving time in hours or weight of the edge between the locations: 
+
+<table cellspacing="10"><tr><td valign="top">
+| * * | *A* | *B* | *C* | *D* | *E* | *F* |
+| *A* | 0 | 52 | 15 | 53 | 43 | 56 |
+| *B* | 52 | 0 | 37 | 7 | 31 | 8 |
+| *C* | 15 | 37 | 0 | 38 | 29 | 42 |
+| *D* | 53 | 7 | 38 | 0 | 37 | 4 |
+| *E* | 43 | 31 | 29 | 37 | 0 | 37 |
+| *F* | 56 | 8 | 42 | 4 | 37 | 0 |
+
+
+Kruskals algorithm sorts the edges by weight and selects the smallest edges such that a cycle is not created. Once all vertexes are seen, then the MST is made. The MST given by Kruskals Algorithm is D-F, B-D, A-C, E-C, E-B. Given in order: A-C-E-B-D-F. 
+
+
+
+---++!! 2c
+Prim's Algorithm operates by starting at an arbitrary vertex and selecting the lowest value edge to another vertex. 
+Continue selecting the lowest connected edge to an unseen vertex until all vertices are seen. 
+The MST given for the graph starting at A is A-C, C-E, E-B, B-D, D-F. Given in order: A-C-E-B-D-F. 
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+
+
+If the graph is complete or very dense (E/V is high) then Prim's would be a more 
+efficient choice as Prim's does not need to see every edge of the graph at each step, 
+but if the graph is sparce (E/V is low), then Kruskal's would be more efficient/easier to implement. 
+
+I could also utilize Bor&#367;vka's algorithm:
+http://en.wikipedia.org/wiki/Bor%C5%AFvka%27s_algorithm
+"
+  Input: A connected graph G whose edges have distinct weights
+  Initialize a forest T to be a set of one-vertex trees, one for each vertex of the graph.
+  While T has more than one component:
+    For each component C of T:
+      Begin with an empty set of edges S
+      For each vertex v in C:
+        Find the cheapest edge from v to a vertex outside of C, and add it to S
+      Add the cheapest edge in S to T
+  Output: T is the minimum spanning tree of G.
+"
+
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+The code runs the outer loop log(V) times and can take at most the number of edges time 
+to complete each loop, so Boruvka's algorithm runs in time O(E log V) time, but in a parallel manner. 
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+Counterexample or Running time
+</VERBATIM>
+---++!! b
+<VERBATIM>
+Counterexample or Running time
+</VERBATIM>
+---++!! c
+<VERBATIM>
+Counterexample or Running time
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+Describe and analyze the algorithm.
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+Provide your result here.
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+// paste your code here
+
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+Describe and analyze the modification
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+
+
+---+++!! Grader comments
+<VERBATIM>Question 4 Results:
+
+Total Grade: 0
+
+	0         		
+	0         		
+	0         		
+
+
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle
+
+
+---+++!! Grader comments
+<VERBATIM>Question 5 Results:
+
+Total Grade: 0
+
+	0         		Grades from submission
+	0         		
+
+
+</VERBATIM>
+

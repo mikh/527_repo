@@ -1,0 +1,223 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  nlog(n)+n  |
+|  c  |  n+log(n)  |
+|  d  |  nlog(n)^2+n  |
+---++ Explanation
+<VERBATIM>
+A: Inserting the normal nodes is just O(n) but inserting the copies is when you have n different types of copies log(n) times so O(nlog(n))
+B: again O(n) for the initial nodes and then you need to insert log(n) copies which is in constant time.
+C: Same idea as A but since its random its possible you will make the tree of copies twice as long so I squared the log(n)
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  56  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  8  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  43  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  40  |
+
+Does this graph exhibit the triangle inequality? yes
+---++!! 2b
+|  Index  |  Location   |  Connected to(weight)  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  E(4), C(8)  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  D(15)  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  A(8), F(33)  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  F(29), B(15)  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  A(4)  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  C(33), D(29)  |
+
+Unsure how better to explain it.
+
+---++!! 2c
+|  Index  |  Location   | &pi;A, B, C, D, E, F |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  | 0, 85, 8, 70, 4, 41   |
+|  b  |  Chichen Itza, Yuc., Mexico  | 85, 0, 77, 15, 89, 44   |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  8, 77,0 , 62, 12, 33  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  | 70, 15, 62, 0, 74, 29   |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4, 89, 12, 74, 0, 45  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  41, 44, 33, 29, 45, 0  |
+This would also apply to 2B but I dont see how the two algorithms have anything to do with &pi;
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+Describe your algorithm here. Pseudocode is preferred.
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+Descrbie and analyze your algorithm.
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+O(E) since it goes through the decreasing edges removing them until the highest connections are removed.
+</VERBATIM>
+---++!! b
+<VERBATIM>
+Lets say there are nodes A, B, and C. AB is 5 AC is 3 and CB is . Then algorithm might take AB and AC as part of its 
+tree when it taking AC CB which is shorter, so there is no guarantee that the final result will be a minimal tree
+</VERBATIM>
+---++!! c
+<VERBATIM>
+O(E^2) since it adds each edge and it might need to check each added edge  when it makes a cycle
+</VERBATIM>
+
+---++!! Grader comments *[18/20]*
+<VERBATIM>
+First running time is O(E^2).
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+So basically it tried to match the target with the possible choices string by string, it takes the one with the largest similarity and saves it, and then starts looking through the possible strings again looking for the next largest 
+similarity, and it continues doing this until it matches each string of the target with the minimal amount of possible strings. Ended up getting is World_Widee_Web. Was not sure if I was just supposed to piece together strings from 
+parts that could represent the target or just piece together the whole strings.
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+I dont have a result, I dont see how I can find a quote of something if I have to base quote to look for 
+since there is nothing to know if the string i am looking at even has the possibility of matching with some 
+kind of word unless we were supposed to use the dictonary from a past assignment
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+#define NUM_CONTESTANTS 10
+
+int main(){
+
+
+	string target = "World_Wide_Web";
+	string contestants[] = {"_Wide", "Wide_", "World", "d_Wid", "de_We", "e_Web", "ide_W", "ld_Wi", "orld_", "rld_W"}; //10 things
+	string winner;
+	int bookmark = 0;
+	int i,j;
+	int test,hold, placeholder;
+	bool flag = false;
+	
+	
+	while(!flag){
+	
+	hold = 0;
+	
+	for(i = 0; i < NUM_CONTESTANTS; i++){
+		test = 0;
+		for(j = 0; j < contestants[i].size(); j++){
+			if(contestants[i][j] == target[bookmark+test]){
+				test++;
+			}
+		}
+		if(test > hold){
+			hold = test;
+			placeholder = i;
+		}
+	}
+	bookmark += hold;
+
+	for( i= 0; i < contestants[placeholder].size(); i++){
+		winner.push_back(contestants[placeholder][i]);
+	}
+	if(bookmark == target.size()){
+		flag = true;
+	}
+
+	
+	}
+
+
+
+	cout << winner << endl;
+
+
+
+}
+
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+I already check the size of the possible thing so I dont think I would have to make any changes to the one i used if its only the size of the possible strong changing?
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+If it does not match what you are looking for I dont see how replications is an issue since you could just ignore them, but if it skips certain substrings then I guess you would need to use some sort of "blank" for any missing substring.
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+If the read has an error wouldnt it just be something youd ignore since it would not be part of the target. Im beginning to think im missing what this entire question is even asking for.
+</VERBATIM>
+
+
+---+++!! Grader comments
+<VERBATIM>Question 4 Results:
+
+Total Grade: 20
+
+	10        		
+	5         		
+	5         		
+
+
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+2360414. Basically what I tried doing was make a graph out of all the edges/vertices in the text file, then do the Floyd Warshall, and then just keep taking the shortest path that I have not yet visited, not horribly efficient
+but I think it maybe worked, hard to tell though.
+
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle
+
+
+---+++!! Grader comments
+<VERBATIM>Question 5 Results:
+
+Total Grade: 5
+
+	0         		Grades from submission
+	5         		
+
+
+</VERBATIM>
+

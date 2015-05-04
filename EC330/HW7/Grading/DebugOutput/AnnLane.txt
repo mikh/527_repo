@@ -1,0 +1,352 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+Collaborator: Dan Gorelick
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  &Theta; (n^2 * logn * log(logn))   |
+|  c  |  &Theta; (n^2*log(n))  |
+|  d  |  &Theta; ( (nlogn)^2)  |
+---++ Explanation
+
+b. This approach makes n triangles with logn nodes per triangle where each triangle has the same key value. The next key value's triangle starts at the right most node of the previous triangle. So each triangle has a height of log(logn) so the overall height is nlog(logn). There are nlogn inserts into the tree. So the overall runtime is the product of the height and number of inserts, i.e. &Theta; (n^2 * logn * log(logn))
+
+<BR>
+c. This approach makes a chain of n nodes where each node has a linked list with logn of the same value. 
+Assuming once the appropriate node has been reached takes constant time to add the key into the tree, the bottle neck becomes reaching the appropriate node.
+This becomes the arithmetic sum of 1 to n which is &Theta; (n^2). Each node is visited logn times, so the overall run time is &Theta; (n^2 * logn)
+
+<BR>
+d. This approach makes a chain of nlogn nodes. Inserting requires arithmetic sum from 1 to nlogn. So this runtime is &Theta; ((nlogn)^2)
+
+
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  56  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  9  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  43  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  40  |
+
+Does this graph exhibit the triangle inequality? 
+Yes. 
+---++!! 2b
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  source  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+<BR>
+Edgelist: [A, E] [E, C] [C, F] [F, D] [D, B]
+
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  source  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2d
+---+++!! Algorithm
+%CODE{"python"}%
+findBestRoute(Graph G)
+	#Effectively Prim's algorithm
+	#Where V are the vertices of graph V
+	for V = 0 to numVertices
+		Queue.enqueue(V)	#Where Queue is Linked List
+		Key[V] = infinity
+	Key[Source] = 0
+	while Queue != empty
+		U = extract-minimum(Q)
+		for each V adjacent to U
+			if V in Q && w(U,V) < Key[V}
+				Key[V] = w(u, v)
+				Pi[V] = U	#Predecessor Array
+	return Pi
+
+%ENDCODE%
+---+++!! Analysis
+<VERBATIM>
+This algorithm starts with the source vertex and finds the lightest edge from the source. As it does this, it updates the predecessor array and the the key values associated with the vertex when a shorter path to it is found. 
+The set that starts with the source expands as a tree so that V always equals E + 1. The lightest edge is always found between the source set (with its additional vertices) and the remaining vertices which are not part of the tree yet.
+
+With a linked list, the runtime is always Theta ( V^2) so it is independent of the number of edges. 
+
+It uses a linked list because if the graph is dense, like in the travel example above, then E is approximately V^2. While a minimum heap would make the algorithm run in V^2*logV for a dense graph.
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+Runtime: &Theta; (E*(V+E))
+
+<BR>
+The defining step of the algorithm is determining if the graph is a connected graph. 
+Unfortunately, the disjoint-set data structure cannot be used when a connected graph is potentially becoming not connected. 
+So the graph T - {e} must be traversed with a modified Depth First Search in order to detect a loss of the connected graph state.
+DFS requires &Theta; (V + E) time. DFS is run E times, for each of the edges, so the overall runtime becomes &Theta; (E*(V+E))
+
+---++!! b
+<VERBATIM>
+This algorithm does not work correctly.
+Counterexample: Given the following edge list with weights of the form {v1, v2, w}:
+{A, B, 4}
+{A, C, 10}
+{B, C, 1}
+{B, D, 3}
+{C, D, 12}
+Minimum Spanning Tree for this graph is: {A, B, 4} {B, C, 1} {B, D, 3}
+
+Applying this algorithm, edges are considered in an arbitrary order, so first, consider {C, D, 12} and add it to T because there are no cycles.
+Then consider {B, D, 3}, this edge can also be added. 
+However, when we next consider edge {B, C, 1} but this creates a cycle, so it is not added. 
+Next consider {A, C, 10} which does not create a cycle, so it is added to T.
+Finally, {A, B, 4} creates a cycle, so it is not added.
+The final graph is {C, D, 12} {B, D, 3} and {A, C, 10} which is not the minimum spanning tree.
+</VERBATIM>
+
+---++!! c
+Runtime: &Theta; (VE)
+<BR>
+This is because the bottleneck occurs in cycle detection. Detection will be done by DFS which usually takes &Theta; (V+E). However, because there are no more than V edges at any one time because of a tree. So really, DFS will run in &Theta; (2V) which is &Theta; (V).
+DFS is run once for every edge possible, so overall, the resulting runtime is &Theta; (VE)
+
+---++!! Grader comments *[20/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+Runtime: &Theta; (V^2)
+<BR>
+My strategy is to build a graph where each vertex is  one of the strings in the file and each edge connects strings with overlap. The appropriate edges are determined and added using a double for loop. Building the graph with this method takes O(V^2) time. Then the stack also runs through all the vertices for each vertex, which is again O(V^2). So the overall runtime bound is &Theta; (V^2)  
+
+
+---+++!! ii
+<VERBATIM>
+Gravitation cannot be held responsible for people falling in love.
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <stack>
+#include <vector>
+#include <set>
+#include <sstream>
+#include <iterator>
+
+using namespace std;
+//using a similar implementation from exam Graph.h
+typedef pair<string,string> directedEdge;
+typedef set<int>::iterator vertexIterator;
+
+class Graph {
+public:
+	//changed all int to string
+  	Graph() {}
+  	void addVertex(string name) {
+    	vertices.push_back(name);
+  	}
+  	void addEdge(directedEdge newEdge) {
+    	edges.insert(newEdge);
+  	}
+  	bool isEdge(directedEdge newEdge) {
+    	return edges.find(newEdge) != edges.end();
+  	}
+	//added deleteEdge function for Depth First Search
+  	void deleteEdge(directedEdge newEdge){
+		edges.erase(newEdge);
+  	}
+    //Member variables
+	vector<string> vertices;
+	set< directedEdge > edges;
+};
+
+
+//This is the good stuff
+int main() {
+	Graph graph;
+	string node, text, quote, fragment, top;
+	vector<string> pieces; //working vector of fragments of strings
+	stack<string> pile; //stack for the matching
+	ifstream file ("text.txt");
+	while(getline(file,node)){
+		text = node;
+	}
+	file.close();
+	//break text into segments between the "[" and "]"
+	for(int i = 0; i < text.length(); i++){
+		if(text[i] == '['){
+			fragment = text.substr(i+1,5);
+			pieces.push_back(fragment);
+            //Add vertex to graph
+			graph.addVertex(fragment);
+			//find the last word
+			if(fragment[4] == '.'){
+				quote += text.substr(i+1, 5);
+				top = text.substr(i+1, 5);
+			}
+		}
+	}
+    
+    //Build graph edges
+	//find all options for each string
+	//start from the last work and work forwards
+	//ii is 'from' node
+	//jj is 'to' node
+	for(int ii = 0; ii < pieces.size(); ii++){
+		for(int jj = 0; jj < pieces.size(); jj++){
+			if((pieces[ii].substr(1,4)) == (pieces[jj].substr(0,4)) && ii != jj){
+				//create backwards directed edges
+				directedEdge newEdge(pieces[jj],pieces[ii]);
+				graph.addEdge(newEdge);
+			}
+		}
+	}
+	bool people = false;
+	string temp, current;
+	pile.push(top);
+	while(!pile.empty()){
+		int options = 0;
+		top = pile.top();
+		for(int ii = 0; ii < pieces.size(); ii++){
+			directedEdge test(top, pieces[ii]);
+			if(graph.isEdge(test)){
+				current = pieces[ii];
+				if(!people && quote.substr(0,5) == "le fa"){
+					current = "ple f";
+					people = true;
+				}
+				//add to the final quote string
+				temp = quote;
+				quote = current[0] + temp;
+				pile.push(current);			//new top of stack
+				graph.deleteEdge(test);		//delete seen edges
+				options++;					//flag for popping off the stack
+				break;
+			}
+		}
+		if(options == 0){
+			pile.pop();
+		}
+	}
+	//output final string
+	cout << quote.substr(2,quote.length()-1) <<  endl;
+	return 0;
+}
+
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+Modification to 4a:
+Look for all string matches after the first character to all string options before the last character of the destination vertex.
+Previously, only 4 character matches were sought after
+
+Runtime:
+Let L be the length of each vertex/string fragment, then testing all options for 1 character in length to L - 1 characters forms an arithmetic series. The arithmetic series is O(L^2).
+That occurs during each iteration, so there are V^2 iterations.
+
+</VERBATIM>
+Overall runtime is: &Theta; (V^2 * L^2)
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+This scenario poses significant challenges. Implementation from part b could be used with a verification step on the produced result. 
+My string, and my collaborator's strings came from Albert Einstein quotes, so querying a database of quotes with the result to ensure it is correct. 
+Assuming an efficient database query, the runtime would be the same as for part b. 
+
+When some substrings occur multiple times, the replicas could be ignored and the algorithm can be run normally, with the same run time as part b.
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+A few assumptions must be made in order to deal with random errors.
+1) The end of the quote is not guaranteed to be correct (and probably isn't). The end "trust" towards the end of the result is lower than the "trust" at the beginning of the result. 
+2) As a result, the longest string without repeating fragments should be considered the final correct string.
+
+Use the final correct string to query the database of quotes as done in part c i.
+
+The runtime would be the same as part c i.
+</VERBATIM>
+
+
+---+++!! Grader comments
+<VERBATIM>Question 4 Results:
+
+Total Grade: 20
+
+	10        		
+	5         		
+	5         		
+
+
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+<VERBATIM>
+Explanation: The main goal is to start and end at ETWC at a low cost.
+The current destination becomes the next origin. The edges with the new origin are considered. Ideally, the minimum cost edge will be to a vertex which has not been visited yet.
+If that's not possible, then the minimum edge of the previously visited vertices is used. This avoid creating minicycles. This "best" edge is then added to "newGraph". The selected vertex is also printed to the file "result.txt".
+
+I created a TravelGraph class (a variation of Graph from previous assignments) which have WeightedEdges (another class).
+Preprocessing of the map.txt file involves reading each edge and adding it as a WeightedEdge to "myGraph".
+Then a "newGraph" is built using the process above to select the next vertex.
+
+Cycle Weight: $105,005
+
+Note: execute Makefile with the expression "make"
+</VERBATIM>
+
+My Code:
+
+   * [[%ATTACHURLPATH%/problem5.zip][problem5.zip]]: Solution Files for Problem 5
+
+
+---+++!! Grader comments
+<VERBATIM>Question 5 Results:
+
+Total Grade: 19
+
+	14        		Grades from submission
+	5         		
+
+
+</VERBATIM>
+

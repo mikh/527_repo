@@ -1,0 +1,240 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  nlg^2(n)  |
+|  c  |  nlgn  |
+|  d  |  n^2lgn  |
+---++ Explanation
+<VERBATIM>
+Provide explanation for partial credits
+b. This will create a balanced binary search tree because we are alternating between the left and right, where insertion takes lg(n) time, so inserting lg(n) copies of n numbers will take nlg^2(n) time in total because we have to visit x each time to add a single copy.
+c. This is a list of nodes so we only have to go to x, and add lg(n) copies to that list only, which will take nlgn time in total.
+d. This will randomly set x to left or right which is similar to the first but its worst case run time is O(n^2lg(n)) because we could end up with lines of nodes, each with the same values because the the same side was picked every time. Since insertion normally takes O(h), h would be n in this case because the tree consists of lines. On average though it would be like part b.
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  57  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  8  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  43  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  40  |
+
+Does this graph exhibit the triangle inequality? 
+Yes
+---++!! 2b
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |    |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |    |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+Since this graph would be very dense and have a lot more edges than vertices, since we can always travel between any two cities, it would be best to use a variant of Prim's algorithm. Kruskal's algorithm would ned us to check all of the edges to find the lowest one each time, but using Prim's algorithm, we would only have to check the edges that are connected to the vertices we have already visited. We could start at an arbitrary node, and go through the same technique of Prim's algorithm shown in the book to find the minimum spanning tree. The run time would be O(ElgV), which is the same as for Kruskal's but in this case, it would work better almost every single time.
+
+MST(G,w,r)
+    for each u in G.V
+        u.key = infinity
+        u.pi = NIL
+    r.key = 0
+    Q = G.V
+    while Q != 0
+        u = EXTRACT-MIN(Q)
+        for each v in G.adj[u]
+            if v is in Q and w(u,v) < v.key
+                v.pi = u
+                v.key = w(u,v)
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+This is the same algorithm as in the book on page 634, but its the most efficient in this case. The run time is O(ElgV) because the last 3 lines take the most time since we have to go through each edge and change the key, which itself take lgV time. The other part is only VlgV so the asymptotic run time is O(ElgV), but that's if we implement the this as a binary min heap with the vertices as nodes in that heap.
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+WILL produce MST.
+We are going through all the edges and checking whether removing the edge with the biggest weight, next biggest weight, and so on produces a graph that is connected. This will work because it will remove cycles from the graph and find a connected graph that has the least amount of weight. The run time is EV, assuming it takes V to check whether a graph is connected, and we have to do that for every edge.
+</VERBATIM>
+---++!! b
+<VERBATIM>
+Will NOT produce MST.
+Any graph with a cycle whose edges are of different weights is a counter example because the algorithms checks whether including ARBITRARY edges produces a cycle. If it does not produce a cycle then it just adds the edge to the graph, which does not work. Let's say we have a square graph with 4 edges connecting the 4 vertices. If we take the edges in arbitrary order, then if it picks the edge with the biggest weight, it will include that in the graph because the first edge will obviously not produce a cycle, but the last edge that is added will produce a cycle, so the algorithm will not include that last edge.
+</VERBATIM>
+---++!! c
+<VERBATIM>
+WILL Produce MST
+We are going through each edge and checking if the addition of that edge will will produce a cycle. If it does, then it removes the biggest weight in that cycle. This effectively produces a graph that has no cycles and a it the edges are of least possible weight. The run time is Theda(E^2) because we are going through each edge and checking if the resulting graph has a cycle, which we need to go through each edge of the graph to check.
+</VERBATIM>
+
+---++!! Grader comments *[20/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+The algorithm finds the last subsequence since its suffix will not be a prefix of any of the other subsequences. Then, I work backwards to compare the prefix of the previous subsequence with all the rest to find the next subsequence whose prefix equals that suffix. Then, I add the first character in that substring to the beginning of the "finalSequence," which is being constructed. However, there was a case when the suffixes of two of the subsequences were equal so I had to specify to use one each time. The run time was (l-k)^2, where l is the length of the original string and k is the length of each of the substrings. That expression is equal to the number of substrings squared. This is the run time because I a nested for loop, which for every substring, it iterates through each of the substring to compare prefixes and suffixes.
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+Do not worry about your difficulties in Mathematics. I can assure you that mine are still greater.
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <vector>
+using namespace std;
+
+int main()
+{
+	vector<string> strings;
+	string substring;
+	//Note that I copied the sequences from the file and removed the brackets and put
+	//each string on one line. It would be easy to do it with brackets since we know the
+	//positions in the index
+	ifstream input("sequence.txt");
+	if (input.is_open())
+	{
+		while(getline(input,substring))
+			strings.push_back(substring);
+		input.close();
+	}
+
+	string lastWord = "";
+	string prefix = "";
+	string suffix = "";
+	bool isLastWord;
+	for (int ii = 0; ii < strings.size(); ii++)
+	{
+		suffix = "";
+		suffix += strings[ii][1];
+		suffix += strings[ii][2];
+		suffix += strings[ii][3];
+		suffix += strings[ii][4];
+		isLastWord = true;
+		for (int jj = 0; jj < strings.size(); jj++)
+		{
+			prefix = "";
+			for (int kk = 0; kk < 4; kk++)
+			{
+				prefix += strings[jj][kk];
+			}
+			if (prefix == suffix)
+			{
+				isLastWord = false;
+			}
+		}
+		if (isLastWord == true)
+			lastWord = strings[ii];
+	}
+
+	bool done = true;
+	string finalString = lastWord;
+	string nextWord = finalString;
+	bool isNextWord;
+	for (int ii = 0; ii < strings.size(); ii++)
+	{
+		prefix = "";
+		prefix += nextWord[0];
+		prefix += nextWord[1];
+		prefix += nextWord[2];
+		prefix += nextWord[3];
+		for (int jj = 0 ; jj < strings.size(); jj++)
+		{
+			suffix = "";
+			for (int kk = 1; kk < 5; kk++)
+			{
+				suffix += strings[jj][kk];
+			}
+			if (prefix == suffix)
+			{
+				if (prefix == " you" && !done)
+				{
+					done = true;
+					continue;
+				}
+				if (prefix == " you")
+				{
+					done = false;
+				}
+				finalString = strings[jj][0] + finalString;
+				nextWord = strings[jj];
+				break;
+			}
+		}
+	}
+
+	cout << finalString << endl;
+
+	return 0;
+}
+
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+The only modification I would make would be to not limit the length of the strings to 5 characters. Since all possible substrings will be included, then we just need to check that the suffix of one is the prefix of another and also whether a substring might be included in another longer substring. Those are the only possibilities, in which case we can use the same technique as in the previous part, but to handle the new case, we can see where they overlap and know the correct letters before and after it, which we can then use to find the other substrings that have the same suffix or prefix, and thus turn it into the first case.
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle

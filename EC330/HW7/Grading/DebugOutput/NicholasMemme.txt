@@ -1,0 +1,381 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  &Theta; nlog(n)  |
+|  c  |  &Theta; n^2log(n)  |
+|  d  |  &Theta; log(n)  |
+---++ Explanation
+<VERBATIM>
+Provide explanation for partial credits
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  57  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  8  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  44  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4   |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  40  |
+
+Does this graph exhibit the triangle inequality? yes
+---++!! 2b
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |    |
+|  b  |  Chichen Itza, Yuc., Mexico  |    |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |    |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |    |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |    |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |    |
+
+MST using Kruskal's Algorithm
+
+ae,ac,bd, df, cf -> 109 hrs
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  0  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  a  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  c  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a   |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+Q<-- all vertices
+key[v] = 100 for all vertices
+while Q != 0
+   u=extract-min(Q)
+   for each v adjacent to u
+       if V in Q and w(u,v) < key[v]
+            key[v] = w(u,v)
+            pi = u
+
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+The algorithm looks for the smallest weight edge connected to a vertex not already in the graph and adds it to the graph. 
+
+Running Time= &Theta; ((V+E) log v)
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+&Theta; (E log E)
+</VERBATIM>
+---++!! b
+<VERBATIM>
+ab=1
+ac=4
+ad=5
+bd=2
+bc=4
+cd=3
+
+This algorithm would not work all the time because the edges it chooses are arbitrary thus would not always lead to the minimum spanning tree.
+</VERBATIM>
+---++!! c
+<VERBATIM>
+&Theta; (e)
+</VERBATIM>
+
+---++!! Grader comments *[16/20]*
+<VERBATIM>
+First running time is O(E^2); last is O(E(V+E)).
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+For my algorithm i used a node object that contained the edges between two pairs of substrings with 1 char difference. it then ran from one substring to the next using the first entry in the edge list for each and then went on to the next one.
+
+Running time:
+&Theta; (n^2)
+
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+
+How on earth can you explain in terms of chemistry and physics so important a biological phenomenon as first love?
+
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+/* Node.h*/
+
+#ifndef NODE_H
+#define NODE_H
+
+#include<iostream>
+#include<vector>
+
+using namespace std;
+class node
+{
+	public:
+		string word;
+		int id;
+		vector<int> edge;
+		int degree;
+		vector<int> weight;
+		node()
+		{
+			word="";
+			id = 0;
+		}
+		node(string in_word,int num)
+		{
+			word=in_word;
+			id=num;
+
+		}
+		void connectNode(int con,int value)
+		{
+			edge.push_back(con);
+			weight.push_back(value);
+			
+		}
+		void print()
+		{
+			for(int i=0; i<edge.size();i++)
+			{
+				cout<<weight[i]<<" "<<edge[i]<<endl;
+			}
+		}
+
+
+};
+
+#endif
+
+
+/*main.cpp*/
+
+#include<iostream>
+#include<fstream>
+#include<string>
+#include<vector>
+#include<map>
+#include "Node.h"
+using namespace std;
+
+void getData();
+int matchDist(string a,string b);
+vector<string> words;
+vector<node> vertices;
+int main()
+{
+
+	getData();
+	int weight;
+	for(int i=0;i<words.size();i++)
+	{
+		
+		node n(words[i],i);
+		vertices.push_back(n);
+		
+
+	}
+	for(int i=0; i<vertices.size();i++)
+	{
+		for(int j=0; j<words.size();j++)
+		{
+			weight=matchDist(vertices[i].word,words[j]);
+			if(weight==1)
+			{
+				vertices[i].connectNode(j,weight);
+			}
+		}
+	}
+	int num=19;
+	string text="";
+	string nodeword;
+	int nodeweight,next=0;
+	
+	for(int i=0; i<vertices.size();i++)
+	{
+		
+		nodeword=vertices[num].word;
+		if(vertices[num].weight.size()>0)
+		{
+			nodeweight=vertices[num].weight[0];
+			num=vertices[num].edge[0];
+		}
+		else
+			nodeweight=5;
+		
+		for(int j=0; j<nodeweight;j++)
+		{
+			text+=nodeword[j];
+		}
+		
+		
+	}
+	cout<<text<<endl;
+	return 0;
+	
+}
+
+void getData()
+{
+
+	ifstream data("reads4.txt");
+	string line;
+	string part;
+	int save=0;
+	char s;
+	if(data.is_open())
+	{
+		while(data.get(s))
+		{
+			if(s=='[')
+			{
+				save=1;
+			}
+			else if(s==']')
+			{
+				save=2;
+			}
+			else if(save==1)
+			{
+				part+=s;
+			}
+			if(save==2)
+			{
+				words.push_back(part);
+				part="";
+				save=0;
+			}
+			
+		}
+	}
+	else
+		cout<<"Unable to open file"<<endl;
+}
+int matchDist(string a, string b)
+{
+	int counter=0;
+	int i=0;
+	int j=0;
+	bool matched=false;
+	while(i<a.length())
+	{
+		if(a[i]!=b[j])
+		{
+			i++;
+			counter++;
+			if(matched)
+			{
+				counter=b.length();
+				break;
+			}
+		}
+		else
+		{
+			j++;
+			i++;
+			matched=true;
+		}
+	}
+
+	return counter;
+}
+
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+To adapt for more than 5 chars it would entail saving the amount of chars to be shifted between each edge, rather than just have a constant shift. This would not impact running time that much.
+
+Running time:
+&Theta; (n^2).
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+In this case the a spaning tree that contains the maximum number of nodes would need to be produced. As well as a check to see if a node is duplicated and remove it. 
+
+Running time:
+&Theta; (n^3).
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+On each read there must be a check to see if the substring contain an error which would not have a large impact on the running time. 
+
+Running Time:
+&Theta; (n^2)
+</VERBATIM>
+
+
+---+++!! Grader comments
+<VERBATIM>Question 4 Results:
+
+Total Grade: 20
+
+	10        		
+	5         		
+	5         		
+
+
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+
+<VERBATIM>
+My approach was to make each destination a node, connect all the nodes and then pick a random connected edge
+that wasn't already visited until the path touched all the nodes and got back to the starting node.
+
+Cycle weight: 
+32705770
+</VERBATIM>
+
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle
+
+
+---+++!! Grader comments
+<VERBATIM>Question 5 Results:
+
+Total Grade: 5
+
+	0         		Grades from submission
+	5         		
+
+
+</VERBATIM>
+

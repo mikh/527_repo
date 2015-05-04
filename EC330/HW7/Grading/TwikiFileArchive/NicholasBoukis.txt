@@ -1,0 +1,158 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  Theta( n * log(n) * log( log(n) ) )  |
+|  c  |  Theta( n^2 )  |
+|  d  |  Theta( n^2 * log(n) ) |
+---++ Explanation
+b. This creates a balanced binary tree with a height of log(log n) for each key. The traversal alone has a running time of 0 + log(log n) + 2log(log n) + 3log(log n) + ... = Theta( n^2 log(log n) ) while the actual insertion of the equal keys has a total running time of log(n) * log( log n) for each unique key 1 to n. So they total is n^2 log(n) log(log n) + n log(n) log(log n), and the first term dominates so the asymptotic running time is Theta(n^2 log(n) log(log n))
+
+c. If at each node you insert at the beginning of the list, the same key insertion has a constant running time which means the only factor to consider is the traversal through the binary search tree which is Theta(n^2).
+
+d. Because this is worst-case, we can assume that this randomly chooses x.right every time resulting in a binary search tree that has a height of n^2 * log(n).
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  56  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  8.52  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  43  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  3.83   |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  40  |
+
+Does this graph exhibit the triangle inequality? 
+Yes. Because we're talking about concrete driving distances, the case will always be true that the distance from location x to location z is less than or equal to the distance from location x to some other location y plus the distance from location y to location z.
+---++!! 2b
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |    |
+|  b  |  Chichen Itza, Yuc., Mexico  |    |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |    |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |    |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |    |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |    |
+
+The order in which it adds the edges is (a, e), (c, e), (b, d), (d, f), (c, f)
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  null  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+1. Sort the edges from smallest weight to largest
+2. Starting from the smallest edge, add each edge that does not create a cycle to the Spanning Tree, T, until you have V-1 edges
+3. Return T
+</VERBATIM>
+---+++!! Analysis
+This is very similar to Kruskal's algorithm that stops when it reaches V-1 edges. This has a worst case running time Theta(E log V), but we know that E here is equal to V(V-1)/2 because it is a complete graph, so the running time is actually Theta(V<sup>2</sup> log V)
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+This algorithm does produce an MST by deleting the next most weighted edge, such that after the deletion the graph is still a connected graph. It has a running time of Theta(E<sup>2</sup>), Theta(E log E) for the sorting and Theta(V + E) using DFS or BFS for each each edge.
+---++!! b
+This algorithm does not produce an MST. Consider the graph (a, b) = 3, (b, c) = 2, (a, c) = 1 - because it takes edges in arbitrary order, this algorithm could add edges (a, b) and (b, c), and then try to add (a, c), which forms a cycle.
+---++!! c
+This algorithm does produce an MST by adding edges in arbitrary order to T and if a cycle c is detected removing the max weight edge. Adding an edge takes constant time and a DFS takes 
+Theta(V + E). Finding the max weight edge on the cycle and deleting an edge both have a running time of V. This gives a total asymptotic running time of Theta(EV).
+
+---++!! Grader comments *[20/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+I kind of cheated a bit here based on the nature of the string - I knew that it began with a capital letter so I preprocessed the reads4.txt to populate the string array "reads" in my program and find the read that began with a capital letter. Then, it was a matter of finding the next overlapping string by checking the vector of reads for the next read whose first 4 characters match the last 4 characters of the last read and then adding the last character of the matched read to the final string. This algorithm takes Theta(n<sup>2</sup>) time where n is the number of reads.
+
+---+++!! ii
+<VERBATIM>
+How on earth can you explain in terms of chemistry and physics so important a biological phenomenon as first love?
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int main()
+{
+	vector<string> reads = {" a bi", " and ", " as f", " biol", " can ", " chem", " eart", " expl", " firs", " impo", " in t", " love", " of c", " on e", " phen", " phys", " so i", " term", " you ", "How o", "a bio", "ain i", "al ph", "an yo", "and p", "ant a", "arth ", "as fi", "biolo", "cal p", "can y", "chemi", "cs so", "d phy", "earth", "emist", "enome", "enon ", "erms ", "expla", "f che", "first", "gical", "h can", "hemis", "henom", "hysic", "ical ", "ics s", "impor", "in in", "in te", "iolog", "irst ", "istry", "l phe", "lain ", "logic", "love?", "menon", "mistr", "mport", "ms of", "n as ", "n ear", "n in ", "n ter", "n you", "nd ph", "nomen", "non a", "nt a ", "o imp", "of ch", "ogica", "ologi", "omeno", "on as", "on ea", "ortan", "ou ex", "ow on", "pheno", "physi", "plain", "porta", "rms o", "rst l", "rtant", "rth c", "ry an", "s fir", "s of ", "s so ", "sics ", "so im", "st lo", "stry ", "t a b", "t lov", "tant ", "terms", "th ca", "try a", "u exp", "w on ", "xplai", "y and", "you e", "ysics"};
+	string currString = "How o";
+	string endString = currString;
+
+	bool running = true;
+
+	while(running == true)
+	{
+		currString = currString.substr(1, 4);
+
+		bool found = false;
+		for(int i = 0; i < reads.size(); i++)
+		{
+			if(reads[i].substr(0, 4) == currString)
+			{
+				currString = reads[i];
+				endString += currString.substr(4,1);
+				found = true;
+			}
+		}
+
+		if(found != true)
+			running = false;
+
+	}
+
+	cout << endString << endl;
+
+	return 0;
+}
+%ENDCODE%
+
+(requires "-std=gnu++11" to run)
+---++ 4b.  Complications [5 points]
+This algorithm would only look at reads that are greater than 3 characters. Anywhere the function substr() is called and anytime the integer 4 comes up, it would be replaced with the length of the read being looked at - 1.
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+You can essentially turn the reads into a complete, weighted, directed graph and the problem becomes finding the Hamiltonian cycle with the smallest weight. The weight in this case is the largest number of overlapping characters between the two reads. Negating these values yields better results. This is of course an NP-Complete problem, so there is no efficient way of finding the smallest Hamiltonian cycle and adding a new read to the graph means adding 2(V-1) edges and that's not even considering the time it takes to calculate the overlap between two strings. Assuming that calculation is constant, just populating the graph takes Theta(n<sup>2</sup>) time, where n is the number of reads. Finding a Hamiltonian cycle is worst case Theta(V!) running time using brute-force.
+---+++!! ii
+In the case of errors, you would need to keep track of how many occurrences of a given read there are. Once that number passes a certain threshold, the likelihood that that read is correct increases and you can consider it in your Hamiltonian cycle. Otherwise, the read should not be considered.
+---+ Problem 5.  Traveling salesperson *[20 points]*
+
+354,803 - with over 5000 cities (Approach A)
+
+1,085,164 - by connecting some cities directly (Approach B)
+
+In _Approach A_, I have all the cities in an array and the graph in an adjacency list. I also have another vector the size of the array of cities that has a value of 0 if the city at that index hasn't been looked at yet, 1 if it has. I then go through each city and find the shortest path from the first city to the second city, with all cities but the destination being marked as "seen" - meaning that the algorithm does not need to visit them in the future because they've already been visited. The algorithm keeps iterating through the vector of cities, until it hits a city that hasn't been visited yet, and then finds the next city in the vector that hasn't been visited and finds the shortest path between the two. In _Approach B_, I check first to see if there exists an edge between the two cities first, and if there isn't then executing the method above. If there is, I just use the direct path. _Approach A_ has a cheaper route, but visits a lot of cities, while _Approach B_ visits less cities but costs a lot.

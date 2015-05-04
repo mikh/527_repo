@@ -1,0 +1,294 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  log (n)*log(log(n))  |
+|  c  |   log(n) |
+|  d  |   log(n)*log(n) |
+---++ Explanation
+<VERBATIM>
+b) Since we will have a balanced binary search tree at the end, it will take nlog(n). Since in this case there are log(n) terms. it will take O(log(n)*log(log(n))).
+c) This is just be O(n), therefore O(log(n)).
+d) The worst case running time is O(n^2), therefore this our case it is O(log(n)*log(n)). 
+
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+No. 
+In the case of the triangle between Chichén Itzá, Pyramid of the Sun and CN Tower, the triangle inequality does not hold. The sides are 39, 53 and 16. 53+39>16.
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  57   |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  9  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  43  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  40  |
+
+Does this graph exhibit the triangle inequality? 
+No it does not. It fails when considering the triangle from Chichen Itza to CN Tower, CN Tower to Pyramid of the Sun and Pyramid of the Sun to Chichen Itza. 53+34>16
+---++!! 2b
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |    |
+|  b  |  Chichen Itza, Yuc., Mexico  |    |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |    |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |    |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |    |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |    |
+
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |    |
+|  b  |  Chichen Itza, Yuc., Mexico  |    |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |    |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |    |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |    |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |    |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+assuming that a graph is dense (as in our case since we know that each vertex is connected to another).
+
+If G is empty return an empty forest.
+Create a contracted graph G' by running two successive Boruvka steps on G (i.e. we remove the edge and combine the veterxes that they had in common).
+
+Create a new subgraph H by selecting each edge in G' with probability 1/2. 
+Recursively apply the algorithm to H to get its minimum spanning forest F
+.
+Remove all F-heavy edges from G' 
+
+Recursively apply the algorithm to G' to get its minimum spanning forest.
+
+
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+this implimentation is based on the work of David Karger, Philip Klein, and Robert Tarjan, and only applies to graphs that are dense. 
+
+This algorithm randomly samples the between the two sub graph that we create, G' and H. It also uses a 
+linear time verification algorithm to eliminate edges that cannot be part of the minimum spanning tree.
+
+This has a O(log V), identical to the Bouvka, since it is being used here.
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+Will provide a MST, with a time complexity of O(E^2).
+</VERBATIM>
+---++!! b
+<VERBATIM>
+Will not always give a MST. 
+
+E.g.
+
+Given a graph with the edges (a,b) weight of 1 (b,c) weight of 2 (c,a) with a weight of 3, this algorithm will return cycle with a weight of 5 being the MST (it will add the edges (b,c) and (c,a)), instead of giving us (a,b) and (b,c) which will return a MST of 3. 
+
+
+</VERBATIM>
+---++!! c
+<VERBATIM>
+This will give us a MST with the time complexity being O(EV)
+</VERBATIM>
+
+---++!! Grader comments *[20/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+Describe and analyze the algorithm.
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+Reading, after a certain age, diverts the mind too much from its creative pursuits.
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+using namespace std;
+
+int main()
+{
+	vector<string> DNA;
+	string quote;
+	string line;
+	char ch;
+	char temp;
+	string test;
+	int iter;
+	string subtest1;
+	string test2;
+	string subtest2;
+	string first;
+	string last;
+
+
+	ifstream file("reads3.txt");
+	if (file.is_open())
+	{
+
+		while (!file.eof())
+		{
+			file.get(ch);
+			if (ch == '[')
+			{
+				line.clear();
+				file.get(ch);
+				for (int i = 0; i < 5; i++)
+				{
+					line.push_back(ch);
+					file.get(ch);
+				}
+				DNA.push_back(line);
+			}
+		}
+
+		file.close();
+
+		/*for (vector<string>::const_iterator iter = DNA.begin();
+			iter != DNA.end(); ++iter)
+			cout << *iter << endl;*/
+	}
+
+	/*test = DNA[1];
+	subtest1 = test.substr(1, 4);
+	cout << subtest1 << endl;*/
+	
+	for (int i = 0; i < DNA.size(); i++)
+	{
+		test = DNA[i];
+		subtest1 = test.substr(1, 4);
+		//cout << subtest1 << endl;
+	
+		first = test.substr(0,1);
+		
+		for (int j = 0; j < DNA.size(); j++)
+		{
+
+			test2 = DNA[j];
+			subtest2 = test2.substr(0, 4);
+			last = test2.substr(4, 1);
+			//cout << subtest2 << endl;
+
+			if (subtest1.compare(subtest2) == 0)
+			{
+				quote.append(first);
+				quote.append(subtest1);
+				quote.append(last);
+				//quote.append(last);
+				//cout << test << endl;
+				//cout << test2 << endl;
+				DNA.erase(DNA.begin() + j);
+
+			}
+
+
+			}
+		/*	
+		quote = DNA.at(0);
+		if (DNA.at(i).substr(0, 4) == quote.substr(1, 4))
+		{
+			quote = quote + DNA.at(i).substr(0, 1);
+			//DNA.erase(DNA.begin() + i);
+		}
+
+		else
+		{
+			quote = DNA.at(i).substr(0, 1) + quote;
+			//DNA.erase(DNA.begin() + i);
+		}
+		*/
+
+		
+	}
+
+	cout << quote << endl;
+	
+}
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+We set up a max reed size to the length of the longest read in the vector, then we begin the comparison. If no results can be found when we compare the prefix and the suffixes, then we decrement the max reed size by 1 and continue. We keep doing this till max reed size equal 0  since by then we should have compared all the reed in the vector.
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+
+
+---+++!! Grader comments
+<VERBATIM>Question 4 Results:
+
+Total Grade: 15
+
+	10        		
+	5         		
+	0         		
+
+
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+
+After inputing all the data form the text file into a vector of vectors called edges, attempt to look for the path with the least weights to traverse through. We then create a copy of the edges since we will be deleting all the edges that give us multiple weights and only saving the ones with the least weights left. 
+
+We then bring in only the resulting path into a path vector. We bring in the vectors that we need from the back up we created and and then output the result to a new file called "cityvisit".
+This does not work completely since it assumes that this is only an undirected graph.
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle
+
+
+---+++!! Grader comments
+<VERBATIM>Question 5 Results:
+
+Total Grade: 5
+
+	0         		Grades from submission
+	5         		
+
+
+</VERBATIM>
+

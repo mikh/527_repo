@@ -1,0 +1,369 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  | n(log(logn)) |
+|  c  | n |
+|  d  | nlogn |
+---++ Explanation
+<VERBATIM>
+b - makes a balanced graph, until the next number comes, then it branches out to the right
+c - n, because it takes constant time to insert into a list and we do it n times
+d - height would be n => nlogn
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  56  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  9  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  43  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  40  |
+
+Does this graph exhibit the triangle inequality? 
+
+Yes, because the shortest distance from one place to another is a direct 
+straight line (the weight is less than the path through another place)
+---++!! 2b
+Order: a,e,c,f,d,b
+
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  0  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  5  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  2  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  4  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  1  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  3  |
+
+---++!! 2c
+Order: a,e,c,f,d,b
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  0  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  5  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  2  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  4  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  1  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  3  |
+
+---++!! 2d
+---+++!! Algorithm
+
+<VERBATIM>
+Use Prim's Algorithm from the textbook, if we use a linked list, can get O(V^2) time.
+
+A = 0
+for each V
+   MAKE-SET(V)
+sort edges into increasing order by weight
+for each edge (U,V) (in the increasing order by weight)
+   if FIND-SET(U) != FIND-SET(V)
+      A = A union {(U,V)}
+      UNION(U,V)
+return A
+
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+The algorithm always produces a minimum spanning tree. 
+Running time - O(ElogE).
+(Depends of kind of sorting - can be E^2)
+</VERBATIM>
+---++!! b
+<VERBATIM>
+The algorithm does not always produce a minimum spanning tree. 
+Because edges are taken in an arbitrary order, it's a matter of luck 
+if we pick the edges of smallest weights.
+
+Counterexample:
+Adj.matrix:
+    a b c d
+a   0 1 x 2
+b   1 0 7 5
+c   x 7 0 4
+d   2 5 4 0
+Let's say we pick edge b-c first, which is has the largest weight and 
+keep adding edges, it will not result in a MST.
+
+
+</VERBATIM>
+---++!! c
+<VERBATIM>
+The algorithm will always produce a MST, because no matter 
+how we select the edges, by deleting the largest ones, we will 
+eventually end up with MST.
+
+Running time - O(VE)
+</VERBATIM>
+
+---++!! Grader comments *[20/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+At first, I created a class Node, that would contain a string, color, point to the
+ child, parent and sibling. I loaded all the words from a text file into an array. 
+Then I built a tree, where each node is a substring and if a substring matches 
+another substring I make it a parent. It runs until all the vertices are black(-1), 
+which means that I traversed a graph.
+
+Running time is O( V(n + logV)) //n - length of the string(can be constant), V - # of vertices
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+Phrase - Gravitation cannot be held responsible for people falling in love.
+</VERBATIM>
+
+%CODE{"cpp"}%
+#include <iostream>
+#include <stdlib.h>
+#include <stdio.h>
+#include <fstream>
+#include <string.h>
+#include <sstream>
+
+using namespace std;
+
+class Node{
+public:
+	string phrase;
+	int color;
+	Node *Child;
+	Node *Parent;
+	Node *Sibling; 
+};
+
+int main()
+{
+	string words[62];
+	ifstream fp;
+	fp.open("reads5.txt");
+	int count = 0;
+	
+	while(!fp.eof())
+	{
+		string word="";
+		getline(fp,word);
+		words[count] = string(word);
+		count++;
+	}
+
+int count1 = 0;
+string phrase = "";
+
+Node *node = new Node();
+node->phrase = "";
+node->color = 1;
+
+while (node->color != -1)
+{
+	if(node->color == 1)
+	{
+		node->color = 0;
+
+		if (node->Parent == NULL)
+		{
+			string arrayStr[62];
+			for (int i = 0; i<62; i++)
+			{
+				if (tolower(words[i][0]) != words[i][0])
+				{
+					arrayStr[count1] = words[i];
+					count1++;	
+				}
+			}
+			if(count1 > 0)
+			{
+				Node *n1 = new Node();
+				n1->phrase = arrayStr[0];
+				n1->color = 1;
+				n1->Parent = node;
+				node->Child = n1;
+				Node *arrayChildren[62];
+				arrayChildren[0] = n1;
+				for(int i=1;i<count1;i++)
+				{
+					Node *n = new Node();
+					n->phrase = arrayStr[i];
+					n->color = 1;
+					n->Parent = node;
+					arrayChildren[i-1]->Sibling = n;
+					arrayChildren[i] = n;
+				}	
+			}
+		}
+		else
+		{	
+			int flag = 0;
+			int c = 0;
+			string possibleArray[62];
+			for (int i = 0; i<62; i++)
+			{
+				flag = 0;
+				for (int k = 1; k <= node->phrase.length(); k++)
+				{
+					if (node->phrase[k] == words[i][k-1])
+					{
+						flag++;					
+					}
+				}
+				if(flag == node->phrase.length()-1)
+				{
+					Node *temp = new Node();
+					temp = node;
+					int flag2 =0;
+					temp = temp->Parent;
+					while(temp->Parent!=NULL)
+					{
+						if(temp->phrase == words[i])
+						{
+							flag2 = 1;
+							break;
+						}
+						temp = temp->Parent;
+					} 
+					if(flag2 == 0)
+                                       {
+						possibleArray[c] = words[i];
+						c++;	
+					}
+						
+				}
+				
+			}
+			if(c>0)
+                       {
+				Node *n1 = new Node();
+				n1->phrase = possibleArray[0];
+				n1->color = 1;
+				n1->Parent = node;
+				node->Child = n1;
+				Node *arrayChildren[62];
+				arrayChildren[0] = n1;
+				//cout<<arrayChildren[0]->phrase<<endl;
+				for(int i=1;i<c;i++)
+				{
+					Node *n = new Node();
+					n->phrase = possibleArray[i];
+					n->color = 1;
+					n->Parent = node;
+					arrayChildren[i-1]->Sibling = n;
+					arrayChildren[i] = n;
+				}	
+			}
+			
+		}
+		if(node->Child != NULL)
+		{
+			node = node->Child;
+
+		}
+		else
+		{
+			node->color = -1;
+			Node *temp = new Node();
+			temp = node;
+			string sentence = "";
+
+			sentence = temp->phrase;
+			temp = temp->Parent; 
+			while(temp->Parent != NULL)
+			{
+				string phraseVal = temp->phrase;
+				sentence = phraseVal[0] + sentence;
+				temp = temp->Parent;
+			}
+			cout<<sentence<<endl;
+			if(node->Sibling != NULL)
+			{
+				node = node->Sibling;
+			}
+			else
+			{
+				node = node->Parent;
+			}
+		}
+	}
+	if(node->color == 0)
+	{
+		node->color = -1;
+		if(node->Sibling != NULL)
+		{
+			node = node->Sibling;
+		}
+		else
+		{
+			if(node->Parent != NULL)
+			{
+				node = node->Parent;
+			}
+		}
+	}
+}
+
+return 0;
+}
+
+%ENDCODE%
+
+---++ 4b.  Combinations [5 points]
+---+++!! i 
+<VERBATIM>
+The code from part a works for any lengths, because I did not make it 5-specific. 
+It finds matches, no matter how long the words are - O( V(n + logV))
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+code from 4a applies
+The tree will be much larger in this case, because the some substrings are replicated.
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle
+
+   * [[%ATTACHURLPATH%/problem5.cpp][problem5.cpp]]: Problem 5 code
+<VERBATIM>
+I could not get any results for problem 5, just because I ran out of time.
+ Please, look at the code, I'm pretty sure the code is correct. 
+(As preprocessing I sorted costs for each city in increasing order and stored it in a txt file)
+</VERBATIM>

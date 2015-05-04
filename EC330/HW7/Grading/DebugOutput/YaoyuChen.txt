@@ -1,0 +1,189 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  Omega(n(log n)lg((log n)*n)  |
+|  c  |  Omega(n (log n))  |
+|  d  |  Omega((log n)^2*n^2)  |
+---++ Explanation
+<VERBATIM>
+Provide explanation for partial credits
+</VERBATIM>
+
+for b, as all the keys are the same, we just simply insert the binary search tree to make it as a balanced binary tree. So the time to insert 1 key is Omega(n (log n)). And we have (log n)*n numbers to insert. So the total time is Omega(n(log n)lg((log n)*n))
+
+for c, this method is to compare the key with node, if it is smaller than node, insert to the left, otherwise to the right. So to insert 1 key takes constant time. So the total time is Omega(n (log n))
+
+for d, the worse case for this method is the insertion will be on the left or all on the right. The time to insert 1 key is Omega(n). So the total time is Omega((log n^2)*n^2)
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  57  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  8.25  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  43  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  3.5  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  39  |
+
+Does this graph exhibit the triangle inequality? 
+---++!! 2b
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  NIL  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  NIL  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+Describe your algorithm here. Pseudocode is preferred.
+</VERBATIM>
+%CODE{"cpp"}%
+for each u in G,V{
+u.key = infinity
+u.pi = NIL
+}
+r.key = 0
+Q = G.V
+while Q = 0{
+u = EXTRACT-MIN(Q)
+for each v in G. Adj[u]{
+if v in Q and w(u,v)<v.key{
+v.pi = u
+v.key = w(u,v)
+}
+}
+}
+
+%ENDCODE%
+---+++!! Analysis
+<VERBATIM>
+Descrbie and analyze your algorithm.
+</VERBATIM>
+
+As this is a dense graph(i.e. there are many edges) Prim Algorithm is the best choice.
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+Counterexample or Running time
+</VERBATIM>
+Omega(E^2+Ev)
+---++!! b
+<VERBATIM>
+Counterexample or Running time
+</VERBATIM>
+
+This method can produce a spanning tree, but it can't produce a minimum spanning tree. the counterexample can be any spinning tree which can have lighter weighed edges but select a higher weighed edges.
+
+---++!! c
+<VERBATIM>
+Counterexample or Running time
+</VERBATIM>
+
+O(VE)
+---++!! Grader comments *[20/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+Describe and analyze the algorithm.
+</VERBATIM>
+
+first we pick substring from the list and compare its first 4 letters with all the rest of the substring's last 4 letters, if it matched, combine them, then compare its last 4 letters with all the rest of the substring's first 4 letters, if it matched, combine them. Then we do the same things to the new substring we combined. After each combine, we check if first or last 4 letters of the substring is matched, if first 4 letter do not matched, it should be the start of the string, so we only need to do the last-4-letter match, vice versa.
+---+++!! ii
+<VERBATIM>
+Provide your result here.
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+// paste your code here
+
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+Describe and analyze the modification
+</VERBATIM>
+
+first we find the shortest string of the substrings(we assume it has length n), we find its first n-1 string with all the other substring's last n-1 string and its last n-1 string with all the other substring's first n-1 string. If matched, combine them. Then we find the second shortest substring and do the same thing. Just like part a, if the first or last part of the substring do not match, it should be the start or end of the whole string.
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+
+
+---+++!! Grader comments
+<VERBATIM>Question 4 Results:
+
+Total Grade: 6
+
+	1         		no code no result
+	5         		
+	0         		
+
+
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle
+
+
+---+++!! Grader comments
+<VERBATIM>Question 5 Results:
+
+Total Grade: 0
+
+	0         		Grades from submission
+	0         		
+
+
+</VERBATIM>
+

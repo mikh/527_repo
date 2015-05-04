@@ -1,0 +1,495 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  nlog(n)*log( log(n) )  |
+|  c  |  nlog(n)  |
+|  d  |  n*log(n)*log(n) |
+---++ Explanation
+<VERBATIM>
+For the problems we will have two for loops.
+The first for loop is from 1 to n and the second is from 1 to log(n) because that is the number of copies for each element.
+Therefore the number of elements we insert into the BST is nlog(n). 
+Since there are n different elements, we want to insert log(n) elements with identical keys n times.
+
+Part b's algorithm goes through the tree, finding an empty spot and decides whether to set x to the left or right, 
+taking O(h) where h is the height of the tree and the height of the tree is log(n). 
+It takes log(n)*log( log(n) to insert log(n) identical items.
+However, there a n elements so it takes O( n* log(n) * log( log(n) ) ).
+
+In part c, a list of the equal values is being kept at x and the new value z is inserted to it if its equal to the value of x. 
+The list will be of size log(n), because there are log(n) identical items to insert. Since the size of the list is log(n), it will take time of log(n) to inserting into the list. 
+It inserts n times for all elements so it will take O(nlog(n)).
+
+Part d's algorithm sets x left or right randomly so now it is not dependent on the height of the tree but the number of nodes. 
+There are log(n) identical values to insert and there are log(n) nodes so the worst case is O(log(n)*log(n)). 
+This is repeated n times so it is O( n*log(n)*log(n) ). 
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  56  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  8  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  42  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  38  |
+
+Does this graph exhibit the triangle inequality? 
+
+Yes, it exhibits triangle inequality because it is a complete graph and the distance from a node x to z rather than x to y to z
+---++!! 2b
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |    |
+|  b  |  Chichen Itza, Yuc., Mexico  |    |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |    |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |    |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |    |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |    |
+
+| Edges | Weight |
+| a - e | 4 |
+| a - c | 8 |
+| c - f | 31 |
+| f - d | 28 |
+| d - b | 16 |
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |    |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  a  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+There are 2(n-1) edges if there are n vertices meaning there are more edges than nodes so Kruskal's algorithm will not be the best option. This is because Kruskal's algorithm looks at the edges and selects the lightest one, etc. 
+Since this is a dense graph, Boruvka's algorithm will not be the optimal solution as well. This is because it looks at every node and finds the smallest path to the next node without caring about edges it has seen before, and since there are more edges than nodes, it will not be efficient.
+
+Since Prim's looks at each node and finds the smallest path to a node it has not visited before, it is the more optimal solution. It is faster in this case because the nodes are much less than the edges.
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+This is a dense complete graph so with Prim's algorithm, using an adjacency list with linked lists will give a faster running time than that with an adjacent list and heap.
+This means it will be Theta(V^2 + E) where V is the number of vertices and E is the number of edges.
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+Counterexample or Running time
+</VERBATIM>
+Running time: <b>O(E<sup>2</sup>+EV)</b><br><br>
+Explanation: This will always produce a minimum spanning tree.<br>
+Sorting the edges will take O(E^2) and the for loop goes through each edge so which will take O(E). Checking if the edge is connected to a vertex will take V times
+so it will be O(E<sup>2</sup>+EV).
+---++!! b
+<VERBATIM>
+Counterexample or Running time
+</VERBATIM>
+It will not always produce a MST because it doesn't account for if the edge is the shortest or not when adding it. So it will create a spanning tree but not a minimum one.
+---++!! c
+<VERBATIM>
+Counterexample or Running time
+</VERBATIM>
+Running time: </b>O(VE)</b><br><br>
+
+Explanation:
+The loop takes E times to go through all the edges.<br>
+Then it checks if it is connected and not a cycle, taking V times because there are V vertices.<br>
+If it has a cycle, it gets rid of the max weight of the cycle, producing a minimum spanning tree.<br>
+So therefore it will be O(EV)
+---++!! Grader comments *[20/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+%CODE{"cpp"}%
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <vector>
+using namespace std;
+
+
+class string_parts{
+
+public:
+
+	string current;
+	int next;
+	int prev;
+	int ID;
+
+	string_parts(int i, string c)
+	{
+		ID = i;
+		next = -1;
+		prev = -1;
+		current = c;
+	}
+
+};
+
+
+void compute_String(string* substrings, int array_length)
+{
+	vector<string_parts> parts;
+
+	//inserts the elements of the array into parts vector
+	for (int i = 0; i < array_length; i++)
+	{
+		parts.push_back(string_parts(i, substrings[i]));
+	}
+
+	//checks to see if the suffix of the part matches the prefix of another part
+	//if there is no match then it is the beginning of the phrase
+	for (int i = 0; i < array_length; i++)
+	{
+		for (int j = 0; j < array_length; j++)
+		{
+			string str = parts[i].current;
+			string compare = parts[j].current;
+
+			if (str.substr(1, 4) == compare.substr(0, 4))
+			{
+				parts[i].next = j;
+				parts[j].prev = i;
+			}
+		}
+	}
+
+	//beginning of string
+	int current_ID = 0;
+	for (int i = 0; i < array_length; i++)
+	{
+		if(parts[i].prev == -1)
+		{
+			current_ID = i;
+		}
+	}
+
+	string current_substring;
+	//prints out the ordered string
+	for( int i = 0; i < array_length; i++)
+	{
+		string current_substring = parts[current_ID].current;
+
+		if (i == array_length-1)
+		{
+			cout << current_substring;
+		}
+		else
+		{
+			cout << current_substring.at(0);
+		}
+
+		current_ID = parts[current_ID].next;
+	}
+
+	cout<<endl;
+}
+
+void input_file()
+{
+	string filename;
+	cout<<"Enter filename: ";
+	cin>>filename;
+
+	ifstream file;
+	file.open(filename);
+
+	if( file.is_open() )
+	{
+		string string_array[100];
+		string temp;
+		int count = 0;
+
+		while( !file.eof())
+		{
+			file.ignore(20, '[');
+
+			getline(file, temp, ']');
+
+			string_array[count] = temp;
+
+			count++;
+		}
+
+		file.close();
+
+		compute_String(string_array, count-1);
+	}
+	else
+	{
+		cout<<"File does not exist"<<endl;
+	}
+}
+
+int main()
+{
+	input_file();
+
+	return 0;
+}
+%ENDCODE%
+---+++!! ii
+<VERBATIM>
+Provide your result here.
+
+Reading, after a certain age, diverts the mind too much from its creative pursuits.
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <vector>
+using namespace std;
+
+
+class string_parts{
+
+public:
+
+	string current;
+	int next;
+	int prev;
+	int ID;
+
+	string_parts(int i, string c)
+	{
+		ID = i;
+		next = -1;
+		prev = -1;
+		current = c;
+	}
+
+};
+
+
+void compute_String(string* substrings, int array_length)
+{
+	vector<string_parts> parts;
+
+	//modified to have customizable sizes for substrings
+	int size = substrings[0].length();
+
+	//inserts the elements of the array into parts vector
+	for (int i = 0; i < array_length; i++)
+	{
+		parts.push_back(string_parts(i, substrings[i]));
+	}
+
+	//checks to see if the suffix of the part matches the prefix of another part
+	//if there is no match then it is the beginning of the phrase
+	for (int i = 0; i < array_length; i++)
+	{
+		for (int j = 0; j < array_length; j++)
+		{
+			string str = parts[i].current;
+			string compare = parts[j].current;
+
+			if (str.substr(1, size - 1) == compare.substr(0, size - 1))
+			{
+				parts[i].next = j;
+				parts[j].prev = i;
+			}
+		}
+	}
+
+	//beginning of string
+	int current_ID = 0;
+	for (int i = 0; i < array_length; i++)
+	{
+		if(parts[i].prev == -1)
+		{
+			current_ID = i;
+		}
+	}
+
+	string current_substring;
+	//prints out the ordered string
+	for( int i = 0; i < array_length; i++)
+	{
+		string current_substring = parts[current_ID].current;
+
+		if (i == array_length-1)
+		{
+			cout << current_substring;
+		}
+		else
+		{
+			cout << current_substring.at(0);
+		}
+
+		current_ID = parts[current_ID].next;
+	}
+
+	cout<<endl;
+}
+
+void input_file()
+{
+	string filename;
+	cout<<"Enter filename: ";
+	cin>>filename;
+
+	ifstream file;
+	file.open(filename);
+
+	if( file.is_open() )
+	{
+		string string_array[100];
+		string temp;
+		int count = 0;
+
+		while( !file.eof())
+		{
+			file.ignore(20, '[');
+
+			getline(file, temp, ']');
+
+			string_array[count] = temp;
+
+			count++;
+		}
+
+		file.close();
+
+		compute_String(string_array, count-1);
+	}
+	else
+	{
+		cout<<"File does not exist"<<endl;
+	}
+}
+
+
+int main()
+{
+	input_file();
+	return 0;
+}
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+I would modify the part in compute_String() to:
+</VERBATIM>
+
+%CODE{"cpp"}%
+int size;
+
+	//checks to see if the suffix of the part matches the prefix of another part
+	//if there is no match then it is the beginning of the phrase
+	for (int i = 0; i < array_length; i++)
+	{
+		size = substrings[i].length();
+		for (int j = 0; j < array_length; j++)
+		{
+			string str = parts[i].current;
+			string compare = parts[j].current;
+
+			if (str.substr(1, size - 1) == compare.substr(0, size - 1))
+			{
+				parts[i].next = j;
+				parts[j].prev = i;
+			}
+		}
+	}
+%ENDCODE%
+
+so that instead of comparing the beginning on one string to the end of one string with a constant size, the length in which you are comparing the prefixes and suffixes will change to adapt to the varying size of the substring
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+Describe and analyze the modification.
+</VERBATIM>
+To account for the replicated substrings, the vector should be changed into a set
+---+++!! ii
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+In order to count for random errors, it will check to see if there is a matching prefix and suffix and if there isn't and it isn't the beginning of the string, then we look for the prefix/suffix that best matches it (i.e if it is off by one or a few character) This allows for a leeway if it doesn't find an exact match for a prefix/suffix
+
+---+++!! Grader comments
+<VERBATIM>Question 4 Results:
+
+Total Grade: 18
+
+	10        		
+	5         		
+	3         		more explanation
+
+
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+<VERBATIM>
+EXPLANATION: 
+
+the function read_vertices() goes through the map.txt file and forms a vector of distinct "vertices" which are the destinations.
+after the vector is formed, it assigns the vertices an ID of a corresponding index 
+so that when forming the adjacency matrix, we can index to the corresponding spot.
+
+the function read_matrix() goes through the map.txt file to insert the costs of each trip from a starting location to an ending location. 
+It finds the corresponding index of the first location and then the corresponding index of the second location using the IDs assigned in read_vertices. 
+From the two index, I input the cost into the adjacency matrix. i.e. costs[ID1][ID2] = price.
+
+the function compute_TSP uses the adjacency matrix to calculate the minimum spanning tree beginning from the ETCW vertex. 
+It does this by calling the function compute_minimum() to find the minimum path to the next destination and then from that destination, 
+finding the minimum path to the next destination, etc. 
+It uses a set to keep track of the places that has been visited to make sure everything has been visited at least once. 
+It then connects back to the beginning ETCW. 
+If it can't connect back to ETCW, it backtracks by finding to the minimum cost/amount of destinations until you get there.
+</VERBATIM>
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle
+
+
+---+++!! Grader comments
+<VERBATIM>Question 5 Results:
+
+Total Grade: 18
+
+	13        		Grades from submission
+	5         		
+
+
+</VERBATIM>
+

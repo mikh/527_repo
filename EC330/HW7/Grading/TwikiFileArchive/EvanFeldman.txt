@@ -1,0 +1,169 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  n*log(n)*log(n*log(n))  |
+|  c  |  n*log(n)*log(n)  |
+|  d  |  n*log(n)*log(n)*log(n)  |
+---++ Explanation
+<VERBATIM>
+in B) we simply insert all n*log(n) keys into a BST, which log(n*log(n)) time for each one of n*log(n) operations
+in C) we insert n*log(n) keys but because of the way duplicates are handled teh tree doesn't grow, as aresult each operation only takes log(n) time
+In D) we insert the same n*log(n) keys but because its a worst case analysis we assume that the random distribution puts them all on one side, thus the tree has height log(n)*log(n) (log of distinct keys*number of duplicates of each key)
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  57  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  8  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  44  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  40  |
+
+Does this graph exhibit the triangle inequality? 
+This graph exhibits the triangle inequality
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  e  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  a  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+Kruskal's algorithim is a generic algorithimt hat works in all cases
+it has effeciency O(E*log(E))
+and is iomplemented as follows: (copied from wikipedia)
+KRUSKAL(G):
+1 A = &#8709;
+2 foreach v &#8712; G.V:
+3    MAKE-SET(v)
+4 foreach (u, v) ordered by weight(u, v), increasing:
+5    if FIND-SET(u) &#8800; FIND-SET(v):
+6       A = A &#8746; {(u, v)}
+7       UNION(u, v)
+8 return A
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+Descrbie and analyze your algorithm.
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+This is a reverse dlete sort which is correct
+which from wikipedia:
+The algorithm can be shown to run in O(E log V (log log V)3) time, where E is the number of edges and V is the number of vertices. This bound is achieved as follows:
+sorting the edges by weight using a comparison sort in O(E log E) time
+E iterations of loop
+deleting in O(1) time
+connectivity checked in O(logV (log log V)3) time (Thorup 2000).
+</VERBATIM>
+---++!! b
+<VERBATIM>
+The graph K3 with edges of weight 1,2, 2; this algorithim will somtiems pick both 2 edges
+</VERBATIM>
+---++!! c
+<VERBATIM>
+adding an edge is constant time, checking for cycles takes O(V) and we have E edges to check for, so the total is O(E*V)
+</VERBATIM>
+
+---++!! Grader comments *[18/20]*
+<VERBATIM>
+First running time is O(E^2).
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+for(substring number){
+substring1=first substring
+substring2=substring that has the first 4 chars match the last 4 chars of substring 1
+substring1=substring1+substring2[4]}
+Then repeat the algorithim going from the last 4 chars to the first 4
+
+Comparisons take O(1) time, we need to look through N keys N times, thus it takes O(n^2)
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+Reading, after a certain age, diverts the mind too much from its creative pursuits.
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+std::String (vector<std::String> substrings){
+     std::String mainString=substrings[0];
+     std::String compareString=mainString.substr(1,4);
+     while(!substrings.isNull()){
+          int ii=0;
+          while(!compareString==substrings[ii].substr(0,4)){
+               ii++
+          }
+          mainString=mainString+substrings[ii].charAt[4];
+          substrings.erase(ii);
+     }
+     return mainString;
+}
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+in this case we simply search from each char in teh substring, rather than lookig at the last 4. This makes teh algorithim n^3, but if we don't know the sizes of teh substrings we have to test every possibility
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+A lack of all teh substrings means that we just assign all of the chars after the overlap to the main string, the repetition of strings means that we have to search from the same index until we find all opitions before tehn concetating teh longest one.
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+we simply find a close fit, only keep those taht match more than say 95%, then keep the one witht he clsoest match, discard the rest. If substrings stille xist but non are 95% or ebtter then wea re enar teh end and can relax our standards.
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle

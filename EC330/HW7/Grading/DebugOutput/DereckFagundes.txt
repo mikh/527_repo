@@ -1,0 +1,365 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  T(n) = O(n*lg(log(n)))  |
+|  c  |  T(n) = O(log^2(n))  |
+|  d  |  T(n) = O( log(n)! * log(n) )  |
+---++ Explanation
+<VERBATIM>
+b) You need to iterate through log(n) numbers (in the example, this corresponds to 1-10), and you need to insert a digit n times for each of those log(n) numbers. The worst-case time for insertion is O(h) where h is the height of the tree. Each new digit will essentially create a new tree underneath the previous one, do you will have n "sub-trees" and each one will have a height of lg(log(n))
+c)Because it takes linear time to insert into a list, and you are not actually inserting the repeated keys into the search tree, you will need to insert (log(n)-1) copies of all (log(n)) digits.
+d)If you are randomly assigning left/right, then the worst case would be all rights or all lefts, in which case the tree's height will come to be log(n), so the insertion time will be log(n) * log(n)-1 * log(n)-2 *
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  56  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  8  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  42  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  3  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  37  |
+
+Does this graph exhibit the triangle inequality? 
+All driving times were obtained from google maps, and were the times disregarding the current traffic
+No, this graph does not. The triangle inequality states that w(u,v) <= w(u,x) + w(v,x) for vertices u,v, and x. The distance from the Photonics Center to Chichen Itza is 56 hours, and the distance from Photonics to Pyramid of the Sun is 42 hours. The distance from Pyramid of the Sun to Chichen Itza is 15 hours. If we say that Photonics is U, Pyramid of the Sun is W, and Chichen Itza is V, w(U,V) is not less than or equal to w(U,W) + w(V,W), because 56 is not less than or equal to 42 + 15.
+---++!! 2b
+| Edge: | Weight |
+|Photonics -> Statue of Liberty | 3|
+|CN Tower -> Statue of Liberty | 7|
+|Chichen Itza -> Pyramid of the Sun | 15|
+|Pyramid of the Sun-> Mandalay Bay | 29|
+|CN Tower-> Mandalay Bay | 31|
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  a  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  e  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  d  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+sort (E) in ascending order
+empty vector final;
+for (i=0 to i=length of E)
+      final.push_back(E)
+      if (E creates a cycle)
+          check edges of cycle and remove highest  
+return final</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+my algorithm sorts the edges, then goes through and adds each edge, checking if it makes a cycle, 
+and removes the highest edge. The runtime of this algorithm would be Theta(E), because it checks 
+through each edge to see if it can be added, and the runtime to check if it creates a cycle is less than
+the number of edges
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+This Maybe-MST would produce a minimum spanning tree every time. The running time I describe 
+is the running time of the algorithm after sorting, because the runtime of the sort algorithm would 
+depend on which sorting method used. The runtime of this algorithm would be Theta(E^2), because 
+the for loop runs through the amount of edges once, and in each for loop iteration the algorithm would 
+run Theta(E) times.
+</VERBATIM>
+---++!! b
+<VERBATIM>
+This Maybe-MST would not produce a minimum spanning tree every time. It would 
+produce a spanning tree, but because the algorithm does not sort the edges and 
+they are chosen in "arbitrary order", it depends on what order the edges are in. For 
+example, a complete graph (all sides connected) with 5 vertices and the following weights:
+A<->B: 4
+A<->C: 2
+A<->D: 10
+A<->E: 1
+B<->C: 7
+B<->D: 6
+B<->E: 8
+C<->D: 9
+C<->E: 5
+D<->E: 3
+and the edge list goes as follows:
+E = 10,9,7,5
+this would satisfy the algorithm, but would not be the minimum spanning tree.</VERBATIM>
+---++!! c
+<VERBATIM>
+This algorithm will always produce an MST. The runtime would be Theta(E^2). 
+The for loop would run through every edge, and checking if each added edge 
+creates a cycle is Theta(E), making the runtime Theta(E^2).
+</VERBATIM>
+
+---++!! Grader comments *[20/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+I create a graph that connects every vertex to a satisfying vertex, then i check every combination starting at each and find the path that connects all. So i do an exhaustive search.
+
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+Gravation cannot be held responsible for people falling in love.
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+//
+//  main.cpp
+//  hw7
+//
+//  Created by Dereck Fagundes on 4/16/15.
+//  Copyright (c) 2015 dereckf. All rights reserved.
+//
+
+#include <fstream>
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <vector>
+using namespace std;
+
+int main() {
+    vector <int> zero;
+    zero.push_back(0);
+    vector <string> vertices;
+    vector <string> data;
+    vector < vector < int> > edges;
+    ifstream infile( "/Users/dfagundes/Desktop/reads5.txt" );
+    string final;
+    while (infile)
+    {
+        string s;
+        if (!getline( infile, s )) break;
+        
+        istringstream ss( s );
+        vector <string> record;
+        
+        while (ss)
+        {
+            string s;
+            if (!getline( ss, s, '[')) break;
+            record.push_back( s );
+        }
+        for (int i=0; i < record.size(); i++) {
+            string it;
+            it.append(record.at(i));
+            data.push_back( it );
+        }
+    }
+    if (!infile.eof())
+    {
+        cout << "Fooey!\n";
+    }
+    
+    for (int i=0; i < data.size(); i++) {
+        string lol;
+        for (int j=0; j < 5; j++) {
+            lol.push_back(data.at(i)[j]);
+        }
+        vertices.push_back(lol);
+        edges.push_back(zero);
+    }
+    
+    int numvertices = vertices.size();
+    /*
+    for (int i = 0; i < numvertices; i++) {
+        cout << vertices.at(i) << endl;
+    }
+    */
+    //cout << vertices.at(numvertices-1) << '.' << endl;;
+    //vertices is the vector of all the strings
+    //cout << numvertices<< "hi";
+    for (int i = 1; i < numvertices; i++) {
+        char first,second,third,fourth;
+        first = vertices.at(i)[1];
+        second = vertices.at(i)[2];
+        third = vertices.at(i)[3];
+        fourth = vertices.at(i)[4];
+        for (int j = 1; j < numvertices; j++) {
+            //cout << sentence << endl;
+            //cout << 'h' << endl;
+            if ((vertices.at(j)[0] == first) & (vertices.at(j)[1] == second) & (vertices.at(j)[2] == third) & (vertices.at(j)[3] == fourth)){
+                edges.at(i).push_back(j);
+            }
+        }
+    }
+    
+    
+    for (int i=1; i< edges.size(); i++) {
+        for (int j =0; j< edges.at(i).size(); j++) {
+            //cout << i << ' ' << j  << ". " <<edges.at(i).at(j) << endl;
+        }
+    }
+    
+    //cout<< edges.at(39).size()<<endl;
+
+    for (int i = 1; i < numvertices-1; i++) {
+        //cout <<"yup: "<<numvertices<<endl;
+        vector <int> finalRoute;
+        finalRoute.push_back(i);
+        int count = 0;
+        int point = i;
+        bool goneThrough = false;
+        //cout<< edges.at(i).size()<<endl;
+        int numedges = edges.at(i).size();
+        while (!goneThrough) {
+    
+            if (numedges < 2){
+                //cout << "one edge " << point << endl;
+                goneThrough = true;
+                count++;
+                //i = numvertices;
+                //cout << "size: "<<finalRoute.size()<<endl;
+            }
+            
+            if (numedges == 2 || point == 52) {
+                //cout << "going good "<< point<< endl;
+                point = edges.at(point).at(1);
+                count++;
+                finalRoute.push_back(point);
+                numedges = edges.at(point).size();
+            }
+            if (numedges > 2 && point != 52) {
+                //cout << count<< " there should only be one " << point << endl;
+                int max = count;
+                //int newpoint = point;
+                int bestj=0;
+                for (int j = 1; j < 3; j++) {
+                    int newpoint = edges.at(point).at(j);;
+                    //cout <<"J is "<<j <<endl;
+                    int temp = count;
+                    bool through =false;
+                    bool done = false;
+                    while (!done) {
+                        //cout <<"newpoint "<< newpoint<< endl;
+                        newpoint = edges.at(newpoint).at(1);
+                        //cout <<"here"<<endl;
+                        through = true;
+                        //cout << newpoint<< ' '<< j << ' ' << edges.at(newpoint).size() <<endl;
+                        temp++;
+                        if ((edges.at(newpoint).size()) == 1) {
+                            done = true;
+                            //cout << done << endl;
+                        }
+                        //numedges = edges.at(newpoint).size();
+                        //j= numedges-1;
+                    }
+        
+                    if (temp > max) {
+                        newpoint = edges.at(point).at(j);
+                        //cout<<"yes"<<endl;
+                        max=temp;
+                        bestj=j;
+                    }
+                }
+                point = edges.at(point).at(bestj);
+                //cout<< "point: " <<point<< endl;
+                count++;
+                finalRoute.push_back(point);
+                numedges = edges.at(point).size();
+            }
+        }
+        //cout << "DONE WITH THIS LOOP"<< endl;
+        if (finalRoute.size() > 61) {
+            //cout << i << endl;
+            //cout<< "yup" <<endl;
+            final.push_back((vertices.at(finalRoute.at(0))[0]));
+            final.push_back((vertices.at(finalRoute.at(0))[1]));
+            final.push_back((vertices.at(finalRoute.at(0))[2]));
+            final.push_back((vertices.at(finalRoute.at(0))[3]));
+            for (int k=2;k< finalRoute.size(); k++) {
+                final.push_back((vertices.at(finalRoute.at(k))[4]));
+            }
+        }
+        //cout << "i: " << i<< endl;
+    }
+    cout <<final<<endl;
+    //cout << final << endl;
+    return 0;
+    
+}
+
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+I would have to adjust how I looked for vertex connections, making it work for different lengths, so id have to check every length of letters connecting and it would take much longer.
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+I would need to check any amount of overlapping sections that i could and delete and copies so that i could see every possible combination
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+I would have to check for any similarities and check every iterations and adjust likelihood based on how early in the string we were
+</VERBATIM>
+
+
+---+++!! Grader comments
+<VERBATIM>Question 4 Results:
+
+Total Grade: 20
+
+	10        		
+	5         		
+	5         		
+
+
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle
+
+
+---+++!! Grader comments
+<VERBATIM>Question 5 Results:
+
+Total Grade: 0
+
+	0         		Grades from submission
+	0         		
+
+
+</VERBATIM>
+

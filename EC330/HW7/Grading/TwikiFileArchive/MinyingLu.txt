@@ -1,0 +1,249 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  O((logn)*(loglogn))  |
+|  c  |  O(logn)  |
+|  d  |  O(log^2(n))   |
+---++ Explanation
+<VERBATIM>
+Provide explanation for partial credits
+b) assume there 's 10 new node z that's replicates of node x, every x that's already in the tree will directed the new node z to either x.left or x.right. 
+    and there's logn copies of each number, the height of the "sub-tree" of each number and its copies will have height = loglogn. 
+    which makes the height of the whole tree to be loglogn times bigger than when there's no replicates. 
+    Therefore the running time is O((logn)*(loglogn))
+
+c)Because add value to a list takes constant time, and the list on the node doesn't change the height of the tree. 
+   the overall insertion time will still be O(logn)
+
+d)It is similar to (b), but worse, because it randomly set x to x.left or x.right.
+    The worst case will be always setting x to x.left (or x.right). Then the height of the tree will be logn times higher than the general case
+    The running time will be O(log^2(n))
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  55 hrs  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  8 hrs  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  43 hrs  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  3 hrs  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  39 hrs  |
+
+Does this graph exhibit the triangle inequality? 
+No it doesn't because it doesn't form any triangles, it's a tree (Star Graph)
+---++!! 2b
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |    |
+|  b  |  Chichen Itza, Yuc., Mexico  |    |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |    |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |    |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |    |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |    |
+
+<pre>
+Kruskal's algorithm takes the smallest edge that doesn't form a circle
+1. A - E = 3    {A, E}
+2. E - C = 7    {A, E, C}
+3. B - D = 15   {B, D}
+4. D - F = 28   {B, D, C} 
+5. F - C = 32   {B, D, C, F}
+
+The Graph will be {A, E, B, D, C, F}
+</pre>
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  e, c, f, d, b  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d, f, c, e, a  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e, a, f, d, b  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  b, f, c, e, a  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a, c, f, d, b  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  d, b, c, e, a  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+Describe your algorithm here. Pseudocode is preferred.
+I will use Kruskal's algorithm to find the minimum spanning tree. Assuming "general case" means E is not significantly larger than V. 
+
+//psuedocode 
+save all vertices into a disjoint set data structure
+P[] = empty array
+for each v belongs to V,
+    make-set (v)
+sort all edges into non-decreasing order by weight
+for each edge e: (u, v) in the sorted graph
+    if find-set(u) != find-set(v)
+         P = P union with {(u, v)}
+         union(u, v)
+return P
+</VERBATIM>
+
+---+++!! Analysis
+<VERBATIM>
+Theta(V) <= make-set for all v belong to V
+O(ElogE) <= sorting the graph
+O(logV) <= for each loop for an edge
+O(ElogV) <= for the whole graph
+
+In general, this algorithm takse Theta(ElogV) time. 
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+This is a minimum spanning tree
+
+Runtime:
+O(ElogE) <= sort edge into non-increasing order
+Theta(E) <= save E to T
+O(E) <= worst case running time for checking if T - {e} is a connected graph
+             per loop
+
+Total running time: O(E^2logE)
+</VERBATIM>
+---++!! b
+<VERBATIM>
+This is NOT a minimum spanning tree.
+
+Counter example:
+Because T takes edge in in arbitrary order, and union it with the current T. 
+A --2--B--4--C--10--A (connected undirected graph)
+T could be A -> C -> B, while the minimum spanning tree should be A -> B -> C
+</VERBATIM>
+---++!! c
+<VERBATIM>
+This is NOT a minimum spanning tree.
+
+Counterexample:
+graph A--2--B--3--C--7--D--4--A (connected undirected cycle)
+also    B--5--D
+
+Assume the algorithm goes from B -> A -> D -> B, finds a cycle,
+eliminate the max-weight edge (B--5--D)
+but because MST-C takes edge e in arbitary order
+it could take the edge (C--7--D) as its next edge
+and the resulting tree will be B->A->D->C, which is not a MST. 
+</VERBATIM>
+
+---++!! Grader comments *[11/20]*
+<VERBATIM>
+(c) works correctly. First running time is O(E^2).
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+Describe:
+This algorithm will save the first element of the substring array in to result string, and iterate through the array, 
+if the substring is not used, compare the first four character of result with the last four characters of the current substring; 
+compare the last four characters of the result and the first four characters of the current substring. once it found a match, 
+it will either append the substring to the front of result or the back. 
+The boolean array used[] which keep track of if the substring is used or not, 
+when all the substring are used, the function will exit out of the while loop and print result.
+
+Analysis:
+the worst case running time will be O(n^2)
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+Gravitation cannot be held responsible for people falling in love.
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+// paste your code here
+#include <iostream>
+#include <list>
+#include <string>
+#include <fstream>
+using namespace std;
+
+int main(){
+  //read file and store the strings in string array seq[]
+  string seq[62];
+  string s;
+  ifstream file("reads5.txt");
+  getline(file, s);
+  file.close();
+  int index = 0;
+  for(int i = 0; i < s.length(); i++){
+    if (s[i] == '[' && s[i+6] == ']'){
+      seq[index++] = s.substr(i+1, 5);
+      i = i + 7;
+    }
+  }
+    bool used[62] = {0};
+    bool isDone = false;
+    cout << "list constructed" << endl;
+    string result = seq[0];
+    int i;
+    while(!isDone){
+        for (i = 0; i < 62; i++){
+            if (!used[i] && seq[i].substr(1,5) == result.substr(0, 4)){
+                cout << seq[i].substr(1,5) << " = " << result.substr(0,4) << endl;
+                result.insert(0, seq[i].substr(0, 1));
+                used[i] = true;
+            }
+            if(!used[i] && seq[i].substr(0,4) == result.substr(result.length()-4, result.length())){
+                cout << seq[i].substr(0,4) << " = " << result.substr(result.length()-4, result.length()) << endl;
+                result.insert(result.length(), seq[i].substr(4, 5));
+                used[i] = true;
+            }
+            isDone = isDone && used[i];
+        }
+    }
+ cout << result << endl;
+  return 0;
+}
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+Describe and analyze the modification
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+I made a minimum spanning tree using prim's algorithm, and tried to use preorder function to visit the nodes in the mst.
+I was able to construct the mst, but my preorder function throws segmentation fault error. 
+So I couldn't produce a result.txt.....
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle

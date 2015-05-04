@@ -1,0 +1,236 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  O(n^2*logn*log(logn))  |
+|  c  |  O(n^2*logn)  |
+|  d  |  O(n^2*logn*log(logn)) average, O((n*logn)^2) worst  |
+---++ Explanation
+<VERBATIM>
+All cases will use a root of 1.
+b) each number will be balanced (triangle of 1's) but will be gathered on the right side (1's triangle, 2's triangle touching 1's on the bottom right corner, etc). Therefore, each triangle will be of log(log(n)) height (logn elements in each triangle/tree), thus with n total triangles the BST is of height n*log(logn). Thus the running time of the insert functon is O(n*log(logn)). Since insert is called n*logn times, the running time of inserting all of them is O(n^2*logn*log(logn)).
+c) Instead of inserting into a tree, keep a counter of how many instances of it there are. Thus the resulting tree is a completely imbalanced one tending to the right (one line, straight down the right), giving it height n. Thus the running time of the insert function would be O(n). Since insert is called n*logn times, the running time of inserting all of them is O(n^2*logn)
+d) The average case should give an answer like b), but the absolute worst case scenario would be if everything tended to one side (which is possible in this random scenario), which would mean that the running time of insert would be O(n*logn) as there are n different numbers and logn repetitions of each number.  Since insert is called n*logn times, the running time of inserting all of them is O((n*logn)^2)
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  57  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  9  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  43  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  40  |
+
+Does this graph exhibit the triangle inequality?
+Yes
+---++!! 2b
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |    |
+|  b  |  Chichen Itza, Yuc., Mexico  |    |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |    |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |    |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |    |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |    |
+
+photonics to NY (4 Hours)
+
+NY to Toronto (8 hours)
+
+Chichen Itza to Pyramid of Sun (16 hours)
+
+Pyramid of Sun to Mandalay Bay (28 hours)
+
+Mandalay Bay to Toronto (33 hours)
+
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  0  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  16  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  8  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  28  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  33  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+If G is empty return an empty forest.
+Create a contracted graph G' by running two successive Boruvka steps on G (i.e. we remove the edge and combine the veterxes that they had in common).
+Create a new subgraph H by selecting each edge in G' with probability 1/2. 
+Recursively apply the algorithm to H to get its minimum spanning forest F
+Remove all F-heavy edges from G' 
+Recursively apply the algorithm to G' to get its minimum spanning forest.
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+Tarjan method, works really well with dense graphs. The algorithm goes through the 2 sub-graphs, G' and H. It also uses a linear time verification algorithm to eliminate edges that cannot be part of the minimum spanning tree.
+
+Has a running time of O(log V)
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+Yes, will provide an MST, running time of  O(E^2)
+</VERBATIM>
+---++!! b
+<VERBATIM>
+No, for example, a graph with edges (a,b) weight 1, (b,c) weight 2, and (c,a) weight 3, it will return weight 5 (using (b,c) and (c,a) instead of the minimum of 3 (a,b) (b,c).
+</VERBATIM>
+---++!! c
+<VERBATIM>
+Yes, will provide an MST, running time of O(E*V)
+</VERBATIM>
+
+---++!! Grader comments *[20/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+Reads in the encoded data into a vector. Keeps a string that is the result of the pieced together result. Goes through the vector, matching to the beginning or end of the string (prefix, suffix) of varying lengths. If something does match, it is added to the string and removed from the vector. Goes until the vector is empty.
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+Do not worry about your difficulties in Mathematics. I can assure you mine are still greater.
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+#include <iostream>
+#include <fstream>
+#include <vector>
+using namespace std;
+
+int main (){
+	vector <string> jumble;
+	ifstream myfile;
+	myfile.open ("reads1.txt");
+	char c;
+	while (!myfile.eof()){
+		myfile.get(c);
+		if (c == '['){
+			string temp;
+			while (true){
+				myfile.get(c);
+				if (c != ']')
+					temp += c;
+				else
+					break;
+			}
+			jumble.push_back(temp);
+		}
+	}
+	myfile.close();
+
+	string decode = jumble.at(0);
+	jumble.erase (jumble.begin());
+	
+	int match = 4;
+	string stuck = decode;
+	while (!jumble.empty()){
+		for (int k = 0; k < jumble.size(); k++){
+			//begin
+			if (jumble.at(k).substr(5-match, match) == decode.substr(0, match)){
+				decode = jumble.at(k).substr(0,5-match).append(decode);
+				jumble.erase(jumble.begin()+k);
+				match = 4;
+			}
+			//end
+			else if (jumble.at(k).substr(0, match) == decode.substr(decode.length()-match, match)){
+				decode += jumble.at(k).substr(match,5-match);
+				jumble.erase(jumble.begin()+k);
+				match = 4;
+			}
+
+		}
+		
+		if (decode == stuck){
+			match--;
+		}
+		stuck  = decode;
+		
+	}
+
+	cout << decode << endl;
+}
+
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+Modify the code so that the length of 5 used becomes a varying length based on the length of the string in the vector. The match integer can stay the same, though needs to make sure it does not run below 0.
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+First part is same program as before as my program will shrink the match size if nothing can be found to satisfy the argument. 
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+As for the random errors, if we have enough repeated strings or overlap between strings, we can lower the match by one, assuming that there is only one error in that section. If a section is very similar, albeit 1 match off, then we can spit out both results to the user, or if there is a majority of string the the vector that tend to one character than another, then it can be assumed that that version of the string is correct.
+</VERBATIM>
+
+
+---+++!! Grader comments
+<VERBATIM>Question 4 Results:
+
+Total Grade: 20
+
+	10        		
+	5         		
+	5         		
+
+
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Unfortunately, I made the assumption that the graph was undirected, as it does not specify in the problem. The weight it gives after I submit it is 102231. The program parses the result in into 2 vectors. One vector holds the vertices, the other holds a vector of vectors that holds a pair of string and int. The string represents the next location, and the int is the weight. I also realized that not everything is in order already, so the vertices may not be unique. The program attempts to branch out into 2 ways, finding the 2 lowest costs connected to ECTW and then going to the next vertices from there and selecting the lowest weight edges. The two branches are inserted into 2 vectors. One of the 2 lowest cost branches will be in reverse and one of them will be forward. The vertices already used are deleted. If the program runs through all the vertices and leaves some out, a backup of the vertices and edges are brought up and inserts a lowest cost path to each of the leftover vertices by going to it and back to the lowest cost node found (uses the same route twice). Outputs the resulting path by running one of the vectors forward and the other backwards, outputting to a textfile. Collaborated with Vinay Krishnan
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle
+
+
+---+++!! Grader comments
+<VERBATIM>Question 5 Results:
+
+Total Grade: 5
+
+	0         		Grades from submission
+	5         		
+
+
+</VERBATIM>
+

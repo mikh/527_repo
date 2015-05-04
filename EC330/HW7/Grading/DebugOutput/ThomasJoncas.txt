@@ -1,0 +1,325 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  Theta(n^2*Log(n)*Lg(Log(n)))  |
+|  c  |  Theta(n^2*Log(n))  |
+|  d  |  Theta(n^2*(logn)^2)  |
+---++ Explanation
+
+b) This algorithm will still take Theta(height) time to insert 1 element.  Since the tree is initially empty, when the first element is inserted the height will be 1.  For the kth element inserted, the height will be Theta(k*Lg(Log(n))) since we insert log(n) copies of each number up to and including k.  We are inserting log(n) copies of each of n elements.  So for each k of the n elements, it takes Theta( Log(n)*kLg(Log(n)) ).  Since k grows for each element up to n, we have Log(n)*Lg(Log(n)) [1+2+3+...+n-1 + n] Or equivalently Log(n) * Lg(Log(n)) * Sum from k = 1 to n of k.  This equals Theta(n^2*Log(n)*Lg(Log(n)))
+<BR><BR>
+c) Here, we just keep a list at node x of equal keys and the list grows for each identical key that we insert.  Let's assume inserting into the list is Theta(1) if we use a vector.  So inserting Log(n) copies of a key to a vector is just Log(n) time.  Getting to the height of that node is going to be Theta(k) for the kth element out of n since the tree will be height k when inserting the kth element.  So for each element (the kth of n elements) we must do Theta(k*Log(n)).  So we have a sum from i = 1 to n of iLog(n) since we have elements from 1 to n which is Theta(n^2*Log(n))
+<BR><BR>
+d) Here, the worst case is that each element gets added to a new level or different height.  We insert a total of nlogn elements since we do numbers 1 thru n each log(n) times.  So we have a sum from k = 1 to nlogn of k.  This simplifies to 1/2*nlogn(nlogn+1) which is Theta(n^2*(logn)^2).
+
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+These are times without traffic taken into consideration
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  56  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  8  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  42  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  3  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  38  |
+
+Does this graph exhibit the triangle inequality?
+Yes
+---++!! 2b
+Statue of Liberty - PHO<BR>
+Statue of Liberty - Canada<BR>
+Chichen - Pyramid <BR>
+Pyramid - Vegas <BR>
+Vegas - Canada<BR><BR>
+We see this touches each node and adds the edges starting with shortest driving time without forming a cycle like the Krustal algorithm says to do
+
+
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  0  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+<BR><BR>
+Note that PHO is the root, then we find the shortest edge to anything that isn't in the MST so far which is the edge to the statue of liberty (3 hrs).  Then we see the shortest edge from vertices in MST to those not in MST is from statue of liberty to canada (7h25m versus the 7h58m from PHO to canada).  Then the next shortest edge from MST to other nodes is from canada to vegas.  Then after this the shortest is vegas to the pyramid of the sun followed by pyramid of sun to chichen.
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+Since this is a complete graph, we know that each vertex has V-1 edges incident to it.
+This gives a total of Theta(V(V-1)/2) = Theta(V^2) edges so it is a dense graph.
+
+As such we apply Prim's Algorithm using a priority queue as a linked-list because this gives running time Theta(V^2):
+//taken from the online lecture notes for Prof Moreshet's section
+Prim:
+	Q <- all vertices                                                              
+	Key[v] <- Infinity; Key[root] <- 0;                                   
+	while Q is not empty:                                                     
+		u <- extract-min(Q)                                             
+		for each v adjacent to u:
+			if v belongs Q and w(u,v) < key[v]:                
+				key[v] <- w(u,v)                                    
+				Pi[v] <- u                                                
+
+Note that the basic idea is to add the light edge from any of the vertices in the MST to any of the vertices not in the MST yet
+   Thus we cannot form a cycle this way
+We saw that Prim's algorithm worked on the example in part (c) of this problem.
+
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+Prim:
+   Q <- all vertices                                                              //V
+   Key[v] <- Infinity; Key[root] <- 0;                                     //V
+   while Q is not empty:                                                      //V
+      u <- extract-min(Q)                                                //V^2
+      for each v adjacent to u:
+         if v belongs Q and w(u,v) < key[v]:                 //E
+            key[v] <- w(u,v)                                      //E
+            Pi[v] <- u                                                //V
+
+In total we have Theta(V^2 + E) but since E is Theta(V^2) because of the denseness of the graph
+In total we end up with Theta(V^2).
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+Sorting edges can be done in Theta(ElogE) using merge-sort or similar.  Can use BFS or DFS in Theta(V+E) to check if T-{e} is a connected graph.
+The edges are sorted once and BFS/DFS is performed E times because it's once per edge.
+Thus the total running time is Theta(ElogE + E(V+E)) = Theta(E^2)
+</VERBATIM>
+---++!! b
+<VERBATIM>
+Counterexample: consider graph with 3 vertices and 3 edges
+(a,b) has weight 3
+(b,c) has weight 2
+(c,a) has weight 1
+
+The MST uses edges (b,c) and (c,a) for total weight 3.
+
+Since this algorithm takes edges in arbitrary order, it could take edge (a,b) and (b,c) (meaning add them to T),
+and then try to add (c,a) to T and then see that it's a cycle and return to just (a,b) and (b,c) for a total weight of 5.
+
+This clearly is not an MST and thus the algorithm doesn't always work.
+</VERBATIM>
+---++!! c
+<VERBATIM>
+Use an adjacency list representation for T.  For each edge we add it to T then check T union {e} for cycles by using DFS.
+If no cycles, we are done with a given edge.  Otherwise we need to output the cycle, find the max-weight edge and delete it from T.
+Adding an edge is Theta(1) because it's an adjacency list.  DFS takes Theta(V+E) which simplifies to Theta(V) since as soon as we get a cycle in T
+we break the cycle so the maximum number of edges in T at a given time is <= V.  Finding max-weight edge is Theta(V) in adjacency list.  Deleting this edge
+is Theta(V) as well.  We do all of these things Theta(E) times because there are E edges.
+
+Thus in total we have Theta(E*(V+V+V)) = Theta(VE).
+</VERBATIM>
+
+---++!! Grader comments *[20/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+//there are n-4 substrings of length 5 for an n-character word
+For each substring s {
+    string test = s;
+    While there is some substring p whose first 4 chars == the last 4 letters of the string test {
+          append the first char of p to test
+          if test.length() == n-4  //have used every possible substring
+              return test
+     }
+}
+
+
+Analysis: The outer loop is executed at most (n-4) times because there are (n-4) substrings, this is Theta(n).
+The "while" loop condition statement takes Theta(n) to execute since we are looking through all of the substrings
+again to compare the first 4 letters of a substring to the last 4 letters of the string "test".
+We then check if the length of "test" is n-4 which is constant.  
+The actual while loop gets executed Theta(n) times for each substring so this is another Theta(n).  
+
+So overall we have Theta(n)*Theta(n)*Theta(n) = Theta(n^3).
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+Do not worry about your difficulties in Mathematics. I can assure you mine are still greater.
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+#include <iostream>
+#include <vector>
+#include <string>
+#include <fstream>
+
+using namespace std;
+
+int main() {
+	vector<string> subs;
+	ifstream infile;
+	infile.open("reads1.txt");
+
+	char c [1000];
+	for (int ii = 0; ii<1000; ii++) {
+		c[ii] = '0';
+	}
+	infile.getline(c,1000);	//read in the whole file at once
+	infile.close();
+	
+	//this loop gets all of the reads into a vector called "subs"
+	for (int ii = 0; ii<950; ii++) {
+		string temp = "";
+		if (c[ii] == '[') {
+			temp.push_back(c[ii+1]);
+			temp.push_back(c[ii+2]);
+			temp.push_back(c[ii+3]);
+			temp.push_back(c[ii+4]);
+			temp.push_back(c[ii+5]);
+			subs.push_back(temp);
+		}
+	}
+	vector <string> possible;
+
+	//go through the list of reads for the "first part"
+	for (int ii = 0; ii<subs.size(); ii++) {
+		string test = subs[ii];
+
+		vector <string> cp (subs.size(),"");	//copy of the reads so we can delete elements
+		cp = subs;
+		
+		bool flag = true;
+		while (flag) {
+			bool flag2 = false;	//second flag to know when to exit loop
+			for (int jj = cp.size()-1; jj>=0; jj--) {
+				
+				string temp2 = cp[jj].substr(0,4);			//first 4 characters of the next reads
+				string temp3 = test.substr(test.length()-4,4);	//need last 4 chars of test
+
+				if (temp3 == temp2) {
+					test += cp[jj].substr(4,1);				//append last char of reads to test string
+					cp.erase(cp.begin()+jj);
+					flag2 = true;					
+				}
+				
+			}
+			if (flag2 == false) {
+				flag = false;
+			}
+					
+		}
+		possible.push_back(test);	//add to the vector of possible strings
+	}
+
+	//get the longest of the possible strings here
+	string longest = "";
+	for (int ii = 0; ii<possible.size(); ii++) {
+		if (possible[ii].size()>longest.size())
+			longest = possible[ii];
+	}
+	cout<<longest<<endl;	//print the answer
+	
+
+	return 0;
+}
+
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+For each substring s {
+    string test = s;
+    While there is some substring p whose first two characters == the last two characters of the string test {
+       for each such p that meets the above criteria
+          append the first char of p to test
+          if all substrings have been used  //have used every possible substring
+              return test
+     }
+}
+
+This algorithm assumes that no substring will be shorter than 2 characters long.
+It takes longer than the simple case since we have to keep trying this for every such p that meets the criteria mentioned.
+This algorithm is worst case O(n^4) with the worst case being where every substring is of length 2 and there are n-2 substrings in total.
+In reality, there could be a much larger number of substrings since Prof Trachtenberg said we could have overlapping reads, but I will ignore this even-worse case here.
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+Now, need to start looking at not just the full substring except the first/last letter, but at sections of the substring
+
+This will take significantly longer to decipher the full string, something on the order of O(n^4).
+It will be similar to the algorithm in part b since we need to have enough information to get the full string we need to have at least length 2 reads.
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+For errors, need to look and see if some reads can help fill in what's missing.
+For example if your string is Hello_World, you could have a read "_Worlq" and also "World" and "orld" since we can have different lengths.
+From this, our algorithm needs to figure out that the last part of the word is _World (and also append this with the "Hello" part from different reads.
+
+This will be on the order of O(n^4) as well but could get worse (or not work at all) if there are too many errors such that the string is undecipherable. 
+</VERBATIM>
+
+
+---+++!! Grader comments
+<VERBATIM>Question 4 Results:
+
+Total Grade: 20
+
+	10        		
+	5         		
+	5         		
+
+
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+
+The cycle weight I found was 100229.<BR><BR>
+My general approach was having a threshold of how large I would allow an edge to be before taking it on the path.  It took a very long time to actually run the code and get a result, but it passed the requirements on the server.  Basically, I started with the starting city and then went through to another city with a relatively low edge weight.  Then, I deleted the edges that ended at this city since we don't want them anymore.  I kept doing this as I went through various cities while maintaining a threshold for the weight of the edge such that I get a fairly low total edge weight for the cycle.
+
+
+
+   * [[%ATTACHURLPATH%/problem5.zip][problem5.zip]]: code for problem 5
+
+
+---+++!! Grader comments
+<VERBATIM>Question 5 Results:
+
+Total Grade: 20
+
+	15        		Grades from submission
+	5         		
+
+
+</VERBATIM>
+

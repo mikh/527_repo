@@ -1,0 +1,351 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |   n^2log(n)log(log (n))   |
+|  c  |  n^2log(n)   |
+|  d  |  n^2(log(n))^2   |
+---++ Explanation
+<VERBATIM>
+Number of insertions: n*log(n)
+
+
+b. Worst case insertion is from 1 to n. Inserting the same number produces a vaguely balanced tree. Total height of the tree is n log log n.
+
+c. Inserting in worst case order, for completely unbalanced tree, numbers from 1 to n results in a height of n for the BST. 
+Inserting additional numbers to the front of a list will take O(1) time. 
+Inserting additional nodes of higher values in the tree will take O(n) time.
+
+d. Worst case pick the same side for every single insertion, for a tree of height nlog(n).
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  56  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  9  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  43  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  40  |
+
+The thing is that these distances are not a straight line due to the roads.
+In addition, rounding the hours can mess up the triangles.
+But the triangle inequality still exists given these potential issues.
+---++!! 2b
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |   |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+a->e->c->f->d->b
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |    |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+This is when you start off with vertex a
+
+a->e->c->f->d->b
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+http://en.wikipedia.org/wiki/Kruskal%27s_algorithm
+
+KRUSKAL(G):
+ A = NULL;
+ for each v in G.V:
+    MAKE-SET(v)
+ foreach (u, v) ordered by weight(u, v), increasing:
+    if FIND-SET(u) not equal FIND-SET(v):
+       A = A union {(u, v)}
+       UNION(u, v)
+ return A
+
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+Prim's algorithm is found to run faster in dense graphs with more number of edges than vertices, 
+whereas Kruskal's algorithm is found to run faster in sparse graphs.
+It does depend on the circumstances of the graph give, but since one of the parameters
+is that the weight is less than 100, one could say that's not too dense.
+Therefore, Kruskal's approach could work in this scenario.
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+T is a MST. This algorithm is the opposite to the Kruskal's algorithm. 
+We assume to separate G into two parts: V1 and V2, then Kruskal's algorithm is based on the fact that the smallest weight edge connecting V1 and V2 must be in T. 
+The Kruskal's algorithm is to find that smallest edge and put it into T, 
+and now this algorithm is to delete those edges which are not smallest and until only the smallest one is left. 
+So actually they are equivalent. Both of them use the Bridge property. Thus T is a MST.
+Sorting the edges takes &#920;(ElogE); We use DFS or BFS to check the connection which takes &#920;(E+V); 
+Since we have E edges, so in total it will be &#920;(ElogE+E(E+V))=&#920;(E^2). 
+</VERBATIM>
+---++!! b
+<VERBATIM>
+T is not a MST. Arbitrarily selecting edges has no way to guarantee the minimum weight.
+The most efficient way to do this problem is using the disjoint set data structure. 
+For disjoint set data structure, the optimal way is to use disjoint set forest with both "union by rank" and "path compression", 
+in which we will have V make-set, E find-set, and V union-set. So the total running time is O((E+V)alpha(V)), alpha() is the inverse Ackermann function.
+Note: If for disjoint set data structure you use Weighted-union heuristic linked list, you will have a running time as O(E+V+VlogV), 
+which is generally not better than to use disjoint set forest with both "union by rank" and "path compression", which is almost optimal. 
+</VERBATIM>
+---++!! c
+<VERBATIM>
+T is a MST. It's the same as case a -- using Bridge property. 
+We still separate G into two parts: V1 and V2, if there is a cycle connecting V1 and V2, 
+we delete the maximum-weight edge and the smallest one will be left. So this is also equivalent to the Kruskal's algorithm.
+Because each time there is at most one cycle, so Ei <= V, Ei is the number of edges in tree T in the ith iteration. 
+Use DFS or BFS to check the cycle takes Big Theta(Ei+V).
+finding the maximum-weight edge on c (We can record the cycle when we use DFS or BFS to travel through T) takes O(Ei);
+and there are E loops(E edges in G), so the total time is O(E(Ei+V+Ei))=O(EV) 
+</VERBATIM>
+
+---++!! Grader comments *[20/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+Since each piece of string has a length of 5, you can represent
+a eulerian graph given that the edges are the pieces of 5 strings.
+The vertices can represent the overlap that each connected edge
+has with the graph. You can then apply the Eulerian cycle and go
+through all the edges and from each vertex you can construct
+your main string.
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+Reading, after a certain age, diverts the mind too much from its creative pursuits.
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <vector>
+#include <map>
+#include <set>
+#include <queue>
+#include <list>
+#include <cmath>
+#include <cstdio>
+#include <cstdlib>
+#include <sstream>
+#include <fstream>
+#include <ctime>
+#include <windows.h>
+
+#define BUFSIZE 1024
+
+using namespace std;
+
+void mkSPtable(const char* pattern, int *SPtable, int m)
+{
+	int i, k;
+
+	k = -1;
+	SPtable[0] = -1;
+
+	for (i = 1; i<m - 1; i++)
+	{
+		while (k >= 0 && pattern[k + 1] != pattern[i])
+		{
+			k = SPtable[k];
+		}
+
+		if (pattern[k + 1] == pattern[i])
+		{
+			k++;
+		}
+		SPtable[i] = k;
+	}
+}
+
+int kmp(const char* text, const char* pattern, int n, int m)
+{
+	int SPtable[BUFSIZE];
+	int i, j;
+
+	mkSPtable(pattern, SPtable, m);
+
+	j = -1;
+
+	for (i = 0; i <= n - 1; i++)
+	{
+		while (j >= 0 && pattern[j + 1] != text[i])
+		{
+			j = SPtable[j];
+		}
+
+		if (pattern[j + 1] == text[i])
+		{
+			j++;
+		}
+
+		if (j == m - 1)
+		{
+			return 1;
+		}
+	}
+
+	return 0;
+}
+
+int main()
+{
+	srand(time(0));
+	vector<string> v;
+
+	ofstream output;
+	ifstream input;
+	string in;
+	output.open(".output.txt");
+	input.open("manual.txt");
+	while (!input.eof()){
+		input >> in;
+		v.push_back(in);
+	}
+	v.pop_back();
+
+	int sz = v[0].size();
+
+	char tmp1[100];
+	char tmp2[100];
+
+	for (int i = sz; i>0; i--)
+	{
+		for (int Cur = 0; Cur<v.size(); Cur++)
+		{
+			for (int j = Cur + 1; j<v.size(); j++)
+			{
+				if (kmp(v[Cur].substr(0, i).c_str(), v[j].substr(sz - i, i).c_str(), i, i))
+				{
+					v[Cur] = v[j].substr(0, sz - i) + v[Cur];
+					v.erase(v.begin() + j);
+					output << i << ": Left comb" << endl;
+					Cur--;
+					break;
+				}
+				if (kmp(v[Cur].substr(v[Cur].size() - i, i).c_str(), v[j].substr(0, i).c_str(), i, i))
+				{
+					v[Cur] = v[Cur] + v[j].substr(i, v[j].size() - i);
+					v.erase(v.begin() + j);
+					output << i << " right comb " << endl;
+					Cur--;
+					break;
+				}
+			}
+		}
+	}
+	output << "v.size() :  " << v.size() << endl;
+	output << "======================" << endl;
+
+	output << v[0] << endl;
+}
+
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+You can do something a little similar from
+when you have the same substring length.
+The main difference is that there will be 
+several more edges and vertices involved,
+and the size of the vertices will vary depending
+on the overlap. 
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+Continue to use the same idea from part(b)
+You are just working with data which will more
+likely lead to to false results.
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+If you can define the errors, then filter them out
+Then use the same idea from part(b)
+</VERBATIM>
+
+
+---+++!! Grader comments
+<VERBATIM>Question 4 Results:
+
+Total Grade: 18
+
+	10        		
+	5         		
+	3         		more explanation
+
+
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+You can find my work in the attached files.
+I did use visual studio to do this, and I used a tuple.
+Tuples are not in g++, so my code will work in VS
+I basically did a greedy algorithm, and I went through
+all the edges and found the shortest distances. 
+I made sure that there was no repeat.
+After running through the loop, two cities were missing
+so the program just added them into my cycle.
+After that, I made another path from the end to the
+original city.
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle
+
+
+---+++!! Grader comments
+<VERBATIM>Question 5 Results:
+
+Total Grade: 18
+
+	13        		Grades from submission
+	5         		
+
+
+</VERBATIM>
+

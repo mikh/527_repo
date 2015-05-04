@@ -1,0 +1,174 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  | <latex>\theta (nlog^{2}(n))</latex> |
+|  c  | <latex>\theta (log(n))</latex> |
+|  d  | <latex>O (nlog(n))</latex> |
+---++ Explanation
+<VERBATIM>
+Provide explanation for partial credits
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  | 56 |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  | 8 |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  | 37 |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  | 3 |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  | 42 |
+
+Does this graph exhibit the triangle inequality? 
+
+this graph does exhibit the triangle inequality
+---++!! 2b
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |    |
+|  b  |  Chichen Itza, Yuc., Mexico  |    |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |    |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |    |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |    |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |    |
+
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  | Photonics (0) |
+|  b  |  Chichen Itza, Yuc., Mexico  | Photonics, Statue of Liberty, Toronto, Vegas, San Juan, Mexico (81-or-85) |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  | Photonics, Statue of Liberty, Toronto (8-or-10) |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  | Photonics, Statue of Liberty, Toronto, Vegas, San Juan (66-or-70)  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  | Photonics, Statue of Liberty (3) |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  | Photonics, Statue of Liberty, Toronto, Vegas (37-or-41) |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+Describe your algorithm here. Pseudocode is preferred.
+
+Input: A connected graph G whose edges have distinct weights
+  Initialize a forest T to be a set of one-vertex trees, one for each vertex of the graph.
+  While T has more than one component:
+  {
+    For each component C of T:
+    {
+      Begin with an empty set of edges S
+      For each vertex v in C:
+      {
+        Find the cheapest edge from v to a vertex outside of C, and add it to S
+      }
+      Add the cheapest edge in S to T
+     }
+    }
+  Output: T is the minimum spanning tree of G.
+
+
+- http://en.wikipedia.org/wiki/Bor%C5%AFvka%27s_algorithm
+</VERBATIM>
+  
+---+++!! Analysis
+<VERBATIM>
+Descrbie and analyze your algorithm.
+
+This algorithm is called Boruvka's algorithm and should run in O(Elog(v)) time, and with trees that have small weight edges (such as this one) it could run in linear time. Finding the cheapest edge for a vertex is done in O(E) time, and the outer loop will take up to log(v) time.
+
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+Counterexample or Running time
+
+This works running in O(Elog(V)+V(E+V)) time.  The first term is from the sorting of the edges and the second term is from the DFS used in line 4.
+</VERBATIM>
+---++!! b
+<VERBATIM>
+Counterexample or Running time
+
+
+    A
+   /  \
+ 5/    \90
+ /      \
+D        B
+ \      /
+ 4\    /6
+   \  /
+    C
+
+
+</VERBATIM>
+---++!! c
+<VERBATIM>
+Counterexample or Running time
+
+This algorithm runs in O(VE) time. E due to the for loop and V because of the searching as to whether or not T has cycle c.
+</VERBATIM>
+
+---++!! Grader comments *[20/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+Describe and analyze the algorithm.
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+Provide your result here.
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+// paste your code here
+
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+Describe and analyze the modification
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle

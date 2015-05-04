@@ -1,0 +1,326 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |    |
+|  c  |  O((n^2)log(n)).  |
+|  d  |  O((n^3)log(n)).  |
+
+
+---++ Explanation
+<VERBATIM>
+
+Need to insert log(n) copies of n numbers = nlog(n) elements to insert for all three methods. Insertion time for a binary search tree is O(n^2) (i.e. worst case is you insert a series of increasing elements that form a single chain to the right; for large enough number of elements you need to traverse an almost equal number of nodes, so time complexity is O(n^2)). Thus, overall time to insert nlog(n) elements into a binary search tree is O((n^3)log(n)). 
+
+B: Alternate storing repeated values on left/right. For nlog(n) repeated values, worst case is height grows by lg(number of repeated inserts) = lg((n-1)log(n)). 
+
+C: Assuming list is a linked list, insertion time in a LL is O(n). If inserting log(n) copies into a list, time becomes O(nlog(n)) to insert all numbers into the list. However, doing it for n different numbers makes time O((n^2)log(n)).
+
+D: Randomly storing repeated values on left or right. Worst case, all values go on same side (i.e. left or right). Thus, the time complexity is similar to inserting a continuously increasing or decreasing series of nlog(n) numbers that form a single chain left or right. Therefore, time complexity is O((n^3)log(n)).
+
+
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  56 hours  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  9 hours  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  | 43 hours  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4 hours  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  40 hours  |
+
+Does this graph exhibit the triangle inequality? 
+
+YES
+---++!! 2b
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |    |
+|  b  |  Chichen Itza, Yuc., Mexico  |  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |    |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |    |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |    |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |    |
+
+
+Edges in order selected by Kruskal's Algorithm:
+
+
+PHO-SOL with length 4
+
+SOL-CN with length 8
+
+POS-CI with length 16
+
+POS-MB with length 29
+
+MB-SOL with length 37
+
+
+
+
+Abbreviations:
+
+PHO: Photonics
+
+SoL: Statue of Liberty
+
+CI: Chichen Itza
+
+CN: CN Tower
+
+PoS: Pyramid of the Sun
+
+MB: Mandalay Bay
+
+
+
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  a  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+Assumes graph is:
+1: Undirected.
+2: Represented by adjacency matrix with cross points = weights of edges between vertices.
+
+void generate_mst()
+    
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+Descrbie and analyze your algorithm.
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+Theta(E). Need to check every edge to make sure it forms a MST.
+</VERBATIM>
+---++!! b
+<VERBATIM>
+Representation of graph given as adjacency matrix:
+
+   A  B  C  D
+A  0  1  1  5
+B  1  0  0  1
+C  1  0  0  1
+D  5  1  1  0
+
+Because Maybe-MST-B adds edges in arbitrary order, it could select {A,D}, {A,B}, {A,C} with weights 5, 1, 1 instead of {A,B}, {B, D}, {A,C} with weights of 1, 1, 1.
+</VERBATIM>
+---++!! c
+<VERBATIM>
+Running time Theta(E).
+</VERBATIM>
+
+---++!! Grader comments *[16/20]*
+<VERBATIM>
+First running time is O(E^2); last is O(E(V+E)).
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+The algorithm treats each 5-character read as an edge with the start vertex as the prefix (first four letters of the read) and the end vertex as the suffix (last four characters of the read). Edges are encoded in an edge list, and the vertices are constructed simply by omitting either the first or last character of the read. A separate map of vertices to IDs is constructed so each vertex receives a unique ID. The algorithm then identifies the degree of each vertex, and then identifies the vertex with degree of 1 and who's only reference in the edge list is as a starting vertex; this is the start of the sentence. The algorithm then constructs the sentence by walking an Eulerian path, removing edges from the edge list as it does so and adding the last character of the suffix vertex to the output string each time. It then returns the final string constructed from the reads.
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+In order that every man present his views without penalty there must be spirit of tolerance in the entire population.
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+#include <iostream>
+#include <fstream>
+#include <utility>
+#include <vector>
+#include <map>
+#include <string>
+
+#define READS_FILE "reads2.txt"
+#define READ_LENGTH 8
+
+/*
+    NOTE: This DOES NOT work for the read provided.
+    That is, it works up until a point; because the reads [ ther] and [ the ] both result in a node [ the], 
+        that node is visited more than once. Thus, there are two edges with a start vertex of [ the], and 
+        in the case of reads2.txt the algorithm selects the incorrect one to continue with, leading to an infinite loop. 
+    The sentence was only identified by uncommenting the "cout << output << endl;" line within the while() loop and pausing 
+        execution after several seconds; while it found the correct start of the quote it could not continue, 
+        and Google had to be used to identify the rest of the quotation.
+*/
+
+using namespace std;
+
+string extractEdge(string prefix, string suffix) {
+    string edge_str;
+    edge_str += prefix[0];  //first letter of prefix + rest of suffix form edge/read
+    edge_str += suffix;
+    return edge_str;
+}
+
+int main() {
+    /************CONSTRUCT GRAPH FROM FILE************/
+    string whole_file, prefix, suffix, line;        //input line and prefix/suffix
+    vector<pair<string,string> > edge_list;             //edge list
+    map<string, int> vertex_list;       //vertex list
+    int vertex_count = 0;
+
+    ifstream file(READS_FILE);
+    if (file.is_open()) {
+        getline(file, whole_file);     //reads are space-delimited, so grab entire line.
+    }
+    file.close();
+
+    //each read is "[xxxxx] ", eight characters in total. However, we only care about the 1-5 characters.
+
+    int file_size = whole_file.size();
+
+    for (int ii = 0; ii < file_size; ii+=8) {
+        for (int jj = ii; jj < ii + 8; jj++) {  //add each read to line
+            line += whole_file[jj];         
+        }
+        for (int kk = 1; kk < 6; kk++) {        //extract prefix and suffix from each line
+            if (kk > 1) suffix += line[kk];         //suffix = 2-5
+            if (kk < 5) prefix += line[kk];         //prefix = 1-4
+        }
+
+        edge_list.push_back(pair<string,string>(prefix, suffix));      //each read/edge is encoded in the edge list
+
+        if (vertex_list.count(prefix) == false) {
+            vertex_list.insert(pair<string,int>(prefix, vertex_count));
+            vertex_count++;
+        }
+        if (vertex_list.count(suffix) == false) {
+            vertex_list.insert(pair<string,int>(suffix, vertex_count));
+            vertex_count++;
+        }
+
+
+        line.clear();                              //erase for next time
+        prefix.clear();
+        suffix.clear();
+    }
+
+
+    int* vertex_degree = new int[vertex_count];     //each index represents the degree of a vertex
+    for (int ii = 0; ii < vertex_count; ii++) {     //initialize to zero
+        vertex_degree[ii] = 0;
+    }
+
+    string start, end;
+    map<string,int>::iterator start_vertex, end_vertex;
+    vector<pair<string,string> >::iterator edge_iter = edge_list.begin();
+    for (edge_iter = edge_list.begin(); edge_iter != edge_list.end(); edge_iter++) {    //calculate degrees of vertices
+        start = (*edge_iter).first;                 //identify prefix/suffix vertices fo each edge
+        end = (*edge_iter).second;
+        start_vertex = vertex_list.find(start);     //extract prefix/suffix vertex ID's/indices
+        end_vertex = vertex_list.find(end);
+        vertex_degree[(*start_vertex).second] += 1; //add one to degree count of each vertex
+        vertex_degree[(*end_vertex).second] += 1;
+
+        start.clear();                              //clear strings for next time
+        end.clear();
+    }
+
+ 
+    //find vertex that:
+        //1: Has degree of 1 (meaning it's the start or end)
+        //2: Is a prefix (meaning it's only the start)
+
+    string path_start;
+    map<string,int>::iterator one_degree_vertex;
+    for (int ii = 0; ii < vertex_count; ii++) {
+        if (vertex_degree[ii] == 1) {                                                              //degree = 1, so only one edge
+            for (edge_iter = edge_list.begin(); edge_iter != edge_list.end(); edge_iter++) {        //however, TWO vertices have degree 1: the start and the stop. Need to check edge list starts
+                one_degree_vertex = vertex_list.find((*edge_iter).first);                               //find pointer to <vertex, ID> where vertex is the start of the edge
+                if ((*one_degree_vertex).second == ii) {
+                    path_start = (*edge_iter).first;
+                }   //end if
+            }   //end for
+        }   //end if
+    }   //end for
+
+    string output, next_start = path_start;
+    output += path_start;
+    pair<string,string> curr_edge;
+    while (!edge_list.empty()) {                                                            //while there are still edges to add
+        for (edge_iter = edge_list.begin(); edge_iter != edge_list.end(); edge_iter++) {
+            if ((*edge_iter).first == next_start) {                                         //find edge that has a matching start
+                curr_edge = (*edge_iter);   //pull matching edge (pair of vertices) out
+                start = curr_edge.first;
+                end = curr_edge.second;
+                edge_list.erase(edge_iter); //remove edge; it's been walked already and can't be used again
+                break;                      //no need to check other edges; it's been found
+            }
+        }
+        output += end[end.size() - 1];
+        //cout << output << endl;
+        next_start = curr_edge.second;                                  //search for edge from current suffix / next prefix
+    }
+    
+    cout << output << endl;
+
+}
+
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+Simply reduce longer reads to multiple shorter ones. I.e. if the shortest read is 2 characters (assuming one character is not a valid read), and a read of length 5 is encountered split the 5-char read into multiple 2-char reads.
+
+EX: read = "abcde" --> Split into "ab", "bc", "cd", "de"
+
+Algorithm will then work with 2-character reads.
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle

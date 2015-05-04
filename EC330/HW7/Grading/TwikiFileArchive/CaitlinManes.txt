@@ -1,0 +1,848 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+---++_Sources:_
+   * _Introduction to Programming with C++_ 2nd edition by Y. Daniel Liang
+   * http://www.cplusplus.com/reference/string/string/
+   * http://www.cplusplus.com/reference/vector/vector/
+   * http://www.cplusplus.com/reference/string/stoi/
+   * http://bytes.com/topic/c/answers/954092-whats-wrong-program
+   * http://stackoverflow.com/questions/7663709/convert-string-to-int-c
+   * http://www.cplusplus.com/reference/set/set/
+   * http://www.cplusplus.com/reference/utility/pair/
+   * http://www.cplusplus.com/reference/utility/pair/pair/
+   * http://www.cplusplus.com/reference/map/map/
+   * http://stackoverflow.com/questions/7307830/error-void-value-not-ignored-as-it-ought-to-be
+   * _Introduction to Algorithms_ 3rd Edition (Course Textbook)
+   * http://stackoverflow.com/questions/22416360/how-to-insert-data-into-mapstring-setstring-c
+   * http://mathworld.wolfram.com/EulerianCycle.html
+   * http://mathworld.wolfram.com/AdjacencyMatrix.html
+   * http://www.mathopenref.com/triangleinequality.html
+   * https://www.youtube.com/watch?v=71UQH7Pr9kU (Kruskal's Algorithm)
+   * https://www.youtube.com/watch?v=cplfcGZmX7I (Prim's Algorithm)
+   * https://algorithmics.bu.edu/twiki/bin/view/EC330/LectureSixteenA2
+   * http://www.cplusplus.com/reference/cstdlib/atof/
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  log(n) * n  |
+|  c  |  n  |
+|  d  |  log(n) * n  |
+---++ Explanation
+<VERBATIM>
+(b) I am assuming that if x.b = true use x.left, and if x.b = false use x.right.
+     Also, I am assuming the x.b is false initially.
+     I started with the case n = 10^2. This means that I insert two 1's, two 2's, two 3's, etc.
+     I inserted the first 1 and set x.b to false. I then inserted the second 1 to the right and set x.b to true.
+     Following this pattern, I inserted my next two 2's. Each was inserted into the rightmost position in the tree.
+     If all the keys 1...10^2 are inserted, the tree height will be log(10^2) * 10^2 = 2 * 10^2 = 200 when all the keys
+     are inserted. The last insert time will be 200. It is the worst case insert time of log(n) * n.
+
+(c) I am assuming the list at each node is a linked list.
+     If a list of nodes with equal keys at x is kept, then adding repeat keys will not affect the height.
+     If they don't affect the height, then they won't affect the insert time other than at the node where the key is being inserted.
+     For example, if n = 10^2, inserting two 1's, two 2's, and two 3's will given me a tree of height 3 since each key is inserted
+     in the rightmost position of the tree. Inserting the second 3 will be 3 + 1 = 4. If this pattern is continued all the way up to n,
+     then the height will be n. The worst case of inserting will then be (log(n) - 1) + n. n for how many keys the last key will have
+     to traverse, and (log(n) - 1) for how many keys will already be in the list.
+
+(d) I am assuming that each node randomly sets x to x.right.
+     If each x inserts keys with the same value to the right, then the height will grow to be log(n) * n since each key inserted is
+     equal to x or greater. Each key will be inserted into the rightmost position.
+
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  57.00  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  7.98  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  41.00  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  3.45  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  38.00  |
+
+Does this graph exhibit the triangle inequality? 
+
+Yes, every side of a given triangle in the graph is always shorter than the sum of the other two sides.
+---++!! 2b
+|  Index  |  Location   |  Vertex Connected To  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  e  |
+|  b  |  Chichen Itza, Yuc., Mexico  |    |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  f  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  b  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  c  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  d  |
+
+Minimum Spanning Tree looks like:
+
+Photonics---Statue of LIberty---CN Tower---Mandalay Bay---Pyramid of the Sun---Chichen Itza
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  0  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  16.1  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  7.45  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  28  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  3.45  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  31  |
+
+
+Minimum Spanning Tree for the graph looks like:
+
+Photonics Center---Statue of Liberty---CN Tower---Mandalay Bay---Pyramid of the Sun---Chichen Itza
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+Describe your algorithm here. Pseudocode is preferred.
+
+I would use Kruskal's algorithm since the running time is E * log E.
+
+Kruskal's Algorithm:
+
+make-set(x): makes components containing only x
+union(x): pin components containing x to y
+find-set(x): return representative of x
+
+Kruskal:
+	sort all edges
+	make-set(v) for each v belongs to V
+	for each edge e(u->v):
+		if find-set(u) != find-set(v):
+			union(u,v)
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+</VERBATIM>
+
+Running time union: &#920;(E log E) + &#920;(V log V) + &#920;(E) = &#920;(E log E)
+
+     sort: &#920;(E log E)
+
+     make-set: &#920;(1)
+
+     find-set: &#920;(1)
+
+     union: &#920;(log V)
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+This algorithm always produces a minimum spanning tree.
+It takes E time to sort the edges into nonincreasing order or edge weights.
+It then takes E time to go through each edge and subtract it from the graph.
+Letting e represent the edge number currently on in the loop, it will take E-(#number of edges removed) time to see if the graph is still connected.
+</VERBATIM>
+
+Total complexity will be E best case. (Starting tree has only one node.)
+
+Total complexity will bee <latex>E^2</latex> worst case. (Graph is already a minimum spanning tree.)
+---++!! b
+<VERBATIM>
+This algorithm does not always produce a minimum spanning tree.
+Take this tree:
+
+a   c-----e---g
+ \ /  \  /   /
+  b----d----f
+
+where the weights are:
+a-b = 5, b-c = 4, b-d = 3, c-d = -2, c-e = 6, d-e = 5, d-f = 86, e-g = 9, and f-g = 11.
+
+Since each edge is added in arbitrary order, the edge d-f can be added first since it does not create a cycle in T.
+Other edges that don't create a cycle can then be added.
+A possible tree given by the algorithm could be:
+
+a   c     e---g
+ \ /  \  /
+  b    d----f
+
+This graph has the edge with 86 in it, making for this to not be a minimum spanning tree for the original graph.
+
+</VERBATIM>
+---++!! c
+<VERBATIM>
+This algorithm always produces a minimum spanning tree.
+The outer for loop takes E time since it iterates over all the edges.
+Each edge is added and a cycle is checked for. Checking for the cycle will take (# number of edges in T) time.
+This will be 1 + 2 + 3 + ... + E total time for the algorithm.
+</VERBATIM>
+
+Total complexity will be <latex>\sum_{k=1}^{E}k = \Theta(E^2)</latex> time.
+---++!! Grader comments *[20/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+All complexities are worst case.
+
+Adding words to graph:
+(1) Algorithm adds all words from file to words vector. Takes V^2 time.
+(2) For each word in words vector, a word is searched for that matches the 4 letter prefix or the 4 letter suffix of a current edge.
+     All edges are searched. This takes E time. (V^2*E for step 1 and 2)
+(3) If a match was found for either or both while searching, the loop searching through the vertices is broken and an edge is added.
+(4) At this point all the edges have been added for each word.
+
+Finding path:
+(5) The start id is found (a vertex that has no edges going to it). All the vertices are searched until one is found. This takes VE time.
+(6) Each vertex is color white. Takes V time.
+(7) dfsVisit() is called on the start vertex, then on all the vertices. Takes V + 1 time.
+(8) In dfsVisit(), the vertex colored grey.
+(9) All the neighbors for that vertex are iterated through. This takes E time.
+(10) If there is more than neighbor, a check is done to see how many of those neighbors have been visited. This takes the individual
+       vertex's edge time (e).
+(11) If at least one of the neighbors has not been visited, all the vertex's edges are iterated through. This takes e time.
+(12) If there is more than one neighbor, each neighbor is iterated through and has doesPathReturn() called on it until doesPathReturn() returns true.
+       This takes e time.
+(13) dfsVisit() is then called on either the original vertex or the chosen vertex.
+(14) When dfsVisit() terminates, the vertex is pushed onto a stack and the vertex is colored black.
+(15) In doesPathReturn() the path is followed until either the path returns or until a vertex is encountered that has to edges leaving it. This takes E time.
+(16) When dfsVisit() returns, all the the vertices on the stack are popped. This takes V time.
+
+Getting Quote:
+(17) The vertices in the path are used to find the quote. This takes V time.
+
+For complexity's, I'm assuming e is small enough to not be considered.
+
+Complexity for adding words to graph is: V^2 * E.
+Complexity for finding path is: VE + V*E^2 + V.
+Complexity for getting quote is: V.
+Total Complexity: O(V^2*E + VE + V*E^2 + 2V).
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+In order that every man present his views without penalty there must be spirit of tolerance in the entire population.
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+#ifndef GRAPH
+#define GRAPH
+
+#include <set>
+#include <map>
+#include <sstream>
+#include <string>
+#include <iterator>
+#include <vector>
+#include <stack>
+
+using namespace std;
+
+/** Type definitions to make life easier. */
+typedef pair<int, int> directedEdge;
+typedef set<int>::iterator vertexIterator;
+
+class Graph {
+	/**
+	* Implements a directed, unweighted graph, where vertices can have color.
+	*/
+public:
+    
+    // CONSTRUCTORS
+	/**
+	* Constructs a graph with no edges or vertices.
+	*/
+	Graph();
+
+    // SETTERS
+	/**
+	* Adds a vertex to the graph with color <color>.
+	* @param color The color of the added vertex.
+	* @return The ID of the vertex that was added.
+	*/
+	int addVertex(int color);
+
+	/**
+	* Adds the given edge to the graph.
+  * @param newEdge An edge to add to the graph.
+	* @require the vertices of <newEdge> must currently exist in the graph.
+	*/
+	void addEdge(directedEdge newEdge, string str);
+
+    // GETTERS
+
+	/**
+	* @param vertex the vertex whose color is of interest.
+	* @require the vertex <vertex> must currently exist in the graph.
+	* @return the color of vertex <vertex>.
+	*/
+	int getColor(int vertex);
+
+	/**
+	* @return true iff there is an edge in the graph with the same vertices as newEdge
+	*/
+	bool isEdge(directedEdge newEdge);
+	
+	/**
+	* @param edge to get value of
+	* @return string edge value for edge
+	* @require edge must currently exist in the graph
+	**/
+	string getEdgeValue(directedEdge edge);
+	
+	/**
+	* @return set of edges currently in graph
+	**/
+	set<directedEdge> getEdges();
+	
+	/**
+	* @return start of directed graph
+	* @require there must be one vertice with in_degree equal to 0
+	**/
+	int getStartId();
+	
+	/**
+	* @param min index to start looking at in list
+	* @return vertex with no edge going to it that is not the same vertex
+	* @require vertex must exist in noEdgeToVertex set
+	**/
+	int getFromVert(int to, int same);
+	
+	/**
+	* @param min index to start looking at in list
+	* @return vertex with no edge going to it that is not the same vertex
+	* @require vertex must exist in noEdgeToVertex set
+	**/
+	int getToVert(int from, int same);	
+	
+	/**
+	* @param vertex to color and color
+	* @require vertex exists in graph
+	**/
+	void colorVertex(int vertex, int color);	
+	
+	/**
+	* @param vector of ints to store path in
+	**/
+	void getEulerianPath( vector<int> &verts);
+	
+	/**
+	* @param vertex to visit
+	**/
+	void dfsVisit(int vertex);
+	
+	/**
+	* @param vertex leaving from and vertex going to
+	* @return boolean value telling if vertex returns or not
+	**/
+	bool doesPathReturn(int from, int to);
+	    
+    /**
+    * Returns a string representing a human-readable version of the adjacency list of the graph.
+    * Format is:  vertex [color]: adjacent_vertex_1 adjacent_vertex_2 ...
+     */
+	string print();
+
+private:
+	set<int> vertices;         /** The set of vertices of the graph. */
+	set< directedEdge > edges; /** A set of edges of the graph. */
+	map< int, int > colors;    /** A mapping between vertices in and their colors. */
+	map< directedEdge, string > edgeValues;		// string value for a directed edge
+	set<int> unusedFrom;				// vertices with out degree of 0
+	set<int> unusedTo;					// vertices with in degree of 0
+	map<int, int> in_degrees;			// the number of in degrees at a vertex
+	map<int, int> out_degrees;			// the number of out degrees at a vertex
+	int white;							// variable for white color
+	int grey;							// variable for grey color
+	int black;							// variable for black color
+	map<int, set<int> > adj_list;		// set of vertices that a given vertex maps to
+	stack<int> stack_verts;				// used to keep track of vertices in getEulerPath()
+	set<int> verts_taken;				// used to keep track of verts_taken in dfsVisit()
+};
+
+#endif
+
+#include "Graph.h"
+
+using namespace std;
+
+Graph::Graph() {
+	// set color values for finding eulerian path
+	int white = 0;
+	int grey = 1;
+	int black = 2;
+}
+
+/**
+* Adds a vertex to the graph with color <color>.
+* @param color The color of the added vertex.
+* @return The ID of the vertex that was added.
+*/
+int Graph::addVertex(int color) {
+    int new_vertex;
+    if (vertices.empty()) {         // start at 0 if vertex is empty
+        new_vertex = 0;
+    } else {                                       // make new vertex current max + 1
+        new_vertex = *(--vertices.end()) + 1;
+    }
+    
+    vertices.insert(new_vertex);                // insert new vertex
+    colors.insert(map<int, int>::value_type(new_vertex, color));    // insert vertex and color into map
+    unusedTo.insert(new_vertex);				// insert new vertex as having in degree of 0
+    unusedFrom.insert(new_vertex);				// insert new vertex as having out degree of 0
+    in_degrees.insert(pair<int, int>(new_vertex, 0));	// insert new vertex as having in degree of 0
+    out_degrees.insert(pair<int, int>(new_vertex, 0));	// insert new vertex as having out degree of 0
+    
+    return new_vertex;
+}
+
+/**
+* Adds the given edge to the graph.
+* @param newEdge An edge to add to the graph.
+* @require the vertices of <newEdge> must currently exist in the graph.
+*/
+void Graph::addEdge(directedEdge newEdge, string str) {
+    edges.insert(newEdge);      // insert newEdge
+    edgeValues.insert(pair<directedEdge, string>(newEdge, str));	// insert edge value
+    in_degrees[newEdge.second]++;		// increase number of in degrees for to vertex
+    out_degrees[newEdge.first]++;		// increase number of out degrees for from vertex
+    
+    // add edge for vertex to adjacency list
+    if (adj_list.find(newEdge.first) != adj_list.end()) {
+    	set<int> temp = adj_list[newEdge.first];
+    	temp.insert(newEdge.second);
+		adj_list[newEdge.first] = temp;
+	} else {
+		adj_list[newEdge.first].insert(newEdge.second);
+	}
+	
+	// remove from and to vertices from unused from and unused to sets
+    set<int>::iterator iter = unusedFrom.find(newEdge.first);
+    if (iter != unusedFrom.end()) {
+		unusedFrom.erase(iter);
+	}
+	iter = unusedTo.find(newEdge.second);
+	if (iter != unusedTo.end()) {
+		unusedTo.erase(iter);
+	}
+	
+}
+
+/**
+* @param vertex the vertex whose color is of interest.
+* @require the vertex <vertex> must currently exist in the graph.
+* @return the color of vertex <vertex>.
+*/
+int Graph::getColor(int vertex) {
+    return colors[vertex];  // get color for given vertex
+}
+
+/**
+* @return true iff there is an edge in the graph with the same vertices as newEdge
+*/
+bool Graph::isEdge(directedEdge newEdge) {
+    set< directedEdge >::iterator iter = edges.find(newEdge);  // look for edge
+    if (iter == edges.end()) {      // return false if iter points to end
+        return false;
+    }
+    return true;
+}
+
+/**
+* @param edge to get value of
+* @return string edge value for edge
+* @require edge must currently exist in the graph
+**/
+string Graph::getEdgeValue(directedEdge edge) {
+	// return empty string if edge does not exist
+	if (edgeValues.find(edge) == edgeValues.end()) {
+		return "";
+	}
+	// else return edge value
+	return edgeValues[edge];
+}
+
+/**
+* @return set of edges currently in graph
+**/
+set<directedEdge> Graph::getEdges() {
+	return edges;
+}
+
+/**
+* @return start of directed graph
+* @require there must be one vertice with in_degree equal to 0
+**/
+int Graph::getStartId() {
+
+	int start_id = 0;
+	bool is_start;
+	
+	for (vertexIterator xx = vertices.begin(); xx != vertices.end(); xx++) {
+		is_start = true;
+		for (set< directedEdge >::iterator yy = edges.begin(); yy != edges.end(); yy++ ) {
+			int to = yy->second;
+			if (to == *xx) {		// vertex is mapped to so *xx is not the start id
+				is_start = false;
+			}
+		}
+		// if is_start then to vertices mapped to current vertex so it is the start
+		if (is_start) {
+			start_id = *xx;
+			break;
+		}
+	}
+	return start_id;
+}
+
+/**
+* @param min index to start looking at in list
+* @return vertex with no edge going to it that is not the same vertex
+* @require vertex must exist in graph
+**/
+int Graph::getFromVert(int to, int same) {
+
+	set<int>::iterator vert = unusedFrom.begin();
+	for (set<int>::iterator xx = unusedFrom.begin(); xx != unusedFrom.end(); xx++) {
+		// vertex is good if vertex is in unusedTo and is not the same or to vertex
+		if (*xx != to && *xx != same && unusedTo.find(*xx) != unusedTo.end()) {
+			vert = xx;
+			break;
+		}
+	}
+	
+	return *vert;
+}
+
+/**
+* @param min index to start looking at in list
+* @return vertex with no edge going to it that is not the same vertex
+* @require vertex must exist in graph
+**/
+int Graph::getToVert(int from, int same) {
+	set<int>::iterator vert = unusedTo.begin();
+	for (set<int>::iterator xx = unusedTo.begin(); xx != unusedTo.end(); xx++) {
+		// vertex is good if vertex is in unusedFrom and is not the same or to vertex
+		if (*xx != from && *xx != same && unusedFrom.find(*xx) != unusedFrom.end()) {
+			vert = xx;
+			break;
+		}
+	}
+	return *vert;
+}
+
+/**
+* @param vertex to color and color
+* @require vertex exists in graph
+**/
+void Graph::colorVertex(int vertex, int color) {
+	colors[vertex] = color;
+}
+
+/**
+* @param vector of ints to store path in
+**/
+void Graph::getEulerianPath(vector<int> &verts) {
+	int start_id = getStartId();	// get start id for path
+	
+	// color all vertices white
+	for (vertexIterator xx = vertices.begin(); xx != vertices.end(); xx++) {
+		colorVertex(*xx, white);
+	}
+	
+	// call dfsVisit on start id
+	dfsVisit(start_id);
+	
+	// call dfsVisit on all remaining vertices
+	for (vertexIterator xx = vertices.begin(); xx != vertices.end(); xx++) {
+		if (getColor(*xx) == white) {
+			dfsVisit(*xx);
+		}
+	}
+	
+	int stack_size = stack_verts.size();	// get starting stack size
+	
+	// pop all vertices from stack_vert and add to verts vector
+	for (int xx = 0; xx < stack_size; xx++) {
+		verts.push_back(stack_verts.top());
+		stack_verts.pop();
+	}
+	
+	// clear verts_taken since it is added to in dfsVisit (makes it so that getEulerPath can be called again and still work
+	verts_taken.clear();
+}
+
+/**
+* @param vertex to visit
+**/
+void Graph::dfsVisit(int vertex) {
+	colorVertex(vertex, grey);	// color current vertex grey
+	int vert_to_visit;			// variable to hold next vertex to visit
+	
+	if (adj_list.find(vertex) != adj_list.end()) {		// see if vertex has edges to other vertices
+		set<int> edge_list = adj_list[vertex];			// get list of to vertices from adjacency list
+		
+		// check that if multiple edges, they haven't already been visited
+		int verts_used = edge_list.size();				
+		if (verts_used > 1) {
+			for(set<int>::iterator yy = edge_list.begin(); yy != edge_list.end(); yy++) {
+				if(verts_taken.find(*yy) != verts_taken.end()) {
+					verts_used--;
+				}
+			}
+		}
+		
+		
+		if (verts_used > 0) {	// check that if multiple vertices in edges list, they haven't already been taken
+			for (set<int>::iterator xx = edge_list.begin(); xx != edge_list.end(); xx++) {		// for each neighbor
+				// visit if white or if (grey and neighbor has more than one neighbor
+				if (getColor(*xx) == white || (adj_list[*xx].size() > 1 && getColor(*xx) == grey)) {
+					vert_to_visit = *xx;
+					
+					// if multiple neighbors to visit
+					if (edge_list.size() > 1) {
+					
+						// if more than 2 neighbors haven't been visited yet
+						if(verts_used > 1) {
+							//check each neighbor and see if taking it returns to the current vertex
+							for(set<int>::iterator yy = edge_list.begin(); yy != edge_list.end(); yy++) {
+								if(verts_taken.find(*yy) == verts_taken.end() && doesPathReturn(vertex, *yy)) {
+									vert_to_visit = *yy;
+									break;
+								}
+							}
+						}
+					}
+					verts_taken.insert(vert_to_visit);		// insert vertex taken to verts taken set
+					dfsVisit(vert_to_visit);				// call dfsVisit on vertex
+				}
+			}
+		}
+	}
+	
+	stack_verts.push(vertex);		// push vertex on to stack_verts stack
+	colorVertex(vertex, black);		// color current vertex black
+	
+}
+
+/**
+* @param vertex leaving from and vertex going to
+* @return boolean value telling if vertex returns or not
+**/
+bool Graph::doesPathReturn(int from, int to) {
+
+	int vert = to;
+	bool return_to_vert = true;	// boolean to see if path taking to returns to from
+
+	for (int xx = 0; xx < edges.size(); xx++) {
+		// if make it to end then taking vertex does not return to from vertex
+		if (adj_list.find(vert) == adj_list.end()) {
+			return_to_vert = false;
+			goto end;
+		} else {									// if make it back to from vertex, then path does return
+			set<int> edge_list = adj_list[vert];
+			vert = *edge_list.begin();
+			if (vert == from) {
+				return_to_vert = true;
+				goto end;
+			}
+		}
+	}
+	
+	end:
+
+	return return_to_vert;
+}
+
+string Graph::print() {
+    stringstream result;
+	for (vertexIterator vert1=vertices.begin(); vert1 != vertices.end(); vert1++) {
+		result << *vert1 << "[" << getColor(*vert1) << "]: ";
+		for (vertexIterator vert2 = vertices.begin(); vert2 != vertices.end(); vert2++)
+			if (isEdge (directedEdge(*vert1, *vert2)))
+				result << *vert2 << " ( " << edgeValues[directedEdge(*vert1, *vert2)] << " ) ";
+		result << endl;
+	}
+		return result.str();
+}
+
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+#include "Graph.h"
+#include <utility>
+using namespace std;
+
+int main() {
+
+	ifstream input("famous_quote.txt");		// open the file
+	string temp;			// temporary string variable for reading in from the famous quote file and for finding edges
+	string quote = "";			// string to store quote
+	vector<string> words;	// vector to add words in file to
+	int word_size = 5;		// size of substrings in text file
+	Graph graph;			// graph to find full text
+	vector< int > vert_ids;		// ids of vertices inserted into graph
+	
+	// add first word
+	getline(input, temp, ']');
+	temp = temp.substr(1, 5);
+	words.push_back(temp);
+	
+	// read in words from file
+	while (!input.eof()) {
+		getline(input, temp, ']');
+		
+		if (temp.size() >= 5) {
+			temp = temp.substr(2, 5);
+			words.push_back(temp);
+		}
+	}
+	
+	input.close();		// close the file
+	
+	// add vertices to graph and record their ids
+	vert_ids.push_back(graph.addVertex(0));
+
+	// add however many vertices as there are words
+ 	for (vector<string>::iterator xx = words.begin(); xx != words.end(); xx++) {
+ 		vert_ids.push_back(graph.addVertex(0));
+	}
+	
+	graph.addEdge(directedEdge (vert_ids[0], vert_ids[1]), words[0]);	// add first word in words vector to first edge
+	words.erase(words.begin());			// erase word from words vector since added to graph
+	bool match_found;					// determines whether a match has been found in the graph for your current word
+	bool match1, match2;				// determines which condition found a match
+	int to, from;						// to vertex and from vertex that get selected for edge
+	
+	while (!words.empty()) {
+		match_found = false;
+		for (vector<string>::iterator xx = words.begin(); xx != words.end(); xx++) {
+			match1 = false;
+			match2 = false;
+			
+			set<directedEdge> edges = graph.getEdges();		// get list of current edges
+			
+			for (set<directedEdge>::iterator yy = edges.begin(); yy != edges.end(); yy++) {
+			
+				temp = graph.getEdgeValue(*yy);		// temp is the current edge value
+				
+				// if the starting four letters of the current word are equal to the ending four letters of the current edge value
+				if (xx->substr(0, 4).compare(temp.substr(1, 4)) == 0) {
+					// set "from" to yy edge's second
+					from = yy->second;
+					
+					// only set to if other substring condition hasn't been met
+					if (!match2) {
+						to = graph.getToVert(from, yy->first);
+					}
+					// set matches to true
+					match_found = true;
+					match1 = true;
+				}
+				
+				// if the ending four letters of the current word are equal to the starting four letters of the current edge value
+				if (xx->substr(1, 4).compare(temp.substr(0, 4)) == 0) {
+					// set "to" to yy edge's first
+					to = yy->first;
+					
+					// only set from if other substring condition hasn't been met
+					if (!match1) {
+						from = graph.getFromVert(to, yy->second);
+					}
+					// set matches to true
+					match_found = true;
+					match2 = true;
+				}
+			}
+			
+			// if either substring condition was true, add edge and erase word that matched
+			if (match1 || match2) {
+				graph.addEdge(directedEdge (from, to), *xx);
+				words.erase(xx);
+			}
+			// break if a match has been found to start over
+			if (match_found) {
+				break;
+			}
+		}
+	}
+	
+	vector<int> eulerian;			// vector to store eulerian path in
+	graph.getEulerianPath(eulerian);	// get eulerian path
+	
+	
+	for (int xx = 0; xx < eulerian.size() - 1; xx++) {
+		string value = graph.getEdgeValue(directedEdge(eulerian[xx], eulerian[xx+1]));
+		// if quote is an empty string and value is not an empty string, set quote to value (initial condition)
+		if (quote.size() == 0 && value.size() != 0) {
+			quote = value;
+		} else if (value.size() != 0) {			// add last letter if value is not an empty string
+			quote += value.substr(4, 1);
+		}
+	}
+	
+	cout << "Quote: " << quote << endl;		// output quote
+	
+
+}
+
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+Adding words to the graph was modified:
+The way the suffix is compared to the prefix was changed by changing the bounds when taking the substrings. This does not add complexity.
+
+Getting Quote:
+Getting the quote was changed. The previous value added to the quote is stored. It is checked against the current value to add to see where they overlap. So each string is iterated through. This adds n^2 complexity to getting the quote. The total complexity for getting a quote is now V*n^2 where n is how many letters are in the quote
+
+Total Complexity: O(V^2*E + VE + V*E^2 + V + V*n^2).
+
+The code was tested against the reads: [ello ] [lo world] [llo wo] [hell].
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle
+
+
+<VERBATIM>
+Code Explanation:
+
+I used an adjacency matrix. I started with the beginning vertex "ETCW". I used a
+greedy algorithm and selected the smallest edge to a vertex that hadn't been used
+yet as my next edge in the path. I incremented the vertex's in degree when I added
+the vertex to the path. I then go through all the vertices and if their in degree is 0, I
+find a min edge from another vertex (not the beginning) and back to the vertex. Then in
+the last loop, I look for a path back to the beginning vertex. I do this by continuously
+selected min edges until its neighbor is the beginning vertex.
+</VERBATIM>

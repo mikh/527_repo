@@ -1,0 +1,234 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  (n^2)*log(n)*lg(log(n))  |
+|  c  |  n^2*log(n)  |
+|  d  |  n*log(n))^2  |
+---++ Explanation
+<VERBATIM>
+Provide explanation for partial credits
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  57  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  9  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  43  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  39  |
+
+Does this graph exhibit the triangle inequality? Yes it does contain triangle inequality. For instance it takes 4 hours to go to Statue of Liberty from Photonics Center, and 8 hours to reach CN Tower in Toronto. This gives a total of 12 hours. On the other hand it takes only 9 hours to go from Toronto to Photonics Center. This exhibits A<=B+C where A,B,C are the cities and their edges are the distances.
+
+---++!! 2b 
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  SRC  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  SRC  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+Describe your algorithm here. Pseudocode is preferred.
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+Descrbie and analyze your algorithm.
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+It produces a MST. The running time: O(E*lg(V)). </VERBATIM>
+---++!! b
+<VERBATIM>
+This algorithm would just take arbitrary large numbered weights. So the weights are not sorted and the algorithm doesn't check for the minimum paths. 
+</VERBATIM>
+---++!! c
+<VERBATIM>
+This algorithm forms a MST. Since the path follows the adjacency list, the running time would be O(E).</VERBATIM>
+
+---++!! Grader comments *[16/20]*
+<VERBATIM>
+First running time is O(E^2); last is O(E(V+E)).
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+Reading from a file and finding the uppercase letter take O(n) time. Assuming there are k words and n element in each word, then matching the parts of strings where the while loop is located take O(n*k) time. So the final runtime is: O(n*k).</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+Reading, after a certain age, diverts the mind too much from its creative pursuits.
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+#include <iostream>
+#include <vector>
+#include <cctype>
+#include <fstream>
+#include <stdlib.h>
+#include <string>
+using namespace std;
+
+int main(){
+
+    // Opening the given file and use the grep command finds the capital and little characters along with comas and periods inside 
+    // the file and extracts them into another file(without the brackets). 
+   
+    ifstream givenFile;
+    givenFile.open("file.txt");
+    system("grep -o '[a-zA-Z., ]\\{4\\}.' file.txt >> extract.txt ");
+    givenFile.close();
+    
+    ifstream changedFile;
+    changedFile.open("extract.txt");
+    vector<string> analyzeString;          // Initialize a vector to push the strings into
+    string reader;                      
+    
+    if(changedFile.is_open()){
+        while(getline(changedFile,reader)){  // Using the getline function to read the words into a vector
+                                            // in order to be able to analyze them
+            analyzeString.push_back(reader);
+        }
+    }
+    changedFile.close();
+    // Finding the first uppercase letter in the 5 character containing string which will give the first word
+    string solved;
+    string first; 
+    for(int ii=0; ii<analyzeString.size(); ii++){    
+        first = analyzeString[ii];
+            if (isupper(first[0]) == true){ 
+                solved = first.substr(0,5);     // Add the 5 characters as the first word 
+            }
+    }
+    
+    // Testing the other strings to see if their first, second, third and fourth letters match with the last four elements of the already solved string
+    string trial;
+    while(solved[solved.size()-1] != '.'){
+        string rest = solved.substr(solved.size()-4, 4);    // Checking the last four elements
+        for(int jj=0; jj<analyzeString.size(); jj++){
+            trial = analyzeString[jj];
+            if((trial[0] == rest[0]) && (trial[1] == rest[1]) && (trial[2] == rest[2]) && (trial[3] == rest[3])){ // If we have a substring match between lastFour and candidate, we want  to add the fifth character of candidate to decode.
+                solved = solved + trial[4];                // Concatenating the string with the solved parts
+            }
+            rest = solved.substr(solved.size()-4, 4);
+        }
+    }
+    cout << solved << endl;     
+    return 0;
+}
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+
+I have just replaced the grep linux command with the following code, and the rest of the string matching algorithm remains the same. 
+This algorithm loop through each word and analyze its individual letters until it finds the closing bracket. If we assume there are k words and n letters in between each bracket, the runtime would be: O(k*n)
+    ifstream givenFile;
+    givenFile.open ("file.txt");
+
+    string word;
+    if(givenFile.is_open()){
+        while(getline(givenFile,word)){
+        //    cout << word << endl;   Checking to see if it really takes the data
+        }
+        givenFile.close();
+    }
+
+    vector<string> analyzeString;          // Initialize a vector to push the strings into
+    for(int jj = 0; jj < word.size(); jj++){
+        if(word[jj] == '['){               // Once the open bracket is detected, it will be analyzed
+            string mySub; 
+            for (int i= jj+1; i<(jj+1000); i++){ // We can break the string concatenation as soon it sees the closing bracket, thus allowing 
+                                                // the input file to have a huge string in the brackets
+                    if(word[i] == ']'){
+                        break;
+                    }
+                    mySub = mySub + word[i];
+            }
+            analyzeString.push_back(mySub);
+        }</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+
+
+---+++!! Grader comments
+<VERBATIM>Question 4 Results:
+
+Total Grade: 15
+
+	10        		
+	5         		
+	0         		
+
+
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle
+
+
+---+++!! Grader comments
+<VERBATIM>Question 5 Results:
+
+Total Grade: 0
+
+	0         		Grades from submission
+	0         		
+
+
+</VERBATIM>
+

@@ -1,0 +1,491 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  O((log(n))^4)/16)  |
+|  c  |  O((log(n)^2)*(n^2))  |
+|  d  |  O((log(n))^4)  |
+---++ Explanation
+<VERBATIM>
+Provide explanation for partial credits
+
+b. To insert m copies of a number, it takes (m/2)^2 time, i.e. (m^2)/4 time.
+    To insert m copies of n numbers, it takes sum from i = 0 to i = n of (m^2)/4, i.e. ((m^2)/4)^2 = (m^4)/16.
+    So now if m = log(n), it takes O((log(n))^4)/16) time.
+
+c. To insert m copies of a number, it takes (m^2) time.
+    To insert one copy n numbers, it'll take sum for i = 0 to i = n of i, i.e. (n^2) time.
+    So to insert m copies of n numbers it'll take (m^2)*(n^2) time.
+    So now if m = log(n), it takes O((log(n)^2)*(n^2)) time.
+
+d. Worst case to insert m copies of a number would be (m^2) time.
+    Worst case to insert m copies of n numbers would be ((m^2)^2) = (m^4) time.
+    So now if m = log(n), it takes O((log(n))^4) time.
+
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  56  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  9  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  43  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  39  |
+
+Does this graph exhibit the triangle inequality? 
+
+No it doesn't. From the table above, (9 + 4) = 13 which is < {56, 43, 39}.
+---++!! 2b
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  NIL  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  NIL  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+Describe your algorithm here. Pseudocode is preferred.
+
+/*
+ * The idea is to make a hybrid from Prim's algorithm and Kruskal's algorithm.
+ * Assume MST-PRIM and MST-KRUSKAL to be the same algorithms from the textbook, p631 and p634.
+ * Assume that the KRUSKAL implementation uses the disjoint-set-forest implementation ...
+ *    ... with the union-by-rank and path-compression heuristics.
+ * Assume that the PRIM implementation uses a Fibonacci Heap implement the min-priority queue.
+ */
+
+Find_MST (G, w):
+begin:
+     If G is dense:
+          MST-PRIM (G, w)
+     else:
+          MST-KRUSKAL (G, w)
+end
+
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+Descrbie and analyze your algorithm.
+
+Here, the PRIM implementation takes O(E + V*lg(V)) time and the KRUSKAL implementation takes O(E*lg(V)) time.
+Therefore, when the graph is dense, the PRIM implementation is used yielding a worst-case of O(E + V*lg(V)) time.
+But when the graph is not dense, the KRUSKAL implementation is used yielding a worst-case of O(E*lg(V)) time.
+
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+Counterexample or Running time
+
+This algorithm does yield a Minimum Spanning Tree. Running time:
+
+theta(E^2)
+
+</VERBATIM>
+---++!! b
+<VERBATIM>
+Counterexample or Running time
+
+This algorithm does not yield a Minimum Spanning Tree. Counterexample:
+
+  0  1  2  3  4  5  6  7  8
+0 0  4  0  0  0  0  0  8  0
+1 4  0  8  0  0  0  0 11  0
+2 0  8  0  7  0  4  0  0  1
+3 0  0  7  0  9 14  0  0  0
+4 0  0  0  9  0 10  0  0  0
+5 0  0  4 14 10  0  2  0  0
+6 0  0  0  0  0  2  0  1  6
+7 8 11  0  0  0  0  1  0  7
+8 0  0  1  0  0  0  6  7  0
+
+In this graph, we could start by choosing the edges in decreasing order of weight leading to a maximum spanning tree.
+
+</VERBATIM>
+---++!! c
+<VERBATIM>
+Counterexample or Running time
+
+This algorithm does yield a Minimum Spanning Tree. Running time:
+
+theta(E^2)
+
+</VERBATIM>
+---++!! Grader comments *[20/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+Describe and analyze the algorithm.
+
+shotgunSequencing (data[] containing substrings):
+begin
+     Graph = A graph object
+     for i 1 to n in data:
+     begin
+          add each element in data to Graph as a vertex
+     end
+     for v1 in Graph:
+     begin
+          for v2 in Graph:
+          begin
+               if v1 != v2:
+               begin
+                    if substring of v1 from (2, 5) == substring of v2 from (1, 4):
+                    begin
+                         Add an edge from v1 to v2
+                    end
+               end
+          end
+     end
+end
+
+for every u in G.V:
+     result = u;
+     travel each edge once and add last character of second vertex to result
+
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+Provide your result here.
+
+Do not worry about your difficulties in Mathematics. I can assure you mine are still greater.
+
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+// paste your code here
+
+/* MAIN_CPP */
+//
+//  main.cpp
+//  Homework 7 Problem 4 2nd Approach
+//
+//  Created by Shantanu Bobhate on 4/17/15.
+//  Copyright (c) 2015 Shantanu Bobhate. All rights reserved.
+//
+
+#include <iostream>
+#include "Graph.h"
+#include <fstream>
+
+int main() {
+    Graph myGraph;
+    string data[89] = {
+        " I ca", " Math", " abou", " are ", " assu", " can ", " diff", " grea", " in M", " mine", " not ", " stil",
+        " worr", " you ", " your", ". I c", "Do no", "I can", "Mathe", "about", "an as", "are s", "assur", "ater.",
+        "athem", "atics", "bout ", "can a", "cs. I", "culti", "diffi", "e are", "e sti", "e you", "eater", "emati",
+        "es in", "fficu", "ficul", "great", "hemat", "ics. ", "icult", "ies i", "iffic", "ill g", "in Ma", "ine a",
+        "l gre", "ll gr", "lties", "matic", "mine ", "n Mat", "n ass", "ne ar", "not w", "o not", "orry ", "ot wo",
+        "ou mi", "our d", "out y", "r dif", "re st", "re yo", "reate", "rry a", "ry ab", "s in ", "s. I ", "ssure",
+        "still", "sure ", "t wor", "t you", "thema", "tics.", "ties ", "till ", "u min", "ultie", "ur di", "ure y",
+        "ut yo", "worry", "y abo", "you m", "your "
+    };
+    
+    for (int ii = 0; ii < 89; ii++) {
+        string myString = data[ii];
+        myGraph.addVertex(data[ii]);
+    }
+    
+    // NOTE: # of combinations = 7832
+    for (int ii = 0; ii < 89; ii++) {
+        string s1 = myGraph.getValue(ii);
+        for (int jj = 0; jj < 89; jj++) {
+            if (ii != jj) {
+                string s2 = myGraph.getValue(jj);
+                int s2_length = (int) s2.size();
+                if (s1.substr(1) == s2.substr(0, s2_length - 1)) {
+                    myGraph.addEdge(directedEdge(ii, jj));
+                }
+            }
+        }
+    }
+    
+    for (int it = 0; it < 89; it++) {
+        int temp_it = it;
+        string s1 = myGraph.getValue(temp_it);
+        cout << "s1: " << s1 << endl;
+        string result = s1;
+        string pre_result = "";
+        bool end = false;
+        int edge_count = 0;
+        while (!end) {
+            pre_result = result;
+            for (int ii = 0; ii < 89; ii++) {
+                if (myGraph.isEdge(directedEdge(temp_it, ii))) {
+                    string s2 = myGraph.getValue(ii);
+                    result += s2[s2.size() - 1];
+                    temp_it = ii;
+                    edge_count++;
+                    break;
+                }
+            }
+            if (result == pre_result)
+                end = true;
+        }
+            cout << ">" << result << endl;
+    }
+}
+/* MAIN_CPP_END */
+
+/* GRAPH_H */
+#ifndef GRAPH
+#define GRAPH
+
+#include <iostream>
+#include <set>
+#include <map>
+#include <sstream>
+#include <string>
+#include <iterator>
+#include <queue>
+
+using namespace std;
+
+/** Type definitions to make life easier. */
+typedef pair<int, int> directedEdge;
+typedef set<int>::iterator vertexIterator;
+
+class Graph {
+	/**
+	* Implements a directed, unweighted graph, where vertices can have color.
+	*/
+public:
+    
+    // CONSTRUCTORS
+	/**
+	* Constructs a graph with no edges or vertices.
+	*/
+	Graph();
+
+    // SETTERS
+	/**
+	* Adds a vertex to the graph with color <color>.
+	* @param color The color of the added vertex.
+	* @return The ID of the vertex that was added.
+	*/
+	int addVertex(string value);
+
+	/**
+	* Adds the given edge to the graph.
+    * @param newEdge An edge to add to the graph.
+	* @require the vertices of <newEdge> must currently exist in the graph.
+	*/
+	void addEdge(directedEdge newEdge);
+
+    // GETTERS
+
+	/**
+	* @param vertex the vertex whose color is of interest.
+	* @require the vertex <vertex> must currently exist in the graph.
+	* @return the color of vertex <vertex>.
+	*/
+	string getValue(int vertex);
+
+	/**
+	* @return true iff there is an edge in the graph with the same vertices as newEdge
+	*/
+	bool isEdge(directedEdge newEdge);
+    
+    /**
+    * Returns a string representing a human-readable version of the adjacency list of the graph.
+    * Format is:  vertex [color]: adjacent_vertex_1 adjacent_vertex_2 ...
+    */
+	string print();
+
+private:
+	set<int> vertices;         /** The set of vertices of the graph. */
+	set< directedEdge > edges; /** A set of edges of the graph. */
+	map< int, string > values; /** A mapping between vertices in and their values. */
+};
+
+#endif
+/* GRAPH_H_END */
+
+/* GRAPH_CPP */ 
+#include "Graph.h"
+
+/**
+ * Constructs a graph with no edges or vertices.
+ */
+Graph::Graph() {}
+
+/**
+ * Adds a vertex to the graph with color <color>.
+ * @param color The color of the added vertex.
+ * @return The ID of the vertex that was added.
+ */
+int Graph::addVertex(string value) {
+    int vertex_id = (int) vertices.size();
+    this->vertices.insert(vertex_id);
+    this->values[vertex_id] = value;
+    cout << "New Vertex added with ID: " << vertex_id << " and color: " << value << "." << endl;
+    return vertex_id;
+}
+
+/**
+ * Adds the given edge to the graph.
+ * @param newEdge An edge to add to the graph.
+ * @require the vertices of <newEdge> must currently exist in the graph.
+ */
+void Graph::addEdge(directedEdge newEdge) {
+    int first_vertex = newEdge.first;
+    int second_vertex = newEdge.second;
+    int number_vertices = (int) this->vertices.size();
+    if (first_vertex < number_vertices && second_vertex < number_vertices) {
+        this->edges.insert(newEdge);
+        cout << "New Edge <" << first_vertex << ", " << second_vertex << "> added." << endl;
+    } else {
+        cout << "Sorry, this edge cannot be added as one or more vertices specified may not exist." << endl;
+    }
+}
+
+/**
+ * @param vertex the vertex whose color is of interest.
+ * @require the vertex <vertex> must currently exist in the graph.
+ * @return the color of vertex <vertex>.
+ */
+string Graph::getValue(int vertex) {
+    string value = this->values[vertex];
+//    cout << "Getting color of vertex with ID: " << vertex << " with color: " << value << "." << endl;
+    return value;
+}
+
+/**
+ * @return true iff there is an edge in the graph with the same vertices as newEdge
+ */
+bool Graph::isEdge(directedEdge newEdge) {
+    for (set<directedEdge>::iterator it = this->edges.begin(); it != this->edges.end(); ++it) {
+        if (*it == newEdge)
+            return true;
+    }
+    return false;
+}
+
+/**
+ * Returns a string representing a human-readable version of the adjacency list of the graph.
+ * Format is:  vertex [color]: adjacent_vertex_1 adjacent_vertex_2 ...
+ */
+string Graph::print() {
+	stringstream result;
+	for (vertexIterator vert1=vertices.begin(); vert1 != vertices.end(); vert1++) {
+		result << *vert1 << "[" << getValue(*vert1) << "]: ";
+		for (vertexIterator vert2 = vertices.begin(); vert2 != vertices.end(); vert2++)
+			if (isEdge (directedEdge(*vert1, *vert2)))
+				result << *vert2 << " ";
+		result << endl;
+	}
+		return result.str();
+}
+/* GRAPH_CPP_END */
+
+%ENDCODE%
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+Describe and analyze the modification
+
+The code provided already contains the change. instead of making a substring of 4 characters, the comparison will be between:
+s1.substr(1) and s2.substr(0, s2_length - 1)).
+
+</VERBATIM>
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+Descrbie and analyze the modification.
+
+When adding the reads as vertices to the graph, check for duplicates and don't add them.
+A set data structure can be used for this.
+
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+Descrbie and analyze the modification.
+
+Explore all possibilities.
+
+</VERBATIM>
+
+---+++!! Grader comments
+<VERBATIM>Question 4 Results:
+
+Total Grade: 18
+
+	10        		
+	5         		
+	3         		more explanation
+
+
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+<VERBATIM>
+
+Explanation:
+
+     Basically, I used a graph header file to create a graph of the map. Then I edited the map so that only edges that were symmetric 
+existed, turning the graph into an undirected graph. Then I used Prim's algorithm to create an MST and then I performed a preorder
+walk on this MST.
+
+Resulting Weight: 185413
+
+</VERBATIM>
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle
+
+
+---+++!! Grader comments
+<VERBATIM>Question 5 Results:
+
+Total Grade: 10
+
+	5         		Grades from submission
+	5         		
+
+
+</VERBATIM>
+

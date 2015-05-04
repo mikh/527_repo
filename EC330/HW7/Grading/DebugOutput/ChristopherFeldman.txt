@@ -1,0 +1,753 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+
+I COLLABORATED WITH ZHANNA KAUFMAN
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  n^2log(n)*lg(log(n))  |
+|  c  |  n*log(n)  |
+|  d  |    |
+---++ Explanation
+<VERBATIM>
+Part B takes n*log(n)^2 because each insertion takes the same amount of time as a regular binary search tree.
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  56  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  8  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  42  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  3  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  37  |
+
+Does this graph exhibit the triangle inequality? 
+This graph does exhibit the triangle inequality. The triangle inequality says that the direct path between two points has either equal or lesser weight than any other path between these two points. Since the graph was generated with the shortest Google Maps driving distance, it would follow that the direct paths would be shorter than any path that passes through a third node.
+---++!! 2b
+EDGES:
+
+AE, AC, BD, FD, CF 
+
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  -  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  D  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  | E  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  F  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  | A  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  C  |
+
+---++!! 2d
+---+++!! Algorithm
+<CODE>
+   //This is the pseudocode for Prim's Algorithm
+
+   VisitedVertices = {0}; 
+   
+   UnvisitedVertices = {1, 2, ..., N-1};
+   
+   SpanningTree = {};
+
+   while ( UnvisitedVertices is not empty )
+   {
+   
+     Find edge e = (x, y) such that x has already been visited, y has not been visited, e is minimum
+
+      //add edge to the spanning tree
+
+      SpanningTree = SpanningTree + e;
+
+
+      //update the sets
+
+      ReachSet   = ReachSet +  y;
+
+      UnReachSet = UnReachSet - y;
+
+   }
+</CODE>
+---+++!! Analysis
+<VERBATIM>
+This is the pseudocode for Prim's algorithm. I do not expect to do better than this for finding a minimum spanning tree. The algorithm works by each time adding the minimum edge that spans between a vertex in the tree and a vertex not in the tree. This runs until all the vertices have been added and runs in  O(|E| log |V|)  time when implemented with a binary heap.
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+YES, Running Time:  with an adjacency list O(E^2)
+</VERBATIM>
+---++!! b
+<VERBATIM>
+NO. This fails on a triangular graph with edges of weight {1, 2, 3}
+</VERBATIM>
+---++!! c
+<VERBATIM>
+YES, Running Time: with adjacency list O(EV)
+</VERBATIM>
+
+---++!! Grader comments *[20/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+My algorithm assumes that, in a quote, the first letter will be capital.
+
+I created a class called Quote, which contains a linked list of words from the text, ;raw', and 
+another of the characters in the quote after it is processed.
+To begin processing, I look for a word from this list which begins with a capital letter.
+I assume the quote begins with a capital letter, but I do not assume only one capital
+letter exists in the quote. When a word beginning with such a letter is found, it is checked
+against all other words in the list, to make sure that it does not exist in the latter part of any
+other words, which would mean it cannot begin our quote. Since we know that 4 letters at a time match, 
+we only need to check the first four characters of this word against the last four characters of some other.
+Each check takes Theta(4) time, so the entire process takes O(4v^2) time. For this particular algorithm,
+because there is only one capital letter, the process takes Theta(v+4v = 5v) time. After this first word is found,
+it is removed from the raw list, and added to the processed list, and  the processing can continue.
+
+Now,  another function does the processing. The first word is initialized as a string. The last four letters of this 
+string are checked with the first four letters of every other string in the raw list. This is done because we know
+that there are four characters that match, and if each word has 5 characters, this is the only way that the match
+can work. Again, each comparison takes Theta(4) time, so altogether this step takes Theta(4v) time. Then,
+once a match is found, that word is removed from the raw list, its last character is added to the processed list,
+and it is placed into the string variable to compare again with the raw list. Removing takes Theta(1) time,
+adding to the processed list takes Theta(1) time, and changing the string takes Theta(1) time. So this takes Theta(3)
+time steps. Now, when this string is compared to the raw list, there is one less member in raw, and this happens every
+time. So rather than taking Theta(4v^2 + 3v) time, it takes (4v^2/2 + 3v time).
+
+Finally, printing takes Theta(v) time, as the processed list is iterated through and printed to the screen.
+
+Altogether, this algorithm takes Theta(v^2) time 
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+Provide your result here.
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <list>
+
+using namespace std;
+
+class Quote
+{
+public:
+	list<string> raw;
+	list<string> processed;
+	void addword(string w);
+	void beginprocess();
+	void process();
+	void print();
+
+};
+
+void Quote::addword(string w)
+{
+	raw.push_back(w);
+}
+
+//begin processing
+void Quote::beginprocess()
+{
+	//I assume the first letter is capital
+	//these checks are just in case there are multiple capital letters in the quote
+	list<string>::iterator i;
+	//look for start of sentence
+	for(i = raw.begin(); i != raw.end();++i)
+	{
+			// if String begins with capital letter
+			if (((*i)[0] < 95) && ((*i)[0] > 44)) 
+			{
+				//go through list, see if the first letter of this string exists in the second letter of another string
+				list<string>:: iterator n;
+				for(n = raw.begin(); n != raw.end();++n)
+				{
+					if ((*n)[1] == (*i)[0])
+						{
+							//check to see if four letters match
+							int letters;
+							for (int l=2;l<5;l++)
+							{
+								if ((*n)[l] == (*i)[l-1])
+								letters+=1;
+							}
+							if (letters==4){}
+							else 
+							{
+								//add into processed string
+								processed.push_back(*i);
+								//remove string from list
+								raw.erase(i); 
+								//we have found our start
+								return;
+								//break from loop 
+							} 
+						}
+					else
+						{
+							//add into processed string
+							processed.push_back(*i);
+							//remove string from list
+							raw.erase(i); 
+							//we have found our start
+							return;
+							//break from loop 
+						}
+				}
+			}
+	}
+}
+	
+
+void Quote::process()
+{
+	//now, look for at least 4 character matches
+	int first;
+	//initialize current word 
+	string currword = (*processed.begin());
+	list<string>::iterator i;
+	int check;
+
+	while(raw.size() > 0)
+		{
+			//last four letters in the string should match first four letters of some word
+			//iterate through list of raw words
+			for(i = raw.begin(); i != raw.end();++i)
+			{
+				//4 letters will match
+				check = 0;
+				for (int l=0;l<5;l++)
+				{
+					if (currword[l+1] == ((*i)[l]))
+					{
+						check +=1;					
+					}
+				}	
+				//if they match
+				if (check ==4)
+				{
+					//we have a new word to check with
+					currword=(*i);
+					//we have a new last letter
+					processed.push_back(&(currword[4]));
+					// delete from list
+					raw.erase(i);
+					break;
+				}
+			}
+			
+		}
+}
+
+
+void Quote::print()
+{
+	list<string>::iterator i;
+	for( i = processed.begin(); i != processed.end(); ++i)
+		cout << *i;
+	cout<<endl;
+}
+
+int main()
+{
+
+//initialize quote
+Quote endquote;
+
+char c;
+string word;
+ifstream myfile("quote.txt");
+//open file, read one character at a time
+if (myfile.is_open())
+{
+	while (myfile.get(c))
+	{
+		if (c=='['){	
+			word.clear();
+		}
+		else if (c==']')
+		{ 
+			//we have a word, add it into the quote
+			endquote.addword(word);
+		}
+		else
+		{
+		word = word+c;
+		}
+	}
+	myfile.close();
+}
+else cout << "Unable to open file";
+
+//process quote
+endquote.beginprocess();
+endquote.process();
+endquote.print();
+
+return 0;
+}
+
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+VEry few changes were needed, I just needed to allow for words that were not five letters long.
+</VERBATIM>
+
+%CODE{"cpp"}%
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <list>
+
+using namespace std;
+
+class Quote
+{
+public:
+	list<string> raw;
+	list<string> processed;
+	void addword(string w);
+	void beginprocess();
+	void process();
+	void print();
+
+};
+
+void Quote::addword(string w)
+{
+	raw.push_back(w);
+}
+
+//begin processing
+void Quote::beginprocess()
+{
+	//I assume the first letter is capital
+	//these checks are just in case there are multiple capital letters in the quote
+	list<string>::iterator i;
+	//look for start of sentence
+	for(i = raw.begin(); i != raw.end();++i)
+	{
+			// if String begins with capital letter
+			if (((*i)[0] < 95) && ((*i)[0] > 44)) 
+			{
+				//go through list, see if the first letter of this string exists in another string
+				list<string>:: iterator n;
+				for(n = raw.begin(); n != raw.end();++n)
+				{
+					if ((*n)[1] == (*i)[0])
+						{
+							//check to see if first four letters of this string exist in another string
+							int letters;
+							for (int l=1;(l<(*n).size()-4);l++)
+								for(int h=0; h<5; h++)
+								{
+									if ((*n)[l+h] == (*i)[h])
+									letters+=1;
+								}
+							if (letters==4){}
+							else 
+							{
+								//add into processed string
+								processed.push_back(*i);
+								//remove string from list
+								raw.erase(i); 
+								//we have found our start
+								return;
+								//break from loop 
+							} 
+						}
+					else
+						{
+							//add into processed string
+							processed.push_back(*i);
+							//remove string from list
+							raw.erase(i); 
+							//we have found our start
+							return;
+							//break from loop 
+						}
+				}
+			}
+	}
+}
+	
+
+void Quote::process()
+{
+	//now, look for at least 4 character matches
+	int first;
+	//initialize current word 
+	string currword = (*processed.begin());
+	list<string>::iterator i;
+	int check;
+	int sublength;
+	//variable for where equality starts
+	int start;
+	//flag
+	int checkflag;
+	while(raw.size() > 0)
+		{
+			//last four letters of the current sentence match some four letters of some other word 
+			for(i = raw.begin(); i != raw.end();++i)
+			{
+				//4 letters will match
+				for (int l=0;(l<(*i).size()-4);l++)
+				{
+				check = 0;
+				start = l;
+				for(int h=0; h<5; h++)
+					{
+					if (currword[currword.size()-4+h] == (*i)[l+h])
+					check+=1;
+					if (check == 4) 
+					{
+					checkflag = 1;
+					break;
+					}
+					}
+				if (checkflag == 1) break;
+				}
+				if (checkflag == 1)
+				{
+				checkflag = 0;
+				//when match is found
+				//we have a new word to check with
+				currword=(*i);
+				//we have a new last segment
+				sublength = currword.size() - (start+4);
+				////if sublength > 0
+				if (sublength > 0)
+				{
+				//processed.push_back(&(currword[4]));
+				processed.push_back((currword.substr(start+4,sublength)));
+				}
+				// delete from list
+				raw.erase(i);
+				break;
+				}
+			}
+			
+			
+		}
+}
+
+
+void Quote::print()
+{
+	list<string>::iterator i;
+	for( i = processed.begin(); i != processed.end(); ++i)
+		cout << *i;
+	cout<<endl;
+}
+
+int main()
+{
+
+//initialize quote
+Quote endquote;
+
+char c;
+string word;
+ifstream myfile("quote.txt");
+//open file, read one character at a time
+if (myfile.is_open())
+{
+	while (myfile.get(c))
+	{
+		if (c=='['){	
+			word.clear();
+		}
+		else if (c==']')
+		{ 
+			//we have a word, add it into the quote
+			endquote.addword(word);
+		}
+		else
+		{
+		word = word+c;
+		}
+	}
+	myfile.close();
+}
+else cout << "Unable to open file";
+
+//process quote
+endquote.beginprocess();
+endquote.process();
+endquote.print();
+
+return 0;
+}
+
+
+%ENDCODE%
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+My code required very few changes, it already accounted for these complications.
+</VERBATIM>
+
+%CODE{"cpp"}%
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <list>
+
+using namespace std;
+
+class Quote
+{
+public:
+	list<string> raw;
+	list<string> processed;
+	void addword(string w);
+	void beginprocess();
+	void process();
+	void print();
+
+};
+
+void Quote::addword(string w)
+{
+	raw.push_back(w);
+}
+
+//begin processing
+void Quote::beginprocess()
+{
+	//I assume the first letter is capital
+	//these checks are just in case there are multiple capital letters in the quote
+	list<string>::iterator i;
+	//look for start of sentence
+	for(i = raw.begin(); i != raw.end();++i)
+	{
+			// if String begins with capital letter
+			if (((*i)[0] < 95) && ((*i)[0] > 44)) 
+			{
+				//go through list, see if the first letter of this string exists in another string
+				list<string>:: iterator n;
+				for(n = raw.begin(); n != raw.end();++n)
+				{
+					if ((*n)[1] == (*i)[0])
+						{
+							//check to see if first four letters of this string exist in another string
+							int letters;
+							for (int l=1;(l<(*n).size()-4);l++)
+								for(int h=0; h<5; h++)
+								{
+									if ((*n)[l+h] == (*i)[h])
+									letters+=1;
+								}
+							if (letters==4){}
+							else 
+							{
+								//add into processed string
+								processed.push_back(*i);
+								//remove string from list
+								raw.erase(i); 
+								//we have found our start
+								return;
+								//break from loop 
+							} 
+						}
+					else
+						{
+							//add into processed string
+							processed.push_back(*i);
+							//remove string from list
+							raw.erase(i); 
+							//we have found our start
+							return;
+							//break from loop 
+						}
+				}
+			}
+	}
+}
+	
+
+void Quote::process()
+{
+	//now, look for at least 4 character matches
+	int first;
+	//initialize current word 
+	string currword = (*processed.begin());
+	list<string>::iterator i;
+	int check;
+	int sublength;
+	//variable for where equality starts
+	int start;
+	//flag
+	int checkflag;
+	while(raw.size() > 0)
+		{
+			//last four letters of the current sentence match some four letters of some other word 
+			for(i = raw.begin(); i != raw.end();++i)
+			{
+				//4 letters will match
+				for (int l=0;(l<(*i).size()-4);l++)
+				{
+				check = 0;
+				start = l;
+				for(int h=0; h<5; h++)
+					{
+					if (currword[currword.size()-4+h] == (*i)[l+h])
+					check+=1;
+					if (check == 4) 
+					{
+					checkflag = 1;
+					break;
+					}
+					}
+				if (checkflag == 1) break;
+				}
+				if (checkflag == 1)
+				{
+				checkflag = 0;
+				//when match is found
+				//we have a new word to check with
+				currword=(*i);
+				//we have a new last segment
+				sublength = currword.size() - (start+4);
+				////if sublength > 0
+				if (sublength > 0)
+				{
+				//processed.push_back(&(currword[4]));
+				processed.push_back((currword.substr(start+4,sublength)));
+				}
+				// delete from list
+				raw.erase(i);
+				break;
+				}
+			}
+			
+			
+		}
+}
+
+
+void Quote::print()
+{
+	list<string>::iterator i;
+	for( i = processed.begin(); i != processed.end(); ++i)
+		cout << *i;
+	cout<<endl;
+}
+
+int main()
+{
+
+//initialize quote
+Quote endquote;
+
+char c;
+string word;
+ifstream myfile("quote.txt");
+//open file, read one character at a time
+if (myfile.is_open())
+{
+	while (myfile.get(c))
+	{
+		if (c=='['){	
+			word.clear();
+		}
+		else if (c==']')
+		{ 
+			//we have a word, add it into the quote
+			endquote.addword(word);
+		}
+		else
+		{
+		word = word+c;
+		}
+	}
+	myfile.close();
+}
+else cout << "Unable to open file";
+
+//process quote
+endquote.beginprocess();
+endquote.process();
+endquote.print();
+
+return 0;
+}
+
+
+%ENDCODE%
+
+
+
+---+++!! Grader comments
+<VERBATIM>Question 4 Results:
+
+Total Grade: 11
+
+	5         		no result
+	3         		need explanation of changes
+	3         		need explanation of changes
+
+
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle
+
+<VERBATIM>
+
+I used a map of maps to save the graph. This way it was easy for me to find the cost between two vertices. From here I implemented Prim's Algorithm. The main problem that I ran into was finding dead ends in the graph. To counter this, I used a loop through all of the vertices that you can travel to from ETCW, each time running Prim's Algorithm from that node. If I hit a dead end I assigned that path a weight of infinity and moved on to the next one. If I made it all the way to the end I compared the weight of the path to my previous best path and saved the new one if was cheaper. Looping through all the vertices that you can travel to from ETCW allowed me to test ~1400 paths for the cheapest one and solved my issue of finding dead ends.
+
+I tried to use more complicated methods but they all took longer to run and didn't give me as good results. My best cycle weight was $98249.
+</VERBATIM>
+
+
+---+++!! Grader comments
+<VERBATIM>Question 5 Results:
+
+Total Grade: 20
+
+	15        		Grades from submission
+	5         		
+
+
+</VERBATIM>
+

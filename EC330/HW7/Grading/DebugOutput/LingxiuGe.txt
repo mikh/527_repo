@@ -1,0 +1,382 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |   <latex>O(n(log n)*log_2(nlog(n)))</latex>  |
+|  c  |  <latex>O(n(log n))</latex>  |
+|  d  |    <latex>O((n(log n))^2)</latex>  |
+---++ Explanation
+<VERBATIM>
+Provide explanation for partial credits
+</VERBATIM>
+
+b. During the process of insertion, we would have a balanced binary search tree. We would not insert to the next level until current level is full. The total number of elements to be inserted is n(log n). Therefore the height of BST is <latex>log_2(nlog(n)).</latex> Therefore the worst case runtime should be <latex>n(log n)*log_2(nlog(n)).</latex>
+
+c. In this case, z is compared with x.key. If z<x, then z will be inserted to the left. If z>x, z will be inserted into right. Inserting one element into the end of linked list takes O(1) time. The total number of elements to be inserted is n(log n). The overall worst case runtime should be O(n(log n)).
+
+d. Worst case: ascending order. Height: n(log n). Overall worst case  <latex>(n(log n))^2</latex>
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  57  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  8.25  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  43  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  3.5  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  39  |
+
+Does this graph exhibit the triangle inequality? 
+
+no, all the driving route starts from photonics.
+---++!! 2b
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  NIL  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  NIL  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+Describe your algorithm here. Pseudocode is preferred.
+</VERBATIM>
+%CODE{"cpp"}%
+//Prim's algorithm
+
+for i=[0,n){
+    dist[i] = tab[0][i]}
+visit[0] = true
+for i=[1,n){
+    min = MAX_VALUE
+    for j=[0,n){
+        if !visit[j] && min>dist[j]{
+            min = dist[j]
+}
+}
+    for k=[0,n){
+        if !visit[k] && dist[j]>tab[i][j]{
+            dist[j] = tab[i][j]
+}
+}
+}
+
+%ENDCODE%
+---+++!! Analysis
+<VERBATIM>
+Descrbie and analyze your algorithm.
+</VERBATIM>
+
+The runtime for Prim's algorithm is Elog(V). In this case, the reason I choose Prim's algorithm over Kruskal's is because we only care about whether we have visited the place or not, which makes two set of vertices. Also, the number of vertices might be huge. Therefore for a dense graph, Prim's algorithm works better than Kruskal's.
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+Counterexample or Running time
+</VERBATIM>
+
+the algorithm does always produce a minimum spanning tree.
+
+The running time of the algorithm is O(E(E + V ))
+---++!! b
+<VERBATIM>
+Counterexample or Running time
+</VERBATIM>
+
+the algorithm does not always produce a minimum spanning tree.
+
+The algorithm can produce a spanning tree. But not always a minimum spanning tree.
+---++!! c
+<VERBATIM>
+Counterexample or Running time
+</VERBATIM>
+
+ the algorithm does always produce a minimum spanning tree.
+
+The running time of the algorithm is O(V E).
+---++!! Grader comments *[20/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+Describe and analyze the algorithm.
+</VERBATIM>
+First i compare the strings in the array to find out pattern. For example in order to get "Wide_", I have to push "_" behind "_Wide". I did this procedure repeated to look for letter before and behind a substring. After a few tries i got the answer.
+
+%CODE{"cpp"}%
+#include <iostream>
+#include <list>
+
+using namespace std;
+const int size = 10;
+int substring_size = 5;
+bool lastfour(string a, string b)
+{
+    int count = 0;
+    for (int i = 1; i < substring_size; i++)
+    {
+        if (a[i] == b[i-1])
+        {
+            count ++;
+        }
+    }
+    if (count == substring_size-1)
+    {
+        return true;
+    }
+    return false;
+}
+
+bool firstfour(string a, string b)
+{
+    int count = 0;
+    for (int i = 0; i < substring_size; i++)
+    {
+        if (a[i] == b[i+1])
+        {
+            count ++;
+        }
+    }
+    if (count == substring_size-1)
+    {
+        return true;
+    }
+    return false;
+}
+
+
+
+int main(){
+    string array[size] = {"_Wide", "Wide_", "World", "d_Wid", "de_We", "e_Web", "ide_W", "ld_Wi", "orld_", "rld_W"};
+    //    list <string> list1;
+    //    list <string> list2;
+    string newarray[size];
+    int count = 8;
+    while(count >0)
+    {
+        for (int i =0; i<size; i++)
+        {
+            string temp = array[i];
+            for (int j = 0; j<size; j++)
+            {
+                if(i!=j)
+                {
+                    if(lastfour(array[i], array[j]))
+                    {
+                        int word = array[j].length();
+                        temp = temp + array[j][word-1];
+                    }
+                    else if (firstfour(array[i], array[j]))
+                    {
+                        temp =array[j][0] + temp;
+                    }
+                }
+                
+                
+            }
+            newarray[i] = temp;
+            
+            //list1.push_back(temp);
+        }
+        for (int i =0; i<size; i++)
+        {
+            array[i] = newarray[i];
+          //  cout<<array[i]<<endl;
+        }
+        count = count -1;
+    }
+    
+    for (int i =0; i<size; i++)
+    {
+     //   array[i] = newarray[i];
+         cout<<array[i]<<endl;
+    }
+}
+%ENDCODE%
+---+++!! ii
+<VERBATIM>
+Provide your result here.
+</VERBATIM>
+
+Reading, after a certain age, diverts the mind too much from its creative pursuits.
+
+and
+
+%CODE{"cpp"}%
+// paste your code here
+#include <iostream>
+#include <list>
+#include <fstream>
+#include <string>
+
+
+using namespace std;
+const int size = 79;
+int substring_size = 5;
+bool lastfour(string a, string b)
+{
+    int count = 0;
+    for (int i = 1; i < substring_size; i++)
+    {
+        if (a[i] == b[i-1])
+        {
+            count ++;
+        }
+    }
+    if (count == substring_size-1)
+    {
+        return true;
+    }
+    return false;
+}
+
+bool firstfour(string a, string b)
+{
+    int count = 0;
+    for (int i = 0; i < substring_size; i++)
+    {
+        if (a[i] == b[i+1])
+        {
+            count ++;
+        }
+    }
+    if (count == substring_size-1)
+    {
+        return true;
+    }
+    return false;
+}
+
+
+
+int main(){
+    string array[size] = {" a ce"," afte"," age,"," cert"," crea"," dive"," from"," its "," mind"," much"," purs"," the "," too ",", aft",", div","Readi","a cer","ading","after","age, ","ain a","ative","certa","ch fr","creat","d too","ding,","diver","e min","e pur","e, di","eadin","eativ","er a ","ertai","erts ","from ","fter ","g, af","ge, d","h fro","he mi","in ag","ind t","ing, ","its c","ive p","ivert","m its","mind ","much ","n age","nd to","ng, a","o muc","om it","oo mu","pursu","r a c","reati","rom i","rsuit","rtain","rts t","s cre","s the","suits","tain ","ter a","the m","tive ","too m","ts cr","ts th","uch f","uits.","ursui","ve pu","verts"};
+    string newarray[size];
+    int count = 77;
+    while(count >0)
+    {
+        for (int i =0; i<size; i++)
+        {
+            string temp = array[i];
+            for (int j = 0; j<size; j++)
+            {
+                if(i!=j)
+                {
+                    if(lastfour(array[i], array[j]))
+                    {
+                        int word = array[j].length();
+                        temp = temp + array[j][word-1];
+                    }
+                    else if (firstfour(array[i], array[j]))
+                    {
+                        temp =array[j][0] + temp;
+                    }
+                }
+                
+                
+            }
+            newarray[i] = temp;
+            
+            //list1.push_back(temp);
+        }
+        for (int i =0; i<size; i++)
+        {
+            array[i] = newarray[i];
+          //  cout<<array[i]<<endl;
+        }
+        count = count -1;
+    }
+    
+    for (int i =0; i<size; i++)
+    {
+     //   array[i] = newarray[i];
+         cout<<array[i]<<endl;
+    }
+}
+
+%ENDCODE%
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+Describe and analyze the modification
+</VERBATIM>
+
+I would first look for the strings with different lengths and try to make them the same length. Then make the data go through my method.
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+
+
+---+++!! Grader comments
+<VERBATIM>Question 4 Results:
+
+Total Grade: 15
+
+	10        		
+	5         		
+	0         		
+
+
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+I set up a class called Route and set start vertex, end vertex and cost as member variables. Then input the file and look for all the shortest path. Facing problem is that my code does not visit all the vertices.
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle
+
+
+---+++!! Grader comments
+<VERBATIM>Question 5 Results:
+
+Total Grade: 5
+
+	0         		Grades from submission
+	5         		
+
+
+</VERBATIM>
+

@@ -1,0 +1,455 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  | O(logn*n^2*lg(logn)) |
+|  c  |  O(logn*n^2)  |
+|  d  |  O(n*(logn)^2)   |
+---++ Explanation
+<VERBATIM>
+Provide explanation for partial credits
+
+For b, because it forces a balanced search tree with height lgn, insertion of n items will take O(n*lgn) times. Because we are inserting log(n) items every time,
+we have O(logn*lg(logn)) time. Now, a new number will be inserted. However, each time we are no longer inserting into an empty
+tree. We can say, because alternation only occurs when we are inserting an element with the SAME key, that this number, which will be larger according to the
+instructions, will be all the way to the right. So, in the end we will have n balanced binary search trees with a height of (lg(lgn)) each, and their root connected to the 
+right leg of their predecessor. So if n was three, there would be a height of lg(log(3)), then 2lg((log3)), and so we need to sum O(logn*i*lg(logn)). The sum of i from 0 to n
+is about n^2/2. So, altogether, the timing would be O(logn*n^2*lg(logn)).
+
+
+For c, inserting n numbers into an empty tree would only take O(n) time. We are now inserting into a list of nodes, and this only takes O(1) time per insertion. So, inserting
+logn 1s would take logn time. Then, the next number is larger, and so would go to the right. This gives a tree of a height of n, and every number i takes i time to be inserted
+now, instead of O(1) time. So, we must take the sum from i = 0 to n of O(logn*i). This comes out to O(logn*n^2/2) or O(logn*n^2).
+
+The WORST CASE running time for the creation of an empty binary tree for n values with the same key is O(n^2), assuming they all go in one direction. So, in this case this
+would mean O(logn^2).Then, assuming that this happens for every number from 0 to n, we would say that this would take O(n*(logn)^2) time.
+
+
+
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  57h  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  8h  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  42h  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  3.5h  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  38h  |
+
+Does this graph exhibit the triangle inequality?
+
+***All values were evaluated without traffic
+
+This graph does states that (weight(u,v) <= weight(u,w) + weight(w,v)).  This graph definitely exhibits this quality,
+as there is no way that traveling to some destination through some other destination will take less time than travelling
+there directly. 
+ 
+---++!! 2b
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  Statue of Liberty  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  Pyramid of the Sun  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  Statue of Liberty, Mandelay Bay  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  Mandalay Bay, Chichen Itza  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  Pho, CN Tower  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  CN Tower , Pyramid of the Sun  |
+
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  Statue of Liberty  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  Pyramid of the Sun  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  Statue of Liberty, Mandelay Bay   |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  Mandalay Bay, Chichen Itza  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  Pho, CN Tower  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  CN Tower , Pyramid of the Sun  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+Describe your algorithm here. Pseudocode is preferred.
+
+Agorithm (graph G)
+{
+For every vertex v:
+{
+Iterate through connected edges
+Find smallest weight edge
+}
+
+For all found edges:
+{
+Create new graph NG
+Replace connected components in G with single nodes
+}
+
+Delete all edges which are not in the minimum set but connect vertices in the new nodes
+
+If we are left with one node:
+Output all found edges
+
+Otherwise:
+perform Algorithm(new graph NG)
+
+}
+
+
+
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+Describe and analyze your algorithm.
+
+This algorithm depends on the fact that there are no isolated vertices.
+If this is the case, then, we find all minimum edges, and connect all 
+vertices which these edges connect into single components. Then we get 
+rid of all redundant edges within these components, which create loops and 
+are not part of the minimum spanning tree. Then, we rerun the algorithm until
+there is only one node left. Because the algorithm takes steps from the Borukva
+algorithm, it's worst case running time is O(ElogV). However, because the amount
+of nodes we are working with is constantly being reduced - as long as there nodes have
+multiple edges connecting them- , and we are looking at each vertex no more than
+twice, then this algorithm is expected to run in O(E) time.
+
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+Counterexample or Running time
+
+Yes, this is a minimum spanning tree.
+Every time it runs, the graph must be checked for connection. If a 
+depth first search traversal was done in order to do this, then 
+each check would take O(E) time worst case. 
+
+Running Time: O(E*E), because for each edge, the graph must
+be checked for connection, which requires O(E) time.
+
+</VERBATIM>
+---++!! b
+<VERBATIM>
+Counterexample or Running time
+
+No, this is not a minimum spanning tree. For instance, if we had a 
+triangle graph, nodes a,b,c, edge weights 3(a,b),2(b,c), 1(c,a), then
+the minimum spanning tree for this would be computed as a-b, b-c,
+because there would be no cycles in this tree, but the best minimum
+spanning tree would be a-c,b-c.
+
+
+</VERBATIM>
+---++!! c
+<VERBATIM>
+Counterexample or Running time
+
+Yes, this is a minimum spanning tree. This algorithm looks for cycles
+and deletes the maximum edge weight from every cycle. For each 
+edge, to find a cycle I assume O(E) for Depth First Search, and in this
+case running time would be O(E*E).
+
+</VERBATIM>
+
+---++!! Grader comments *[20/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+Describe and analyze the algorithm.
+
+My algorithm assumes that, in a quote, the first letter will be capital.
+
+I created a class called Quote, which contains a linked list of words from the text, ;raw', and 
+another of the characters in the quote after it is processed.
+To begin processing, I look for a word from this list which begins with a capital letter.
+I assume the quote begins with a capital letter, but I do not assume only one capital
+letter exists in the quote. When a word beginning with such a letter is found, it is checked
+against all other words in the list, to make sure that it does not exist in the latter part of any
+other words, which would mean it cannot begin our quote. Since we know that 4 letters at a time match, 
+we only need to check the first four characters of this word against the last four characters of some other.
+Each check takes Theta(4) time, so the entire process takes O(4v^2) time. For this particular algorithm,
+because there is only one capital letter, the process takes Theta(v+4v = 5v) time. After this first word is found,
+it is removed from the raw list, and added to the processed list, and  the processing can continue.
+
+Now,  another function does the processing. The first word is initialized as a string. The last four letters of this 
+string are checked with the first four letters of every other string in the raw list. This is done because we know
+that there are four characters that match, and if each word has 5 characters, this is the only way that the match
+can work. Again, each comparison takes Theta(4) time, so altogether this step takes Theta(4v) time. Then,
+once a match is found, that word is removed from the raw list, its last character is added to the processed list,
+and it is placed into the string variable to compare again with the raw list. Removing takes Theta(1) time,
+adding to the processed list takes Theta(1) time, and changing the string takes Theta(1) time. So this takes Theta(3)
+time steps. Now, when this string is compared to the raw list, there is one less member in raw, and this happens every
+time. So rather than taking Theta(4v^2 + 3v) time, it takes (4v^2/2 + 3v time).
+
+Finally, printing takes Theta(v) time, as the processed list is iterated through and printed to the screen.
+
+Altogether, this algorithm takes Theta(v^2) time 
+
+
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+
+
+Reading, after a certain age, diverts the mind too much from its creative pursuits.
+
+
+</VERBATIM>
+
+
+%CODE{"cpp"}%
+// paste your code here
+
+
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <list>
+
+using namespace std;
+
+class Quote
+{
+public:
+	list<string> raw;
+	list<string> processed;
+	void addword(string w);
+	void beginprocess();
+	void process();
+	void print();
+
+};
+
+void Quote::addword(string w)
+{
+	raw.push_back(w);
+}
+
+//begin processing
+void Quote::beginprocess()
+{
+	//I assume the first letter is capital
+	//these checks are just in case there are multiple capital letters in the quote
+	list<string>::iterator i;
+	//look for start of sentence
+	for(i = raw.begin(); i != raw.end();++i)
+	{
+			// if String begins with capital letter
+			if (((*i)[0] < 95) && ((*i)[0] > 44)) 
+			{
+				//go through list, see if the first letter of this string exists in the second letter of another string
+				list<string>:: iterator n;
+				for(n = raw.begin(); n != raw.end();++n)
+				{
+					if ((*n)[1] == (*i)[0])
+						{
+							//check to see if four letters match
+							int letters;
+							for (int l=2;l<5;l++)
+							{
+								if ((*n)[l] == (*i)[l-1])
+								letters+=1;
+							}
+							if (letters==4){}
+							else 
+							{
+								//add into processed string
+								processed.push_back(*i);
+								//remove string from list
+								raw.erase(i); 
+								//we have found our start
+								return;
+								//break from loop 
+							} 
+						}
+					else
+						{
+							//add into processed string
+							processed.push_back(*i);
+							//remove string from list
+							raw.erase(i); 
+							//we have found our start
+							return;
+							//break from loop 
+						}
+				}
+			}
+	}
+}
+	
+
+void Quote::process()
+{
+	//now, look for at least 4 character matches
+	int first;
+	//initialize current word 
+	string currword = (*processed.begin());
+	list<string>::iterator i;
+	int check;
+
+	while(raw.size() > 0)
+		{
+			//last four letters in the string should match first four letters of some word
+			//iterate through list of raw words
+			for(i = raw.begin(); i != raw.end();++i)
+			{
+				//4 letters will match
+				check = 0;
+				for (int l=0;l<5;l++)
+				{
+					if (currword[l+1] == ((*i)[l]))
+					{
+						check +=1;					
+					}
+				}	
+				//if they match
+				if (check ==4)
+				{
+					//we have a new word to check with
+					currword=(*i);
+					//we have a new last letter
+					processed.push_back(&(currword[4]));
+					// delete from list
+					raw.erase(i);
+					break;
+				}
+			}
+			
+		}
+}
+
+
+void Quote::print()
+{
+	list<string>::iterator i;
+	for( i = processed.begin(); i != processed.end(); ++i)
+		cout << *i;
+	cout<<endl;
+}
+
+int main()
+{
+
+//initialize quote
+Quote endquote;
+
+char c;
+string word;
+ifstream myfile("quote.txt");
+//open file, read one character at a time
+if (myfile.is_open())
+{
+	while (myfile.get(c))
+	{
+		if (c=='['){	
+			word.clear();
+		}
+		else if (c==']')
+		{ 
+			//we have a word, add it into the quote
+			endquote.addword(word);
+		}
+		else
+		{
+		word = word+c;
+		}
+	}
+	myfile.close();
+}
+else cout << "Unable to open file";
+
+//process quote
+endquote.beginprocess();
+endquote.process();
+endquote.print();
+
+return 0;
+}
+
+
+
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+Describe and analyze the modification
+
+
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+Descrbie and analyze the modification.
+
+
+In order to modify this algorithm, I kept mostly the same method. I still looked for four letters
+in common, as I know that at least four letters are the same. I looked for a match between the 
+last four letters of the current phrase and some four letters of the new word within it.
+Then, I took the last section of the  new word, or new phrase, which came after these four letters.
+I added this onto the current quote.
+
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+Descrbie and analyze the modification.
+
+For this modification, I no longer looked for a capital letter to begin the quote, I only looked for a 
+string that did not have its first four letters within any of the other strings that were in the list. 
+
+Additionally, redundancy was not an issue because I only looked for new characters to add to the
+list of current characters.
+
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+Resulting Cycle Weight: 98,251.
+
+
+My approach was an adaptation of Prim's algorithm to find a minimum spanning tree. I took every
+edge pair from the list in Map.txt and placed them all into a map, with the first and second vertex values
+held there as well as the weight. I also placed all vertices into two different sets, one which I could
+change, called lefttovisit, and one called myCity which I was only using for comparison.
+
+For each of the vertices in myCity ( as sets only allow for original values), I looked through its neighbors
+using the map, and compared the weights of each, keeping count of the lowest weight and the neighboring
+vertex that it was related to. Once I had found a minimum weight, I deleted the vertex to which it related from
+the left to visit set, added it onto the a visited set, and this became the new node which I was working with.
+I kept doing this, until I had no vertices left in the left to visit set. Then, I had found the shortest hamiltonian path
+from the original node. After this, I simply looked at the weight of the edge between that last vertex found
+and the original start node, and added this onto the total weight.
+
+
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle

@@ -1,0 +1,232 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  O(n log n)  |
+|  c  |  O(n log n)  |
+|  d  |  O(n)  |
+---++ Explanation
+<VERBATIM>
+Provide explanation for partial credits:
+b.
+c. We have n lists and into each list we insert log(n) equal numbers.
+d. O(n + log n)
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  57  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  8  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  41  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  3  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  37  |
+
+Does this graph exhibit the triangle inequality?
+Yes, it does.
+---++!! 2b
+|  Vertex  |  Location   |
+|  A  |  Photonics Center,8 St Marys St, Boston, MA 02215  |    
+|  B  |  Chichen Itza, Yuc., Mexico  |    
+|  C  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |    
+|  D  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |    
+|  E  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |    
+|  F  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |    
+
+The table above shows the characters that represent each location.
+
+The Minimum Spanning Tree produced by Kruskal's algorithm are(represented as a edge list):
+
+(A,E),(E,C),(C,F),(F,D),(D,B)
+
+---++!! 2c
+|  Vertex  |  Location   |  
+|  A  |  Photonics Center,8 St Marys St, Boston, MA 02215  |    
+|  B  |  Chichen Itza, Yuc., Mexico  |    
+|  C  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |    
+|  D  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |    
+|  E  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |    
+|  F  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |    
+
+I picked B as my arbitrary node, from there the path is: D,F,C,E,A.
+
+Represented as an edge list:
+
+(B,D),(D,F),(F,C),(C,E),(E,A).
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+Prim´s algorithm...
+
+Describe your algorithm here. Pseudocode is preferred.
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+Descrbie and analyze your algorithm.
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+It does always produce a minimum spanning tree.
+
+Running time: O(E^2)
+</VERBATIM>
+---++!! b
+<VERBATIM>
+It produces a spanning tree but not necessarily a minimum spanning tree.
+
+Lets take a graph of 4 vertices(A,B,C,D) and 5 edges((A,B),(B,C),(C,D),(D,A),(A,C) with weights 1,2,3,4,5, respectively).
+
+The resulting spanning tree could be (D,A),(A,C),(C,B).
+
+As each edge is arbitrarily chosen, only luck will determine if the resulting spanning tree will be minimum.
+</VERBATIM>
+---++!! c
+<VERBATIM>
+It always produces a minimum spanning tree.
+
+Running time: O(EV)
+</VERBATIM>
+
+---++!! Grader comments *[20/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+Describe and analyze the algorithm:
+We start with some sub string and we look for the two sub strings that sandwich our initial sub string (strings that have 4 characters in common).
+To our initial sub string we add the letters from the sandwich sub strings we found.
+Now we have a new string and we use it to find sub strings that are on each side of it.
+Repeat until we have the whole string.
+
+Running time:
+Each time we look for a sandwich we look through an array of sub strings (n).
+This array of sub strings gets smaller each time we find a sandwich (decreases by n-2 number of elements each time)
+so our total running time is the sum: n+(n-2)+(n-4)+(n-6)+...+1
+
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+Gravitation cannot be held responsible for people falling in love.
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+#include<iostream>
+#include<string>
+
+using namespace std;
+
+
+
+int main()
+{
+	string mysubs[] = { " be h", " cann", " fall", " for ", " held", " in l", " love", " peop", " resp", "Gravi", "allin", "annot", "ation", "avita", "be he", "ble f", "canno", "d res", "e fal", "e for", "e hel", "eld r", "eople", "espon", "falli", "for p", "g in ", "held ", "ible ", "in lo", "ing i", "ion c", "itati", "ld re", "le fa", "le fo", "ling ", "lling", "love.", "n can", "n lov", "ng in", "nnot ", "not b", "nsibl", "on ca", "onsib", "ople ", "or pe", "ot be", "peopl", "ple f", "ponsi", "r peo", "ravit", "respo", "sible", "spons", "t be ", "tatio", "tion ", "vitat" };
+	string mystring = mysubs[0];
+	mysubs[0] = "";
+	string almost1 = "";
+	string almost2 = "";
+
+	while (mystring.length() < 65)
+	{
+		for (int ii = 1; ii < 62; ii++)
+		{
+
+			if (mystring.compare(0, 4, mysubs[ii], 1, 4) == 0)
+			{
+				almost1 = mysubs[ii][0];
+				mysubs[ii] = "     ";
+			}
+			else if (mystring.compare(mystring.length() - 4, 4, mysubs[ii], 0, 4) == 0)
+			{
+				almost2 = mysubs[ii][4];
+				mysubs[ii] = "     ";
+			}
+
+		}
+		mystring = almost1 + mystring + almost2;
+		almost1 = "";
+		almost2 = "";
+	}
+	cout << mystring << endl;
+	return 0;
+
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+Describe and analyze the modification
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+
+
+---+++!! Grader comments
+<VERBATIM>Question 4 Results:
+
+Total Grade: 10
+
+	10        		
+	0         		
+	0         		
+
+
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle
+
+
+---+++!! Grader comments
+<VERBATIM>Question 5 Results:
+
+Total Grade: 0
+
+	0         		Grades from submission
+	0         		
+
+
+</VERBATIM>
+

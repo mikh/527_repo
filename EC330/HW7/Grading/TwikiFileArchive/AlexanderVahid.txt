@@ -1,0 +1,439 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  <latex> \Theta(n^2log(n)log_2(log(n)))</latex>  |
+|  c  |  <latex> \Theta(n^2log(n))</latex>  |
+|  d  |  <latex> \Theta((nlog(n))^2)</latex>  |
+---++ Explanation
+<VERBATIM>
+a. The tree contains nlogn elements, and its height will be nlog2(logn), so all together it will be n^2log2(logn)
+b. The binary search tree will be built up so that the height is n, and each node has a list of log(n) keys. It is added such that 
+</VERBATIM>
+<latex>\sum\limits_{k=1}^n \sum\limits_{L=1}^{log(n)} k = \Theta(n^2log(n))</latex>
+<VERBATIM>
+c.The binary search tree will be built up so that in the absolute worst case, the height is n*log(n). It is added such that
+</VERBATIM>
+<latex>\sum\limits_{k=1}^{n*log(n)} k = \Theta((nlog(n))^2)</latex>
+
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  | 56   |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  | 8 h 49 min   |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  43  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  | 3 h 39 min   |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  40  |
+
+Does this graph exhibit the triangle inequality? 
+Yes, the cost of traveling between two vertices is essentially the euclidean distance between them, so it exhibits the triangle inequality.
+---++!! 2b
+(Using driving time with traffic)
+Photonics - Statue of Liberty - CN Tower - Mandalay Bay - Pyramid of the Sun - Chichen Itza
+
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |    |
+|  b  |  Chichen Itza, Yuc., Mexico  |  Pyramic of the Sun  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  Statue of Liberty  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  Mandalay Bay  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  Photonics  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  CN Tower  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+//Modified Prim's algorithm
+//Q is implemented as a fibonacci heap
+
+for each u in G.V 
+    u.key = infinity 
+    u.p = NIL
+r.key = 0 
+Q = G.V 
+while Q != emtpy;
+    u = EXTRACT-MIN(Q)
+    for each v in G.Adj[u];
+        if v in Q and w(u,v)< v.Key
+            v.p = u
+            v.key = w(u,v)
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+By using Fibonacci heaps, Prim’s algorithm runs in time O(E + V lg V ), which improves over the binary-heap implementation if V is much smaller than E. Because this is a complete graph,
+V is much smaller than E, so Prim's algorithm runs faster.
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+Running time: O(E*V)
+sorting using quicksort will take E*log(E) time
+cycling through each edge takes E time, and checking that it is connected (using an adjacency list) takes V time
+therefore the total time is E*log(E) + E*V which asymptotically is O(E*V)
+</VERBATIM>
+---++!! b
+<VERBATIM>
+Counterexample:
+A cycle graph of three vertices, of weights 1,2,3. This algorithm could potentially make the edges 3 and 2 a minimum spanning tree, which would be false. 
+</VERBATIM>
+---++!! c
+<VERBATIM>
+Running time: O(E(V+E))
+Each edge is iterated over, and each time the graph is checked for cycles. Using Tarjan's strongly connected components algorithm, 
+cycles can be returned in O(V+E) time. Therefore, the total time is O(E(V+E))
+</VERBATIM>
+
+---++!! Grader comments *[18/20]*
+<VERBATIM>
+First running time is O(E^2).
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+My algorithm takes all of the reads, treating them as nodes in a graph, and connects them to each of the remaining reads based on whether there is overlap. The graph is implemented using a modified adjacency list that keeps track of the largest prefixes and suffixes of the node. Once the graph is generated, the program finds the starting node (the node with no prefixes) then traverses the graph until the end using a recursive function. The recursive function is necessary because some reads have the same overlap; for example " the " and " ther" both fit equally as well at the end of "n the". The recursive function attempts to find a hamiltonian path, and when it does, it outputs the sequence.
+
+The running time of the algorithm is approximately O(n^2). n^2 time is needed to build the graph, but the recursive function could take up to n! time (only if every read was exactly the same), but could also take as little as n time.
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+(code below will produce this, forgot to post actual answer with code) In order that every man present his views without penalty there must be spirit of tolerance in the entire population.
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <list>
+#include <map>
+#include <utility>
+
+using namespace std;
+
+typedef map<string, pair<list<string>, list<string> > > adjacencyList;
+
+string followMap(string sequence, string next, adjacencyList adjList)
+{
+	string newSequence;
+	list<string> nextReads = adjList[next].second;
+	sequence += next[4];
+	adjList.erase(next);
+	
+	string largestSequence = sequence;
+	for (list<string>::iterator it = nextReads.begin(); it != nextReads.end(); it++)
+	{
+		newSequence = followMap(sequence, *it, adjList);
+		if (newSequence.size() > largestSequence.size()) largestSequence = newSequence;
+	}
+
+	return largestSequence;
+}
+
+int main()
+{
+	ifstream input;
+	input.open("C:\\Users\\Alex\\Dropbox\\Sophomore\\Algorithms\\Homework7\\reads2.txt");
+	
+	list<string> reads;
+	string node1, node2, read;
+	char c;
+	while (input >> noskipws >> c)
+	{
+		//start read
+		if (c == '[') read = "";
+		//end read
+		else if (c == ']')reads.push_back(read);
+		//add to read
+		else read += c;
+	}
+	adjacencyList adjList;
+	adjacencyList::iterator mapIt;
+	list<string>::iterator it1,it2;
+	int node1Length, node2Length;
+
+	for(it1 = reads.begin(); it1 != reads.end();it1++)
+	{
+		for(it2 = reads.begin(); it2 != reads.end();it2++)
+		{
+			int overlap = 4;
+			bool prefix, suffix;
+			node1 = *it1;
+			node2 = *it2;
+			node1Length = 5;
+			node2Length = 5;
+
+			if (node1 == node2) continue;
+
+			prefix = true;
+			for(int ii = 0; ii < overlap; ii++)
+			{
+				if(node1[node1Length - overlap + ii] != node2[ii])
+				{
+					prefix = false;
+					break;
+				}
+			}
+			if (prefix) 
+			{
+				adjList[node1].second.push_back(node2);
+			}
+
+			suffix = true;
+			for(int ii = 0; ii < overlap; ii++)
+			{
+				if(node1[ii] != node2[node2Length - overlap + ii])
+				{
+					suffix = false;
+					break;
+				}
+			}
+			if (suffix) 
+			{
+				adjList[node1].first.push_back(node2);
+			}
+		}
+	}
+
+	string start, sequence, next;
+	for(mapIt = adjList.begin(); mapIt != adjList.end(); mapIt++)
+	{
+		if(mapIt->second.first.size() == 0)
+		{
+			start = mapIt->first;
+			break;
+		}
+	}
+	sequence = start;
+	next = adjList[start].second.front();
+	adjList.erase(start);
+	
+	sequence = followMap(sequence, next, adjList);
+	cout << sequence << endl;
+		
+	input.close();
+	return 0;
+
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+Now, instead of choosing the maximum overlap (which was 4 before), each node is compared for overlap up to the size of the smaller of the two nodes being compared. The running time is similar to before, except the pre-processing of the graph doesn't take O(n^2) time anymore, it also depends on the size of the reads. The recursive function doesn't change much, and neither does its running time. For working code, see below.
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+%CODE{"cpp"}%
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <list>
+#include <map>
+#include <utility>
+
+using namespace std;
+
+class edges
+{
+public:
+	string node1;
+	
+	int prefixOverlap;
+	list<string> prefixes;
+	int suffixOverlap;
+	list<string> suffixes;
+
+	edges() {}
+	edges(string n)
+	{
+		node1 = n;
+		prefixOverlap = 0;
+		suffixOverlap = 0;
+	}
+
+	void addEdge(string node2)
+	{
+		int overlap, maxOverlap;
+		int node1Length = node1.length();
+		int node2Length = node2.length();
+		bool prefix, suffix;
+
+		if(node1Length < node2Length) maxOverlap = node1Length;
+		else maxOverlap = node2Length;
+
+		for (overlap = 1; overlap < maxOverlap; overlap++)
+		{
+			suffix = true;
+			for(int ii = 0; ii < overlap; ii++)
+			{
+				if(node1[node1Length - overlap + ii] != node2[ii])
+				{
+					suffix = false;
+					break;
+				}
+			}
+			if (suffix && overlap >= suffixOverlap) 
+			{
+				if (overlap > suffixOverlap) 
+				{
+					suffixes.clear();
+					suffixOverlap = overlap;
+				}
+				suffixes.push_back(node2);
+			}
+
+			prefix = true;
+			for(int ii = 0; ii < overlap; ii++)
+			{
+				if(node1[ii] != node2[node2Length - overlap + ii])
+				{
+					prefix = false;
+					break;
+				}
+			}
+			if (prefix && overlap >= prefixOverlap) 
+			{
+				if (overlap > prefixOverlap) 
+				{
+					prefixes.clear();
+					prefixOverlap = overlap;
+				}
+				prefixes.push_back(node2);
+			}
+		}	
+	}
+};
+
+typedef map<string, edges> adjacencyList;
+
+string followMap(string sequence, string next, int overlap, adjacencyList adjList)
+{
+	string newSequence;
+	list<string> nextReads = adjList[next].suffixes;
+	sequence += next.substr(overlap, next.length() - overlap);
+	overlap = adjList[next].suffixOverlap;
+	adjList.erase(next);
+	
+	string largestSequence = sequence;
+	for (list<string>::iterator it = nextReads.begin(); it != nextReads.end(); it++)
+	{
+		newSequence = followMap(sequence, *it, overlap, adjList);
+		if (newSequence.size() > largestSequence.size()) largestSequence = newSequence;
+	}
+
+	return largestSequence;
+}
+
+int main()
+{
+	ifstream input;
+	input.open("C:\\Users\\Alex\\Dropbox\\Sophomore\\Algorithms\\Homework7\\DNA.txt");
+	
+	list<string> reads;
+	string node1, node2, read;
+	string c;
+	while (input >> c)
+	{
+		reads.push_back(c);
+	}
+	adjacencyList adjList;
+	adjacencyList::iterator mapIt;
+	list<string>::iterator it1,it2;
+
+        //add edges
+	for(it1 = reads.begin(); it1 != reads.end();it1++)
+	{
+		node1 = *it1;
+		adjList[node1].node1 = node1;
+		for(it2 = reads.begin(); it2 != reads.end();it2++)
+		{	
+			node2 = *it2;
+			
+			if (node1 == node2) continue;
+
+			adjList[node1].addEdge(node2);
+		}
+	}
+
+	string start, sequence;
+	string next;
+	int smallestOverlap = 99999999;
+
+        //attempt to find the starting node
+	for(mapIt = adjList.begin(); mapIt != adjList.end(); mapIt++)
+	{
+		if (mapIt->second.prefixes.size() == 0)
+		{
+			start = mapIt->first;
+			break;
+		}
+		if (mapIt->second.prefixOverlap < smallestOverlap)
+		{
+			smallestOverlap = mapIt->second.prefixOverlap;
+			start = mapIt->second.prefixes.front();
+		}
+	}
+	sequence = start;
+	next = adjList[start].suffixes.front();
+	int overlap = adjList[start].suffixOverlap;
+	adjList.erase(start);
+	
+	sequence = followMap(sequence, next, overlap, adjList);
+	cout << sequence << endl;
+		
+	input.close();
+	return 0;
+}
+%ENDCODE%
+---+++!! i
+<VERBATIM>
+Not much needed to be changed to implement this. The recursive function already took care of cases where multiple reads had the same overlap on a node. If incorrect reads are found, they will not likely create a Hamiltonian cycle, so the recursive function will eventually pop back and start looking for different paths. The running time will be the same as before. See above code for a working implementation.
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+<VERBATIM>
+Explanation:
+My code builds up an adjacency list from the file using a map and a list of "edges". The edges are implemented using a struct containing the edge destination and the cost. The program then sorts every list of edges using the built in list sort. Next, it takes a starting node, 
+and traverses the map by finding the cheapest neighbor. Every time a node is added to the path, it is removed from the adjacency list. This continues until there are no nodes left in the adjacency list, or a dead end is found. If a valid cycle is located, it is output to a file. 
+The program then continues to look for cheaper paths by using different starting nodes.
+
+
+***To get the exact result I posted on the twiki page, uncomment "//seed = "BHWD";" and comment the line before it
+***Cycles that are generated do not begin and end with ECTW, but by finding where in the cycle ECTW is and moving it to the beginning a valid solution can be made.
+</VERBATIM>
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle

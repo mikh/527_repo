@@ -1,0 +1,420 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  <latex>\Theta( n(h + log^2(log(n)) ) )</latex>  |
+|  c  |  <latex>\Theta(nhlog(n))</latex>  |
+|  d  |  <latex>\Theta( n(h + log^2(n) ) )</latex>  |
+---++ Explanation
+<VERBATIM>
+I am assuming that h is the height of the existing tree we're inserting into.
+
+b). For the log(n) duplicates of a key that are being inserted into the tree, the time taken
+to insert will increase from the first to the last. For example, the first make take Theta(h) to 
+get to the place where the key must be inserted, but then the next insertion may force the 
+creation of a new level, and thus take Theta(h + 1). Overall, as we add log(n) elements in 
+this manner, we will add log(log(n)) levels. This is because the boolean switching will evenly 
+distribute the new elements. Over the course of these log(n) additions, the  increase in time 
+on top of h will look like an arithmetic series from 1 to log(log(n)), which is bounded by the square 
+of log(log(n)). Since the is in addition to the h extant levels, the insertion time for these copies will 
+be Theta(h + log^2(log(n))). We are inserting log(n) copies of n distinct keys, so that procedure 
+will be repeated n times, hence my final answer. 
+
+c). Finding a key in the tree takes Theta(h) time, and adding an element to a linked list 
+takes constant time, so inserting a single key duplicate key will take Theta(h) time. That 
+insertion is repeated for log(n) copies of a key, for a total of Theta(hlogn) time for all 
+duplicates of a single key. We insert that number of duplicates for n different keys, so 
+the overall time is Theta(nhlog(n)).
+
+d). With this method, the worst outcome would be that the random selection randomly chooses the 
+same thing each time (such as always adding the key to the left). If that were to happen, each insertion 
+of an element would add a new level to the tree. This would cause each successive insertion to take 
+longer than the previous one. Similar to the first method, the total time incurred over the insertion of the 
+log(n) duplicates would look like an arithmetic series, except this one would be from 1 to log(n), which is 
+bounded by the square of log(n). So to add log(n) duplicates in this worst case scenario to the existing 
+tree would take h + log^2(n) time. We would repeat this duplicate-inserting procedure for n different keys, 
+so we'd multiply be n as in my provided answer.
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  56  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  9  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |   43   |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |   4   |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  40  |
+
+Does this graph exhibit the triangle inequality?
+ 
+When I did out all the math, it did exhibit the triangle inequality. Some routes had the sum of
+two sides equal to the third side, but that doesn't violate the >= relationship.
+---++!! 2b
+|  Index  |  Location   |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |
+|  b  |  Chichen Itza, Yuc., Mexico  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |
+
+Edge List: (a,e), (c,e), (b,d), (d,f), (c,f)
+
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  NULL (chosen as root)  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2d
+---+++!! Algorithm
+The best algorithm I can think of is Prim's algorithm, as given in notes and the textbook.
+<VERBATIM>
+Q = all vertices;
+key[v] = infinity;
+key[root] = 0;
+
+while(Q is not empty) {
+	u = extract-min(Q);
+
+	for each v adjacent to u:
+		if v is an element of Q && w(u,v) < key[v]
+			key[v] = w(u,v);
+			pi[v] = u;
+}
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+The algorithm runs in Theta(E logV) time. 
+
+You can see that the while loop will run V times, since the number of elements in Q is V, 
+and each iteration removes one vertex from the queue. If we are using a binary min-heap
+for the queue, the extract-min will take logV time. Then, over the course of the entire function,
+the for loop will take E time to execute, since exploring all the relationships between vertices 
+is equivalent to considering all edges. Then, inside the for loop, it will take logV time to change
+the key of v, since we will have to modify a key in a heap, which takes logV time. From all of that, 
+the ElogV term dominates. 
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+This algorithm will work. Since it deletes edges from greatest to least, and only as long as the graph 
+remains connected, it cannot possible leave in an edge that is too big to belong, for there would 
+theoretically be a lighter edge keeping the tree connected, so the algorithm would not complain 
+about deleting that edge.
+
+Sorting the edges into decreasing order would take Theta(ElogE) time. We don't really know much 
+about the data set that we are sorting, so we couldn't use a linear time sort like Counting or Radix 
+sort (which would require us to know something about the number of digits in/the range of weights). 
+Merge sort is the best option, since it runs in the consistently lowest time, which is nlogn.
+
+The for loop would be run E times. Inside, we could use BFS to figure out if the graph was connected. 
+As we ran through BFS we could track how many vertices we found, and then compare that to the 
+number of vertices expected in the graph. If these were not equal, then the graph would not be 
+connected. Running BFS would take Theta(V+E) time. If we entered the if branch, deleting an edge 
+would take some multiple of V or E time, depending on the graph representation.
+</VERBATIM>
+
+Overall, the two dominating terms give us ElogE + E(V+E) time, which is <latex>\Theta(E^2)</latex>. 
+
+<VERBATIM>
+E(V+E) simplifies to E*E because there could be cycles at certain times, so the number of edges
+could be greater than the number of vertices.
+</VERBATIM>
+
+---++!! b
+<VERBATIM>
+This does not always produce an MST. As a counterexample, the following undirected graph, given as an edge list:
+
+G = (a,b):2, (b,c):11, (b,d):1, (c,d):4, (d,e):3, (e,a): 6
+
+(I don't know how to represent weights in an edge list, so I just did (v1,v2):weight as my notation)
+
+Using Maybe-MST-B, we could arbitrarily choose (b,c) first, with a weight of 11. This is the absolute worst edge to 
+pick, and cannot later be taken out of the graph. Then we could pick (e,a), (d,e), and (b,d) as the next three edges.
+ Adding either of the remaining two edges would create a cycle, so our final tree would have weight 21. The true 
+MST for this graph would contain edges (a,b), (b,d), (d,e), and (c,d) for a total weight of 10.
+</VERBATIM>
+---++!! c
+<VERBATIM>
+This one always works because it always gets rid of the biggest edge when a cycle is detected. 
+If a cycle hasn't been detected, then a valid tree is still being built (or has been completed on the 
+previous step). Since all possible edges are looked at, all possible edges will be added, so all 
+possible heaviest removable edges will be found.
+
+The for loop will execute E times. Adding an edge to the tree could take constant or V time, 
+depending on the implementation. We can use DFS to check if there is a cycle - BFS would not 
+work in this case because the graph could be disconnected at first, and BFS does not work for 
+non-connected graphs, while DFS does. Regardless, both take Theta(V + E) time. Since there 
+are not supposed to be an cycles, the dominant term will be V, since E should be less than V. 
+Inside the if logic, checking for a maximum weight edge and deleting an edge could both take 
+E or V time, depending on the implementation, but these wouldn't polynomially effect the runtime 
+of this logic block. 
+
+So we would get E(V + E) time, where we already said that V will dominate.
+</VERBATIM>
+
+Thus the runtime is <latex>\Theta(EV)</latex>
+
+---++!! Grader comments *[20/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+This algorithm runs in Theta(R^3) time, where R is the number of reads.
+
+   * The first while loop executes constant time statements R times to get in all the reads.
+   * Then the first for loop iterates through all of the reads and performs a constant time 
+      function to insert extract all prefixes/suffixes into a vector.
+   * The sort function from the algorithms library takes NlogN time, where N in this case is ~2R, so the time is Theta(RlogR).
+   * The unique function from the algorithms library takes linear time for the input, where the input is Theta(R).
+   * Then resize also takes linear time with respect to R. 
+   * The next for loop iterates over all prefixes/suffixes, which are about R in number, and does constant time functions in the body.
+   * The most time consuming work is done in the nested for loops on lines 64-83. The outer loop iterates over every read (R in number), 
+     and then iterates over every prefix/suffix (now R in number also. The worst case scenario is that the second for loop will have to go 
+     over every R to meet the condition for entering the innermost for loop, which will run for R time in the worst case. 
+   * This gives the entire nested loop a time of Theta(R^3).
+   * The following for loop could run for up to R iterations to find the head.
+   * The last while loop will end up traversing all R reads in order to build the output sequence.
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+Reading, after a certain age, diverts the mind from its creative pursuits.
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+#include <sstream>
+#include <algorithm>
+#include "vertex.h"
+
+using namespace std;
+
+int main() {
+
+	// Extracts the reads from the file
+	string unformatted;
+	ifstream infile;
+	infile.open("reads3.txt");
+
+	getline(infile, unformatted);
+
+	infile.close();
+
+	// Splits the string into individual reads
+	// and clears away delimiters
+	vector<string> reads;
+	istringstream ss(unformatted);
+	string read;
+
+	while(getline(ss, read, ']')) {
+		read = read.erase(0, read.find("[")+1);
+		reads.push_back(read);
+	}
+
+	// Preprocessing to create nodes: determine prefixes/suffixes and then remove duplicates
+	vector<string> pfx_sfx;
+	for (vector<string>::iterator ii = reads.begin(); ii != reads.end(); ++ii) {
+
+		pfx_sfx.push_back((*ii).substr(1,4));	// Determine suffix of the read
+		pfx_sfx.push_back((*ii).substr(0,4));	// Determine prefix of the read
+	}
+
+	vector<string>::iterator marker;
+	sort(pfx_sfx.begin(), pfx_sfx.end());	// Sort strings to work with unique()
+  	marker = unique (pfx_sfx.begin(), pfx_sfx.end());	// Remove duplicates so that all nodes are unique
+  	pfx_sfx.resize( distance(pfx_sfx.begin(),marker) );	// Resize the vector so that it fits the data
+
+
+  	// Create nodes out of all the prefixes/suffixes
+	vector<Vertex> nodes;
+	int numVertices = 0;
+	for (vector<string>::iterator hh = pfx_sfx.begin(); hh != pfx_sfx.end(); ++hh) {
+		Vertex node(numVertices, (*hh));	// Create a new node for the prefix/suffix
+		nodes.push_back(node);	// Add vertex to the list of nodes
+		numVertices++;	// Increment next vertex ID
+	}
+
+	// Create directed edges from prefixes to suffixes
+	// This means that each read ends up being an edge between nodes
+	for (vector<string>::iterator nn = reads.begin(); nn != reads.end(); ++nn) {
+		for (vector<Vertex>::iterator jj = nodes.begin(); jj != nodes.end(); ++jj) {
+
+			// Only look for a suffix if the prefix for the read has been found
+			// In graph terms, we only want to look for a v if the u belonging to this edge is found
+			if ((*nn).substr(0,4) == (*jj).contents) {
+				for (vector<Vertex>::iterator kk = nodes.begin(); kk != nodes.end(); ++kk) {
+
+					// We find the suffix of the read (e.g. the v for the pair (u,v))
+					if ((*nn).substr(1,4) == (*kk).contents) {
+						(*jj).addAdj(&(*kk)); // Add suffix node to the adjacency list of prefix (create directed edge)
+						(*kk).in_degree++;	
+						cout << (*jj).contents << " " << (*kk).contents << endl;
+					}
+				
+				}
+			}
+
+		}	
+	}
+
+
+	// Search through the array of nodes for the one which has no edges coming into it.
+	// This node must be the first node.
+	Vertex *head;	
+	for (vector<Vertex>::iterator search = nodes.begin(); search != nodes.end(); ++search) {
+		if ((*search).in_degree == 0) {
+			head = &(*search);
+		}
+	}
+
+	// Builds the sequence by traversing the nodes from the head
+	// all the way to the tail (the one with no adjacent nodes)
+	string sequence = "";	// Create empty string to store reconstructed sequence
+	sequence.append((*head).contents);	// Add the head contents as the start of the sequence
+
+	Vertex *next = (*head).adjList[0];	// Next node to visit is the one adjacent to head
+	while((*next).adjList.empty() != true) {	// While next node has adjacent edges
+		sequence.append((*next).contents.substr(3,1));	// Merge the prefix/suffix in this node into the sequence
+		next = (*next).adjList[0];	// Next node to visit is the one adjacent to the present node
+	}
+	sequence.append((*next).contents.substr(3,1));	// The while loop will miss adding the last node to the sequence
+
+	cout << sequence << endl;
+
+}
+
+%ENDCODE%
+
+%CODE{"cpp"}%
+#ifndef VERTEX_H
+#define VERTEX_H
+
+#include <vector>
+#include <string>
+
+using namespace std;
+
+class Vertex {
+	public:
+		int name;	// The numerical label of the vertex
+		int in_degree;	// Number of edges directed towards this node
+		int out_degree;	// Number of edges directed out of this node
+		string contents;	// The read or city this vertex represents
+		vector<Vertex*> adjList; 	// Adjacent vertices
+
+		// Constructor for a vertex object
+		Vertex(int num, string text) {
+			name = num;
+			contents = text;
+			out_degree = 0;
+			in_degree = 0;
+		}
+
+		void addAdj(Vertex *adjacent) {
+			adjList.push_back(adjacent);	// Add the given vertex to list of adjacent vertices
+			out_degree++;
+		}
+};
+
+#endif
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+To adapt to differently sized reads, I modified the code so that, in places where I previously 
+extracted or examined substrings of static length, I now look at sizes of substrings relative 
+to the size of the original read. For instance, prefixes/suffixes are still 1 character less than
+the read, but I had to change the arguments to the substr function to extract the right things.
+ And when I search for the prefixes and suffixes of the reads, I check if the current node we're 
+looking at during the for loop is found in the beginning of the read from position 0 to the length 
+of that node, and for suffixes check if that node occupies the right number of chars at the end. 
+
+Since we now have to find substrings relative to the length of a read nested inside of for loops, 
+the new time complexity is Theta(NL) where L is the length of a read (since substr takes time 
+linear to the length it's extracting).
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+
+
+---+++!! Grader comments
+<VERBATIM>Question 4 Results:
+
+Total Grade: 15
+
+	10        		
+	5         		
+	0         		
+
+
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+My approach was to first extract all of the origins from the map file and create a graph node for each. 
+Then I populated the adjacency list of each node with the destinations you could reach from that node
+ and the cost it would incur to get there. Then I ran Prim's Algorithm on the resulting graph to find the
+ minimum spanning tree. I then did a Depth First Search on that MST to find the cycle that would bring
+ me to each city at the lowest cost.
+
+The cost I found was $2,558,782
+
+   * [[%ATTACHURLPATH%/problem5.zip.zip][problem5.zip.zip]]: problem5.zip.zip
+
+
+---+++!! Grader comments
+<VERBATIM>Question 5 Results:
+
+Total Grade: 5
+
+	0         		Grades from submission
+	5         		
+
+
+</VERBATIM>
+

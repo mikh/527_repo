@@ -1,0 +1,433 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  n^2 * log(log(n))  |
+|  c  |  n^2 * log(n)  |
+|  d  |  (n * log(n))^2  |
+---++ Explanation
+<VERBATIM>
+B: For part B, you will be creating "perfect" trees, so essentially you will have height of log(n) for each of the groups of numbers that you insert. Because there are log(n) insertions, you will get log(log(n)) as your total height of the tree.
+Because there are n numbers, and you will be inserting n times, you will get n^2 * log(log(n)) for the final running time. 
+
+C: For part C, you will have a linked list of nodes at each of the nodes. So insertion time is constant, and you will be inserting log(n) times for n numbers. The height of the tree will be n (due to being n numbers), so when you
+multiply them together, you will get n^2*log(n) as the worst running time. 
+
+D: For a random insertion right/left, the worst case will just be a huge "linked list" tree, and so the height will be n * log(n). Because there are n numbers, log(n) insertions, you will get n^2 * 2 * log(n) which simplifies to n^2 * log(n). 
+
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  57  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  9  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  44  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  40  |
+
+Does this graph exhibit the triangle inequality? 
+---++!! 2b
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  Start  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  Start  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+For this part, I would use an algorithm pretty much the same to Prims or Kruskals algorithm. In both cases you are able to add the lowest edge/vertex that doesn't create a cycle in order to have the "best" minimum spanning tree. For example, using Kruskals algorithm you would just keep adding the minimum weight edge that doesn't cause a cycle. This would be a pretty good algorithm in terms of running time, because it would just be Theta(E * log(v)).
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+This would just be a simple use of Kruskal's algorithm, meaning you would be checking for the minimum edge each time and adding it. This would yield
+O(E * log(V)). 
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+Yes it will work.
+
+It will have a running time of E(V+E). This is because the for loop will run E times, and to check if it's a connected graph after the subtraction will be V+E time (e.g. running BFS), and so in total it will be E(V+E) time. 
+
+</VERBATIM>
+---++!! b
+<VERBATIM>
+No it will not give you a minimum spanning tree.
+
+It will run, but because it takes arbitrary edges, as long as there is no cycle, it will add the value, even if there is an edge that has a better value. For instance, it looks at an edge of weight 6, but there is a better path with the total weight less than 6. It checks if there is a cycle, which there isn't, and adds it anyway. So it will not always add the lowest/best edges, and will not always create a minimum spanning tree. 
+
+</VERBATIM>
+---++!! c
+<VERBATIM>
+Yes it will create a minimum spanning tree. 
+
+The running time will be E(V+E) because there will be a for loop running E times, V+E to check for connected graphs, and then +E (which just drops the constant) for the checking of the maximum weight edge. 
+
+This gives E(V + 2E) = VE + E^2. 
+</VERBATIM>
+
+---++!! Grader comments *[18/20]*
+<VERBATIM>
+First running time is O(E^2).
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+NOTE: My algorithm does NOT compile correctly. But I will describe how I would like it to work.
+
+For my algorithm, I essentially create a graph with the vertices being all of the given strings. The edges would connect the vertices that have the four characters that are similar (with the direction pointing from the vertex with the last four characters being equal to the first four characters of the next vertex). This would allow you to find a Euclidean cycle, meaning that you are able to go through EVERY single string. This would be implemented by using a stack, where you would push the vertex string onto the stack. Every time you add a vertex onto the stack, you delete the edge. Every vertex, you check if there are edges. When you reach the final string value (meaning there are no edges for this particular vertex), you pop off the stack and check for edges again, adding the string "backwards". This allows you to make sure you go through all of the vertices and allow you to get through every edge, to make sure you have no forgotten any vertices/edges. 
+
+For this algorithm, you would have to go through every edge, and every vertex, as well as the creating the graph in the first place. This would give a running time of O(V + E + V * E) = O(V * E). 
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+Reading, after a certain age, diverts the mind too much from its creative pursuits.
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+#include "Graph.h"
+#include <iostream>
+#include <stdlib.h>
+#include <time.h>
+#include <stack> 
+
+using namespace std;
+
+Graph::Graph() {};
+
+int Graph::addVertex(string word) { 
+  //colors[vertices.size()] = color; //verticies.size() creates an arbitrary index in the map 
+  vertices.insert(word); //adds the arbitrary index as a vertex
+  return vertices.size()-1; //
+}
+
+void Graph::addVertexEdge(string word) { 
+  if (vertices.size() == 0) {
+	vertices.insert(word);
+  }
+  else {
+	vertices.insert(word);
+	for (vertexIterator vert1=vertices.begin(); vert1 != vertices.end(); vert1++) {
+	  if (word.substr(1,4) == (*vert1).substr(0,4)) {
+		addEdge(word, *vert1);
+	  }
+	}
+	for (vertexIterator vert1 = vertices.begin(); vert1 != vertices.end(); vert1++) {
+	  if ((*vert1).substr(1,4) == word.substr(0,4)) {
+		addEdge(*vert1, word); 
+	  }
+	}
+  }
+	
+
+
+}
+
+void Graph::addEdge(string word1, string word2) {
+  
+  std::pair <string, string> edge = std::make_pair(word1, word2);
+  edges.insert(edge); //simply inserts the edge into the set
+}
+
+int Graph::getColor(int vertex) {
+  return colors[vertex]; 
+}
+
+string Graph::getLetter(int vertex) {
+  stringstream result;
+  vertexIterator vert1 = vertices.begin();
+  std::advance(vert1, vertex); 
+  result << *vert1;
+  return result.str(); 
+}
+
+int Graph::getNumOfLetters() {
+  return vertices.size(); 
+}
+
+
+bool Graph::isEdge(string word1, string word2) {
+  std::pair <string, string> newEdge = std::make_pair(word1, word2);
+  if (edges.find(newEdge) != edges.end()) { //if the edge exists in the set
+	return true;
+  }
+  return false; 
+}
+
+
+string Graph::print() {
+  stringstream result;
+  for (vertexIterator vert1=vertices.begin(); vert1 != vertices.end(); vert1++) {
+	result << *vert1 << ": ";
+	for (vertexIterator vert2 = vertices.begin(); vert2 != vertices.end(); vert2++) {
+	  if (isEdge(*vert1, *vert2)) {
+		result << *vert2 << " ";
+	  }
+	}
+	result << endl; 
+  }
+  return result.str(); 
+}
+
+string Graph::combineWords() {
+  std::stack <vertexIterator> holder;  
+  std::pair <string, string> deleteEdge; 
+  string totalString = ""; 
+  vertexIterator vert1 = vertices.begin();
+  holder.push(vert1);
+  while (!holder.empty()) {	
+	for (vertexIterator vert2 = vertices.begin(); vert2 != vertices.end(); vert2++ ) {
+	  cout << print() << endl;
+	  if (isEdge(*vert1, *vert2)) {
+		deleteEdge = std::make_pair(*vert1, *vert2); 
+		edges.erase(deleteEdge); 
+		holder.push(vert2);
+		vert1 = vert2;
+		vert2 = vertices.begin(); 
+	  }
+	}
+	totalString = *(holder.top()) + totalString;
+	cout << totalString << endl; 
+	cout << "ARE WE GETTING HERE" << endl; 
+	holder.pop();
+	vert1 = holder.top(); 
+  }	
+  return totalString; 
+}
+
+
+/*string Graph::print() {
+	stringstream result;
+	for (vertexIterator vert1=vertices.begin(); vert1 != vertices.end(); vert1++) {
+		result << *vert1 << "[" << getColor(*vert1) << "]: ";
+		for (vertexIterator vert2 = vertices.begin(); vert2 != vertices.end(); vert2++)
+			if (isEdge (directedEdge(*vert1, *vert2)))
+				result << *vert2 << " ";
+		result << endl;
+	}
+		return result.str();
+		}*/
+
+//Code to test the basic Graph functions. Uncomment for testing. 
+int main () {
+
+  cout << "Creating test graph: " << endl;
+  string worldWide [] = {"_Wide", "Wide_", "World", "d_Wid", "de_We", "e_Web", "ide_W", "ld_Wi", "orld_", "rld_W"}; 
+  Graph testgraph;
+
+  for (int i = 0; i < 10; i++) {
+	testgraph.addVertexEdge(worldWide[i]);
+  }
+
+  cout << testgraph.combineWords() << endl; 
+
+
+  //testgraph.addVertexEdge("Hello my name is waffle man"); 
+ 
+  cout << testgraph.print() << endl;
+
+  /*Graph testGraph;
+
+  cout << endl << "Adding vertices with color 5, 200, 40" << endl << endl;
+  testGraph.addVertex(5);
+  testGraph.addVertex(200);
+  testGraph.addVertex(40);
+
+  cout << "Adding edge between vertex 1 and 2" << endl; 
+  std::pair <int, int> edge;
+  edge = std::make_pair(1,2); 
+  testGraph.addEdge(edge); 
+
+
+  cout << endl << "The current graph: " << endl; 
+  cout << testGraph.print() << endl;
+  cout << "End of Graph Test" << endl << endl;*/
+  
+  }
+
+//Code for Graph.h
+
+#ifndef GRAPH
+#define GRAPH
+
+#include <set>
+#include <map>
+#include <sstream>;
+#include <string>
+#include <iterator>
+
+using namespace std;
+
+/** Type definitions to make life easier. */
+typedef pair<string, string> directedEdge;
+typedef set<string>::iterator vertexIterator;
+
+class Graph {
+	/**
+	* Implements a directed, unweighted graph, where vertices can have color.
+	*/
+public:
+    
+    // CONSTRUCTORS
+	/**
+	* Constructs a graph with no edges or vertices.
+	*/
+	Graph();
+
+    // SETTERS
+	/**
+	* Adds a vertex to the graph with color <color>.
+	* @param color The color of the added vertex.
+	* @return The ID of the vertex that was added.
+	*/
+	int addVertex(string word);
+
+	/**
+	* Adds the given edge to the graph.
+  * @param newEdge An edge to add to the graph.
+	* @require the vertices of <newEdge> must currently exist in the graph.
+	*/
+	void addEdge (string word1, string word2);
+
+	string combineWords(); 
+
+	string getLetter(int vertex);
+
+    // GETTERS
+
+	/**
+	* @param vertex the vertex whose color is of interest.
+	* @require the vertex <vertex> must currently exist in the graph.
+	* @return the color of vertex <vertex>.
+	*/
+	int getColor(int vertex);
+
+	/**
+	* @return true iff there is an edge in the graph with the same vertices as newEdge
+	*/
+	bool isEdge(string word1, string word2);
+    
+    /**
+    * Returns a string representing a human-readable version of the adjacency list of the graph.
+    * Format is:  vertex [color]: adjacent_vertex_1 adjacent_vertex_2 ...
+     */
+	string print();
+
+	int getNumOfLetters(); 
+	
+	bool areThereEdges(); 
+
+	static Graph* generateRandom(int num);
+	void addVertexEdge(string word);
+	set< directedEdge > edges; /** A set of edges of the graph. */
+	
+private:
+	set<string> vertices;         /** The set of vertices of the graph. */
+	
+	map< int, int > colors;    /** A mapping between vertices in and their colors. */
+};
+
+#endif
+
+
+
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+
+For similar code, all you would need to do is create edges for all of the vertices, similar to what I do before. The only difference is, you have to create edges for ALL possible edges, which means that they could possibly ALL be edges. This means the graph creation time increase, but checking through all of the edges and whatnot is still going to be the same. 
+
+For the running time, the processor time increases, meaning O(E^2 + V + E * V) which leads it to be O(E*V) again depending on the sizes. 
+
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+For this, because there are potential errors on the reads/therefore creating the graph, you have to write in order to check for these errors/account for these errors. This means when you are connecting edges (as stated previously) you have to take into account these errors, so what I would to is create redundant edges, as you would rather have a false positive than a false negative. But as you are going through the graph, you have to check if these are correct in order to get the correct DNA sequencing. 
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+The modification would change to include error checking in both the edge creation, and the creating of the string.
+
+For this, you would have extra time creating the edge again to account for error checking, and more for the creating of the string/traversing the graph.
+
+This would lead to a running time of O(E^2 * V). 
+</VERBATIM>
+
+
+---+++!! Grader comments
+<VERBATIM>Question 4 Results:
+
+Total Grade: 20
+
+	10        		
+	5         		
+	5         		
+
+
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+I did not have time to finish this, but to create a minimum cycle you could essentially just use DFS to create an arbitrary cycle.
+
+To speed it up, you could use a minimum spanning tree + DFS combo type thing in order to get the cycle from the minimum spanning tree. 
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle
+
+
+---+++!! Grader comments
+<VERBATIM>Question 5 Results:
+
+Total Grade: 0
+
+	0         		Grades from submission
+	0         		
+
+
+</VERBATIM>
+

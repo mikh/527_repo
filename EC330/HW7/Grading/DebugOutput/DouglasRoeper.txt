@@ -1,0 +1,653 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  Theta( n^2 * lg( log(n) ) * log(n) )  |
+|  c  |  Theta( n^2 * log( n ) )  |
+|  d  |  Theta( n^2 * log^2 ( n ) )  |
+---++ Explanation
+<VERBATIM>
+Provide explanation for partial credits
+</VERBATIM>
+
+b)
+
+Since you are distributing the equal keys equally between the left and right childs, for each value you make the tree lg( log(n) ) higher, since you add log(n) elements. Thus for each value i from 1 to n, the height of the tree is i * lg( log(n) ). This result means that to add the next value, you must traverse that many elements to get to the bottom. Thus to add one of each value from 1 to n, you do 1 * lg( log(n) ) + 2 * lg( log(n) ) + ... n * lg( log(n) ), giving you n^2 * lg( log(n) ). Finally, since you add log(n) values, not just one, you get a total of: n^2 * lg( log(n) ) * log(n).
+
+
+c) 
+
+By starting with an empty tree and adding the elements from 1 to n, you add every successive element in the right most child. From this, it takes 1, 2, 3, 4, ..., n steps to traverse the tree to find a given element. Adding an element to the list takes constant time, so to add all the elements from 1 to n ONCE, it takes n^2 time. Do this log(n) times to add log(n) of each element, and you get a total run time of n^2 * log(n).
+
+d)
+
+In the worst case, each time you get an element, the child selected is always the right. Then, for each value from 1 to n, you have to traverse all the elements that were added previously to add one new value, which for a given value i equates to i * log ( n ). Doing this for every value, you get the sum 1 * log (n) + 2 * log(n) + ... n * log(n), making adding one of each element n^2 * log( n ). Since you add log(n) elements, not 1, of each value, you get n^2 * log^2 (n).
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  56  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  8  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  43  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  40  |
+
+Does this graph exhibit the triangle inequality? 
+
+Yes.
+
+
+
+
+---++!! 2b
+
+Minimum spanning tree:
+
+Statue <-> PHO  <-> CN Tower  <-> Vegas <-> Pyramid <-> Chichen
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  NONE  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  a  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+Describe your algorithm here. Pseudocode is preferred.
+</VERBATIM>
+
+%CODE{"cpp"}%
+
+findMST(vertices[], edges)
+{
+
+sortEdgesUsingCountingSort( edges );
+T = empty;
+
+for all edges
+{
+if T + e does not contain a cycle
+T = T + e;
+}
+
+return T;
+}
+
+%ENDCODE%
+---+++!! Analysis
+<VERBATIM>
+Descrbie and analyze your algorithm.
+</VERBATIM>
+
+
+I would use Kruskal's algorithim for find the minimum spanning tree. Since you know all the weights are less than 100, you can use a counting sort to sort the edges in linear time. Once this is done, you then have to do E operations to add the lowest edge to the tree that doesn't create a cycle. This will take you E * log( V ), because you need to go through E edges and it will take you log( V ) time to find if V is already been connected. Thus, the total time for this algorithm would be E + E * log V. Since the graph is complete, we can say that E is V^2, and the total running time is Theta(V^2 * log ( V )).
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+Counterexample or Running time
+</VERBATIM>
+
+Returns MST: Yes 
+
+Runtime: Theta(E*(V + E))
+
+First sorting the edges into decreasing order takes E * log (E) time.
+
+Next, you enumerate through all E edges. For each edge, you try removing it to see if you still have a connected graph. Checking if the graph is connected requires you to do a BFS or DFS, which requires a running time of V + E. This makes the running time for the loop E * (V + E).
+
+Since you remove the largest edges first, once the loop is complete, you are left with the smallest edges that make a connected graph. This is the minimum spanning tree.
+
+Thus, you get the running time as E * log( E ) + E*(V+ E), or just Theta(E * (V + E)).
+---++!! b
+<VERBATIM>
+Counterexample or Running time
+</VERBATIM>
+
+Returns MST: No
+
+Counterexample:
+
+Take the graph defined by the edges:
+
+S E W
+
+A B 1
+
+A C 100
+
+B C 1
+
+Where S and E denote the start and end vertices, and W is the weight.
+
+The minimum spanning tree is made up of the edges (A,B) & (B,C) and the total weight is 2. However, using this algorithm, it would proceed as such:
+
+Taking the edges in arbitrary order:
+T: 0/
+
+Take union of T and edge (A,B). No cycle, so add edge.
+T: (A, B)
+
+Next use T and edge (A, C). No cycle, so add edge.
+T: (A, B), (A,C)
+
+Finally, do T and edge (B, C). This adds a cycle, so skip the edge.
+T: (A, B), (A,C)
+
+The weight of this graph is 101, which is not the minimum spanning tree.
+---++!! c
+<VERBATIM>
+Counterexample or Running time
+</VERBATIM>
+
+Returns MST: Yes
+
+Runtime: Theta(E * (V + E))
+
+First, you enumerate through all E edges. For each edge, you check if adding it will add a cycle. To find a cycle, you can do a DFS, which requires V + E running time. If you keep track of the maximum edge while doing the DFS, you can find and remove the edge at the same time. Since you do this for every edge, this gives you a total of Theta(E * (V + E)) time.
+---++!! Grader comments *[20/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+Describe and analyze the algorithm.
+</VERBATIM>
+
+Description:
+
+First, I find the shortest read (we will call this length X). Next, I break all the reads into substrings of the length of the shortest read, if needed. If we’re running this on V reads of the same length, we will have V substrings afterwards. These substrings make of the vertices of the graph.
+
+Next, we separate the parts into buckets based on the first X-1 letters.
+
+Once we’ve sorted the parts, we can then add edges in-between the vertices. For a given vertices, we add an edge between all of the vertices that have the same first X-1 letter in common with the last X-1 letters of the current vertices. Ex:
+
+If the current vertices is “ABCDE”, we look for vertices that start with “BCDE”:
+
+“BCDEF” - Edge
+“BCAEF” - No Edge
+“ABCDE” - No Edge
+
+Since we’ve already sorted the vertices into buckets, it is easy to get all the vertices we need to connect to.
+
+Next, we find which nodes don’t have any parent edges. These nodes are the possible starting points.
+
+Finally, we preform a DFS on all of the starting points and take the longest path (no cycles) that we find. This path, when read in order while taking into account the overlap, will give us the reconstructed string.
+
+Analysis:
+
+Theta( V^2 )
+
+Finding shortest read: V
+
+Breaking up reads: V - (Since they are all the same length, none will be broken so we do a constant amount of work for each one)
+
+Putting in bucket: V - Go through every vertex once and add it to the correct bucket
+
+Adding edges: V^2 - Worst case is that the first X and last X chars of every read are the same, so they are all in the same bucket. That means we would have to connect every vertex to every other vertex, making it V^2
+
+Finding which don’t have parents: V -> Only have to go through each vertex once, check if it has a parent.
+
+DFS: V * (V + E) -> V^2 - If all of the parts are disconnected, every vertex is a possible starting point. However, if this is the case, E is 0, making the DFS run in constant time since there are no children. Also, if E = V^2, there would be no starting points, which is impossible in this case in the same length read case. Thus, the worst case is in the middle, where E is k * V because there is a finite upper bound to the number of edges that   a vertex can have and still have a starting point. Ex:
+
+Using reads of 5 length:
+
+If the current vertex is: ABCDE
+
+All the possible vertices it could connect to are: BCDEA, BCDEB, BCDEC, …, BCDEZ
+
+Thus, there are a finite number of possibilities for the number of edges.
+
+Reconstructing the complete string: V - have to go through all vertices on the path once.
+
+Thus, this algorithm runs in Theta( V^2 ) time.
+---+++!! ii
+<VERBATIM>
+Provide your result here.
+</VERBATIM>
+
+Reading, after a certain age, diverts the mind too much from its creative pursuits.
+
+and
+
+%CODE{"cpp"}%
+// paste your code here
+
+//
+//  Question4.cpp
+//  Homework 7
+//
+//  Created by Doug on 4/19/15.
+//  Copyright (c) 2015 Doug Roeper. All rights reserved.
+//
+
+#include <vector>
+#include <fstream>
+#include <list>
+#include <iostream>
+#include <unordered_set>
+#include <algorithm>
+#include <map>
+
+using namespace std;
+
+typedef unsigned long ulong;
+
+#define kReadsFile  "/Users/Doug/Desktop/Q4/Q4aReads.txt"
+
+#pragma mark -
+#pragma mark ReadPartNode
+
+class ReadPartNode
+{
+    std::string _readPart;
+    std::list<ReadPartNode *> _parents;
+    std::list<ReadPartNode *> _children;
+    
+public:
+    ReadPartNode(std::string aReadPart);
+    std::string getReadPart();
+    bool hasParent();
+    void setParent(ReadPartNode * aParent);
+    void addChild(ReadPartNode * aChild);
+    std::list<ReadPartNode *> * getChildren();
+};
+
+ReadPartNode::ReadPartNode(std::string aReadPart)
+{
+    this->_readPart = aReadPart;
+}
+
+std::string ReadPartNode::getReadPart()
+{
+    return this->_readPart;
+}
+
+bool ReadPartNode::hasParent()
+{
+    return this->_parents.size() > 0;
+}
+
+void ReadPartNode::setParent(ReadPartNode * aParent)
+{
+    this->_parents.push_back(aParent);
+}
+
+void ReadPartNode::addChild(ReadPartNode * aChild)
+{
+    this->_children.push_back(aChild);
+    aChild->setParent(this);
+}
+
+std::list<ReadPartNode *> * ReadPartNode::getChildren()
+{
+    return &this->_children;
+}
+
+#pragma mark -
+#pragma mark Loading
+
+vector<string> loadReads()
+{
+    ifstream inputFile(kReadsFile);
+    vector<string> result;
+    
+    if (inputFile.is_open())
+    {
+        while (!inputFile.eof())
+        {
+            char buffer[1000];
+            inputFile.getline(buffer, 1000);
+            string nextRead = buffer;
+            //inputFile >> nextRead;
+            result.push_back(nextRead);
+        }
+        
+        inputFile.close();
+    }
+    else
+    {
+        cout << "Error opening reads file" << endl;
+    }
+    
+    return result;
+}
+
+list<ReadPartNode *> findLongestPathStartingAt(ReadPartNode *aStart, list<ReadPartNode *> aCurrentPath, unordered_set<ReadPartNode *> aNodesSeen)
+{
+    //add the current node to the path and the nodes seen
+    aCurrentPath.push_back(aStart);
+    aNodesSeen.insert(aStart);
+    
+    //keep track of the best path
+    list<ReadPartNode *> bestPath = aCurrentPath;
+    //get all the children
+    list<ReadPartNode *> * children = aStart->getChildren();
+    //go through all the children
+    for (list<ReadPartNode *>::iterator it = children->begin(); it != children->end(); it++)
+    {
+        //get current child
+        ReadPartNode *currentChild = *it;
+        //see if the child has already been seen
+        if (aNodesSeen.find(currentChild) == aNodesSeen.end())
+        {
+            //if not, get the path going to that child
+            list<ReadPartNode *> childPath = findLongestPathStartingAt(currentChild, aCurrentPath, aNodesSeen);
+            //see if the path is better
+            if (childPath.size() > bestPath.size())
+            {
+                //save it if it is
+                bestPath = childPath;
+            }
+        }
+    }
+    
+    //return the best path
+    return bestPath;
+}
+
+void question4()
+{
+    cout << "-----Question 4-----" << endl;
+    
+    cout << "Loading reads file..." << endl;
+    //load all the reads
+    vector<string> reads = loadReads();
+    cout << "Number of reads: " << reads.size() << endl << endl;
+    
+    cout << "Finding shortest read..." << endl;
+    //find the shortest read
+    ulong shortestRead = -1;
+    ulong longestRead = 0;
+    ulong sum = 0;
+    for (vector<string>::iterator it = reads.begin(); it != reads.end(); it++)
+    {
+        string currentRead = *it;
+        if (currentRead.length() < shortestRead)
+            shortestRead = currentRead.length();
+        if (currentRead.length() > longestRead)
+            longestRead = currentRead.length();
+        sum += currentRead.length();
+    }
+    cout << "Shorest read length: " << shortestRead << endl;
+    cout << "Average read length: " << sum / (double)reads.size() << endl;
+    cout << "Longest read length: " << longestRead << endl << endl;
+    
+    cout << "Breaking reads down" << endl;
+    //now break the reads up into substrings
+    //the shortest read will not be broken
+    const ulong substringLength = shortestRead;
+    //hold the parts in a unordered set so we only have one of each
+    unordered_set<string> parts;
+    for (vector<string>::iterator it = reads.begin(); it != reads.end(); it++)
+    {
+        string current = *it;
+        ulong currentIndex = 0;
+        while (currentIndex + substringLength <= current.length())
+        {
+            //get the part
+            string currentPart = current.substr(currentIndex, substringLength);
+            //add it to the lest
+            parts.insert(currentPart);
+            //increment index
+            currentIndex++;
+        }
+    }
+    cout << "Total number of parts: " << parts.size() << endl << endl;
+    
+    cout << "Populating graph with vertices" << endl;
+    //Now that we've got all of the parts, we will make vertices out of them
+    vector<ReadPartNode *> vertices;
+    //we also add the nodes to buckets based on their first four characters,
+    // we will use these buckets later
+    map<string, list<ReadPartNode *> > sortedParts;
+    for (unordered_set<string>::iterator it = parts.begin(); it != parts.end(); it++)
+    {
+        string currentPart = *it;
+        ReadPartNode *newNode = new ReadPartNode(currentPart);
+        vertices.push_back(newNode);
+        
+        //get the parts first X characters
+        string bucketKey = currentPart.substr(0, substringLength-1);
+        //see if there is already a bucket for the key
+        if (sortedParts.find(bucketKey) == sortedParts.end())
+        {
+            //if there isn't one, create a new list
+            list<ReadPartNode *> newList;
+            //add it
+            sortedParts.insert(pair<string, list<ReadPartNode *> >(bucketKey, newList));
+        }
+        
+        //add the part to the bucket
+        sortedParts.at(bucketKey).push_back(newNode);
+    }
+    cout << "Number of vertices: " << vertices.size() << endl;
+    cout << "Number of buckets: " << sortedParts.size() << endl << endl;
+    
+    cout << "Adding edges..." << endl;
+    //now we need to add edges between them
+    //to make the edges, we look for overlap between the last.
+    //LEN-1 characters of one part and the first LEN-1 character of another part.
+    //If they match, we add an edge between them.
+    ulong edgeCount = 0;
+    for (vector<ReadPartNode *>::iterator it = vertices.begin(); it != vertices.end(); it++)
+    {
+        ReadPartNode *currentNode = *it;
+        string part = currentNode->getReadPart();
+        
+        //since we've already separated the nodes into buckets, we will just get the bucket for this node
+        string lastXChars = part.substr(part.length() - substringLength + 1, substringLength - 1);
+        //see if there is a bucket for these chars
+        map<string, list<ReadPartNode *> >::iterator bucketLoc = sortedParts.find(lastXChars);
+        //check if there is one
+        if (bucketLoc != sortedParts.end())
+        {
+            //if there is, add all of these nodes as children of the parent
+            list<ReadPartNode *> bucket = (*bucketLoc).second;
+            for (list<ReadPartNode *>::iterator it = bucket.begin(); it != bucket.end(); it++)
+            {
+                ReadPartNode *currentChild = *it;
+                currentNode->addChild(currentChild);
+                edgeCount++;
+            }
+        }
+    }
+    cout << "Number of edges: " << edgeCount << endl << endl;
+    
+    cout << "Finding starting points..." << endl;
+    //now find which nodes don't have parents
+    list<ReadPartNode *> noParents;
+    for (vector<ReadPartNode *>::iterator it = vertices.begin(); it != vertices.end(); it++)
+    {
+        ReadPartNode *currentNode = *it;
+        if (!currentNode->hasParent())
+        {
+            noParents.push_back(currentNode);
+        }
+    }
+    cout << "Number of starting points: " << noParents.size() << endl << endl;
+    
+    cout << "Finding longest path..." << endl;
+    //now find the longest path in the graph
+    //this will give us the order we want
+    list<ReadPartNode *> longestPath;
+    list<ReadPartNode *> emptyList;
+    unordered_set<ReadPartNode *> empty;
+    if (noParents.size() > 0)
+    {
+        //go through all of the possible starting points
+        for (list<ReadPartNode *>::iterator it = noParents.begin(); it != noParents.end(); it++)
+        {
+            ReadPartNode *startingPoint = *it;
+            list<ReadPartNode *> currentPath = findLongestPathStartingAt(startingPoint, emptyList, empty);
+            if (currentPath.size() > longestPath.size())
+            {
+                longestPath = currentPath;
+                string finalResult = "";
+                ulong index = 0;
+                for (list<ReadPartNode *>::iterator it = longestPath.begin(); it != longestPath.end(); it++)
+                {
+                    string currentPart = (*it)->getReadPart();
+                    finalResult = finalResult.substr(0, index) + currentPart;
+                    index++;
+                }
+                cout << "Matched:" << finalResult << endl;
+            }
+        }
+    }
+    else
+    {
+        //means there is a cycle, just pick any vertice as we have no idea where to start
+        ReadPartNode *startingPoint = *vertices.begin();
+        longestPath = findLongestPathStartingAt(startingPoint, emptyList, empty);
+    }
+    cout << "Longest path length: " << longestPath.size() << endl << endl;
+    
+    cout << "Building string..." << endl;
+    //now that we've got the parts in order, the last thing we need to do is put
+    //them together
+    string finalResult = "";
+    ulong index = 0;
+    for (list<ReadPartNode *>::iterator it = longestPath.begin(); it != longestPath.end(); it++)
+    {
+        string currentPart = (*it)->getReadPart();
+        finalResult = finalResult.substr(0, index) + currentPart;
+        index++;
+    }
+
+    //print result
+    cout << "Result: " << finalResult << endl;
+    
+    //finally, clean up
+    for (vector<ReadPartNode *>::iterator it = vertices.begin(); it != vertices.end(); it++)
+    {
+        ReadPartNode *currentNode = *it;
+        delete currentNode;
+    }
+}
+
+int main()
+{
+    question4();
+    return 0;
+}
+
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+Describe and analyze the modification
+</VERBATIM>
+
+Description:
+
+If the reads are of different lengths, my algorithm still works the same way. Since if finds the shortest read and breaks all the others into smaller substrings of the same length, even if the reads are different lengths, afterwards you will end up with all substrings of the same length. That problem then the same as in 4a.
+
+Analysis:
+
+Theta( V^2 )
+
+The main difference between 4a and 4b is that the number of vertices in the graph is not equal to the original number of reads. We can fix thus as such:
+
+Since each read is of a finite length, we can define k as the maximum number of substrings a read can be broken down into. This means that we have k * R (# of Reads) vertices.
+
+Thus, if we substitute V = k * R into the running time we found for 4a, we get:
+
+(kR)^2 = k^2 * R^2 -> Theta( R^2 )
+
+Since k is ultimately a constant, we find that the runtime is asymptotically the same.
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+ 
+If there is not enough overlap between the reads, then you will have to look for different amounts of overlap between the different parts. As the vertices would be sorted, it would add a factor of V to the edge creation stage, as you would have to make edges with vertices depending on how much of their parts overlap. Thus the algorithm would run in Theta( V^3 ).
+---+++!! ii
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+
+To overcome the errors, you could take all of longest results created at the end of the algorithm and compare them together. By doing this, you would be able to see what similarities and what differences there were between the different possibilities. For ex, if you got these 3 results:
+
+abababXXXababababa
+
+abababababababXXba
+
+abababababababababa
+
+You could take the more frequently occurring character at each index, so you would get
+
+abababababababababa.
+
+This would take in the worst case V * the maximum length of the result, which could be approximated as the total length of all the reads R. This would give a running time of Theta( V^3 + VR)
+
+---+++!! Grader comments
+<VERBATIM>Question 4 Results:
+
+Total Grade: 20
+
+	10        		
+	5         		
+	5         		
+
+
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle
+
+
+First, I made a few classes that could represent the map: a CityNode and a CityEdge. A CityNode represents a cities and has references to all of it's children. Each CityNode has both a name (which is the code from the file) and a ID which is assigned to it. A CityEdge has a start and end city, a cost, and a pheromone level (which will be described later).
+
+Once I could represent the map, I then calculated the All Pairs Shortest Paths between each city using Floyd-Warshall's algorithm.
+
+Next, I used an Ant Colony Optimization algorithm to find the shortest tour between all the vertices. This method involves sending thousands of "ants" into the graph that try to find a solution. The Ants choice for which edges to go on are based on the distance between the cities (shorter is better) and the amount of pheromones already on the edge. (This affects the probability that the ant will choose the path, but the actual choice is random. This ensures that a few ants will explore paths that don't look the best locally). Once an Ant finds a solution, it lays virtual Pheromones along it's trail (the amount that is deposited is inversely proportional to the length of it's tour). Thus, when the next Ant comes to it's path, it is more likely to go down the path with the most pheromones, making it the shortest route so far. This creates a positive feed back loop, as as more Ants travel and explore, they're likely to use the best path as a starting point.
+
+Ants are sent out in waves, and after each wave pheromones are applied to the edges. Pheromones from the last wave are also removed from the paths due to "evaporation", which ensures one path is not overly enforced.
+
+When a better path is found by an Ant, it is saved as the global best path and saved to a file.
+
+
+---+++!! Grader comments
+<VERBATIM>Question 5 Results:
+
+Total Grade: 20
+
+	15        		Grades from submission
+	5         		
+
+
+</VERBATIM>
+

@@ -1,0 +1,203 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  | theta(n)   |
+|  c  |  theta(n)  |
+|  d  | theta(n log(n))   |
+---++ Explanation
+<VERBATIM>
+b. When inserting 2 or more copies of the same number will cause
+a zig-zag between 2 branches. The total height of the tree will be 2n + log(n)/2
+which means that the longest it will take to insert will be theta(n).
+c. Since the repeated numbers will not be added to the binary search tree it will
+not add any extra height at most this tree will take theta (n) to insert.
+d. Since it is random, there is a chance that all values are mapped to the right,
+ the height of the tree will be n log(n), therefore the longest it will take to insert
+ will be theta( n log(n))
+
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  57  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  9  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  44  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  8  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  | 40   |
+
+Does this graph exhibit the triangle inequality? 
+Yes, the weights meet the definition of a triangle
+---++!! 2b
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |    |
+|  b  |  Chichen Itza, Yuc., Mexico  |  Pyramid of the sun  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  Statue of Liberty  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  Las Vegas  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  Photonics  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  CN Tower  |
+
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |    |
+|  b  |  Chichen Itza, Yuc., Mexico  |  Pyramid of the Sun  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  Statue of Liberty  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  Las Vegas  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  Photonics  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  CN Tower  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+KRUSKAL(G):
+1 A = &#8709;
+2 foreach v &#8712; G.V:
+3    MAKE-SET(v)
+4 foreach (u, v) ordered by weight(u, v), increasing:
+5    if FIND-SET(u) &#8800; FIND-SET(v):
+6       A = A &#8746; {(u, v)}
+7       UNION(u, v)
+8 return A
+
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+Kruskal's Algorithm has a running time of Theta (E log(E))
+we can use counting sort to sort the weights with time O(100E) or O(E) this changes Kruskal's to O(E)
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+theta (E^2 log(E))
+</VERBATIM>
+---++!! b
+<VERBATIM>
+if an edge with a large weight is taken before a smaller weight it will not produce a minimum spanning tree.
+</VERBATIM>
+---++!! c
+<VERBATIM>
+theta(E)
+assuming that the running time to check if a cycle exists is constant.
+</VERBATIM>
+
+---++!! Grader comments *[16/20]*
+<VERBATIM>
+First running time is O(E^2); last is O(E(V+E)).
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+First I preprocessed the data to remove the brackets, then I inserted all the strings into an array of strings. Then I made a seed string containing some of the letters of one of the strings. Then I made a 4 letter prefix and suffix of the seed string and compared it to every other string. If the strings matched then I added the first or last letter of that string to the seed. I repeat this process until every string is used.
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+Provide your result here.
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+int main() {
+    ifstream input;
+    //ofstream output;
+    //output.open("/Users/yes/Desktop/reduced_dna.txt");
+    input.open("/Users/yes/Desktop/reduced_dna.txt");
+    string test,sub,pre;
+    string total,pref,subf;
+    string array[113];
+    int counter= 0;
+    int i = 0;
+        while(!input.eof()){
+            getline(input,test,'\n');
+            if (i == 0) {
+                total = test;
+            }
+            array[i] = test;
+            i++;
+        }
+    total = "y ther";
+    while (true) {
+        pref = total.substr(0,4);
+        subf = total.substr(total.size()-4,total.size()-1);
+        for (int i = 0; i<113; i++) {
+            pre = array[i].substr(0,array[i].size()-1);
+            sub = array[i].substr(1,array[i].size()-1);
+            if (pref == sub) {
+                total = pre[0] +total;
+                break;
+            }
+            else if(subf == pre){
+                total = total + sub[3];
+                break;
+            }
+            else{
+                counter++;
+            }
+        }
+        //cout << total <<endl;
+        if(counter == 113){
+            break;
+        }
+        else{
+            counter = 0;
+        }
+    }
+    cout << total;
+    input.close();
+    return 0;
+}
+
+
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+To take into account different size strings I can just manipulate the prefix and suffix to include all the letters except the first or last and I can do this by using string.size() The rest of the algorithm will be the same and compare different suffixes and prefixes.
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+To take into account errors I can modify the suffix to become shorter and avoid the potential errors. Also to correct the possible missing reads I can use multiple seeds and compare each one to see if they fit together.
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+My approach is to use Kruskal's algorithm to find the MST and use that and turn it into a cycle.
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle

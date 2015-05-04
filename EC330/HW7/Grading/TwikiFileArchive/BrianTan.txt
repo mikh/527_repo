@@ -1,0 +1,277 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  O(nlogn*h)  |
+|  c  |  O(nlogn*h)  |
+|  d  | O(nlogn*h)   |
+---++ Explanation
+<VERBATIM>
+Provide explanation for partial credits
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |   56  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  8  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  43  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  | 40  |
+
+Does this graph exhibit the triangle inequality? 
+Yes, when observing any three destinations, two distances from city a-<->b and b<->c always add up to greater than a<->c. 
+---++!! 2b
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  NULL  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  Pyramid of the Sun  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  Statue of Liberty  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  | Mandalay Bay   |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  Photonics  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  CN Tower  |
+
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  NULL  |
+|  b  |  Chichen Itza, Yuc., Mexico  | Pyramid of the Sun   |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  | Statue of Liberty   |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  | Mandalay Bay   |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  Photonics  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  CN Tower  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+Describe your algorithm here. Pseudocode is preferred.
+
+Kruskal's Algorithm with Counting Sort
+
+We are to use an edgeList in the form of a vector of weighted edges
+
+//ALGORITHM BEGINS HERE 
+//Sorting
+initialize a vector of edges with size 100
+from the beginning to end of the edgeList
+{
+   store the edge in the index of the vector corresponding to the weight of the edge
+}
+from the beginning to end of the vector
+{
+   insert inorder, each element of each index of the vector into a new Sorted edgeList
+}
+
+//Run Kruskal's
+initialize an array to store the edges of the minimum spanning tree
+
+Make each vertex of the graph a disjoint set
+
+for each edge in the Sorted edgeList
+{
+   if v1 and v2 of the edge are in different disjoint set
+   {
+      combine them into the same disjoint set
+      create an edge between v1 and v1
+      store that edge in spanning tree array 
+   }
+}
+
+return the spanning tree array 
+
+//ALGORITHM ENDS HERE 
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+Descrbie and analyze your algorithm.
+
+The sorting portion of the algorithm first looks at each edge and stores it into the "counting array". This will take E time. Next, inserting each element from the counting array into a new sorted edgelist will take looking into each index of the vector. There is a maximum E amount of edges to insert to the new array, and since our vector is of finite size, 100, this will also take E insertions. Together, the time to sort the edgelist in this manner is E + E. This results in a run time of O(E) for the sort.
+
+For the construction of the spanning tree, the first step is the make disjoint set with each vertex. This will take V time. Then, the next step is to check each edge and if its two vertices are not in the same set, we merge them and store their edge in the spanning tree. The loop will run E times, with its embedded functions running in constant time. All together this part will take V + E time. 
+
+Combining the sort and the creation of the tree, the time is E + E + V + E which is O(E). 
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+This code will always produce a MST.
+
+The code will run BFS, E times in total in order to tell if the graph is connected every time a potential edge is removed. Therefore, the total time will take E(V + E). O(EV+E^2).  
+</VERBATIM>
+---++!! b
+<VERBATIM>
+Counterexample or Running time
+
+This code is not guaranteed to produce a MST. 
+
+An example can be a graph with three vertices. The edges can be weighted 1, 2, and 100. It is possible for the code to produce a T which contains 2 and 100. The MST would only contain the edges of weight 1 and 2. 
+
+</VERBATIM>
+---++!! c
+<VERBATIM>
+
+This will return a MST. 
+
+This code will add each edge to the Tree and test the Tree if there is a cycle. This will take E loops of Depth First Search, which takes (V + E) time. All together this will take E(V + E) time or EV + E^2 time. This equates to O(E^2) time. If we represent the Tree as a set, it will take constant time to insert, 's' (size of set) time to find max edge, and constant time to remove. These do not factor into the time complexity because they are small. 
+
+</VERBATIM>
+
+---++!! Grader comments *[20/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+Describe and analyze the algorithm.
+The algorithm first begins by searching for a capital letter in the substrings in the vector container. The motive for this is to find the start of the final string. Once this string is found, we will store it in a finalString variable. Next, we ill remove this substring from the vector. We will then create a variable called testString which will hold the last 4 letters of finalString. Then, we will iterate through the vector comparing testString to the first 4 letters of each substring. When a match is found, the last letter of the matched substring will be added to finalString, testString will be updated, and the matched substring will be erased from the vector. This process is repeated until the vector is empty. This algorithm will take size + (size - 1) + (size - 2) + .... + 1 comparisons. If size of the vector of substrings is N, this will take O(N^2) time. 
+
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+Provide your result here.
+
+In order that every man present his views without penalty there must be spirit of tolerance in the entire population.
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+#include <iostream>
+#include <string>
+#include <vector>
+using namespace std;
+
+
+int main(int argc, const char * argv[])
+{
+//in order that every man present his views without penalty there must be spirit of tolerance in the entire population.
+
+   /*
+   //Originally ordered substrings
+   vector<string> ss= {" be s", " enti", " ever", " his ", " in t", " man ", " must", " of t", " orde", " pena", " popu", " pres", " spir", " that", " the ", " ther", " tole", " view", " with", "In or", "alty ", "an pr", "ance ", "at ev", "ation", "be sp", "ce in", "der t", "e ent", "e in ", "e mus", "e pop", "e spi", "enalt", "ent h", "entir", "er th", "eranc", "ere m", "ery m", "esent", "every", "ews w", "f tol", "hat e", "he en", "here ", "his v", "hout ", "iews ", "in th", "ire p", "irit ", "is vi", "it of", "ithou", "latio", "leran", "lty t", "man p", "must ", "n ord", "n pre", "n the", "nalty", "nce i", "nt hi", "ntire", "of to", "olera", "opula", "order", "out p", "penal", "pirit", "popul", "prese", "pulat", "r tha", "rance", "rder ", "re mu", "re po", "resen", "rit o", "ry ma", "s vie", "s wit", "sent ", "spiri", "st be", "t be ", "t eve", "t his", "t of ", "t pen", "that ", "the e", "there", "thout", "tion.", "tire ", "toler", "ty th", "ulati", "ust b", "ut pe", "very ", "views", "witho", "ws wi", "y man", "y the"};
+   */
+
+   //Changed places of " the " and " ther"
+    vector<string> ss= {" be s", " enti", " ever", " his ", " in t", " man ", " must", " of t", " orde", " pena", " popu", " pres", " spir", " that", " ther", " the ", " tole", " view", " with", "In or", "alty ", "an pr", "ance ", "at ev", "ation", "be sp", "ce in", "der t", "e ent", "e in ", "e mus", "e pop", "e spi", "enalt", "ent h", "entir", "er th", "eranc", "ere m", "ery m", "esent", "every", "ews w", "f tol", "hat e", "he en", "here ", "his v", "hout ", "iews ", "in th", "ire p", "irit ", "is vi", "it of", "ithou", "latio", "leran", "lty t", "man p", "must ", "n ord", "n pre", "n the", "nalty", "nce i", "nt hi", "ntire", "of to", "olera", "opula", "order", "out p", "penal", "pirit", "popul", "prese", "pulat", "r tha", "rance", "rder ", "re mu", "re po", "resen", "rit o", "ry ma", "s vie", "s wit", "sent ", "spiri", "st be", "t be ", "t eve", "t his", "t of ", "t pen", "that ", "the e", "there", "thout", "tion.", "tire ", "toler", "ty th", "ulati", "ust b", "ut pe", "very ", "views", "witho", "ws wi", "y man", "y the"};
+
+
+   //when running the code, the strings " the " and " ther" are indistinguishable for the code, they are essentially the same when the previous string is "y the." I am not sure if there is a way to tell which of these are supposed to take priority.
+   
+   //Look for the capital letter in the substrings, once found, we will use this substring as our start
+   string finalString;
+   bool foundStart = false;
+   for(vector<string>::iterator it = ss.begin(); it != ss.end(); it++)
+   {
+      char firstLetter = (*it)[0];
+      if(firstLetter > 64 && firstLetter < 91)
+      {
+         finalString = *it;
+         ss.erase(it);
+         foundStart = true;
+         break;
+      }
+   
+   }
+   
+   //If we could not find a capital letter, just start at the first substring in the vector
+   if(foundStart != true)
+   {
+      finalString = ss[0];
+      ss.erase(ss.begin());
+   }
+
+   //test string will be used to see if it matches the first 4 chars of potential next string, or read
+   string testString = finalString;
+   testString.erase(testString.begin(),testString.begin() + 1);
+   
+   string cmpString;
+   
+   vector<string>::iterator it;
+   it = ss.begin();
+   while(!ss.empty())
+   {
+      cmpString = *it;
+      //cmpString will be the first four characters in the string to be compared
+      //if testString, the most recent string, is the same as cmpString, we know the next letter to add
+      //to finalString
+      cmpString.erase(cmpString.end() - 1);
+      if(testString == cmpString)
+      {
+         //add the last character of that string to final string
+         //accessing the last character of the string which the vector iterator is pointing at
+         char charToAdd = (*it).back();
+         finalString+=charToAdd;
+         //set testString equal to that string
+         testString = *it;
+         testString.erase(testString.begin(),testString.begin() + 1);
+         //remove that string from the vector
+         //this will speed up the process as we get further into the algorithm, each time we remove a substring, we have less to check through next time 
+         ss.erase(it);
+         //set the iterator back to the beginning
+         it = ss.begin();
+         continue;
+      }
+      
+      it++;
+   }
+  
+   cout << finalString << endl;
+   return 0;
+}
+
+
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+Previously, I was just comparing the last 4 characters of the current substring to the first 4 characters of each other substring. 
+
+Now, the situation is different, in that each read can be of different length. Instead of comparing the last 4 characters, I would compare the last (n - 1) characters of the substring, n being the length of the substring, with the first (n - 1) characters of each other substring. For example, if the read was "Wor", I would compare "or" to the first two characters of every other substring. In the code, this required an additional forloop to add the the remaining characters of the matched read to the finalString, as opposed to just one character. 
+
+The worst case scenario for this algorithm is if the testString is only 1 character, and the matched read is of longest length, say 's'. Then with each match, it would take 's - 1' amount of character additions to the finalString. The remainder of the algorithm remains the same as before, where after each read match, there is one less read to compare to, leading to O (N^2). So the overall time will be O(N^2 + Ns). With N being the number of substrings and 's' being the length of the longest string. 
+
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle

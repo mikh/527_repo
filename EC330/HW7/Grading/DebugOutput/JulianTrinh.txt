@@ -1,0 +1,305 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  (n^2)logn  |
+|  c  |  (n^2)logn  |
+|  d  |   (n^2)(log(n))^2 |
+---++ Explanation
+<VERBATIM>
+Provide explanation for partial credits
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  57h  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  9h   |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  43h  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4h  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  39h  |
+
+Taken on Friday the 17th at 11:46 PM
+
+Does this graph exhibit the triangle inequality? 
+
+Yes
+---++!! 2b
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |    |
+|  b  |  Chichen Itza, Yuc., Mexico  |    |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |    |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |    |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |    |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |    |
+
+a -> e -> c -> f -> d -> b
+
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  0  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+
+
+a -> e -> c -> f -> d -> b
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+PQ <- all Vertices
+key[V]
+key[root] = 0
+while PQ != 0
+        u <- extractMin(Q)
+        for each V adjacent to u
+                if V is in Q && w(u,v) < key[v]
+                        key[v] <- w(u,v)
+                        pi[v] <- u
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+The algorithm is Prim's using a min-heap as  PQ
+
+PQ <- all Vertices                                      Theta(log(v))
+key[V]                                                         Theta(V)   
+key[root] = 0                                               Theta(V)
+while PQ != 0                                              Theta(V)
+        u <- extractMin(Q)                              Theta(1)
+        for each V adjacent to u                       
+                if V is in Q && w(u,v) < key[v]    Theta(E)
+                        key[v] <- w(u,v)                   Theta(Elog(V))
+                        pi[v] <- u                               Theta(V)
+
+Total running time: Theta(ElogV)
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+1) &Theta;(ElogE)
+
+2) &Theta;(1)
+
+3) &Theta;(E)
+
+4)      &Theta;(V+E)
+
+5)      &Theta(1)
+
+The V+E portion must be run E times, giving us:
+
+Total runtime: &Theta;(E^2 + EV)
+---++!! b
+<VERBATIM>
+Since the edges are taken in any arbitrary order, it will produce a ST, but not a MST.
+</VERBATIM>
+---++!! c
+1) &Theta;(1)
+
+2) &Theta;(E)
+
+3) &Theta;(1)
+
+4) &Theta;(V)
+
+5) &Theta;(c)
+
+6) &Theta;(1)
+
+Since the (V) portion must run E times, we get:
+
+Total Runtime: &Theta;(E*V)
+
+---++!! Grader comments *[20/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+
+<VERBATIM>
+
+NOTE: Vector and string complexities are taken from cplusplus.com (C++98)
+
+&Theta;(n)  Read in the quote and push_back every 5-length substring into a vector.
+
+&Theta;(1)  Access the first element and put it into a string (which holds the constructed quote so far), then delete it from the vector.
+
+&Theta;(n)  Loop until the vector is empty.
+
+&Theta;(n)          Loop through every quote substring
+
+&Theta;(1)                  Get the first and last 4 - length substrings of the constructed quote so far.
+
+&Theta;(1)                          Get the two 4-length substrings from the quote substrings
+
+&Theta;(1)                                  Compare them, if it matches the first constructed substring, prepend the new piece and delete.
+
+&Theta(1)                                   If it matches the last constructed substring, append the new piece and delete
+
+Total running time: &Theta;(n^2) (where n is the number of characters in the quote)
+
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+Do not worry about your difficulties in Mathematics. I can assure you mine are still greater.
+</VERBATIM>
+
+%CODE{"cpp"}%
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <vector>
+using namespace std;
+
+int main()
+{
+	string quote,build;
+	vector <string> quoteSubs;
+	char parts;
+	
+	ifstream myFile("quote.txt");
+	
+	//Streams the text
+	while(getline(myFile,quote))
+	{	
+		//Loop through the entire quote and break it up into appropriate substrings
+		for(int x = 0; x < quote.length(); x++)
+		{
+			//Every substring starts with a [
+			if(quote[x] == '[')
+			{
+				quoteSubs.push_back(quote.substr(x+1,5));
+				x+=6;
+			}	
+		}
+	}	
+	myFile.close();	
+
+	//We begin building the quote with the first substring and erasing it
+	build = quoteSubs[0];
+	quoteSubs.erase(quoteSubs.begin());
+	
+	//Loop until we have included every substring
+	while(quoteSubs.size() != 0)
+	{
+		//Loop through each remaining substring
+		for(int y = 0; y < quoteSubs.size(); y++)
+		{
+			//Builds a temp string of first and last substrings of size 4 from the constructed quote
+			for(int z = 0; z <= 1; z++)
+			{
+				string temp;
+				if(z == 0)
+					temp = build.substr(z,4);
+				else
+					temp = build.substr(build.length()-4,4);
+				
+				//Gets both substrings of size 4 from the quote
+				for(int zz = 0; zz < 2; zz++)
+				{
+					//If the substrings match
+					if(temp == quoteSubs[y].substr(zz,4))
+					{
+						//If the match is at the end of the quote, append the new piece to the end of the quote
+						if(z == 1 && zz == 0)
+						{
+								build+=quoteSubs[y][4];
+								quoteSubs.erase(quoteSubs.begin()+y);
+						}						
+						//If the match is at the beginning, prepend the new piece
+						else if (z == 0 && zz == 1)
+						{
+							build.insert(build.begin(),quoteSubs[y][0]);
+							quoteSubs.erase(quoteSubs.begin()+y);
+						}
+						break;
+					}
+				}
+			}
+		}
+		
+	}
+	cout << build << endl;
+	return 0;
+}
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+
+Given all the reads, I would first sort them in descending order by length. After that, I would compare for similarities by iterating through the sorted reads from greatest to least and appending if the requirements were met as above. The only changes to runtime would be an &Theta;(nlogn) sort at the beginning which would not alter the asymptotic runtime.
+
+TL;DR - I would do everything exactly the same except I would sort the reads from largest to smallest size.
+
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+
+Instead of appending everytime there is a match, I would count the amount of matches that occur with every iteration through the reads. I would first push the starting substring into a vector. If a constructed version had multiple matches, push all of them into a vector (essentially "forking") and clone push the remaining substrings into another vector whose elements correlate. If two iterations result in the same string, it is an incomplete cycle, erase it from the vector. At the end, one string should remain, if not, cry.
+---+++!! ii
+The runtime would be the same as above, but multiplied by a constant F, where F is the number of forks (possible matches) that can occur while parsing.
+This would make the total runtime &Theta;(F(N^2)) where F is the number of forks, which is equal to the number of reads worst-case.
+
+
+---+++!! Grader comments
+<VERBATIM>Question 4 Results:
+
+Total Grade: 20
+
+	10        		
+	5         		
+	5         		
+
+
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+I used a variation on prims algorithm. Made a vertex object that contains a vector of edges each. I read in every edge and write it to a a set of vertices. If it is a new edge from a certain vertex in the set, I would add it. I then go to the starting vertex ETCW and look for the lowest weight edge. I save the destination and call go to that destination vertex and look repeat. Everytime I go to a destination, I delete the starting vertex from the set, and remove all the edges whose destination was the removed vertex. 
+
+Cycle Weight: 112252
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle
+
+
+---+++!! Grader comments
+<VERBATIM>Question 5 Results:
+
+Total Grade: 19
+
+	14        		Grades from submission
+	5         		
+
+
+</VERBATIM>
+

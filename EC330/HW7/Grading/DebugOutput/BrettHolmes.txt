@@ -1,0 +1,169 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  O( log(n) *  lg log(n) * n^2 ) |
+|  c  |  O( n^2 * log(n) )  |
+|  d  |  O( n^2 * log(n)^2 )  |
+---++ Explanation
+<VERBATIM>
+B)  assuming that boolean flag for each node starts with a value such that insertions go to left side on the first case of an equal key: worst case would occur when log(n)=1,3,7,15,31,... (where each subtree is a complete tree, this maximizes tree height). The generated tree will consists of n sub-trees which are complete BSTs with the root of each subtree being the right child of the bottom, right-most node of the subtree above it. With this algorithm, the subtrees are balanced and would take worst case O(log(n) * lg log(n)) to create each IF they all started from an empty tree. We can observe the full BST as a linear chain of n of these subtrees where it takes the SUM[k=1, n]: O(log(n)*lglog(n)*k) ==> O(log(n)*lglog(n)*n^2)
+
+C) this algorithm will generate a linear chain of nodes each of which contains a list with log(n) elements. for each value k (k=1,2,3..,n) it takes k comparisons to reach the appropriate node in the tree and inserting to a list takes linear time for the number of elements inserted so O( n^2 * log(n) ) 
+
+D) worst case is we randomly place all equal nodes to right side every time. So tree ends up as linear chain of n*log(n) nodes. so time to insert all node is SUM[k=1, n*log(n)]: k ==> (n*log(n))^2
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  57  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  8  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  42  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  38  |
+
+This DOES exhibit the triangle inequality. (all traingles follow property A<=B+C (where A,B, and C are side of triangle) 
+---++!! 2b
+|  Index  |  Location   |
+
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |
+|  b  |  Chichen Itza, Yuc., Mexico  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |
+
+MST edges: (a,e) , (c,e) , (a,c) , (b,d) , (d,f) , (c,f)
+
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  NIL  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+Describe your algorithm here. Pseudocode is preferred.
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+Descrbie and analyze your algorithm.
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+This does produce an MST. Running time O(E*lg(E))
+</VERBATIM>
+---++!! b
+<VERBATIM>
+does NOT always produce an MST. This algorithm does not consider edge weights and adds edges in arbitrary order, it simply avoids cycles. It will always produce a spanning tree, but because of arbitrary edge selection, it will not always be minimal.
+</VERBATIM>
+---++!! c
+<VERBATIM>
+This DOES produce an MST, it runs in O(E*V)
+</VERBATIM>
+
+---++!! Grader comments *[18/20]*
+<VERBATIM>
+First running time is O(E^2).
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+Describe and analyze the algorithm.
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+Provide your result here.
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+// paste your code here
+
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+Describe and analyze the modification
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+
+
+---+++!! Grader comments
+<VERBATIM>Question 4 Results:
+
+Total Grade: 0
+
+	0         		
+	0         		
+	0         		
+
+
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+
+Weight Cycle returned (in path.txt): 362568
+
+
+My code is attached. I modified an open source implementation of Dijkstra's algorithm in C++ (found online at http://rosettacode.org/wiki/Dijkstra's_algorithm#C.2B.2B ). My code generates an adjacency list by parsing the map.txt file. The functions I implemented for  Dijkstra's algorithm allow the program to compute the shortest path between any two nodes.
+
+Appologies for the messy code, this program could be improved signifcantly to produce better results, but it's REALLY late.
+
+I can't attach a result.txt becuase i'm running this remotely, so the file is generated on the lab grid, not on this PC. 
+
+
+---+++!! Grader comments
+<VERBATIM>Question 5 Results:
+
+Total Grade: 3
+
+	0         		Grades from submission
+	3         		
+
+
+</VERBATIM>
+

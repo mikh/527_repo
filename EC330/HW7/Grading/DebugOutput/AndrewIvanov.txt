@@ -1,0 +1,293 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  O(nlog(n)*log(nlogn)) = O(n log(n) (log(n)+log(log(n))))  |
+|  c  |  O(n*log(n))  |
+|  d  |  Worst case: O((n*log(n))^2  |
+---++ Explanation
+<VERBATIM>
+Provide explanation for partial credits
+</VERBATIM>
+
+Because of the  condition: "insert log(n) copies each (in turn) of the numbers 1 through n. For example, if n = 1010, then there we will be inserting ten 1's followed by ten 2's followed by ten 3's, etc.", instead of normally the time it takes to insert a single constant value which would result in: <br>
+b) O(nlog(n) <br>
+c) O(n) <br>
+d) O(n^2) <br>
+The constant insertion takes on the form of nlogn time instead, substituting the n's for nlogn time <br>
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  57  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  9  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  44  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  40  |
+
+Does this graph exhibit the triangle inequality? <br>
+No, its a star graph from Photonics Center,8 St Marys St, Boston, MA 02215, to each corresponding destination.
+---++!! 2b
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  N/A  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  N/A  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+Describe your algorithm here. Pseudocode is preferred.
+</VERBATIM>
+
+Prim's algorithm: <br>
+Start at a node and continuously pick the smallest weighted edge connected to that node that does not form a cycle.
+
+%CODE{"cpp"}%
+    Q = all vertices;
+    key[v] = infinity; 
+    key[root] = 0;
+    while Q != 0;
+        u = extract-min(Q);
+        for each v adj to u;
+            if V exists in Q and (u,v) < key[v];
+                key[v] = w(u,v);
+                pi[v] = u;
+
+%ENDCODE%
+---+++!! Analysis
+<VERBATIM>
+Descrbie and analyze your algorithm.
+</VERBATIM>
+
+Suming the parts: V, VlogV, E, ElogV, V, leads to O((E+V)logV) but simplified to answer below w/ binary heap. <br>
+With a binary heap O(E*log(V)) runtime. <br>
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+Counterexample or Running time
+</VERBATIM>
+
+Adjacency list representation for T. Using Merge sort --> O(E*log(E)) <br>
+Check if connected graph with BFS or DFS in O(V + E) time. <br>
+Lastly BFS or DFS is performed E times, once for each edge. <br>
+
+total: O(E*log(E) + E*(V + E)) <br>
+O(E^2) longest component. <br>
+---++!! b
+<VERBATIM>
+Counterexample or Running time
+</VERBATIM>
+
+Counterexample: <br> 
+Graph: A--B--C   <br>
+Weights: A--B = 1,  B--C =2,  A--C = 3    (undirected edges) <br>
+
+MST would have to include A--B & B--C resulting in a final weight of 3. But with this algorithms edges are selected arbitrarily until a cycle is formed so... <br>
+A--C & B--C could be selected first and then when A--B is selected that forms a cycle so that edge is rejected but the result would then be weight 5!, which is not the MST of this graph. <br>
+---++!! c
+<VERBATIM>
+Counterexample or Running time
+</VERBATIM>
+
+Using adjacency list for T: <br>
+Add edge to T takes: O(1) <br>
+Checking for cycle (Using DFS because no more then 1 cycle will ever occur): Thus resulting in DFS O(V+E) goes too --> O(V) <br>
+Finding maximim weighted edge: O(V) <br>
+Deleting an edge: O(V) <br>
+We operate on every edge: O(E) <br>
+
+Cumulatively for each edge we add onto T, do DFS, and possible find cycle necessary for deletion: <br>
+total runtime: O(VE) <br> 
+---++!! Grader comments *[20/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+Describe and analyze the algorithm.
+</VERBATIM>
+
+First read the file delimited by '[' into a vector list of strings. <br>
+Determine the first entry with a capital letter & then loop twice through the length of the vector of strings, each time comparing the last 4 substring of the final string with the first 4 entries of the list indexed vector. O(Vec.size^2) time <br>
+
+This double for loop operates in O(Vec.size^2) time with other components all taking less time individually. <br>
+total runtime: O(4*Vec.size^2) which is = O(Vec.size^2) because of const length substrings.
+---+++!! ii
+<VERBATIM>
+Provide your result here.
+</VERBATIM>
+
+Reading, after a certain age, diverts the mind too much from its creative pursuits.
+
+and
+
+%CODE{"cpp"}%
+// paste your code here
+
+
+
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <sstream>
+#include <list>
+#include <cctype>
+#include <vector>
+#include <stdio.h>
+#include <ctype.h>
+
+
+using namespace std;
+
+int main() {
+  string line;
+  ifstream myfile ("C:\\Users\\Andrew\\OneDrive\\Documents\\EC330\\hw7\\p4a.txt");
+  
+  std::vector<std::string> myvec;
+  string temp;
+  
+  if (myfile.is_open())
+  {
+    while ( getline (myfile,line, '[') )  // [
+    {
+        temp = "";
+        //cout << line[0] << line[1] << line[2] << line[3] << line[4] << endl;
+        temp.insert(0,line,0,5);
+        //cout << temp << endl;
+        myvec.push_back(temp);
+    }
+    myfile.close();
+  }
+
+  
+  string final;
+  
+  for (int i= 1; i < myvec.size(); i++) {
+      if (isupper(myvec[i][0])) {
+          //cout << myvec[i] << endl;
+          final = myvec[i];
+      }
+  }
+  
+  for (int i = 0; i < myvec.size(); i++) {
+      for (int j = 0; j < myvec.size(); j++) {
+          if (myvec[j].substr(0,4) == final.substr(final.size()-4,final.size())) {
+              final.append(myvec[j].substr(4,1));
+              //cout << myvec[i].substr(4,1) << endl;
+              //cout << " " << myvec[j] << endl;
+          }
+      } 
+  }
+  
+  cout << final << endl;
+    
+    return 0;
+}
+
+
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+Describe and analyze the modification
+</VERBATIM>
+
+if (myvec[j].substr(0,4) == final.substr(final.size()-4,final.size())) { <br>
+
+would have to be modified to: <br>
+
+if (myvec[j].substr(0,myvec[j].size()-1) == final.substr(final.size()-myvec[j].size()-1,final.size())) {  <br>
+
+In essence the comparison step step instead of comparing the first 4 to the last 4 of the new substring needs to be changed to the length of the substring being compared -1, to the substring at the end of the final string with substring-1 size of characters to compare. <br>
+total runtime: O(Vec.size^2) time is approximately right if substrings are still small constants, but if substrings are long then O(average(substring.length)*Vec.size^2) is more accurate <br>
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+
+The issue of replication may be solved by introducing a memory aspect to the program so that when recurrent patterns occur they are ignored, this will add substantial computational time however but it is a possiblity. <br>
+In the case of missing substrings, this may be remedied by continuing the searching chain even if no perfect match for  a substring was found & instead sat 3/4 match perfectly if this is the best case, so in essence introducing a memory of best match up to data for the iterations. <br>
+---+++!! ii
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+
+Reads containing random errors can be accounted for by introducing a type of weighting, for instance perfect string matches will be weighted higher then 5/6 matches which are higher then 4/6, etc... <br>
+These weights may then be analyzed in order to determine which matches would suit the string match next & the final string will be the one with the highest matching weights. <br>
+Knowing that errors often occur at the ends may also hint at focusing this approach towards the ends of the string. <br>
+
+---+++!! Grader comments
+<VERBATIM>Question 4 Results:
+
+Total Grade: 20
+
+	10        		
+	5         		
+	5         		
+
+
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found. <br>
+
+The approach goes as to be stated: <br>
+- First select a root node. <br>
+- Second construct a MST using Prim's algorithm <br>
+- Third list the vertices visited in pre-order walk of the constructed MST & lastly add the root node at the end to finish the eularian cycle <br>
+Pseudocode is attached in zip.
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle
+
+
+---+++!! Grader comments
+<VERBATIM>Question 5 Results:
+
+Total Grade: 5
+
+	0         		Grades from submission
+	5         		
+
+
+</VERBATIM>
+

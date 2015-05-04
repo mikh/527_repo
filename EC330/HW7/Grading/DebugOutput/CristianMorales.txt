@@ -1,0 +1,194 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  O(log(nlogn))  |
+|  c  |  O(n)  |
+|  d  |  O(nlogn)  |
+---++ Explanation
+<VERBATIM>
+Because we are inserting log(n) copies of n numbers, the total amount of nodes we are adding is nlog(n). Also, the runtime of inserting a node into a binary search tree is O(h), where h is the height of the tree.
+
+In the case of approach 1, the algorithm will result in a complete binary tree (as the algorithm is alternating between going left and right every time, which will result in a complete tree). Because the height of a complete binary tree is log(n), and our n-amount of insertions is nlog(n), then the insert runtime is O(h) = O(log(nlog(n)));
+
+In the case of approach 2, multiple instances of a node with the same key will be represented by a single node, instead of multiple nodes. So even though our graph would have log(n) copies of a node with a key between 1 and n, we wouldn't have log(n) nodes with that key, only a single node. As such, our graph will only contain n nodes, and therefore its worse-case height will be n. Because of that, our insert runtime will be O(h) = O(n).
+
+In the case of approach 3, the worst-case possible would be where the algorithm always chooses going left (or always right), so that the resulting tree's nodes all only have 1 child. The height of that tree would be the n-amount of nodes. So when we're inserting nlog(n) nodes, the height would be nlog(n), and the resulting insert runtime would be O(h) = O(nlog(n)).
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  56hr  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  8hr,27min  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  44hr  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  3hr,40min  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  40hr  |
+
+Does this graph exhibit the triangle inequality? 
+Yes, this graph exhibits the triangle inequality.
+---++!! 2b
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  a  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  a  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+I like using Kruskal's algorithm, so I'm just using that because I'm not really sure if we're supposed to create our own algorithm for finding minimum spanning trees or what so...
+
+sort the edges into nondecreasing order by their weight
+T = NULL //Where T is originally an empty spanning tree
+for each edge E taken in nondecreasing order by weight
+    if T U {E} has no cycles
+        T = T U {E}
+return T
+
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+The algorithm I used is Kruskal's algorithm, so it works by sorting the edges according to weight from least to greatest, and then adding edges one by one to the minimum spanning tree as long as they don't create a cycle.
+
+Kruskal's algorithm has a runtime of Theta(Elog(E)).
+
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+This algorithm will be able to always produce a minimum spanning tree. It's runtime after the edges are sorted by weight is just Theta(E) because of the for-loop over all the E-amount of edges. But the time taken to sort the edges according to weight must also be considered. Since no sort methods that I know of (or that I can recall since I'm exhausted right now), run in in Theta(n) time, the time it takes to sort the E-edges will be greater than just the Theta(E) time required for the rest of the algorithm. Therefore, the running time of this algorithm is equal to the running time of the sorting algorithm used in its first line to sort the edges by weight.
+</VERBATIM>
+---++!! b
+<VERBATIM>
+This algorithm will result in a spanning tree, but since the algorithm never takes into account the weights of any of the edges and instead just goes through them randomly, the resulting spanning tree will not necessarily be a minimum spanning tree. As a small counter example, for this given connected graph:
+
+A -- B    where AB=1, AC=2, AD=3, BC=4, BD=5, CD=6
+|  X  |
+C -- D
+
+the minimum spanning tree should be:
+
+A -- B
+|   \
+C    D
+
+but for the given algorithm, one result could easily be:
+
+A -- B
+    /
+C -- D
+
+
+</VERBATIM>
+---++!! c
+<VERBATIM>
+This algorithm does always produce a minimum spanning tree. And because the edges are examined in arbitrary order, no sorting has to be done before hand. Because of this, the only part of the algorithm that needs to be considered is the for loop that runs over the e edges, (or e times). Because of this, the algorithm runs in Theta(E) time.
+</VERBATIM>
+
+---++!! Grader comments *[16/20]*
+<VERBATIM>
+First running time is O(E^2); last is O(E(V+E)).
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+Describe and analyze the algorithm.
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+Provide your result here.
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+// paste your code here
+
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+Describe and analyze the modification
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+
+
+---+++!! Grader comments
+<VERBATIM>Question 4 Results:
+
+Total Grade: 0
+
+	0         		
+	0         		
+	0         		
+
+
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle
+
+
+---+++!! Grader comments
+<VERBATIM>Question 5 Results:
+
+Total Grade: 0
+
+	0         		Grades from submission
+	0         		
+
+
+</VERBATIM>
+

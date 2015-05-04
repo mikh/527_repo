@@ -1,0 +1,773 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  O( n*log(n) )  |
+|  c  |  O( n^2 )  |
+|  d  |  O( n^n ) )  |
+---++ Explanation
+<pre>
+b => let's look at how we populate the tree. 
+We start at:
+
+1(right)
+
+then it goes:
+
+1(left) -(right)-> 1(right)
+		-(left)-->
+        
+...        
+1(left) -(right)-> 1(right)
+		-(left)--> 1(right)
+
+...
+1(right) -(right)-> 1(left) -(right)-> 1(right) 
+							-(left)--> 
+		-(left)--> 1(right)
+        
+ And it keeps going that way in a way it will fill up the tree in a balanced manner. 
+ You  will always notice that the height of the tree is the log_2 of the number of elements being inserted in the tee. 
+ In adition to that, you know that you are inserting n^n elements, the amount of times you go through the tree is jus the heigh. 
+ Therefore you have log(n^n) which mean n*log(n).
+ 
+ c => (n-1)*n + log(n) which makes it O(n^2)
+ 
+ The idea of this algorithm is to have a reference list with all the elememnts that should be added to the list when they are repeated. So, let's look at it:
+ 
+ 1
+ 
+ ---
+ 
+ 1					x => 1
+ 
+ ---
+  
+ 1					x => 1  1
+ 
+ ---
+  
+ 1					x => 1  1  1
+ 
+ ---
+  
+ 1					x => 1  1  1  1
+ 
+ ---
+ 
+ ...
+ 
+ ---
+ 
+ 1					x => 1 1 1 1 1 1 1 1 1
+ 
+ --- 
+ 
+ 1					x => 1 1 1 1 1 1 1 1 1 
+  \
+   2
+   
+ ---
+ 
+  1					x => 1 1 1 1 1 1 1 1 1 2
+  \
+   2
+   
+ ---
+ 
+ Since all the repeated values are added to the tree, both on the list(gives you n*(n-1)) + going through the height of the tree(that gives you h which is log(n)
+ so the complexity is n*(n-1) + log(n). come down to O(n^2)
+ 
+ 
+ 
+ d => 
+ 
+ In the worst case, x would be either all x.right, so you would keep inserting to the right of every node and since the umbers are ascending as well. You will have everything into a really long list that goes through all the values in a linear manner. 
+ Looking at the complexity of the worst case you gonna have N = n^n( e.g. n = 10. N = 10^10) so the complexity will be N or n^n. 
+
+
+</pre>
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  56  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  08  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  43  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  04  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  40  |
+
+Does this graph exhibit the triangle inequality? 
+---++!! 2b
+Edges were:
+
+PHO -> STL
+CN -> PHO
+CI -> PYR
+LV - PYR
+CN -> LV
+STL -> PYR
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  04  |
+|  b  |  Chichen Itza, Yuc., Mexico  |   00 |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  08 |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  16   |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  37  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  29  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+For this, I'd use a derivation of kruskal's that makes a list of edges in ascending order and after going through that list, I'm going to "markdown" whether the edge makes a cycle and keep going.
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+For this algorithm, the complexity will be the same as Kruskal's O(log(V)). V being the amount of vertices you have
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+This algorithm always produces a minimum spanning tree. It removes edges until the graph has only one edge (the minimum number of edges in a connected graph is 1), and since the edges are checked in non-increasing weight order, the last remaining edge is the lightest weight. Thus, the output T has the minimum number of edges of minimum weight --> MST. 
+Running Time: 
+	Line 1: Implement with a priority queue, so runs O(E) times
+	Line 3: Runs O(E) times (for each edge)
+		Line 4: Checks connectivity in O(lg(V)) time --> Total running 			time of O(E*lg(V))
+		Line 5: Deletes the edge in O(lg(E)) time --> Total running 			time of O(E*lg(E))
+		
+	RUNNING TIME - O(E*lg(E))
+</VERBATIM>
+---++!! b
+<VERBATIM>
+This algorithm doesn't always produce a minimum spanning tree. It looks at edges in arbitrary order, and only adds edges (never removes or switches edges). The arbitrary order means that it is possible to add heavy edges at the expense of light edges.
+</VERBATIM>
+---++!! c
+<VERBATIM>
+This algorithm always produces a minimum spanning tree. It first adds an edge, but if a cycle is detected, removes a max. weight edge, leaving lighter-weight edges in the graph. Since all cycle edges (unnecessary edges) are removed, the final graph contains the minimum number of edges, each of minimum-weight --> MST.
+Running Time:
+	Line 2: Use a priority queue to hold all of the edges, so runs O(E) times
+		Line 3: Insert edge into the priority queue in O(lg(V)) time
+		Line 4: Checks for cycle in constant time (O(1))
+			Line 5: Finds max-weight edge in constant time (O(1))
+			Line 6: Deletes edge from priority queue in O(lg(V)) time
+			
+	RUNNING TIME - O(E*lg(V))*/
+</VERBATIM>
+---++!! Grader comments *[16/20]*
+<VERBATIM>
+First running time is O(E^2); last is O(E(V+E)).
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<pre>
+
+The idea of this algorithm is that you will branch off the whole sequence from an initial string.
+
+Let's look at the World_Wide_Web example for a better understanding:
+
+This is the sequence given: 
+"_Wide" "Wide_" "World" "d_Wid" "de_We" "e_Web" "ide_W" "ld_Wi" "orld_" "rld_W".
+
+Now let's stack all this values:
+
+|_Wide| 
+|Wide_| 
+|World| 
+|d_Wid| 
+|de_We| 
+|e_Web| 
+|ide_W| 
+|ld_Wi| 
+|orld_| 
+|rld_W| 
+
+The algorithm will go through all the values and try to match them to first one given a shift value. So on the first go, it will look at 
+
+|_Wide| 
+ |Wide_| 
+
+Overtime you can't match one of the substrings, you send them to the bottom of the vector:
+
+|_Wide| 
+ |Wide_| 
+
+|World| --> no match, re-queue
+
+At the end of the algorithm it will look like this:
+
+     |_Wide| 
+      |Wide_| 
+|World| 
+    |d_Wid| 
+        |de_We| 
+         |e_Web| 
+       |ide_W| 
+   |ld_Wi| 
+ |orld_| 
+  |rld_W| 
+
+=======
+
+Now, analyzing this algorithm:
+
+We have to look at the following parts:
+
+Going through substring vectors...linear time => m
+
+Finding the shift amount...also linear time (more specifically, length of the main string + 2*(length substring -1)) => n
+
+So, the code is working on squared time, m*n given the size of the strings keep changing.
+
+
+</pre>
+---+++!! ii
+<VERBATIM>
+ ==> "Reading, after a certain age, diverts the mind too much from its creative pursuits."
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+
+
+/* FUNCTION THAT COMBINES 2 STRINGS IN A POSITION GIVEN BY THE SHIFT AMOUNT */
+string placeString(string main, string toPlace, int shift){
+    
+    if(shift < 0){ for (int ii = 0; ii > shift; ii--) { main = "_" + main; } } // open up some space at the beginning of the string
+    
+    for(int ii = 0; ii < toPlace.size(); ii++){
+        
+        // could be before the beginning of string
+        if(shift < 0){
+            main[ii] = toPlace[ii];
+        }
+        else if (shift+ii >= main.size()) {
+            main += toPlace[ii];
+        }
+        else{
+            main[ii+shift] = toPlace[ii];
+        }
+    }
+    return main;
+}
+
+/* FUNCTION TO FIND BEST POSITION */
+int bestPosition(string sentence, string word, int& parity){
+    
+    int start_size;
+    
+    int parity_case2 = word.size();
+    int shift_case2 = word.size();
+    int size_case2 = word.size() + 1;
+    
+    int parity_case3 = word.size();
+    int shift_case3 = word.size();
+    int size_case3 = word.size() + 1;
+    
+    // there only a hand full of possibilities:
+    
+    /* CASE 1: word is within sentence */
+    int shift = sentence.find(word);
+    if(shift > sentence.size()){
+        parity = 0;
+    }
+    else {
+        parity = shift;
+        return shift;
+    }
+    
+    /* CASE 3: word is before sentence */
+    shift = 0;
+    start_size = word.size();
+    
+    // start of with something like this:
+    // sentence => | d | _ | W | i | d | e | _ | W | e | b |
+    //     word => | W | o | r | l | d |
+    //
+    // should match when:
+    // sentence =>                 | d | _ | W | i | d | e | _ | W | e | b |
+    //     word => | W | o | r | l | d |
+    
+    for(int ii = 0; ii < word.size(); ii++) {
+        
+        string piece_main = sentence.substr(0,start_size);
+        string piece_check = word.substr(shift,start_size);
+        if( piece_main.compare(piece_check) == 0 ){
+            parity_case2 = shift*-1;
+            shift_case2 = shift*-1;
+            size_case2 = start_size;
+            goto case3;
+        }
+        shift++;
+        start_size--;
+    }
+    
+case3:
+    
+    /* CASE 3: word is after sentence */
+    shift = sentence.size() - word.size();
+    start_size = word.size();
+    // start of with something like this:
+    // sentence => | W | o | r | l | d | _ | W | i | d | e | _ |
+    //     word =>                         | e | _ | W | e | b |
+    //
+    // should match when:
+    // sentence => | W | o | r | l | d | _ | W | i | d | e | _ |
+    //     word =>                                     | e | _ | W | e | b |
+    
+    for(int ii = 0; ii < word.size(); ii++) {
+        
+        string piece_main = sentence.substr(shift,start_size);
+        string piece_check = word.substr(0,start_size);
+        if( piece_main.compare(piece_check) == 0 ){
+            parity_case3 = shift;
+            shift_case3 = shift;
+            size_case3 = start_size;
+            goto check;
+        }
+        shift++;
+        start_size = sentence.size() - shift;
+    }
+    
+check:
+    
+    if(shift_case2 == word.size() && shift_case3 == word.size()){
+        /* CASE 4: word cannot attach */
+        parity = -1;
+        return 0;
+    }
+    
+    
+    if(shift_case2 == word.size()){
+        parity = parity_case3;
+        return shift_case3;
+    }else if (shift_case3 == word.size()){
+        parity = parity_case2;
+        return shift_case2;
+        
+    }else{
+        
+        if (true){//size_case3 >= size_case2) {
+            parity = parity_case3;
+            return shift_case3;
+        }else{
+            parity = parity_case2;
+            return shift_case2;
+        }
+        
+        
+    }
+    
+}
+
+
+int main(){
+    
+    // create string reference:
+    vector<string> shells;
+    
+    /* example 1 *
+    shells.push_back(" Wide");
+    shells.push_back("Wide ");
+    shells.push_back("World");
+    shells.push_back("d Wid");
+    shells.push_back("de We");
+    shells.push_back("e Web");
+    shells.push_back("ide W");
+    shells.push_back("ld Wi");
+    shells.push_back("orld ");
+    shells.push_back("rld W");
+    //*/
+    
+    /* example 2 */
+    
+    shells.push_back("Readi"); //obs: this algorithm is very efficient given an initial condition that allows you to put the words together in a cohesive way. I had to stablish this element as the first one and always tell the code to append values to the mais string only with positive shifts
+    shells.push_back(" a ce");
+    shells.push_back(" afte");
+    shells.push_back(" age,");
+    shells.push_back(" cert");
+    shells.push_back(" crea");
+    shells.push_back(" dive");
+    shells.push_back(" from");
+    shells.push_back(" its ");
+    shells.push_back(" mind");
+    shells.push_back(" much");
+    shells.push_back(" purs");
+    shells.push_back(" the ");
+    shells.push_back(" too ");
+    shells.push_back(", aft");
+    shells.push_back(", div");
+    shells.push_back("a cer");
+    shells.push_back("ading");
+    shells.push_back("after");
+    shells.push_back("age, ");
+    shells.push_back("ain a");
+    shells.push_back("ative");
+    shells.push_back("certa");
+    shells.push_back("ch fr");
+    shells.push_back("creat");
+    shells.push_back("d too");
+    shells.push_back("ding,");
+    shells.push_back("diver");
+    shells.push_back("e min");
+    shells.push_back("e pur");
+    shells.push_back("e, di");
+    shells.push_back("eadin");
+    shells.push_back("eativ");
+    shells.push_back("er a ");
+    shells.push_back("ertai");
+    shells.push_back("erts ");
+    shells.push_back("from ");
+    shells.push_back("fter ");
+    shells.push_back("g, af");
+    shells.push_back("ge, d");
+    shells.push_back("h fro");
+    shells.push_back("he mi");
+    shells.push_back("in ag");
+    shells.push_back("ind t");
+    shells.push_back("ing, ");
+    shells.push_back("its c");
+    shells.push_back("ive p");
+    shells.push_back("ivert");
+    shells.push_back("m its");
+    shells.push_back("mind ");
+    shells.push_back("much ");
+    shells.push_back("n age");
+    shells.push_back("nd to");
+    shells.push_back("ng, a");
+    shells.push_back("o muc");
+    shells.push_back("om it");
+    shells.push_back("oo mu");
+    shells.push_back("pursu");
+    shells.push_back("r a c");
+    shells.push_back("reati");
+    shells.push_back("rom i");
+    shells.push_back("rsuit");
+    shells.push_back("rtain");
+    shells.push_back("rts t");
+    shells.push_back("s cre");
+    shells.push_back("s the");
+    shells.push_back("suits");
+    shells.push_back("tain ");
+    shells.push_back("ter a");
+    shells.push_back("the m");
+    shells.push_back("tive ");
+    shells.push_back("too m");
+    shells.push_back("ts cr");
+    shells.push_back("ts th");
+    shells.push_back("uch f");
+    shells.push_back("uits.");
+    shells.push_back("ursui");
+    shells.push_back("ve pu");
+    shells.push_back("verts");
+    //*/
+    
+    
+    // setup first run:
+    int c = 0;
+    int c_consecutive;                  // accounts for the number of consecutive matches (might not use this
+    int shift_amount;					// amount to shift when place on the main_string
+    int shell_pick; 					// index value for shells vector
+    int parity_check;
+    string main_str = shells[0];		// start with something at the main string
+    shells.erase(shells.begin() + 0); 	// remove 0 element since it has already been placed on main string
+    
+    do{
+        
+        //cout << main_str << endl; //display progress so far
+        
+        //figure out shift amount
+        shift_amount = bestPosition(main_str,shells[0],parity_check);
+        
+        //place string on right location:
+        if(parity_check == shift_amount){
+            main_str = placeString(main_str,shells[0],shift_amount);
+            shells.erase( shells.begin() );
+        }
+        else{
+            shells.push_back( shells[0] );  // send value from top to bottom of queue
+            shells.erase( shells.begin() ); // remove the value from top
+        }
+        
+        
+    }while(shells.size() > 0);// && ++c <= 1000);
+    
+    cout << " ==> " << main_str << endl;
+    
+
+    
+    return 0;
+    
+}
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+The code already addresses that
+</VERBATIM>
+---++ 4c.  More complications [5 points]
+
+<VERBATIM>
+The code is the same but instead, you cap the amount of time you go through the while loop checking through the substrings. The complexity remains the same. Let's loo at the actual code for it:
+</VERBATIM>
+%CODE{cpp}%
+ do{
+        
+        //cout << main_str << endl; //display progress so far
+        
+        //figure out shift amount
+        shift_amount = bestPosition(main_str,shells[0],parity_check);
+        
+        //place string on right location:
+        if(parity_check == shift_amount){
+            main_str = placeString(main_str,shells[0],shift_amount);
+            shells.erase( shells.begin() );
+        }
+        else{
+            shells.push_back( shells[0] );  // send value from top to bottom of queue
+            shells.erase( shells.begin() ); // remove the value from top
+        }
+        
+        
+    }while(shells.size() > 0 && ++c <= shells.size()*2); // <<== change
+%ENDCODE%
+
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+<pre>
+This was the basic approach:
+<a href="https://algorithmics.bu.edu/twiki/pub/EC330/HomeworkSevenIgorPereiraDePaula/traveling_salesman.png">SEE</img>
+</pre>
+%CODE{cpp}%
+//
+//  main.cpp
+//  P5_maybeforthelasttime
+//
+//  Created by Igor de Paula on 4/18/15.
+//  Copyright (c) 2015 idp_od. All rights reserved.
+//
+
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <sstream>
+#include <map>
+#include <string>
+#include <iomanip>
+
+using namespace std;
+
+class IDP_MAP{
+    
+public:
+    
+    // variables
+    map< string, int > W_graph;               // variable that holds all the edges weights
+    map< string, vector<string> > E_graph;    // variable that holds all the edges
+    map< string, int > V_graph;              // variable that holds # of visits to node
+    
+    // constructor
+    IDP_MAP(){/* just the default contructor */}
+    
+    // functions
+    string minCol(string colName){
+        
+        string indx = E_graph[colName][0];
+        
+        for (vector< string >::iterator ii = E_graph[colName].begin(); ii != E_graph[colName].end(); ii++) {
+            
+            if(*ii == colName){ continue; } // this might actually never happen
+            
+            if(W_graph[*ii + ":" + colName] < W_graph[indx + ":" + colName]){
+                indx = *ii;
+            }
+        }
+        
+        return indx;
+        
+    }
+    //this function returns the row position of the min of a col on Weights
+    
+    
+    
+    int MinWeight(string from, string to, vector<string> via){
+        //on the first  A       A       {B,C,D,E}
+        // given that:
+        // A -> 0
+        // B -> 1
+        // C -> 2
+        // D -> 3
+        // E -> 4
+        
+        
+        if (via.size() == 0)
+            return W_graph[from + ":" + to];
+        else {
+            
+            // find min of column
+            string next = minCol(to);
+            
+            // erase next from via path (because you will pass it to "to")
+            for (int ii = 0; ii < via.size() ; ii++) {
+                if(via[ii].compare(next) == 0){
+                    via.erase(via.begin() + ii);
+                }
+            }
+            
+            // print path:
+            cout << next << " <-- ";
+            
+            return MinWeight(from, next, via) + W_graph[next + ":" + to];
+        }
+    }
+    
+    
+    int find_total_path(string startAt){
+        
+        vector<string> allNodes;
+        
+        for(map<string, int>::iterator ii = V_graph.begin(); ii != V_graph.end(); ii++){
+            if(ii->first == startAt){ continue; }
+            allNodes.push_back(ii->first);
+        }
+        
+        // call the function that actually implements evrything:
+        return MinWeight(startAt,startAt,allNodes);
+        
+        
+    }
+    
+    void load_map(string fileName){
+        
+        /* PREPARE VARIABLES FOR LOADING MAP */
+        ifstream rawMap; rawMap.open(fileName);   // file stream
+        string read_edge;                         // a line taken from the file stream
+        
+        //int c = 0;                                // to keep track of loading
+        
+        
+        /* READ IN THE VALUES FROM MAP INTO THE GRAPH */
+        while(getline(rawMap, read_edge)){
+            
+            // for debug:  //\
+            cout << read_edge.substr(0,4) + ":" + read_edge.substr(9,4) << " = "<< stoi(read_edge.substr(15),nullptr,10) << endl;
+            
+            // store weights:
+            W_graph[read_edge.substr(0,4) + ":" + read_edge.substr(9,4)] = stoi(read_edge.substr(15),nullptr,10);
+            
+            //store edges:
+            E_graph[read_edge.substr(0,4)].push_back( read_edge.substr(9,4) );
+            
+            //store visits:
+            V_graph[read_edge.substr(0,4)] = 0; // false for not visited.
+            V_graph[read_edge.substr(9,4)] = 0; // false for not visited.
+            
+        }
+        
+        rawMap.close();
+        
+    }
+    
+    bool isEdge(string v1,string v2){
+        
+        if(W_graph[v1 + ":" + v2]){
+            // existis
+            return true;
+        }
+        else{
+            // doesnt exist
+            return false;
+        }
+        
+        return true;
+        
+    }
+    
+    bool isVisited(string v_pick){
+        
+        return V_graph[v_pick] > 0;
+        
+    }
+    
+    bool isVertex(string v_test){
+        
+        if(V_graph.find(v_test) != V_graph.end() ){
+            //exists
+            return true;
+        }
+        else{
+            // doesnt exist
+            return false;
+        }
+        
+    }
+    
+    bool allVisited(){
+        
+        for(map<string,int>::iterator it=V_graph.begin(); it!=V_graph.end(); ++it){
+            if( it->second == 0 ){
+                return false;
+            }
+        }
+        return true;
+    }
+    
+};
+
+
+
+
+int main(){
+    
+    IDP_MAP main_map;
+    int trip_cost; // trip.first = path trip.second = total cost
+    
+    main_map.load_map("map.txt");
+    
+    cout << "ETCW <-- ";
+    trip_cost = main_map.find_total_path("ETCW"); //pass starting/ending point to it
+    cout << "ETCW (start);" << endl;
+    
+    cout << trip_cost << endl;
+    
+    return 0;
+    
+}
+
+
+
+%ENDCODE%
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle

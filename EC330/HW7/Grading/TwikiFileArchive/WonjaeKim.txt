@@ -1,0 +1,372 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  <latex>n^2 (logn) (lg{(logn)})</latex>  |
+|  c  |  <latex>n^2 logn</latex>  |
+|  d  |  <latex>n^2 {(logn)}^2</latex>  |
+---++ Explanation
+
+
+b. For each "i" in the sum(i=1 to n), logn insertions are performed at a height i*lg(logn). The height is i*lg(logn) since this method produces a tree similar to the perfectly unbalanced tree, except the nodes are replaced with balanced subtrees of logn nodes, which have height lg(logn) each. sum(i=1 to n)(i) is O(n^2), therefore the total time is n^2 (logn)(lg(logn)).
+
+c. Insertion into list = O(1). This method is described by sum(i=1 to n)(ilogn), since for each "i", logn insertions are performed at height i. Therefore n^2 logn.
+
+d. The time taken can be no better than the method in b), and the worst case time occurs when the height of the tree is maximized, that is, when all the values are stored on the right, producing a tree of height(nlogn). This is described by sum(i=1 to n)(i (logn)^2), because each "i" value is inserted logn times at a height ilogn
+
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  57  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  9  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  44  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  40  |
+
+Does this graph exhibit the triangle inequality? Yes.
+---++!! 2b
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |    |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |    |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+
+MST_2d (Graph, Root) {
+
+list PQarray [101];
+
+for each vertex-except-Root u {
+PQarray[101].insert(u);
+u.parent = NIL;
+} //takes O(V) time in total. 
+
+PQarray[0].insert(Root); //O(1)
+
+while (Queue != empty) {
+u = extract_min(PQarray); //O(1)
+for each (v = u.Neighbor) {
+if (v is in PQarray && weight(u,v) < v.arrayIndex) {
+v.parent = u;
+PQarray[weight(u,v)] = decrease_key(u); //O(1)
+}
+}
+} //while loop, takes O(E) time since only the unexplored edges result in operations, and all edges are explored.
+}
+
+</VERBATIM>
+---+++!! Analysis
+
+
+A completed graph satisfies E = O(V^2). Also, given the constraints of this problem, an algorithm generally cannot run in less than O(E) time, since any unchecked edge might potentially be a member of the MST. 
+
+In other words, every operation used within the structure is O(1). The while loop takes O(E) time and the for loop takes O(V) time, substantially improving on the standard implementation of Prim's algorithm by a factor of logV. This is essentially the same implementation, except that by using a different data structure to implement the priority queue we change the logV decrease_key and extract_min times from O(logV) to O(1). By implementing the priority queue as an array of length 101, where the index represents the possible edge weights and each element contains a linked list representing the vertices not yet added, we can achieve O(1) decrease_key time (Find key in O(1) time, delete() and insert() from the linked list in O(1) time) and O(1) extract_min time(Go through the array until the first non-empty element is found, then remove the vertex at the top of the list). We can build this data structure in O(V) time, by inserting every vertex at the 101th element. 
+
+The total time complexity is O(V+E) = O(V+V^2) = O(V^2) = O(E). 
+
+
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+
+Running time.
+
+1. sort = O(ElgE)
+2. O(1)
+3-5. for (1:E), if (connected) then do O(1) //how to check connectedness? max O(E), therefore 3-5 is max O(E^2)
+6. O(1)
+
+From http://en.wikipedia.org/wiki/Reverse-delete_algorithm, http://dl.acm.org/citation.cfm?doid=335305.335345, graph connectedness can be checked in O(logV * (loglogV)^3) time. 
+Therefore, total is O(ElogE+E(logV * (loglogV)^3). And since V = O(E), total also = O(ElogE * (loglogE)^3).
+
+---++!! b
+
+Fails for the graph described by 
+
+A-B = 5
+A-C = 1
+B-C = 1
+
+In the worst case, the algorithm will choose the edge AB to produce a tree, which is not the MST. 
+
+---++!! c
+
+1. O(1)
+2. O(E) *
+3. O(1) //using adjacency matrix
+4. O(V+E)
+5. O(V) //cycle can be up to V edges in size, finding maximum edge requires V time
+6. O(1)
+7. O(1)
+
+total = O(E*(V+E+V)) = O(EV+EE) = O(E^2)
+
+From http://www.geeksforgeeks.org/detect-cycle-undirected-graph/, graph cycles can be detected in O(V+E)
+
+---++!! Grader comments *[18/20]*
+<VERBATIM>
+First running time is O(E^2).
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+
+string p4a(substrings) {
+
+m = substring.length()
+n = #substrings
+substr_arr [n][3]; //O(n)
+
+for each substring i {
+substr_arr [i][1] = first four letters of i
+substr_arr [i][2] = last four letters of i
+substr_arr [i][3] = i
+} //O(mn)
+
+for each substring i {
+for each substring j {
+if substr_arr[i][1] == substr_arr [j][2] && substr_arr[i][1] != NIL {
+substr_arr[i][2] = substr_arr[j][2];
+substr_arr[j][1] = NIL;
+substr_arr[j][2] = NIL;
+substr_arr[i][3] = substr_arr[i][3] - overlap(substr_arr[i][3],substr_arr[j][3]) + substr_arr[j][3];
+if (i == j == last) return substr_arr[i][3];
+} //O(m)
+} //O(n)
+} //O(n)
+
+//O(mn^2)
+}
+
+This algorithm gives O(mn^2) running time where m = substring length and n = number of substrings. An nx3 array is constructed, and then strings are copied into the elements (O(m)) n times, and finally subsubstring matches of length m-1 are combined repeatedly to produce the final string. 
+
+---+++!! ii
+
+"Gravitation cannot be held responsible for people falling in love."
+
+and
+
+%CODE{"cpp"}%
+
+#define NN 62
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+using namespace std;
+
+string d(string a) {return a.substr(0,4);}
+
+string f(string a) {return a.substr(a.length()-4,4);}
+
+int main() {
+  fstream fs;
+  string bob = "";
+  vector<string> tmp;
+  vector<string> v;
+  fs.open("reads5.txt");
+  getline(fs,bob);
+  fs.close();
+  for (int i = 0;i < NN;i++) {
+    v.push_back(bob.substr(8*i+1,5));
+  }
+  tmp = v;
+  int m = 0;
+  do {
+    v = tmp;
+    bob = v[m % tmp.size()];
+    v.erase(v.begin()+m % tmp.size());
+  int n = 0;
+  while (!v.empty() && v.size() != n) {
+    n = v.size();
+    cout<<m<<' '<<n<<endl;
+    for (int i = 0;i < v.size();i++) {
+      if (d(v[i]) == f(bob)) {
+	bob += v[i][v[i].length()-1];
+	v.erase(v.begin()+i);
+      }
+    if (f(v[i]) == d(bob)) {
+      bob = v[i][0]+bob;
+      v.erase(v.begin()+i);
+    }
+  }
+}
+
+  //
+  m++;
+  } while (bob.length() < NN+5-1);
+
+  cout << bob << endl;
+}
+
+
+
+
+
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+
+string p4b(substrings) {
+
+m = substring.length()
+n = #substrings
+substr_arr [n][3]; //O(n)
+
+for each substring i {
+substr_arr [i][1] = first m-1 letters of i
+substr_arr [i][2] = last m-1 letters of i
+substr_arr [i][3] = i
+} //O(mn)
+
+for k = 0 to m-2 {
+for each substring i {
+substr_arr[i][1] -= last letter;
+substr_arr[i][2] -= first letter;
+for each substring j {
+if substr_arr[i][1] == substr_arr [j][2] && substr_arr[i][1] != NIL {
+substr_arr[i][2] = substr_arr[j][2];
+substr_arr[j][1] = NIL;
+substr_arr[j][2] = NIL;
+substr_arr[i][3] = substr_arr[i][3] - overlap(substr_arr[i][3],substr_arr[j][3]) + substr_arr[j][3];
+if (substr_arr[i][3].length() == m+n-1) return substr_arr[i][3];
+} //O(m)
+} //O(n)
+} //O(n)
+} //O(m)
+
+//O(m^2*n^2)
+}
+
+Algorithm performs the same step, but if all length = 5 comparisons don't give a string of the proper final length then all the starting and ending sub-substrings have their lengths reduced by 1 until they reach 1, at which point they must find a match. This occurs O(m) times.
+---++ 4c.  More complications [5 points]
+---+++!! i
+
+string p4ci(substrings) {
+
+m = substring.length()
+n = #unique substrings
+substr_arr [n][3]; //O(n)
+
+for each unique substring i {
+substr_arr [i][1] = first m-1 letters of i
+substr_arr [i][2] = last m-1 letters of i
+substr_arr [i][3] = i
+} //O(m^2n)
+
+for k = 0 to m-2 {
+for each unique substring i {
+substr_arr[i][1] -= last letter;
+substr_arr[i][2] -= first letter;
+for each unique substring j {
+if substr_arr[i][1] == substr_arr [j][2] && substr_arr[i][1] != NIL {
+substr_arr[i][2] = substr_arr[j][2];
+substr_arr[j][1] = NIL;
+substr_arr[j][2] = NIL;
+substr_arr[i][3] = substr_arr[i][3] - overlap(substr_arr[i][3],substr_arr[j][3]) + substr_arr[j][3];
+} //O(m)
+} //O(n)
+} //O(n)
+} //O(m)
+
+
+for each unique substring i{
+if (tempstring.length() < substr_arr[i][3].length()) {
+tempstring = substr_arr[i][3];
+}
+}
+return tempstring; //O(n)
+
+//O(m^2*n^2)
+}
+
+Added "unique" to substrings, adds O(m) time factor to initial for loop, which doesnt affect total runtime. 
+Also checks to see longest string produced at the end, instead of looking for the one of length m+n-1.
+
+
+---+++!! ii
+
+string p4cii(substrings) {
+
+m = substring.length()
+n = #unique substrings
+substr_arr [n][3]; //O(n)
+
+for each unique substring i {
+substr_arr [i][1] = first m-1 letters of i
+substr_arr [i][2] = last m-1 letters of i
+substr_arr [i][3] = i
+} //O(m^2n)
+
+for k = 0 to m-2 {
+for each unique substring i {
+substr_arr[i][1] -= last letter;
+substr_arr[i][2] -= first letter;
+for each unique substring j {
+if substr_arr[i][1] == substr_arr [j][2] && substr_arr[i][1] != NIL {
+substr_arr[i][2] = substr_arr[j][2];
+substr_arr[j][1] = NIL;
+substr_arr[j][2] = NIL;
+substr_arr[i][3] = substr_arr[i][3] - overlap(substr_arr[i][3],substr_arr[j][3]) + substr_arr[j][3];
+} //O(m)
+} //O(n)
+} //O(n)
+} //O(m)
+
+for each unique substring i{
+if (tempstring.length() < substr_arr[i][3].length()) {
+tempstring = substr_arr[i][3];
+}
+}
+return tempstring; //O(n)
+
+//O(m^2*n^2)
+}
+
+This is the same solution as i), and produces the correct answer, as it returns the longest string found thus far from every valid combination.
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle

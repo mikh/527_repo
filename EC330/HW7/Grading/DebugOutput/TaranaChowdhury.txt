@@ -1,0 +1,336 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  | Explanation |
+|  b  |   Theta n*(h+(log(log(n)))^2)| for every n the height of the tree increases by log(log(n)) so the the summation is theta (log(log(n)))^2 and it traverses the tree n times| 
+|  c  |  Theta n*h*log(n)| There are log n inserts for every n number and insert-tree take theta (h) |
+|  d  |  Theta n*(h+(log(n))^2)| so for every n the height of the tree increases at most log n levels (inserting on same side) and the summation would be theta  log(n)^2 so traversing the tree takes h+log(n)^2 and this is done n times |
+---++ Explanation
+<VERBATIM>
+Provide explanation for partial credits
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  56  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  8  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  43  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  39   |
+
+Does this graph exhibit the triangle inequality? 
+No it does not.
+---++!! 2b
+|  Index  |  a  |  b  |  c  |  d  |  e  |  f  |
+|  a  |  0  |  56  |  8  |  43  |  4  |  39  |
+|  b  |  56  |  0  |  52  |  23  |  53  |  43  | 
+|  c  |  8  |  52  |  0  |  38  |  43  |  32 |  
+|  d  |  43  |  23  |  38  |  0  |  39  |  28  |  
+|  e  |  4  |  53  |  43  |  39  |  0  |  36  | 
+|  f  |  39  |  43  |  32  |  28  |  36  |  0  |  
+
+using the distances between each vertex in the adjacency matrix above I have determined the MST using Kruskal's algorithm to be 
+
+a-e, a-c, b-d, d-f, f-c
+---++!! 2c
+|  Index  |  a  |  b  |  c  |  d  |  e  |  f  |
+|  a  |  0  |  56  |  8  |  43  |  4  |  39  |
+|  b  |  56  |  0  |  52  |  23  |  53  |  43  | 
+|  c  |  8  |  52  |  0  |  38  |  43  |  32 |  
+|  d  |  43  |  23  |  38  |  0  |  39  |  28  |  
+|  e  |  4  |  53  |  43  |  39  |  0  |  36  | 
+|  f  |  39  |  43  |  32  |  28  |  36  |  0  |  
+
+using the distance in the adjacency matrix above I have determined the MST using Prim's algorithm to be
+a->e, e->f, f->d, d->b, f->c
+
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |   null  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  f  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a   |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  e  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+KRUSKAL(G):
+  A = Null;
+for each v element of G.V:
+  MAKE-SET(v)
+for each (u, v) ordered by weight(u, v), increasing:
+   if FIND-SET(u) !=FIND-SET(v):
+       A = A union {(u, v)}
+       UNION(u, v)
+return A
+
+credit: http://en.wikipedia.org/wiki/Kruskal%27s_algorithm
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+Descrbie and analyze your algorithm.
+
+I would use Kruskal's algorithm which takes Theta (E log V).
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+Running time.
+
+Yes this would find the MST since it goes through all the 
+edges in nonincreasing order and removes the edges 
+only if removing the edges would still result in a connected 
+graph so the the tree would still span the entire graph and 
+so the larger edges that aren't necessary are removed. 
+
+The runtime for this algorithm assuming we are using an 
+adjacency list representation for T would be O(E^2)
+because sorting the edges in nonincreasing order would
+ take at least O( E log E) using Merge-Sort, then using 
+BFS or DFS to traverse the tree and check if T- {e} is 
+connected graph would take O(V+ E) and this would
+ be done for all the E edges so the total run time would 
+be O(E log E + E (V +E))= O (E^2).
+
+</VERBATIM>
+---++!! b
+<VERBATIM>
+Counterexample 
+
+No this algorithm would not return a MST because
+it takes each edge in arbitrary order and so it may 
+chose edges that don't result in a cycle, but also don't 
+for a MST. For example, a simple undirected graph 
+with three vertices a, b, c and edges a-b, b-c, a-c
+each with a weight 3, 4. 5. This algorithm may 
+chose edges b-c and a-c as the MST which has a
+weight of 9 however this is incorrect. The MST includes 
+edges a-b and b-c which has a weight of 7.   
+
+
+</VERBATIM>
+---++!! c
+<VERBATIM>
+Running time
+
+Yes, this algorithm does produce a MST because
+it adds edges in arbitrary order and when a cycle
+is detected it removes the largest edge in the cycle 
+and going through all edges in this manner would 
+result in a MST.
+
+The runtime, assuming we are using an adjacency list
+representation for T, would be O(E*V) because adding 
+and edge take constant time O(1) and DFS takes O(V) 
+for this algorithm because the number of edges in T 
+will never be greater than V because every time a cycle 
+is found an edge is removed. Finding the maximum edge
+weight takes O(V) and deleting an edge also takes O(V). And 
+since this is done for all E edges the runtime would be O(E*V). 
+
+</VERBATIM>
+
+---++!! Grader comments *[20/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+Describe and analyze the algorithm.
+I was able to successfully extract the reads, create prefixes and suffixes using the first four 
+and last four characters respectively, and eliminate all the duplicate entries. I was planning 
+use the nodes2 string array as my vertices for the graph and the reads for the edges; however 
+I was unable to complete this portion. 
+
+Allocating the read, prefix, and suffix arrays take Theta(n) where n is the number of reads. 
+I used the sort function from the the algorithms stl and that takes Theta(n log n).
+And lastly I wend through the entire nodes array to eliminate repeating nodes, which takes
+theta(N). So my algorithm thus far takes Theta(N log N).
+ 
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+Provide your result here.
+The sequence from doing this by hand is:
+
+Reading, after a certain age, diverts the mind from its creative pursuit
+
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <algorithm>
+
+int dd=79;
+using namespace std;
+int main(){
+
+string line;
+string read[79];
+string prefix[79];
+string suffix[79];
+string nodes[158];
+string nodes2[158];
+int length;
+int m=0;
+
+
+ifstream myfile("reads3.txt");
+if(myfile.is_open()){
+
+	while(!myfile.eof()){
+		getline(myfile, line);
+		length=line.length();
+		for(int i=0; i<length-1; i++){
+			if(line[i]==']'){
+				for(int j=5; j>0; j--){//read[] will contain everything between []
+					read[m]+=line[i-j];
+				}	
+				for(int nn=0; nn<4; nn++){	//prefix will be first 4 characters of read
+					prefix[m]+=read[m][nn];
+				}
+				for(int gg=1; gg<5; gg++){	//suffix will be last 4 characters of read
+					suffix[m]+=read[m][gg];
+				}
+				m+=1;
+			}
+		}
+	}
+	//insert all prefixes and suffixes into nodes array
+	for(int hh=0; hh<79; hh++)
+	{
+		nodes[hh]=prefix[hh];	
+	}
+	for(int bb=0; bb<79; bb++, dd++)
+	{
+		nodes[dd]=suffix[bb];	
+	}
+	
+	//sort then delete duplicates
+	sort(nodes, nodes + 158);
+	int count=0;
+	//delete duplicate nodes
+	for(int aa=0; aa<157; aa++)
+	{
+		if(nodes[aa]!=nodes[aa+1])
+		{
+			nodes2[count]=nodes[aa];
+			count+=1;
+		}
+	}
+	nodes2[count]=nodes[157];
+
+	for(int jj=0; jj<count+1; jj++){
+		cout<<nodes2[jj]<<endl;
+	}
+	cout<<count;
+
+	
+}
+else cout<< "Unable to open file";
+
+	myfile.close();
+	return 0;
+}
+
+
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+Describe and analyze the modification
+In order to deal with reads of different lengths the only thing that would change
+is the length of the prefixes and suffixes. And so the nodes would be different lengths. 
+So when matching a read edge to it's prefix and suffix node it would still be the same comparison. 
+This modification would not change the run time. It would take just as long to create the nodes 
+Theta(n) and to sort them Theta(n log n) where n is the number of reads. 
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+Descrbie and analyze the modification.
+
+In order to deal with reads with complications at the end the suffix node can be create to simply
+take in a substring of the suffix and drop letters at the end based on some condition. 
+ 
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+Descrbie and analyze the modification.
+
+This modification would not change the run time. It would take just as long to create the nodes 
+Theta(n) and to sort them Theta(n log n) where n is the number of reads. 
+
+
+</VERBATIM>
+
+
+---+++!! Grader comments
+<VERBATIM>Question 4 Results:
+
+Total Grade: 20
+
+	10        		
+	5         		
+	5         		
+
+
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+Applying Prim's algorithm to this file would find the MST, since none of the distances are negative.  
+
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle
+
+
+---+++!! Grader comments
+<VERBATIM>Question 5 Results:
+
+Total Grade: 3
+
+	0         		Grades from submission
+	3         		more explanation needed
+
+
+</VERBATIM>
+

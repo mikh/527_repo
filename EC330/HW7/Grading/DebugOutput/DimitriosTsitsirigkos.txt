@@ -1,0 +1,533 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  Theta(n(h+[log(logn)]^2)  |
+|  c  |  Theta(h*n*logn)  |
+|  d  |  Theta(n(h+(logn)^2)) |
+---++ Explanation
+<VERBATIM>
+For all of them I assume that I have an existing tree of heigh h.
+
+
+b) Here, I have to go through the existing tree (h). In addition to that, to add a single element logn times it will take (logn)^2. I get this number through an arithmentic series, because I add 1+2+3…..logn. logn is just the last element. but I dont have to insert n elements, I have to insert logn elements so it will be (log(logn))^2  So, so far I have (log(logn))^2 + existing height (h). However, I have to repeat this process n times because I have n different numbers.
+Therefore my total running time will be Theta[n( h+ (log(logn))^2]
+
+c) for this one I thought of a tree that it already exists with height h. On this tree we have to insert logn items and n different numbers. I thought of logn being basically the "depth" in a third dimension and n just the nodes. Therefore, it will be Theta(h*n*logn)
+
+d) For this one, it is very similar to part b) however instead of having a height of logn now I have a height of n. the worst case for this one means that my tree is not balanced at all and only one side is fulled. 
+so I have a tree of height n. again i have the excisting tree h and n different numbers. Therefore, I have Theta(n(h+(logn)^2)).
+
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  56  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  9  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  43  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  40  |
+
+Does this graph exhibit the triangle inequality? 
+
+Yes it does
+---++!! 2b
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |    |
+|  b  |  Chichen Itza, Yuc., Mexico  |    |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |    |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |    |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |    |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |    |
+
+I will enter that as a pair of edges that give me the MST:
+(entered as a linked list the edges are undirected)
+{ (a,e), (e,c), (b,d), (d,f), (f,c) }
+
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  NULL  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+I am going to use Prim's algorithm
+
+Pseudocode:
+Prims
+Q <-- all vertices
+key[v] <-- infinity
+key[root] <-- 0
+   while (Q is not empty)
+     {
+      u <-- extract min(Q)
+      for (each v (vertex) adjacent to u)
+            {
+                if  (v belongs to Q  && w(u,v) < key[v])
+                key[v]   <-- w(u,v)
+                pi[v]   <-- u
+            }
+     }
+
+
+where pi is an array which holds the predecessors and w is the weight.
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+The running time for this algorithm will be:
+I am going use priority queues as my Q where each operation can be implmented in log|Q| time according to the book.
+
+So, to extract a vertex from the Q I need O(logV) time. so for n vertices I will need O(VlogV) time.
+I also need O(logV) time to decrese the key value of neighbouring vertex, which is done at most once for each edge therefore it is O(ElogV)
+
+Therefore, the running time will be bigTheta( (V+E)*logn )
+
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+This one gives always a MST and the running time is:
+ 
+(Using an adjacecny list for the tree)
+For this one, I am going to first sort the edges which can take Theta(ElogE) running time. In addition, I can check if the graph is connected by using bfs that will run on Theta(V+E). However, I should run bfs E times because of all the edges so the total running time will be  Theta(E * logE   +  E(V+E))
+
+
+---++!! b
+<VERBATIM>
+This will not give a MST. A simple counterexample will be the following:
+
+Think of this graph:
+
+                5       C   3
+    A O--------------O-----------O E
+      |              |            | 
+  24  |           2  |            |
+      |              |            |    1
+   B  O--------------O------------|
+               2           D            
+
+(DE is one edge with weight 1)
+
+because the edges are added in arbitrary order, this means that I can start by adding the edge AB which has weight 24. This will defintelty not give me the MST because the MST on this graph is:
+AB BC  CD DE  with total weight  of 11. If i start by adding AB then I already have a weight of 24. Therefore, this algorithm wont give me the MST.
+</VERBATIM>
+
+
+
+---++!! c
+<VERBATIM>
+This algorithm gives a MST the running time of an algorithm will be:
+
+(Using an adjacecny list for the tree)
+We need to see of a cycle exists this can be done by using DFS which takes Theta(V+E).  However, in this partucal case we can do better than Theta(V+E) and we can do Theta(V). This can happen because we will never have a number of edges in T greater than V (because we break the cycle). We also need to add an edge (constant running time). In addition, finding the max-weight edge takes Theta(V) and deleting an edge from T also takes Theta(V). We do the above for each edge E (multiply everything by E) so we will have a total running time of Theta(E(V)) = Theta(EV)
+</VERBATIM>
+
+---++!! Grader comments *[18/20]*
+<VERBATIM>
+First running time is O(E^2).
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+First of all, I modified a little bit the input file by putting each bracket into a seperate line.
+
+Analysis Running Time:
+
+First I create two structs one of edges the other one representing graphs.
+here everyhting will be stored.
+
+Basically for this one I am tracing the edges. The edge goes from one vertex to the next according to the weight. The largest weight is followed after the previous vertex.
+The weight is basically the corelation between two vertices and therefore I had to sort the edges according to their sizes and add them to the existing container. I used kruskals algorithm to implement that
+and to find the minimum weight "graph".
+
+
+
+The running time is influenced by two main factors.
+First is the recursive function search and the kruskals implementation. The recursive function is called according to the parents of vertices. This function is called to find the relationships between vertices.
+
+
+The recursion will take worst case V because it just looks for an equal key trough the set. 
+
+mykrusk function will infuelnce the running time.  it contains the built in function sort which takes logarithmic time and also for loops. In general the kruskals algorithm takes ElogE. In my case where the sorting takes logE (because i sort edges depending on their sizes(lenghts))
+Therefore, the final running time will be the sum of the above. So it is Theta(E(logE) +V)
+
+
+
+
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+How on earth can you explain in terms of chemistry and physics so important a biological phenomenon as first love?
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+
+//
+//  main.cpp
+//  hw72
+//
+//  Created by Dimitris Tsitsirigos on 4/20/15.
+//  Copyright (c) 2015 Dimitris Tsitsirigos. All rights reserved.
+//
+
+
+
+
+#include <algorithm>
+#include <fstream>
+#include <string>
+#include <iostream>
+#include <vector>
+#include <map>
+
+
+
+using namespace std;
+
+
+
+
+map <string, string> branch;
+map <string, int> depth;
+
+
+
+struct Edge
+{
+    string vertexone, vertextwo;
+    int weight;
+    Edge(string v1, string v2, int wh) :
+    vertexone(v1), vertextwo(v2), weight(wh){}
+    
+    
+};
+
+
+struct Graph
+{
+    vector <string> V;
+    vector <Edge> E;
+};
+
+
+
+string search(string myv)
+{
+    
+    if (branch[myv].compare(myv) == 0)
+    {
+        
+        return branch[myv];
+    }
+    
+    else
+    {
+        return search(branch[myv]);
+    }
+}
+
+void ens(string ensone, string enstwo)
+
+{
+    if (depth[ensone] > depth[enstwo])
+    {
+        branch[enstwo] = ensone;
+    }
+    
+    else if (depth[ensone] < depth[enstwo])
+    {
+        branch[ensone] = enstwo;
+    }
+    
+    else
+    {
+        branch[ensone] = enstwo;
+        depth[enstwo]++;
+    }
+}
+
+
+
+void init(string vec)
+{
+    branch[vec] = vec;
+    depth[vec] = 0;
+}
+
+
+
+
+
+
+
+
+//mst algor
+
+
+
+
+void mykrusk(Graph &g)
+{
+    vector<Edge> A;
+    for (auto c : g.V)
+    {
+        init(c);
+        
+    }
+    sort(g.E.begin(), g.E.end(), [](Edge x, Edge y)
+    {return x.weight > y.weight; }
+         
+         );
+    
+    
+    for (Edge e : g.E)
+    {
+        string r1 = search(e.vertexone);
+        string r2 = search(e.vertextwo);
+        if (r1.compare(r2) != 0){
+            A.push_back(e);
+            ens(r1, r2);
+        }
+    }
+
+    
+    
+    for (Edge myedge : A)
+    
+    {
+        
+        cout << myedge.vertexone<<"  " << myedge.weight<<"  "<<myedge.vertextwo <<endl;
+    }
+}
+
+int wt(string s1,string s2){
+    int count = 0;
+    int intd2 = 0;
+    int intd = 0;
+    int myar[5];
+    int mystc2;
+    
+    int mystc;
+    
+    int size = s1.length();
+    
+   
+    
+    for (int i = 0; i < size; i++)
+    {
+        if (s1[i] == s2[intd2])
+        {
+            intd2++;
+            count++;
+            myar[i] = count;
+        }
+        else
+        {
+            myar[i] = count;
+            count = 0;
+            intd2 = 0;
+        }
+        
+    }
+    
+    string opos1 = s2;
+    string opos2 = s1;
+    
+    int counter = 0;
+    int myarray[5];
+    for (int i = 0; i < size; i++)
+    {
+        if (opos1[i] == opos2[intd])
+        {
+            intd++;
+            counter++;
+            myarray[i] = counter;
+        }
+        else
+        {
+            myarray[i]= counter;
+            counter = 0;
+            intd = 0;
+            
+        }
+        
+    }
+    
+    
+    sort(myar, myar+5);
+    
+    sort(myarray, myarray+5);
+    
+    
+    mystc = myar[4];
+    
+    
+    
+    mystc2 = myarray[4];
+    
+   
+    
+    if (mystc2 > mystc)
+    {
+        return mystc2;
+    }
+    
+    
+    
+    
+    else
+    {
+        return mystc;
+    }
+    
+    
+}
+
+int main(){
+    
+    string t[113];
+    
+   
+    int i = 0;
+    
+    
+    string myline;
+    
+    ifstream myfile("reads4.txt");
+    
+    if (myfile.is_open())
+    {
+        
+        
+        while (getline(myfile, myline)){
+            
+            
+            
+            int bracket = myline.find(']');
+            
+            string s = myline.substr(1, bracket-1);
+            
+            t[i] = s;
+            
+            
+            
+            i++;
+            
+        }
+    }
+    
+    myfile.close();
+    
+    int sz = sizeof(t)/sizeof(t[0]);
+    
+    Graph myg;  //constructgraph to implement
+    
+    
+    
+    myg.V = vector<string>(t,t+sz);
+    
+    
+    for (int i = 0; i<113; i++)
+    {
+        
+        
+        for (int j = i+1; j <113; j++)
+        {
+           
+            myg.E.push_back(Edge(t[j], t[i], wt(t[j], t[i])));
+        
+        }
+        
+    }
+
+    
+    mykrusk(myg);   //call mst algorithm
+    
+    return 0;
+    
+}
+
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+Describe and analyze the modification
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+
+
+---+++!! Grader comments
+<VERBATIM>Question 4 Results:
+
+Total Grade: 10
+
+	10        		
+	0         		
+	0         		
+
+
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle
+
+
+---+++!! Grader comments
+<VERBATIM>Question 5 Results:
+
+Total Grade: 0
+
+	0         		Grades from submission
+	0         		
+
+
+</VERBATIM>
+

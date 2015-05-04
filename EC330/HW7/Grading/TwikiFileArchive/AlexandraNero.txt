@@ -1,0 +1,337 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+Worked with Shane McCormack
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |bigTheta(n*logn*(log(nlogn))|
+|  c  |bigTheta(n*logn)|
+|  d  |bigTheta(n^2logn*(logn))|
+---++ Explanation
+<VERBATIM>
+Provide explanation for partial credits
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  57  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  8  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  43  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  39  |
+
+Does this graph exhibit the triangle inequality? 
+Yes, physically driving from point A to point B is always shorter than going to point A to point C to point B. 
+Google maps always strives to give an optimal route.
+---++!! 2b
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  NULL  |
+|  b  |  Chichen Itza, Yuc., Mexico  |   Pyramid of the Sun  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  Statue of Liberty   |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  | Mandalay Bay |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  Photonics  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  CN Tower   |
+
+---++!! 2c
+|  Index  |  Location   |  &pi;  | Take numbers as vertices that each vertex is connected to.
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  | e, starting vertex |
+|  b  |  Chichen Itza, Yuc., Mexico  | d, ending vertex |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  | e, f  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  | b, f |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  | a, c  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  | c, d  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+Describe your algorithm here. Pseudocode is preferred.
+
+functionPrims(graph G, int V){
+
+Q = G.v //Q is a linked list with all the vertices
+Vertex v1 = Q.v[0] //grab the first vertex
+tree = NULL
+
+while (Q.size != 0){
+for all edges connected to v1:
+list smallest.add(edge)
+
+int i = 0
+vertex v2 - smallest[0]
+while (v2 in Q){
+i++
+Vertex v2 = smallest[i] //gets the vertex the smallest edges is connected to, if we have already seen this vertex than go to another vertex
+}
+
+Q.delete(v2);
+tree.add(v2)
+v1 = v2
+}
+return Q
+}
+
+
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+Descrbie and analyze your algorithm.
+Explanation:
+	-Builds tree one edge at a time by choosing smallest-weight edges
+	-Pick a starting vertex
+	-Among the edges connecting the vertex in the tree and one outside, choose the one with the smallest weight
+	-Repeat step previous step until all vertices have been added
+
+Time is V^2 + E: first it starts as V for going through each of the vertices in a bigger loop, and then V time for looking through each of the adjacent vertices in an inner loop
+E time comes 2E total in the code: 1E from seeing if the current vertex is in the linked list and another E for checking which E of V is the smallest edge.
+
+</VERBATIM>
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+Counterexample or Running time
+O(E(E+V))
+</VERBATIM>
+---++!! b
+<VERBATIM>
+Counterexample or Running time
+A counter example could be any graph
+| Edge | Vertex 1 | Vertex 2 | Weight |
+| 0 | 0 | 2 | 5 |
+| 1 | 2 | 3 | 4 |
+| 2 | 0 | 3 | 12 |
+| 3 | 0 | 1 | 30 | 
+| 4 | 1 | 3 | 5 |
+
+
+if the algorithm chooses a vertex arbitrarily, let's say it starts at the 0 vertex and grabs an edge with a weight of 5 going to 2 vertex, 
+then at 2 vertex it goes to 3 and picks up an edge of weight 4. Then at 3 it goes to 0 and picks up an edge with weight 12, not looking at the possible smaller weight edges that could have been added.
+Parts a and c produce a tree because there is a correctly place step in the process where the edges are compared to each other.
+</VERBATIM>
+---++!! c
+<VERBATIM>
+Counterexample or Running time
+O(VE)
+</VERBATIM>
+
+---++!! Grader comments *[20/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+Describe and analyze the algorithm.
+
+keep in mind: for the length of an entire quote or phrase to unscramble = L ex. World_Wide_Web's length = 14
+length of the nodes is L - 4 or 10 (size of the array of nodes)
+
+The algorithm is dependent of the class Node which describes the vertex of the graph that will be created. Each vertex has an id and  a prev and next pointer saying where in the graph it will go.
+first the strings are preprocessed: put into an array and forwarded to the print string function can take up to L time)
+each of the strings are created as Nodes which are added in an array((L-4) time). Then each node is compared to every other node((L-4)^2), checking to see if the suffix of the current node = the prefix of the comparison node, if so, then the next and prev variables of the two nodes are changed to pint at each other.
+Once the graph is completed, the starting point is found by looking at all the prev integers of the nodes(L-4), the one without a prev, i.e. it does not point to a node that should precede it, it must be the head and we should start there.
+Then the string is outputted by following the Nodes(L-4) and the next indexes in the node array. it prints out the first letter of each id in the node, then prints out the whole string for the last node. 
+
+the total time is 3(L-4) + (L-4)^2 + L
+or O(n^2)
+
+
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+Provide your result here.
+
+I CALL THE INPUT FILE FOR THE FAMOUS QUOTATION "QUOTES" PLEASE CHANGE IF FILE HAS BEEN RENAMED
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+// paste your code here
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <streambuf>
+#include <vector>
+using namespace std;
+
+
+class Node{
+public:
+
+	Node(int id, string value){
+		this->id = id;
+		this->next = -1;
+		this->prev = -1;
+		this->value = value;
+	}
+
+	string value;
+	int next;
+	int prev;
+	int id;
+
+};
+
+
+void printString(string* substrings, int subNum){
+	int subLength = substrings[0].length();
+	vector<Node> nodes;
+
+//making an array with all the vertex
+	for (int i = 0; i < subNum; i++){
+		nodes.push_back(Node(i, substrings[i]));
+	}
+
+//compare the suffix to another strings prefix if =, must be the next node in the graph.
+	for (int i = 0; i < subNum; i++){
+		for (int j = 0; j < subNum; j++){
+			string str = nodes[i].value;
+			string compare = nodes[j].value;
+			if (str.substr(1, subLength-1) == compare.substr(0, subLength-1)){
+				nodes[i].next = j;
+				nodes[j].prev = i;
+			}
+		}
+	}
+
+
+
+//finding where the cycle starts
+	int k = 0;
+	int index = 0;
+	for (int j = 0; j < subNum; j++){
+		if(nodes[j].prev == -1){
+			index = j;
+		}
+	}
+	
+//printing from start to end
+	while (k < subNum){
+		string s = nodes[index].value;
+		if (k == subNum-1)
+			cout << s;
+		else
+			cout << s.at(0);
+		index = nodes[index].next;
+		k++;
+	}
+	cout<<endl;
+}
+
+
+int main()
+{
+	string substrings[] = {"_Wide", "Wide_", "World", "d_Wid", "de_We", "e_Web", "ide_W", "ld_Wi", "orld_", "rld_W"};
+	printString(substrings, 10);
+	
+	ifstream raw("quotes.txt", ios::in|ios::binary);
+	string whole;
+	if(raw)
+	{
+		raw.seekg(0, ios::end);
+		whole.resize(raw.tellg());
+		raw.seekg(0, ios::beg);
+		raw.read(&whole[0], whole.size());
+		raw.close();
+	}
+	string quoteStrings[79]; 
+	int i = 1;
+	int j = 0;
+	while (i < whole.length()){
+		string s = whole.substr(i, 5);
+		quoteStrings[j] = s;
+		j++;
+		i = i + 8;
+	}
+
+	printString(quoteStrings, j);
+	return 0;
+}
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+Describe and analyze the modification
+
+CODE FOR 4B AND 4C HAS BEEN ATTACHED AND COMMENTED
+for the reads of different length, this does not affect my code, I only care about the suffixes and prefixes of lengths 5, 4, or 3 being matched to other pieces of the text in order to create a graph that connects all of them.  
+LOOK TO 4C FOR TIME COMPLEXITY
+
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i and ii
+<VERBATIM>
+Describe and analyze the modification.
+THIS APPLIES TO PARTS I AND II
+
+TIME COMPLEXITY, Where matches is the number of possible prefix and suffix matches, M (worst case each string match to every other string and is equal to L-1)
+see 4a for the orginal complexity
+= O(n^2), more specifically 3(L-4) + 3((L-4)^2) + L*M
+
+This part inspired more modification of my code.
+For the main function, printString, I knew that piece will match up to more than one other piece. I therefore now keep the references to the indices of the matching pieces in vectors call prev and next.
+Also, if a node has no other matches, it may be because it is the end node, or because there are missing sub strings or errors causing it to not match. I therefore lower the requirements and try a couple more times. I do not do much for the case of duplicates because there may be naturally occurring duplicates I wish to take into consideration.(T(3L^2))
+After getting all the prev and next matches I attempt to find the beginning of the code. I start by counting how many prev matches I have, figuring that like 4a my head node will have the least chance of having a node that points to it.
+For printing, I add in another check where I try not to visit the same node twice. (T(M)) Once I visit the node I erase their value in a temp vector of the nodes. Any node with an erased value I have not visit and therefore I should try another node that is included in the next vector.
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+Descrbie and analyze the modification.
+
+LOOK ABOVE TO 4 i AND ii
+
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+<VERBATIM>
+CODE DOES NOT WORK, ONLY THE FIRST 70 CITIES OF THE CYCLE ARE FOUND
+CONSIDER THE CODE FOR PARTIAL CREDIT
+
+First the file is read, the cities are taken in and edges are made between cities. 
+This creates a connected graph. It uses Classes City and Edge as the Vertex 
+and the Edges of the graph respectively. Once the graph is initialized, then a 
+minimum spanning tree is found. To fully connect the tree in order to create a 
+cycle, the last city's edges are analyzed. If it can connect to the first city, then 
+that is chosen. If not, the code goes through the vertices and sees if there is a 
+vertices or a series of connected vertices that will take the final city to the first 
+city. Of course, the weight is taken into account, and the minimum is found.
+
+However, there is an error in the code where a city's EdgeVect is getting extremely high.
+Could not solve in time
+
+</VERBATIM>
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle
+
+   * [[%ATTACHURLPATH%/problem5.zip][problem5.zip]]: problem 5 files

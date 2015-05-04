@@ -1,0 +1,163 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  O(log(log(n)) * nlog(n))  |
+|  c  |  n^2 * log(n)  |
+|  d  |  n^2(log(n))^2  |
+---++ Explanation
+<VERBATIM>
+b) The original in the book would be a balanced tree and would thus take n*log(n) to construct
+now we need to multiply the height of that by log(n).. but not quiet, because that (log(n)) of each copy
+would also be balanced, so that height difference is actually log(n) plugged into the original log(log(n))
+
+c) if you're just using a list of nodes at x it takes n time to make that list, now if you're doing that linear
+operation with log(n) copies that means you have to multiply the run time by log(n), but the linked list will also eventually be size n so its going to take n^2 to insert
+
+d) worst case for d is n^2 if random because it could randomize to the same direction.  with log(n) copies
+this is actually (n*(log(n)))^2
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  57  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  8  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  43  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  40  |
+
+Does this graph exhibit the triangle inequality? Yes
+---++!! 2b
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  start  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  e  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  a  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  starting point  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+//N.B. This homework was done in collaboration with Max Li
+//Algorithm:
+
+make-set(x) //makes component containing only c
+union (x, y) //joins the connected components containing x and y
+find-set(x) //returns the representative of x
+
+Kruskals()
+ make-set(v) for each v in V
+
+ for each edge e from u to v
+    if find-set(u) != find set(v)
+      union(u,v)
+
+}
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+According to sources found online there was a bit of debate but Kruskals seemed to out perform Prim's algorithm with sparse graphs
+since it uses simpler data structures
+
+(this is after a few hours of conflicting sources and youtube videos explaining the two algortihms, a majority answer was decided on).
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+This also give a minimum spanning tree with runtime of O(E^2).
+If you use adjacency list you can sort in Elog(E) and you can depth first search in V+E
+Once edges are sorted depth first is done E times, and you end up truncating the (E*(V+E)) to E^2
+</VERBATIM>
+---++!! b
+<VERBATIM>
+Not a minimum spanning tree.  For counter example, if a graph has edges (w,u) and (v,w) with a weight of 3,
+then it will add edges in a random order, it could add edges (u,v) and (v, w) and then try to add (w, u), but this will for a cycle.
+</VERBATIM>
+---++!! c
+<VERBATIM>
+This does give a minimum spanning tree.  It adds edges in arandom order and if cycle is detected removes the maximum weight edge.  Using an adjacency list, add each edge to a graph and check for cycles, then depth first search.  Total runtime should be O(V* E)
+</VERBATIM>
+
+---++!! Grader comments *[18/20]*
+<VERBATIM>
+Last running time should be O(E(V+E)).
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+For this part I was thinking of ways to implement a eulearean cycle algorithm.  The structure I was thinking of using was a directed graph.  Unfortunately with other major projects and exams this week I didn't get anyything functioning up and running for this portion.
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+Provide your result here.
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+// paste your code here
+
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+Cascading from part a I was not able to do b or c
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found:
+
+Again, as with the issue above I was trying to use the approach discussed in office hours with finding minimum spanning tree and using a depth first search, but I was having general issues getting code to run
+and given time constraints and the precedence I was not able to get anything worth uploading unfortunately, sorry for the lack of solution.
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle

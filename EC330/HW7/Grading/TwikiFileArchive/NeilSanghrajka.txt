@@ -1,0 +1,270 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  O(n (log n)^2)  |
+|  c  |   O(n log(n))  |
+|  d  |  O(n (log n)^2) |
+---++ Explanation
+<VERBATIM>
+Provide explanation for partial credits
+</VERBATIM>
+
+b. 
+
+To insert N values in a binary search tree it takes: log(1)+log(2)+.....log(N).
+
+By Stirling's approximation, time taken to insert N values in BST is O(N log N).
+
+In this case, if a node is already present in the tree, the algorithm checks if the flag value is true or false and assigns the node to the left or the right of a node which has equal key. 
+
+ N is n*log(n) because each node from 1 to n, is inserted log n times.
+
+Hence O(N log(N)) = O((n log n)*(log (n log n))) =O(n*(log n)^2)
+
+c. 
+
+To insert N values in a binary search tree it takes: log(1)+log(2)+.....log(N).
+
+By Stirling's approximation, time taken to insert N values in BST is O(N log N).
+
+ime where N= number of nodes to be inserted. In this case, if there is an equal key, it is added to a list of nodes with the same key.
+Hence, each node from 1 to n is inserted only once in the tree. Equal nodes are inserted in a list which takes time O(1).
+
+ Hence, the number of nodes in the tree are n.
+
+O(N log N) = O(n log n)
+
+d.
+
+ To insert N values in a binary search tree it takes: log(1)+log(2)+.....log(N).
+
+By Stirling's approximation, time taken to insert N values in BST is O(N log N).
+
+In this case, if a node is already present in the tree, the algorithm randomly assigns the node to new node to the right or left of the node who it has an equal key to. This adds only constant running time, because it simply means we need to make an additional comparison, if so assign it left or right.
+
+N is n*log(n) because each node from 1 to n, is inserted log n times.
+
+Hence O(N log(N)) = O((n log n)*(log (n log n))) =O(n*(log n)^2)
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+Yes,
+Since this is a map of places, for a triangular path, Each edge is lesser than the sum of the other two edges.
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  57  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  8  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  43  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  | 39  |
+
+Does this graph exhibit the triangle inequality? 
+---++!! 2b
+
+The minimum spanning tree is:
+
+ Photonics building-CN tower-Mandalay bay-Pyramid of the Sun-Chichen
+
+The "-" between locations indicates a weighted, undirected edge between the location on the left and the location on the right.
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  0  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  16  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  8  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  | 28  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  | 32  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+Describe your algorithm here. Pseudocode is preferred.
+</VERBATIM>
+
+Prim's algorithm
+
+
+MST-Prim(G,w,r) // G is graph, r is root node of MST, w(u,v) is weight of edge between u&v
+
+for each u in G.V
+
+......u.key=101
+
+......u.pi=Nil
+
+r.key=0
+
+while Q is not empty // Q is min priority que implemented as Fibonacci heap
+
+......u=EXTRACT-MIN(Q)
+
+......for each v adjacent to u
+
+...........if v is in Q and w(u,v)<v.key
+
+.................v.pi=u
+
+.................v.key=w(u,v)
+---+++!! Analysis
+<VERBATIM>
+Descrbie and analyze your algorithm.
+</VERBATIM>
+
+Prim's algorithm takes O(E + V lg V) time. where E is number of edges and V is number of vertices. (when the priority que is implemented as Fibonacci heap )
+
+In this case, our graph is a weighted complete graph, where each location is a vertex, and the distance between locations is the weighted edge.
+
+In a complete graph, E=O(V^2).
+
+Prim's algorithm in this case takes O(V^2 + V lg V) = O(V^2)
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+Counterexample or Running time
+</VERBATIM>
+
+This algorithm gives a minimum spanning tree in time O(E^2). The time analysis is provided below.
+
+- Sorting the edges in non increasing order takes O(E log E) time.
+
+- The for loop in step 3 runs O(E) times. Hence, step 4 and 5 are performed E times.
+
+- Checking if a graph is connected in step 4 can be done using DFS which takes O(V+E) time. This has to be done O(E) times, hence this step takes O(E(V+E)) time.
+
+- Deleting an edge from a set takes O(log E) time (assuming the set is implemented as BST). This has to be done E times, hence this step takes O(E log E) time.
+
+-The total time taken is O(E log E + E(V+E) + E log E) = O(E log E + EV+ E^2).
+
+Assuming it is a undirected, connected graph: E>V-1.
+
+Hence the running time can be simplified to O(E^2).
+
+
+
+
+
+
+---++!! b
+<VERBATIM>
+Counterexample or Running time
+</VERBATIM>
+
+Does not return a minimum spanning tree.
+
+Counter Example:
+
+Consider the complete,undirected graph G with Vertices-A,B,C,D.
+
+It has the following edges, weight : {(A,B,9),(A,C,14),(A,D,5),(B,C,11),(B,D,4),(C,D,7)}
+
+The minimum spanning tree should be T={(A,D,5),(B,D,4),(C,D,7)} with total weight 16.
+
+This algorithm gives the minimum spanning tree as T={(A,B,9),(A,C,14),(A,D,5)} with total weight 28.
+
+ 
+---++!! c
+<VERBATIM>
+Counterexample or Running time
+</VERBATIM>
+
+It returns a minimum spanning tree in O(EV) time.
+
+Implement T using a binary tree.
+
+-The loop in step 2 runs E times.
+
+- Inserting an element in T (step 3) and deleting an element from T(step 6)  take O(log E) time each (where E is O(V). These steps are performed O(E) times.
+
+- Checking if T has a cycle in step 4 can be done using DFS in O(V+E) time(where E is O(V)). This DFS is performed O(E) times.
+
+It is important to notice that at no point of time T has more edges than the number of vertices in the graph(V). This is because the moment there is a cycle in T we remove it from T.
+Therefore, the time complexity can be written as:
+
+O(E(log V +E+E  log E)) = O(E log V + EV ) =O(EV).
+---++!! Grader comments *[20/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+Describe and analyze the algorithm.
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+Provide your result here.
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+// paste your code here
+
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+Describe and analyze the modification
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+The cycle weight I found is 78458.
+
+I used a greedy algorithm for this problem. My algorithm follows the following steps:
+
+1. Input all the city name and store them in a map so that each city name is a key and its value is a unique integer.
+
+3. . Create an adjacency matrix of size 1500*1500 where the matrix contains the edge weights. Each city is a vertex on the graph.
+
+4. Start out with vertex "ETCW", and find the minimum edge from that node. Visit the node that is connected by that minimum edge. Find the minimum edge from that node.
+
+5. Repeat this process for each node, until every node has been visited once.
+
+6. My algorithm does not allow a node to be visited more than once. I did this, by changing the weights on the adjacency matrix to infinity, if that particular node had been visited once. Example, if ETCW has an index 0 on the adjacency matrix. Once it has been visited, the entire 0th column was made to infinity. Hence, the algorithm never returns to this node(it can never be the minimum edge).
+
+7. Finally, if all the weights in a row are infinity, this implies that all the vertices have been visited. So, find the weight from that particular vertex back to ETCW(a copy of the original adjacency list was used for this).
+
+
+CODE is attached.
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle

@@ -1,0 +1,266 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  | <latex>\Theta(n^2)</latex> |
+|  c  | <latex>\Theta(n)</latex> |
+|  d  | <latex>\Theta(n^2\log{n})</latex> |
+---++ Explanation
+Without any of the improvements, it takes =&Theta;((n^2)*log(n))= time is because the tree is continuously adding to the right child only. If you've already inserted =x= of the same value, and you want to add one more, it will take =x= steps to add the one new element to the tree. The same occurs when you move on to the next number; the new values start all the way at the bottom of the tree and keep growing downward and to the right. In total, every addition of an element will take about =n*log(n)= longer than the previous, which gives =(n^2)*log(n)=. There will be a total of =n*log(n)= numbers in the tree after the operation is finished (height of the tree will also be =n*log(n)=.
+
+Approach (b) tries to help this by picking the opposite child (left or right) of what it picked the last time it traversed the tree. This helps "flatten" the binary search tree from a height of n*log(n) to a height of n, which gives the asymptotic time of =&Theta;(n^2)=.
+
+Approach (c) is the best of these improvements, because adding to the end of a list/vector/array takes constant time. The height of the binary search tree does not grow, even though the same value is being added multiple times. So, the height of the tree depends on =n= only, because a new list is created every time you move on to the next number. A new list is created =n= times in total--the asymptotic time for this improvement is =&Theta;(n)=.
+
+Approach (d) randomly chooses whether to go left or right when choosing a child to place the duplicate value into. The worst-case is when the randomness is so bad that the tree grows the same way it does without any improvements--always picking the right child or always picking the left child. This causes an asymptotic time of =&Theta;((n^2)*log(n))=. If the random function is uniformly distributed between left and right, then you may see an improvement similar to Approach (b).
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  | 57 |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  | 9 |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  | 44 |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  | 4 |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  | 40 |
+
+Does this graph exhibit the triangle inequality? *Yes*
+---++!! 2b
+|  Index  |  Location   |  neighbors  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  | e |
+|  b  |  Chichen Itza, Yuc., Mexico  | d |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  | e,f |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  | b,f |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  | a,c |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  | c,d |
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  | e |
+|  b  |  Chichen Itza, Yuc., Mexico  | d |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  | (start) |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  | f |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  | c |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  | c |
+
+---++!! 2d
+---+++!! Algorithm
+If given a complete graph that exhibits the triangle inequality, the algorithm is as follows:
+
+<pre>
+startVertex = nil
+minSum = infinity /// some large value
+for each vertex V in graph: /// in order
+    thisSum = sum of weights of all edges connected to V
+    if thisSum > minSum:
+        startVertex = V
+        minSum = thisSum
+
+Prim(graph, startVertex) //// run Prim's algorithm, but start at startVertex
+
+///// we want to start off Prim's algorithm at the vertex that is connected to the lowest edges of the graph 
+</pre>
+---+++!! Analysis
+The vertex-finding code in the beginning takes &Theta;(V) time. Prim algorithm takes &Theta;(V+E) time, so in total, 2V+E iterations, thus =&Theta;(V+E)= asymptotic time.
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+This algorithm works.
+
+The =for= loop performs =E= iterations. However, within it there is a function to check if the graph is still connected after removing an edge. Let's say you use breadth-first-search to check if the graph is connected. BFS takes =&Theta;(V+E)= time--so, running BFS =E= times gives the final asymptotic time: <latex>\Theta(E(V+E))</latex>
+---++!! b
+This algorithm does not work.
+
+Imagine a graph of three vertices like this:
+<pre>
+(A) ---- 1 ---- (B)
+|             /
+|           /
+10        /100
+|       /
+|    /
+(C)
+</pre>
+Vertex A and B are connected by an edge weight 1; B and C are connected by weight 100; and A and C are connected by weight 10.
+
+The ideal MST for this graph is two edges: an edge from (a) to (c) and and edge from (a) to (b)
+
+Since the algorithm picks arbitrary edges and skips edges when it detects a cycle, it might start off with the edge with weight 100, then pick the edge with weight 10, then stop. This is obviously not a minimum spanning tree.
+---++!! c
+This algorithm works; it's building up the graph into an MST whereas algorithm A is breaking down the graph into an MST.
+
+The =for= loop iterates =E= times. Within it, there is a check to see if the current tree has a cycle. This cycle-check can be performed using depth-first-search, which, in this case, has an iteration count of up to =E= iterations (since the graph =T= it is looking through cannot possibly have more than =E= edges, and in most iterations will have less). The final time is <latex>\Theta(E^2)</latex>
+---++!! Grader comments *[20/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+Given all of the length-5 substrings of a certain string, the algorithm checks both ends of the final string during each loop against all of the existing substrings to see if they overlap by a certain amount (in this case, by 4 characters). If the input file correctly has all of the substrings, there will be a match (either left end or right end) during each loop. When a match is made, the substring that was matched is removed from the list of substrings to consider, so it won't be considered again unnecessarily. Also, when a match is made, one character is added to either the beginning or the end of the final string.
+
+To start off the algorithm, the final string is set to the first substring/read that is in the file. The loop continues until there are no more matches on both the left and right. The code keeps itself from looping forever by counting the amount of times it has iterated so far--if there have been more iterations than the number of reads in the input file, then the algorithm is finished.
+
+The running time for this algorithm is <latex>O(N^2)</latex>, where =N= is the number of reads/substrings in the input file. Technically, the amount of loops it does is <latex>\frac{1}{2}N(N-1)</latex> (the arithmetic series formula) but this still evaluates to =N^2= asymptotically.
+
+The algorithm consists of two for() loops, one within the other. The outer loop iterates =N= times, while the inner loop iterates in the worst case (the matching substring is always at the end of the file), =N= times, then =N-1= times, then =N-2=, times. The inner loop iteration count decreases by 1 for each of the outer loop's iterations because one substring/read is erased from the list of potential substrings each time.
+
+The run time could be improved by doing more pre-processing of the reads (something similar to what was done in #5), for example, sorting them into alphabetical lists so that the inner loop would have to iterate much less.
+---+++!! ii
+This code implements exactly what is described above.
+
+%CODE{"cpp"}%
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <list>
+
+#define READ_LENGTH 5
+
+using namespace std;
+
+int main(int argc, const char * argv[])
+{
+	vector<string> reads;
+	
+	///////////////////////////
+	/// Open, read the file ///
+	///////////////////////////
+	ifstream file("./reads4.txt");
+	if(file.fail())
+	{
+		cout << "Error opening file" << endl << "Exiting" << endl;
+		return 1;
+	}
+	
+	char *inputBuffer = new char[10];
+	while(file.getline(inputBuffer, 10, ']'))
+	{
+		if(strlen(inputBuffer) >= READ_LENGTH)
+		{
+			string inputLine = string(inputBuffer);
+			string read = inputLine.substr(inputLine.length() - READ_LENGTH);
+			reads.push_back(read);
+		}
+	}
+	
+	cout << "number of reads: " << reads.size() << endl;
+	
+	////////////////////////////
+	/// Determine the string ///
+	////////////////////////////
+	string joinedReads;
+	string currentRead = reads.front();
+	joinedReads += currentRead;
+	
+	// Create a list of all the reads, so when we process a read we can
+	// remove it from this list and not have to consider it again
+	list<string> readsNotSeen = list<string>();
+	for(int i = 1; i < reads.size(); i++) {
+		readsNotSeen.push_back(reads[i]);
+	}
+	
+	int overlap = READ_LENGTH - 1;
+	
+	// Loop (# of reads in input file) times
+	for(int i = 0; i < reads.size(); i++)
+	{
+		bool foundMatch = false;
+		cout << "====> so far: " << joinedReads << endl;
+		
+		// Loop through the list of the potential matches
+		list<string>::iterator iter;
+		for(iter = readsNotSeen.begin(); iter != readsNotSeen.end(); iter++)
+		{
+			string possibleMatch = *iter;
+			
+			string patternToMatchRight = joinedReads.substr(joinedReads.length() - overlap);
+			string possibleMatchSubstringRight = possibleMatch.substr(0,overlap);
+			
+			string patternToMatchLeft = joinedReads.substr(0,overlap);
+			string possibleMatchSubstringLeft = possibleMatch.substr(possibleMatch.length() - overlap);
+			
+			// Try to match on the end of the final string
+			if(patternToMatchRight == possibleMatchSubstringRight)
+			{
+				//cout << "right" << endl;
+				//cout << "|" << patternToMatchRight << "| vs. |" << possibleMatchSubstringRight << "|" << endl;
+				joinedReads += possibleMatch[overlap];
+				readsNotSeen.erase(iter);
+				foundMatch = true;
+				break;
+			}
+			
+			// Try to match on the beginning on the final string
+			if(patternToMatchLeft == possibleMatchSubstringLeft)
+			{
+				//cout << "left" << endl;
+				//cout << "|" << patternToMatchLeft << "| vs. |" << possibleMatchSubstringLeft << "|" << endl;
+				joinedReads = possibleMatch[possibleMatch.length() - overlap - 1] + joinedReads;
+				readsNotSeen.erase(iter);
+				foundMatch = true;
+				break;
+			}
+		}
+		
+		if(!foundMatch)
+		{
+			cout << "Uh oh, did not find a match!!" << endl;
+			break;
+		}
+	}
+	
+	cout << endl << "Final string:" << endl;
+	cout << joinedReads << endl;
+	
+	file.close();
+	
+	return 0;
+}
+
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+First I'd need to edit the file loading code to accept reads that are not a constant length because at the moment, it uses a constant number that's defined at the top of the program. It would have to be a bit smarter and recognize both the =[= and =]= characters.
+
+Assuming that the loading code is changed and that a vector of all of the reads in the file can be created correctly, the only modification that the sequencing algorithm needs is a more dynamic =overlap= variable. The code above keeps its =int overlap= variable at a constant value (=READ_LENGTH - 1=) throughout all of the iterations. If the algorithm simply updates the overlap variable according to the length of the read it is currently trying to match (for example, =thisRead.length() - 1=), the rest of the algorithm will react accordingly. This change will not affect the running time of the algorithm.
+---++ 4c.  More complications [5 points]
+---+++!! i
+Firstly, the code which creates the vector of reads will eliminate all of the duplicates it is given--this does not have a complexity higher than the existing complexity of =N^2=. Then, the sequencing algorithm will be changed as follows:
+
+To account for missing substrings, the inner loop (which checks each read against both ends of the sequence so far) needs to loop through multiple overlap values, not just =thisRead.length() - 1=. It will first try to match with an overlap of =thisRead.length() - 1=, then =thisRead.length() - 2=, =thisRead.length() - 3= etc., until it gets to 1. Even though this does add more iterations to the inner loop, I assume that the maximum read length will be a constant value and will not grow with respect to =N= (the number of reads). So, this addition will add iterations, but not asymptotic complexity in terms of =N=, to the algorithm. It will remain at =N^2=.
+---+++!! ii
+If there are errors in the reads, then there's a good chance that the un-modified algorithm would not be able to find a match on every iteration, and it would fail. The modification I would make would be, for each of the potential matching reads, to compute its [[http://en.wikipedia.org/wiki/Levenshtein_distance][Levenshtein distance]] from the ends of the sequence that has been found so far. The algorithm would pick the read with the smallest distance (i.e. the read that is the least different from the ends of the sequence).
+
+By doing this, the algorithm is now able to successfully make a match in each iteration (or, more of an calculated guess).
+
+The complexity of the Levenshtein distance computation is only related to the length of the reads (their string lengths), so if the read length does not grow with respect to =N= (the total number of reads), which I think I can assume to be true in real cases, then the distance computation, asymptotically, takes constant time.
+<br>
+<br>
+<br>
+---+ Problem 5.  Traveling salesperson *[20 points]*
+The program first loads the =map.txt= file and organizes it, which makes the path algorithm run very fast. Firstly, all of the edges in the graph are split into groups based on their start vertex. So, even in the densest graph, each of these groups can only have 1497 items each (1497 is the total number of vertices in the graph). Secondly, the edges are sorted by weight, least-to-greatest, within their respective groups.
+
+The path algorithm is not too complicated--it keeps track of the current city it is at, and only loops through the edges starting from that city (the city's neighbors). And, because these edge lists are sorted, in many cases it only has to loop once or twice, or not loop at all, to find a new city that it hasn't visited yet. It picks from the edge list the edge that has the least weight.
+
+At the end, the program makes sure that it can go directly back to =ETCW= from the last city that it visited (if this is not possible, then the path is not valid).

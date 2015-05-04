@@ -1,0 +1,276 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  | O( (n^2)(log(n))(lg(log(n))) )   | 
+|  c  | O( (n^2)(log(n)) )   |
+|  d  | O( (nlog(n))^2 )   |
+---++ Explanation
+<VERBATIM>
+Provide explanation for partial credits
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  57  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  8  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  43  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  40  |
+
+Does this graph exhibit the triangle inequality? 
+ANSWER: This graph does exhibit the triangle inequality. The triangles created must follow the inequality: A <= B + C.
+
+---++!! 2b
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  | Source   |
+|  b  |  Chichen Itza, Yuc., Mexico  | D   |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  | A or E   |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  F  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  | A   |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  | C   |
+
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  | Source   |
+|  b  |  Chichen Itza, Yuc., Mexico  | D   |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  | A or E   |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  | F   |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  | A   |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  | C   |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+Describe your algorithm here. Pseudocode is preferred.
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+Describe and analyze your algorithm.
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+Counterexample or Running time
+ANSWER: 
+Runtime for a sort on the edges: O( E*lg(E) ) = O( E*lg(V) )
+Runtime using a DFS: O( E*lg(V) + E(E+V) ) = O( (E^2) + (EV) )
+</VERBATIM>
+---++!! b
+<VERBATIM>
+Counterexample or Running time
+ANSWER:
+The given algorithm produces a spanning tree, not always a minimum spanning tree. The algorithm does not check for minimum paths, it only checks to ensure there are no cycles; since the edges are picked in any random order, any tree that has an unsorted edge list would fail to create a MST.
+</VERBATIM>
+---++!! c
+<VERBATIM>
+Counterexample or Running time
+ANSWER:
+Runtime for line 3: O(1)
+Runtime for lines 4,5,and 6: O(V)
+Runtime for-loop: O(E)
+------------------------------
+Total Runtime = O(VE)
+</VERBATIM>
+
+---++!! Grader comments *[20/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+Describe and analyze the algorithm.
+
+The algorithm first reads the file into a function which cleans the formatting of the file; it is then read into a vector. The vector is ran through a nested while loop and for-loop where the sentence is constructed. The sentence fragments are matched with each other to determine the proper sequence of the sentence fragments.  
+
+RUNTIME: O(N^2)
+
+
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+Provide your result here.
+In order that every man present his views without penalty there must be spirit of tolerance in the entire population.
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+// paste your code here
+//
+//  main.cpp
+//  ec330hw7q4
+//
+//  Created by Raja Patel on 4/19/15.
+//  Copyright (c) 2015 Raja Patel. All rights reserved.
+//
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+using namespace std;
+
+
+int main(){
+    
+    //----------------------------------------------------------------------
+    // READ IN TEXT FILE AND TAKE OUT NECESSARY FORMATTING
+    // grep command - removes square brackets for each text content and saves that into a new file
+    //----------------------------------------------------------------------
+    ifstream input;
+    input.open("reads2.txt");
+    system("grep -o '[a-zA-Z. ]\\{4\\}.' reads2.txt >> rawData.txt ");
+    input.close();
+
+    
+    //----------------------------------------------------------------------
+    // READ IN UNFORMATTED TEXT FILE INTO A VECTOR
+    //----------------------------------------------------------------------
+    ifstream newInput;
+    newInput.open("rawData.txt");
+    string data;
+    vector<string> wordFrags;
+    if (newInput.is_open()){
+        while(getline(newInput,data)){ //Read cleaned file into vector
+            wordFrags.push_back(data);
+        }
+    }
+    newInput.close();
+    
+    
+    //----------------------------------------------------------------------
+    // CREATE THE FIRST PART OF THE SENTENCE
+    // find the sentence fragment with the capital letter and place it in the 'sentence' variable
+    //----------------------------------------------------------------------
+    string sentence;
+    for (int i=0; i<wordFrags.size(); i++){
+        string current = wordFrags[i];
+        if (isupper(current[0]) == true){
+            sentence = current.substr(0,5);
+        }
+    }
+    
+    
+    //----------------------------------------------------------------------
+    // CREATE THE REST OF THE SENTENCE
+    // string match the last 4 letters of 'sentence' with the first 4 letters of each sentence fragment
+    // if match, then append the extra letter of the sentence fragment to 'sentence'
+    // finish once the 'sentence' variable ends with a period
+    //----------------------------------------------------------------------
+    while (sentence[sentence.size()-1] != '.'){
+        string stringMatch = sentence.substr(sentence.size()-4, 4); //last 4 letters of 'sentence'
+        for (int i=0; i<wordFrags.size(); i++){
+            string sentFragment = wordFrags[i];
+            if ((sentFragment[0] == stringMatch[0]) && (sentFragment[1] == stringMatch[1]) && (sentFragment[2] == stringMatch[2]) && (sentFragment[3] == stringMatch[3])){
+                sentence = sentence + sentFragment[4];
+            }
+            stringMatch = sentence.substr(sentence.size()-4, 4);
+        }
+    }
+    cout << sentence << endl; 
+    
+    return 0;
+}
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+Describe and analyze the modification
+
+PSUEDOCODE
+The code work will remain the same as part 4a except for the while loop that string matches each sentence fragment. The while loop now string matches in several different ways depending on the size of the sentence fragment. 
+
+New version of the while loop:
+string previousValue = sentence;
+while (sentence[sentence.size()-1] != '.'){
+        int prevousValueLength = previousValue.size();
+        string stringMatch = sentence.substr(sentence.size()-previousValueLength, previousValueLength);
+        for (int i=0; i<wordFrags.size(); i++){
+            string sentFragment = wordFrags[i];
+            if (sentFragment.size() > previousValueLength){
+                int iterator = 0;
+                while (i < previousValueLength){
+                     if (sentFragment[i] == ending[i+1])(
+                          iterator += 1;
+                          i += 1;
+                     }
+                }
+                if 
+            }
+            stringMatch = sentence.substr(sentence.size()-4, 4);
+        }
+    }
+    cout << sentence << endl; 
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+Describe and analyze the modification.
+To create a DNA sequence when there is a missing fragment of the DNA:
+
+1) Read in the text file.
+2) Use the <map> library and map function to store in the contents of the text file into the index variable 
+3) As each value is being stored into the index, find which DNA sequence could potentially go next and store that as the array value.
+4) The format of the map function should look like this: DNA[current] = nextValue
+5) If no next value(s) are found for a particular index then assign it a whitespace
+6) Use a while loop, or for loop, to iterate through each index of the map and construct the DNA sequence. 
+7) If the algorithm detects an index with no value, find the value that has a white space for an index value.
+8) String match these segments to determine if any of the sequence is identical. If true then map to this value.
+9) Continue to map the DNA sequence until all values in the map function are mapped.
+
+RUNTIME: O(n)
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+Describe and analyze the modification.
+To create a DNA sequence when there are repeating fragments of the DNA:
+
+1) Read in the text file.
+2) Use the <map> library and map function to store in the contents of the text file into the index variable 
+3) Also store each index value into a vector to use for repetition detection.
+4) As each value is being stored into the index, find which DNA sequence could potentially go next and store that as the array value.
+5) The format of the map function should look like this: DNA[current] = nextValue
+6) While each index value is being stored in the map function, compare it with the vector to see if it is a repeating value.
+7) If a repeated index value, discard and continue storing the next index value
+8) Use a while loop, or for loop, to iterate through each index of the map and construct the DNA sequence. 
+9) Continue to map the DNA sequence until all values in the map function are mapped.
+
+RUNTIME: O(n*m); n - for the while/for loop to conduct the mapping; m - iterating through the vector for repetition detection  
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle

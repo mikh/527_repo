@@ -1,0 +1,262 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  | <latex> O(n^2 log log (n)) </latex>   |
+|  c  |  <latex> O(n^2log(n)) </latex>  |
+|  d  |  <latex> O(n^2log(n)) </latex>  |
+---++ Explanation
+<VERBATIM>
+b -- worst case will produce linked list which takes n time to insert into and logn checks of x.b (at each level) so inserting nlogn items will take n^2loglogn
+
+c -- root will always be 1, each new insertion will be larger so produces a linked list which takes n time to insert into so n^2logn overall
+
+d -- worst case x.left/right is always the same producing a linked list so overall n^2logn running time
+
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  56  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  9  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  44  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  40  |
+
+Does this graph exhibit the triangle inequality? Yes
+---++!! 2b
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |    |
+|  b  |  Chichen Itza, Yuc., Mexico  |    |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |    |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |    |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |    |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |    |
+
+Edges used: a-e, e-c, c-f, f-d, d-b
+
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  | a   |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  | e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+Input: A graph G with no isolated vertices
+
+If G is empty return an empty forest
+
+Create a contracted graph G' by running two successive Boruvka steps on G
+
+Create a subgraph H by selecting each edge in G' with probability 1/2. Recursively apply the algorithm to H to get its minimum spanning forest F.
+
+Remove all F-heavy edges from G' (where F is the forest from step 3) using a linear time minimum spanning tree verification algorithm.
+
+Recursively apply the algorithm to G' to get its minimum spanning forest.
+
+Output: The minimum spanning forest of G' and the contracted edges from the Boruvka steps
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+This algorithm is based on the one developed by David Karger, Philip Klein, and Robert Tarjan. http://en.wikipedia.org/wiki/Expected_linear_time_MST_algorithm
+
+First, it utilizes a derivation of Boruvka's algorithm to create a contracted graph. It then uses a randomized divide and conquer method by randomly selecting edges to create two subgraphs. The minimum spanning forest of the first subproblem is then found, and then a linear time verification algorithm is used to check which edges cannot be within the MST. The algorithm is recursively applied until the MST is found. The Boruvka step takes linear time, and the ensuing random selection step also takes linear time. The verification algorithm will run in linear time. Therefore the entire algorithm runs in linear time with respect to the number of edges, i.e. O(E)
+
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+
+<latex> \Theta(E^2 + VE) </latex>
+---++!! b
+
+This algorithm will not always produce a MST.
+
+Counterexample:
+
+Take the complete graph <latex> K_4 </latex>
+
+Let's say the the outer edge weights are all 1, while the two inner edges are 100.
+
+Although the MST is obvious (simply the outer edges), this algorithm is just as likely to choose one of the inner edges as one of the outer.
+
+Therefore, it could use one, or both of the inner edges in a spanning tree, thus not producing a MST.
+
+
+---++!! c
+
+<latex> \Theta(VE) </latex>
+
+
+---++!! Grader comments *[20/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+makestring(string input)
+Graph G -- Implement as adjacency list //O(1)
+vector V;//V is vector of all nodes in G
+
+for i = 0 to input.size() - 1  //O(V)
+   if i == ','
+      for j = i-5 to i //O(1)
+         vertex += input[j];
+      V.pushback(vertex) //O(1)
+
+for Viterator v1 = V.begin() to V.end()  //O(V) total -- O(V^2)
+   for i = 0 to 4 //O(1)
+      pre += *v1[i];
+
+   for Viterator v2 = V.begin() to V.end()  //O(V)
+      for 1 to 5 //O(1)
+         suff += *v2[i];
+	 
+      if (pre == suff) //
+	 link v1 to v2
+
+DFS(G) //O(V+E)
+   Run DFS on G stop when Hamiltonian cycle is found - represent cycle as ordered list of vertices - Hcycle
+
+finalstring = H[0]; //know that final string will include all of first vertex
+for i = 1 to Hcycle.size() - 1 //O(V)
+   finalstring += H[1][5] //add last letter of next substring in cycle
+
+
+Runtime: O(V^2 + E)			
+	
+
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+Provide your result here.
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+int makestring(string input){
+	int size = input.size();
+	//pre -- prefix, suff -- suffix
+	string pre;
+	string suff;
+
+	typedef vector<string> str_vec;
+	typedef vector<string>::iterator vertexIterator;
+	typedef pair<int, int> directedEdge;
+	set< directedEdge > edges;
+
+	//Treat substrings as vertices
+	str_vec vertices;
+	string vertex;
+
+	//Add each substring as a vertex
+	for (int i = 0; i < size - 1; i++){
+		if (input[i] == ','){
+			for (int j = i-5; j < i; j++){
+				vertex += input[j];
+			}
+			vertices.push_back("vertex");
+		}	
+	}
+
+	for (vertexIterator v1 = vertices.begin(); v1 != vertices.end(); v1++){
+		for (int i = 0; i < 4; i++){
+			pre += *v1[i];
+		}
+
+		for (vertexIterator v2 = vertices.begin(); v2 != vertices.end(); v2++){
+			for (int i = 1; i < 5; i++){
+				suff += *v2[i];
+			}
+			if (pre == suff){
+				
+			}
+		}
+	}
+
+
+
+}
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+Describe and analyze the modification
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+
+
+---+++!! Grader comments
+<VERBATIM>Question 4 Results:
+
+Total Grade: 5
+
+	5         		no result
+	0         		
+	0         		
+
+
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle
+
+
+---+++!! Grader comments
+<VERBATIM>Question 5 Results:
+
+Total Grade: 0
+
+	0         		Grades from submission
+	0         		
+
+
+</VERBATIM>
+

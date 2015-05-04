@@ -1,0 +1,399 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  O(n * lg^2(n))  |
+|  c  |  O(n * lg(n))  |
+|  d  |  O(n * lg^2(n))  |
+---++ Explanation
+<VERBATIM>
+Provide explanation for partial credits
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  57  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  8  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  43  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  40  |
+
+Does this graph exhibit the triangle inequality? 
+Yes. The quickest route to any location is the direct path. 
+---++!! 2b
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  -  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  a  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  -  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+
+// Given a graph G and starting vertex V
+
+mark V as visited      // green
+unUsedEdges = edges(V)      // Gets all edges touches Vertex V
+
+for each edge in unUsedEdges {
+     edgeToTravel = minimum(unUsedEdges)
+     mark edgeToTravel.destination as visited      
+     mark edgeToTravel as Traveled      
+
+     unUsedEdges.remove(edgeToTravel)
+     
+     for each edge in unUsedEdges {
+        Remove edge if edge.destination is visited
+}
+   
+    for each edge not visited beginning with edgeToTravel.destination {
+       unUsedEdges.insert(edge)
+}
+
+}
+
+
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+My algorithm uses a similar approach to prim's algorithm. It takes all available edges (from a starting vertex) and finds the shortest available edge. It them marks that edge as traveled and the destination vertex as visited. It then adds all edges from the destination vertex to the list of unused edges (if the destination vertex has not been visited).
+</VERBATIM>
+
+Takes O(V^2) time
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+Running time:
+
+O(E^2)
+
+It would take O(n*log(n)) to sort the edges in non increasing order (merge sort or best case quick-sort).  It would then take O(E) to check whether the removal of each edge disconnects the graph and the check is completed E times. Making the removal of larger edges take O(E^2) time. 
+
+This the total time complexity is O(Elog(E) + E^2) where E^2 >> ELog(E). 
+
+</VERBATIM>
+---++!! b
+<VERBATIM>
+Counterexample:
+
+Graph:
+Vertices: {a , b, c}
+Edges - Complete Graph
+Weights:
+{a,b}: 1
+{b,c}: 3
+{a,c}: 2
+
+Edge list: {b, c}, {a, c}, {a, b}
+
+MST would be found to be {a,c}, {b, c} which is not the minimum spanning tree.
+
+</VERBATIM>
+---++!! c
+<VERBATIM>
+Running time:
+
+O(VE + E^2)
+
+The inner portion of the for loop is executed E times. 
+
+To find a cycle, a DFS operation is executed with the time complexity of V+E (for an adjacency list).
+
+Thus the final complexity is O(E(V+E))
+
+
+</VERBATIM>
+---++!! Grader comments *[20/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+I would start off by creating a vertex in a directed graph for every read. I then create edges between vertices if the suffix of the first node is the prefix of the second node. I make the weight of the edges equal to the character value of the differing character between the two nodes. To find the chained string, I find the starting node (the node with a 0 indegree) and traverse through to appending the differing character each time. 
+
+overall my approach takes L * R^2 where L is the length of the read and R is the number of reads. 
+
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+In order that every man present his views without penalty there must be spirit of tolerance in the entire population.
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+//
+//  main.cpp
+//  DNASequencing
+//
+//  Graph implementation referenced from http://stackoverflow.com/questions/5493474/graph-implementation-c
+//  Referenced http://stackoverflow.com/questions/2602013/read-whole-ascii-file-into-c-stdstring
+
+#include <iostream>
+#include <map>
+#include <string>
+#include <vector>
+#include <fstream>
+#include <streambuf>
+
+using namespace std;
+
+
+class Vertex{
+public:
+    
+    typedef pair<int,Vertex*> ve;
+    
+    int inDegree;
+    bool wasVisited;
+    
+    vector<ve> adj; //cost of edge, destination Vertex
+    string name;
+    Vertex(string s)
+    {
+        inDegree = 0;
+        wasVisited = false;
+        name=s;
+    }
+};
+
+class Graph
+{
+public:
+    typedef map<string, Vertex *> vmap;
+    vmap work;
+    void addVertex(const string&);
+    void addedge(const string& from, const string& to, double cost);
+    void print();
+};
+
+void Graph::addVertex(const string &name)
+{
+    vmap::iterator itr=work.begin();
+    itr=work.find(name);
+    if(itr==work.end())
+    {
+        Vertex *v;
+        v= new Vertex(name);
+        work[name]=v;
+        return;
+    }
+}
+
+void Graph::addedge(const string& from, const string& to, double cost)
+{
+    Vertex *f=(work.find(from)->second);
+    Vertex *t=(work.find(to)->second);
+    pair<int,Vertex *> edge = make_pair(cost,t);
+    f->adj.push_back(edge);
+    t->inDegree++;
+}
+
+void Graph::print() {
+    for (vmap::const_iterator it = work.begin(); it != work.end(); it++) {
+        cout << it->first << " (-> " << it->second->inDegree << "): ";
+        
+        for (int i = 0; i < it->second->adj.size(); i++) {
+            cout << it->second->adj[i].second->name;
+        }
+        
+        cout << endl;
+    }
+}
+
+
+string chain(Graph & graph) {
+    
+    string currentChain = "";
+    
+    Vertex * beginning = nullptr;
+    
+    for (map<string, Vertex *>::const_iterator it = graph.work.begin(); it != graph.work.end(); it++) {
+        if (it->second->inDegree == 0) {
+            beginning = it->second;
+            currentChain.append(it->first);
+        }
+    }
+    
+    beginning->wasVisited = true;
+    
+    while (beginning->adj.size() > 0) {
+        
+        
+        
+        for (int i = 0; i< beginning->adj.size(); i++) {
+            if (beginning->adj[i].second->wasVisited == false) {
+                
+                currentChain.push_back(beginning->adj[i].first);
+                beginning->adj[i].second->wasVisited = true;
+                beginning = beginning->adj[i].second;
+            }
+        }
+        
+        
+        
+    }
+    
+    return currentChain;
+}
+
+
+
+bool requiresEdge(string stringFrom, string stringTo) {
+    
+    stringFrom.erase(0, 1);
+    stringTo.erase(stringTo.size() - 1);
+    
+    for (int i = 0; i<stringFrom.length(); i++) {
+        if (stringTo[i] != stringFrom[i])
+            return false;
+    }
+    
+    return true;
+}
+
+
+int main(int argc, const char * argv[]) {
+    // insert code here...
+    
+    
+    vector<string> reads;
+    
+    
+    ifstream t("reads2.txt");
+    string str((std::istreambuf_iterator<char>(t)),
+                    std::istreambuf_iterator<char>());
+    
+    for (int i= 0; i<str.length(); i++) {
+        
+        string read("");
+        
+        for (int n = 0; n< 7; n++, i++) {
+            if (n > 0 && n < 6)
+                read.push_back(str[i]);
+        }
+        reads.push_back(read);
+    }
+    
+    
+    
+    
+    Graph graph;
+    
+    for (int i = 0; i<reads.size(); i++)
+        graph.addVertex(reads[i]);
+    
+    
+    for (int i = 0; i<reads.size(); i++) {
+        for (int n = 0; n<reads.size(); n++) {
+            if (i == n)
+                continue;
+            else {
+                if (requiresEdge(reads[i], reads[n])) {
+                    graph.addedge(reads[i], reads[n], reads[n].back());
+                }
+            }
+        }
+    }
+    
+    // graph.print();
+    
+    
+    cout << chain(graph);
+    
+    
+    
+    return 0;
+}
+%ENDCODE%
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+I would have to have a dynamic (instead of static) file reading process. 
+
+I would also have to change the requiresEdge method to account for the different sized reads. 
+</VERBATIM>
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+To account for the duplicate reads, I would place all reads in a set instead of a matrix. (Same running time)
+
+To account for missing reads, 
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+
+
+---+++!! Grader comments
+<VERBATIM>Question 4 Results:
+
+Total Grade: 13
+
+	10        		
+	2         		more detail needed
+	1         		more detail needed
+
+
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+Starting with the ETCW vertex, I traverse the graph by moving along the shortest available edge. When all edges on a vertex were taken (or all adjacent vertices had been visited) I simplify moved along the next shortest path. When all vertices were colored, I found the path back to ETCW.
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle
+
+
+---+++!! Grader comments
+<VERBATIM>Question 5 Results:
+
+Total Grade: 20
+
+	15        		Grades from submission
+	5         		
+
+
+</VERBATIM>
+

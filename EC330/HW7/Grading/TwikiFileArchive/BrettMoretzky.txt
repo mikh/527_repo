@@ -1,0 +1,262 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  O(nlog(logn))  |
+|  c  |  O(n^2logn)  |
+|  d  |  O(nlogn)  |
+---++ Explanation
+<VERBATIM>
+b.
+Constant time to decide if it should go left or right.
+If both left/right are taken, the height of the tree gets larger.
+After inserting log(n) of the same number, the height is now log(logn).
+For the next number, insert takes O(h), where h=log(logn), and the height will grow to log(logn) + log(logn) = 2log(logn).
+So at the end, the height will be Theta(nlog(logn)), so it'll take O(nlog(logn)) to insert all the numbers.
+
+c. 
+Inserting into the list: Theta(1).
+Inserting log(n) numbers into each list: Theta(logn * 1) = Theta(logn).
+After inserting those logn numbers, now the next number will be greater, and it'll have to check through the height of the tree to see where it will go.
+The height of the tree, since numbers are being inserted in increasing value, is O(n).
+So O(n * logn) for each set of logn numbers, and n numbers total, so O(n^2logn) to insert all the numbers.
+
+d.
+Randomly choosing to put the equal value either left or right has a worst case of making them all go right.
+This is the worst case because then the next value greater than the current one will also go right, so the height will be O(n).
+For each like value, there are logn copies to insert, and the height will grow to n, so worst case is O(nlogn).
+</VERBATIM>
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  56  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  8  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  43  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  40  |
+
+Does this graph exhibit the triangle inequality? 
+yes
+---++!! 2b
+edge list:
+(a,e), (a,c), (b,d), (c,a), (c,f), (d,b), (d,f), (e,a), (f,c), (f,d)
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  a  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  c  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+Since it is a dense, complete graph, use Prim's algorithm with a linked list as the priority queue.
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+In a dense graph, E is close to V^2, so Theta(V^2 + E) becomes Theta(2V^2) which is better 
+than using a heap as the priority queue and getting Theta(ElogV) = Theta(V^2logV)
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+Always works. Theta(E*x) where x is however long it takes to check if it's a connected graph when removing an edge
+</VERBATIM>
+---++!! b
+<VERBATIM>
+Counterexample: Graph in shape of triangle. 
+If edge a = 3, edge b = 4, edge c = 5, it may make a spanning tree from edges b and c which would not be a MST
+</VERBATIM>
+---++!! c
+<VERBATIM>
+Always works. Theta(E*x) where x is however long it takes to check if there is a cycle
+</VERBATIM>
+
+---++!! Grader comments *[16/20]*
+<VERBATIM>
+First running time is O(E^2); last is O(E(V+E)).
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+Load all the reads into a vector of strings.
+Start with the complete string containing only the first read
+Loop through the vector, each time looking for the read whose first 4 characters match the last 4 of the current complete string.
+Append the last character of that read to the end of the complete string, erase read from vector.
+Keep going until no read matches end of complete string.
+Then, do the same thing for the beginning of the complete string, but looking for reads whose last 4 characters match the first 4 of the complete string.
+Insert the first character of that read onto the beginning of the complete string.
+Keep going until no reads left.
+
+o(R^2), where R is the number of reads.
+Since you're erasing the reads being used from the vector each time, looping through the vector gets smaller and smaller, so it's less than R^2.
+It's Theta(R + R-1 + R-2 + R-3 + ... + 1) --> o(R^2)
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+How on earth can you explain in terms of chemistry and physics so important a biological phenomenon as first love?
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+#include <iostream>
+#include <string>
+#include <vector>
+#include <fstream>
+#include <sstream>
+using namespace std;
+
+int main()
+{
+	//Read in all contents of file into a string
+	ifstream in("reads4.txt");
+	stringstream buffer;
+	buffer << in.rdbuf();
+	string contents(buffer.str());
+
+	//Split each read into its own string, add it to vector "reads"
+	bool read_in = false;
+	vector<string> reads;
+	string s;
+	for (int i=0; i < contents.size(); i++)
+	{
+		if (contents[i] == ']')
+		{
+			read_in = false;
+			reads.push_back(s);
+			s = "";
+		}
+		if (read_in)
+		{
+			s += contents[i];
+		}
+		if (contents[i] == '[')
+		{
+			read_in = true;
+		}
+	}
+	
+	//Algorithm starts here
+	string complete = reads[0];		//Will hold final completed string
+	int start = 1;				//Where in the complete string to start looking for matches. Initialized to 1
+	bool second_half = false;		//whether or not we are done adding all of the reads that come after the first read in the vector
+	while (!second_half)
+	{
+		for (int j=0; j < reads.size(); j++)	//Loop through reads
+		{
+			if (reads[j].substr(0, 4) == complete.substr(start, start+4))	//If a read matches the end of the complete string
+			{
+				complete += reads[j][4];		//Append the new character (its last character) to the complete string
+				reads.erase(reads.begin() + j);		//Remove the read from the vector
+				start ++;		//Increase the starting point in the complete string to where we will now check for matches
+				break;			//No need to keep looking through vector
+			}
+			if (j == reads.size() - 1)	//If you've reached the last read and none can be matched to the end of the complete string
+			{
+				second_half = true;
+			}
+		}
+	}
+
+	//Now looking to see which reads fit onto the beginning of the complete strings
+	bool first_half = false;
+	while (!first_half)
+	{
+		for (int k=0; k < reads.size(); k++)	//Loop through reads vector
+		{
+			if (reads[k].substr(1, 5) == complete.substr(0, 4))		//If a read matches the beginning of the complete string
+			{
+				complete.insert(complete.begin(), reads[k][0]);		//Insert the new character from the read (first character) onto beginning of complete string
+				reads.erase(reads.begin() + k);				//Remove the read from the vector
+				break;		//No need to keep looking through the vector
+			}
+			if (reads.size() == 1)
+			{
+				first_half = true;		//If no more reads left to look at, we're done
+			}
+		}
+	}
+	cout << complete << endl;
+}
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+Instead of checking whether a read's first 4 characters match the last 4 of the complete string, 
+or if the read's last 4 characters match the first 4 of the complete string,
+you just check if the read's first 2 characters match the last 2 of the complete string.
+If there's one match, you append the rest of the read onto the complete string.
+If there's multiple matches, you see which one has more characters that match the end of the complete string, and then use that one.
+If there's no matches, then check for reads whose first character matches the last of the complete string.
+If there's one then use it. If there's multiple, then there's no way to be sure which one to use.
+Use the same principle for matching reads to the beginning of the string.
+Then erase the used read from the vector.
+
+O(R^2) where R is the amount of reads. Erasing reads as you go ensures that it will be less than R^2, but it will be slower than when you know
+the read length because if there's multiple matches you then loop through those to check which one has more characters in common with the complete string.
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+Keep a vector of complete strings.
+Start with any read. Apply the same algorithm as in 4b, looking for any reads that can be appended onto the beginning or end of it.
+If there are some, go as far as possible, making the complete string longer and longer.
+If there are none, or when you run out of reads to append since some are missing, add the complete string so far to the vector, 
+and move on to a new read that hasn't been appended yet.
+Run the same thing as for the original read. 
+Once that reaches a dead end, see if the beginning or end of the string in the vector is a match for the end/beginning of this new complete string.
+If it is, append it. If it's not, and it most likely won't be, add the new complete string to the vector.
+Keep going through all the reads, checking first for matches among all the unused reads, and then for matches with the strings in the vector.
+Once all of the unused reads can't be matched with anything else, add all of those separately to the vector.
+The vector now contains a decent ordering of the sequence.
+You cannot know which strings in the vector come first, since those gaps are where there are missing substrings.
+O(R^2). Need to look through all of the reads R times.
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+If reads contain errors near the end, treat the characters that are errors as having the possibility to be either A, C, G, or T.
+So when doing the same process I described in 4b, when comparing the ends/beginnings of reads to the beginning/end of the complete string,
+if there is a match everywhere but the error, include it in the list of possible matches.
+When looking through those possible matches to see which is the best one, choose the one with the most matching characters.
+If there is a tie, take the one with the least errors.
+O(R^2)
+</VERBATIM>
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+Greedy algorithm. Kept a set of all the unvisited locations. Started at ETCW. Looked for cheapest edge from it, went to the destination of that edge, set that destination as the current location, and removed it from the unvisited set. Repeated this until the size of the unvisited set was 0. Once every place was visited, looked for cheapest edge from final location back to ETCW.
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle

@@ -1,0 +1,439 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |   Theta(n^2*log(n)*log(log(n))) |
+|  c  |   Theta(n^2*log(n)) |
+|  d  |   Theta(n^2*log(n)^2) |
+---++ Explanation
+<VERBATIM>
+Part B: Consider first inserting just log(n) 1's. Then the height of this tree is log(log(n)). Then when we
+insert log(n) 2's, we add another subtree to the bottom right, making the total height 2*log(log(n)). We
+add n-1 subtrees, so the total height of the tree is, asymptotically, n*log(log(n)). We then make nlog(n)
+inserts, for a worst-case time of n^2*log(n)*log(log(n)).
+
+Part C: Consider first inserting just log(n) 1's. Each insertion takes constant time, for a total of log(n) time.
+The height of the tree here is 1. Then, add log(n) 2's. The height of the tree is 2, and each takes twice as
+long. So the overall height of the tree is n, and we do n*log(n) insertions for a worst-case time of n^2*log(n).
+
+Part D: Worst case: every time we add an element it gets added to the right subtree, so no vertex has a
+left child. Total height = total number of elements added = n*log(n). Insert n*log(n) items and we have a
+worst-case time of n^2*log(n)^2.
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+
+I USED DRIVING TIMES WITHOUT TRAFFIC AT 4PM ON A TUESDAY.
+
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  56  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  8  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  43  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  39  |
+
+Does this graph exhibit the triangle inequality?
+Yes. Any route between two points must be shorter than the same route with a detour to visit a third location.
+Google Maps uses the shortest possible times! This means that if, say, going from A to B was faster if we went
+through C, then Google Maps would have given the route from A to B originally as passing through C.
+---++!! 2b
+|  Index  |  Location   |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |
+|  b  |  Chichen Itza, Yuc., Mexico  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |
+
+Kruskal's algorithm will use the following edges, format (vertex1, vertex2):
+(a,e),(e,c),(b,d),(d,f),(f,c)
+
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  NIL  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  a  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+Assuming we start Prim's Algorithm from vertex a (PHO).
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+Use Kruskal's Algorithm from the textbook with Counting-Sort (since all the weights are < 100).
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+With Counting-Sort and all weights below 100, sorting runs in linear time and so the sort is Theta(n).
+Per the analysis in the book, the running time of the rest of Kruskal's Algorithm is Theta(E*logV) with
+disjoint-set-forest implementation with union-by-rank and path-compression heuristics.
+
+Total time: Theta(E*log(V))
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+Running time is Theta(E^2+E*V).
+
+Sorting takes (with a stupid sort) E^2 time. BubbleSort or something similar.
+Testing if the graph is connected takes E+V time, can do this by running DFS.
+We do this test E times, which means total runtime is E*(E+V) = E^2 + E*V.
+</VERBATIM>
+---++!! b
+<VERBATIM>
+Consider the cycle graph C_5. The MST for this graph should be the tree that includes every edge in E
+except for the highest-weight edge. However, if the highest-weight edge is not considered last by the algorithm
+(which takes edges in random order) then it will be included, the resulting tree will not be a MST.
+</VERBATIM>
+---++!! c
+<VERBATIM>
+Running time is Theta(E^2+V^2).
+
+For the worst case, assume that each edge added does not create a cycle in T. We can test if a graph has a
+cycle with DFS in Theta(E+V) time. Our graph, T, will run this check in Theta(T_E + T_V) where T_E is the
+number of edges in the tree and T_V is the number of vertices in the tree. Also, we will run this check when
+T_E + T_V = 1 all the way up to E+V, so the total complexity is (E+V)^2/2, which is Theta(E^2+V^2).
+</VERBATIM>
+
+---++!! Grader comments *[18/20]*
+<VERBATIM>
+Last is O(E(V+E)).
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+We want to take the reads and form a directed graph where the vertices are the 4-character overlaps
+and the edges point from overlap to overlap. Consider first an auxiliary function find_overlap(string s1, string s2)
+
+bool find_overlap(string s1, string s2)
+    if last four chars of s1 = last four chars of s2
+        return true
+    return false
+
+This takes constant time.
+
+First we must find the vertices of the graph.
+
+find_vertices(list<string> reads)
+    for each r in reads:
+        for each j in reads:
+            if find_overlap(r,j)
+                add last four chars of r to vertices
+
+This takes n^2 time, since we consider each read once, and do n operations with each read.
+
+Now we must find the edges of the graph - use a modified find_overlap that checks 3 chars not 4.
+
+find_edges(list<string> vertices)
+    for each v in vertices:
+        for each j in vertices:
+            if find_overlap(v,j)
+                add edge from v to j
+
+This will take a total of v^2 time, from the same logic above. 
+
+Now we must find an Eulerian cycle for the graph that we have created. To do this, we can use
+the following algorithm from http://www.geeksforgeeks.org/euler-circuit-directed-graph/. The algorithm takes
+Theta(V+E) time.
+
+In our case, with n reads we will have order n vertices and also order n edges. Thus, it takes Theta(n^2) time
+to create the graph and then Theta(n) time to find the decoding, for a total of Theta(n^2) time.
+
+TIME: Theta(n^2)
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+Do not worry about your difficulties in Mathematics. I can assure you mine are still greater.
+</VERBATIM>
+
+and
+
+Note that here I did some off-line parsing of the text file, making it one read per line and parsing accordingly.
+I have attached my file as famous_quote.txt.
+
+%CODE{"cpp"}%
+//
+//  main.cpp
+//  EC330hw7
+//
+//  Created by Paul Moy on 4/18/15.
+//  Copyright (c) 2015 __MyCompanyName__. All rights reserved.
+//
+
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <map>
+#include <list>
+#include <set>
+
+using namespace std;
+
+string* find_consecutive(string front, string end, int len);
+
+int main() {
+    
+    // Map to hold some data - assume each string
+    // can only be overlapped once from the front 
+    // and once from behind
+    
+    // Input data:
+    // pair.first = found overlap on front
+    // pair.second = found overlap on end
+    map<string, pair<bool, bool> > matches_found;
+    list<string> reads;
+    
+    // Data we will construct for graph
+    string first, last;
+    map<string, set<string> > edges;
+    set<string> vertices;
+    
+    // Input data - substrings of length 5
+    ifstream data_in("./famous_quote.txt");
+    
+    // Process data
+    string temp;
+    while(getline(data_in,temp)) {
+        string to_add = temp.substr(2,5);
+        reads.push_back(to_add);
+        matches_found[to_add] = pair<bool,bool>(false,false);
+    }
+    
+    // Find vertices of our graph, also find last string (has no end match)
+    for (list<string>::iterator it = reads.begin(); it != reads.end(); it++) {
+        while (matches_found[(*it)].second == false) {
+            // Test until we find an overlap
+            for (list<string>::iterator s_it = reads.begin(); s_it != reads.end(); s_it++) {
+                if (matches_found[(*s_it)].first == false) {
+                    // Only test if we haven't already found an overlap
+                    string* test = find_consecutive(*it, *s_it,4);
+                    if ((*test) != "") {
+                        vertices.insert(*test);
+                        matches_found[(*it)].second = true;
+                        matches_found[(*s_it)].first = true;
+                        break;
+                    }
+                }
+                if (++s_it == reads.end()) {
+                    // Means string under consideration is the last string - has no front overlap
+                    matches_found[(*it)].second = true;
+                    last = *it;
+                }
+                s_it--; // Need to reverse the earlier ++
+            }
+        }
+    }
+    
+    // Find initial string - should still have .first = false
+    for (list<string>::iterator it = reads.begin(); it != reads.end(); it++) {
+        if (matches_found[*(it)].first == false) {
+            first = *it;
+            break;
+        }
+    }
+
+    // Find edges of our graph
+    for (set<string>::iterator it = vertices.begin(); it != vertices.end(); it++) {
+        for (set<string>::iterator s_it = vertices.begin(); s_it != vertices.end(); s_it++) {
+            string* test = find_consecutive(*it, *s_it, 3);
+            if (*test != "") {
+                // Check to make sure it's legitimate...
+                // i.e. the full edge exists in the reads
+                bool exists = false;
+                string poss_edge = (*it);
+                poss_edge += (*s_it)[3];
+                //cout << *it << ": " << *s_it << ": " << poss_edge << endl;
+                for (list<string>::iterator t_it = reads.begin(); t_it != reads.end(); t_it++) {
+                    if ((*t_it) == poss_edge) {
+                        //cout << *t_it << endl;
+                        exists = true;
+                        break;
+                    }
+                }
+                if (exists == true) {
+                    edges[*it].insert(*s_it);
+                }
+            }
+        }
+    }
+
+    // Let's get the decoding!
+    cout << first[0];
+    string current_str = first.substr(1);
+    bool visited = false;
+    while (current_str != last.substr(0,4)) {
+        cout << current_str[0];
+        set<string>::iterator it = edges[current_str].begin();
+        if ((edges[current_str].size() != 1) && (visited == false)) {
+            it++;
+            visited = true;
+        }
+        current_str = *it;
+    }
+    cout << last << endl;
+    
+    return 0;
+}
+
+string* find_consecutive(string front, string end, int len) {
+    // Returns "" if inputs don't match up, else
+    // returns len-char string of overlap
+    string* to_return = new string("");
+    if (front.substr(1) == end.substr(0,len)) {
+        (*to_return) += front.substr(1);
+    }
+    
+    return to_return;
+}
+
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+Note that once we have the graph built, again all we need is the same Eulerian cycle. The difference is in the
+program I described as find_overlap(string s1, string s2). Modify it as follows:
+
+int find_overlap(string s1, string s2)
+    min_len = min(length of s1, length of s2)
+    for i = min_len down to 0:
+        if last i chars of s1 are the first i chars of s2:
+            return i
+    return 0
+
+This now takes, instead of constant time, Theta(m) where m is the min of the length of s1 and the length of s2.
+Constructing and analyzing the graph is the same as in part a. Now, the worst case time is Theta(n^2*m) where
+m is the length of the second-longest substring in the reads. The logic is the same as in the first case.
+
+TIME: Theta(n^2*m)
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+Add the following function:
+
+void delete_repeats(list<string> reads)
+    list<string>iterator:: it goes from beginning to end of list
+        list<string>iterator:: second_it goes from beginning to end of list
+            if it != second_it and *it == *second_it:
+                delete *second_it from reads
+
+This function takes Theta(n^2) time. If we run it at the beginning of the algorithm, then we don't
+increase the complexity at all. The rest of the solution is the same as in part b.
+
+TIME: Same as part b! No added time complexity.
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+Modify the find_overlap function as follows:
+
+int find_overlap(string s1, string s2)
+    min_len = min(length of s1, length of s2)
+    same_count = 0;
+    for i = min_len down to 0:
+        if i-th last char of s1 is the i-th char of s2:
+            same_count++;
+    return same_count;
+
+Again, this takes m time, where m = min_len = min(length of s1, length of s2).
+
+Each read should only have one read that comes after it, and one read that comes before it. So, keep a 
+running track of an int current_max_overlap as follows:
+
+find_vertices(list<string> reads)
+    for each r in reads:
+        current_max_overlap = 0;
+        for each j in reads:
+            if find_overlap(r,j) > current_max_overlap
+                current_max_overlap = find_overlap(r,j)
+                save j
+        whichever j is saved, add vertex which is the overlap between r and j.
+
+This takes n^2*m time, since we consider each read once, and do n*m operations with each read.
+Again, m is the second-longest substring in reads. Create the edges in a similar fashion as in problem a,
+modifying like I did here with the vertices. As we can see, the total time is the same as in parts b and c, or
+Theta(n^2*m).
+
+TIME: Same as parts b and c.
+
+</VERBATIM>
+
+
+---+++!! Grader comments
+<VERBATIM>Question 4 Results:
+
+Total Grade: 20
+
+	10        		
+	5         		
+	5         		
+
+
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+I parsed the map.txt file into an adjacency list. The data structure was implemented in the following variable:
+map<string, list<pair<string, int> > > data;
+It stores the data in a map, which is indexed by the 4-letter code for the city of origin. That index contains a 
+list with every possible destination city (their 4-letters codes) each of which is associated with an int, which
+is the cost of that flight.
+
+After parsing the data, I took note of the size of the data variable - this corresponded to the number of cities.
+I ran a loop that continued until the number of unique cities I had visited was equal to the total number of cities.
+This loop checked which city I was currently at, then looked to see which was the cheapest flight to a city I had
+not yet visited, and then it would take that flight and write the flight into result.txt. If I had already visited every
+city in the possible destinations, then I just took the cheapest possible flight out of my current city. After the conclusion
+of this loop, I had visited every city but I was not back at the beginning city yet. I then looked into the file and realized
+that there was a direct flight back from the last city to the first city, so I took it and wrote that into the file.
+
+I determined which was the cheapest flight to take by sorting each of the lists by the costs before running my loop.
+I used a simple bubble sort, because no list had a very long length, so bubble sort gave adequate performance.
+
+My shortest length cycle was 106910.
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle
+
+
+---+++!! Grader comments
+<VERBATIM>Question 5 Results:
+
+Total Grade: 19
+
+	14        		Grades from submission
+	5         		
+
+
+</VERBATIM>
+

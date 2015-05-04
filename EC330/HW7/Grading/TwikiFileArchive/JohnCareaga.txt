@@ -1,0 +1,292 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  <latex>n^2log(n)lg(log(n))</latex>  |
+|  c  |  <latex>n^2log(n)</latex>  |
+|  d  |  <latex>(nlogn)^2</latex>  |
+---++ Explanation
+<VERBATIM>
+Provide explanation for partial credits
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  56  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  8  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  43  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  40  |
+
+Does this graph exhibit the triangle inequality? 
+
+Yes. For any triangles formed, The distance between the two non-photonics locations are less than (or equal to) the sum of (destination1 to pho) + (destination2 to pho). Therefore, the graph exhibits the triangle inequality.
+---++!! 2b
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  origin  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  a or e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  origin  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  a or e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+Describe your algorithm here. Pseudocode is preferred.
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+Descrbie and analyze your algorithm.
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+Counterexample or Running time
+</VERBATIM>
+---++!! b
+<VERBATIM>
+Counterexample or Running time
+</VERBATIM>
+---++!! c
+<VERBATIM>
+Counterexample or Running time
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+First I read in the data and put them into a vector of strings. I made a graph.h class that serves as a directed adjacency-list. Each 5-character substring is a vertex and is added to the graph.
+For each vertex, I look at the 4 characters that form the suffix. If this suffix is the prefix for any of the other vertices in the graph, I add an edge from the vertex with the suffix to the vertex with the prefix.
+It's possible that a vertex can point to multiple vertices.
+To determine the end of the quote, I look for the vertex that has no edges in it's adjacency-list. This implies that there are no other 5-character vertices that follow it.
+To determine the start of the quote, I look for the vertex that is not pointed to by any of the other vertices. This implies that none of the other vertex's suffixes matched the starting vertex's prefix.
+Once I have determined the starting vertex, I do DFS, with each vertex pointing to another vertex. I do DFS in case there are substrings that can branch to multiple vertices. Doing DFS guarantess that I will have tried out all the possible permutations.
+For a particular dfs route, the recursion ends once a vertex has nowhere to go. It's possible that the DFS won't display the proper sequence in order, but by inspection, it's easy to piece together branches. In my case and implementation, the DFS did indeed return the quote in correct order.
+When I do DFS, i print the first character of the substring to generate the sentence as a whole.
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+Do not worry about your difficulties in Mathematics. I can assure you mine are still greater.
+</VERBATIM>
+
+and
+main
+%CODE{"cpp"}%
+#include <iostream>
+#include <string>
+#include <vector>
+#include <fstream>
+#include "Graph.h"
+#include <map>
+using namespace std;
+
+int main(int argc, char const *argv[])
+{
+
+	ifstream read_file("reads1.txt");
+	string read;
+	Graph mygraph = Graph();
+	vector<string> vertices;
+	if (read_file.is_open()){
+		while (!read_file.eof()){
+			read_file.ignore(256, '[');
+			getline(read_file, read, ']');
+			mygraph.addVertex(read);
+			vertices.push_back(read);
+		}
+		string vert;
+		string substring;
+		string vertex;
+		string other_substring;
+		for(int i = 0; i < vertices.size(); i++){
+			vert = vertices[i];
+			substring = vert.substr(1, vertex.length()-1);
+			for(int j = 0; j < mygraph.getSize(); j++){
+				vertex = mygraph.getVertex(j);
+				other_substring = vertex.substr(0, vertex.length()-1);
+				if (substring == other_substring)
+					mygraph.addEdge(vert, vertex);
+			}
+		}
+
+		mygraph.printGraph();
+		string start = mygraph.findStart();
+		mygraph.followGraph(start);
+	}
+	cout << "\n";
+
+
+	return 0;
+}
+
+%ENDCODE%
+Graph.h
+%CODE{"cpp"}%
+#include <vector>
+#include <string>
+#include <map>
+using namespace std;
+
+typedef struct{
+	vector<string> seq;
+	int visited;
+} my_pair;
+
+class Graph {
+public:
+	Graph(){
+
+	}
+
+	void addVertex(string vertex){
+		if (graph_map.find(vertex) == graph_map.end()){
+			my_pair v;
+			v.visited = 0;
+			graph_map.insert(pair<string, my_pair >(vertex, v));
+			color.insert(pair<string, string>(vertex, "unseen"));
+		}
+		
+	}
+
+	void addEdge(string vertex, string edge){
+		if (graph_map.find(vertex) != graph_map.end()){
+			(graph_map.find(vertex)->second).seq.push_back(edge);
+			(color.find(edge)->second) = "seen"; 
+		}
+	}
+
+	string getVertex(int i){
+		map<string, my_pair >::iterator it = (graph_map.begin());
+		for (int j = 0; j < i; j++)
+			it++;
+		return it->first;
+	}
+
+	void printGraph(){
+		map<string, my_pair >::iterator it;
+		for(it = graph_map.begin(); it != graph_map.end(); it++){
+			cout << it->first;
+			vector<string> temp = (it->second).seq;
+			if(!temp.empty()){
+				cout << "  ||  ";
+				for(int i = 0; i < temp.size(); i++){
+					cout << "|" << (temp[i]) << "| ";
+				}
+				cout << endl;
+			}
+			else cout << endl;
+		}
+	}
+
+	int getSize(){
+		return graph_map.size();
+	}
+
+	string findStart(){
+		map<string, string>::iterator it;
+		string start;
+		for(it = color.begin(); it != color.end(); it++){
+			if((it->second) == "unseen"){
+				start = it->first;
+				break;
+			}
+		}
+		return start;
+	}
+	void followGraph(string start){
+			if(graph_map.find(start)->second.seq.empty())
+				cout << start << endl;
+			else
+				cout << start[0];
+			(graph_map.find(start)->second).visited = 1;
+			
+			int size = (graph_map.find(start)->second).seq.size()-1;
+			for(int i = 0; i < (graph_map.find(start)->second).seq.size(); i++){
+				if( (graph_map.find(((graph_map.find(start)->second).seq[size-i]))->second).visited == 0){
+					followGraph(    (graph_map.find(start)->second).seq[size-i] );
+				}
+			}			
+	}
+
+	map<string, string> color;
+	map<string, my_pair > graph_map; 
+
+};
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+Describe and analyze the modification
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+I made a directed edge adjacency-list-esque graph class. First I read in the file and extract source, destination, and weight values. Whenever there is a new source, I add a vertex to my graph. And for each line of the file, I add an edge corresponding to the destination and weight. Once I have the graph representation, I use Prim's algorithm to find the MST for the starting vertex (city). This MST function call results in a new graph. I use this new graph to generate a vector that corresponds to traversing the graph in pre-order traversal. This new vector is ideally the hamiltonian path I'd take if the triangle inequality were always to apply and if there are always triangular cycles. However, this second property is not always satisfied. So, first I start at the beginning of the vector and try to go directly to the vertex in the next postion. If I can, great, I move on to the next city. If I can't, I go backwards and see if I can get to my next desired destination from this already visited city. I keep going back until I can get to my next destination. Eventually, I reach the end of the vector and get to the last city I need to visit. Getting back to the start is the same process of trying to go directly from my last stop, and then tracking backwards if I can't.
+
+RESULTS:
+
+number of cities: 1497
+number of edges: 1346039
+
+steps vs cities: 1878 | 1497
+path length: 1878
+
+traversal estimate cost: 115235
+
+
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle

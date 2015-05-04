@@ -1,0 +1,199 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  <latex> \theta (n^2 \log n \log \log n) </latex>  |
+|  c  |  <latex> \theta (n^2 \log n) </latex>  |
+|  d  |  <latex> \theta (n^2 \log ^2 n) </latex>  |
+---++ Explanation
+Each runtime can be found relatively methodically.  Pretend you're inserting n elements from 1 to n.  This is equivalent to a linked-list insert, so insertion time is linearly dependent on the number of elements already inserted.  Just sum i from i=1 to n.  Since you're actually inserting n log n elements, multiply this by log n.  Runtime so far is n^2 log n.
+
+The difference in the three trees shown here lies in the height of each section of log n repeated values.  The first one creates a balanced BST repeated values.  The height of a BST with n elements is lg n, so the height of a BST with log n elements is lg log n.  So the runtime of b) is theta(n^2 log n log log n).
+
+The second tree pushes repeated values back into a linked list, so the height of the tree with log n repeated values will always be 1.  So this runtime is theta(n^2 log n).
+
+The tree described in d) randomly inserts left or right when it encounters a repeated value.  Worst case, the tree always chooses right, and the tree becomes a linked list.  The height of this tree after inserting log n repeated elements is log n, so the overall runtime is theta(n^2 log^2 n).
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  56  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  8  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  42  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  3  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  38  |
+
+Does this graph exhibit the triangle inequality?  Yes.
+---++!! 2b
+{ (a, e), (c, e), (d, b), (f, d), (c, f) }
+
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  -  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2d
+---+++!! Algorithm
+%CODE{"cpp"}%
+// INPUT: - an edge-list containing all edges of the input graph
+//        - a list of the vertices in the input graph
+
+// OUTPUT: - an edge-list representing the M.S.T.
+
+DisjointSet set;
+list minSpanningEdges; // an edge-list representing the M.S.T.
+
+for vertex in vertices
+  set.makeSet(vertex);
+
+radixSort(edgeList);
+
+for {u, v} in edgeList
+{
+  if (set.find(u) != set.find(v)) {
+    minSpanningEdges.push_back({u, v});
+    set.union(u, v);
+  }
+}
+
+return minSpanningEdges;
+%ENDCODE%
+---+++!! Analysis
+First, a disjoint-set is generated containing all vertices in original graph G.  This takes time linear in V.
+
+Then we use radix sort to sort the edge-list of G by weight.  Since the weight of any edge in G is known
+to be less than or equal to two, this operation is linear in E.
+
+Finally, we loop through the sorted edge-list and generate the MST.  Inside the loop is a push_back
+operation and some disjoint-set operations.  Given we're using a doubly-linked list to push_back into,
+the inside of the loop is executed in approximately constant time (this also assumes that the
+disjoint-set uses rank and path compression).
+
+Adding these three sections together, we're left with V + 2E.  In a complete graph, E is
+always greater than V, so we can simplify, giving:
+
+<latex> \theta (E) </latex>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+The for loop will execute in linear time, but sorting the edges will take at best E log E time without any knowledge of the weights.
+
+<latex> \theta (E \log E) </latex>
+---++!! b
+Say a 5-vertex graph is represented by this edge-list:
+
+<verbatim>orderedPair EdgeList[] = { { 0, 3 }, { 3, 1 }, { 1, 4 }, { 4, 2 }, { 0, 1 }, { 1, 2 }, { 2, 3 }, { 3, 4 } };</verbatim>
+
+The first four edges don't create a cycle, so the algorithm provided would iterate through the list as-is and construct a tree with those four edges.  Let's say the weighted adjacency matrix looks like this:
+
+|      | *0* | *1* | *2* | *3* | *4* |
+| *0* |  0  |  1  |   0  |  2  |   0  |
+| *1* |  1  |  0  |   1  |  2  |   2  |
+| *2* |  0  |  1  |   0  |  1  |   2  |
+| *3* |  2  |  2  |   1  |  0  |   1  |
+| *4* |  0  |  2  |   2  |  1  |   0  |
+
+So the tree generated would include the first four edges of the edge-list, but the actual MST is the last four edges of the list.  This highlights the main problem with this algorithm; there is no check to see if the edges used are light edges.
+---++!! c
+The key here is that the tree is updated before the code searches for cycles, which means that it's using depth-first search.  Running time inside the loop will be V + E, which is multiplied by E from the outer loop.
+
+<latex>\theta ( E^2 )</latex>
+
+---++!! Grader comments *[18/20]*
+<VERBATIM>
+First running time is O(E^2).
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+Describe and analyze the algorithm.
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+Provide your result here.
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+// paste your code here
+
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+Describe and analyze the modification
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+
+
+---+++!! Grader comments
+<VERBATIM>Question 4 Results:
+
+Total Grade: 0
+
+	0         		
+	0         		
+	0         		
+
+
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle
+
+
+---+++!! Grader comments
+<VERBATIM>Question 5 Results:
+
+Total Grade: 0
+
+	0         		Grades from submission
+	0         		
+
+
+</VERBATIM>
+

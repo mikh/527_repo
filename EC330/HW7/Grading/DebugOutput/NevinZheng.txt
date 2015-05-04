@@ -1,0 +1,508 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  | O(n*log^2(n)).   |
+|  c  |   O(n^2 log(n)) |
+|  d  |   O(n * log(n)) |
+---++ Explanation
+<VERBATIM>
+Provide explanation for partial credits
+</VERBATIM>
+<VERBATIM>
+b. Let us first examine the case when we insert k elements that are identical. By alternating between left and right, we keep the tree balanced so that every insertion takes lg(k) time. we need to do k insertions so overall, for k elements we have O( k*lg(k) ).
+For our case we just need to consider what happens when for 1 to n numbers we insert lg(n) of each number. As we learned from the simple example, each “subtree” of identical numbers will be balanced and insertion on each subtree takes O(h) time where h is the height of the subtree. To reach that subtree we need to traverse the height of the overall tree (O(h)). we effectively need to do this for n log(n) elements. so we have O(n log(n) * h ). 
+the height of the tree is O( log( n log(n)  )). We put these together and we get:
+O(n*log(n) * log(n *log(n)) ) = O ( n*log(n)*(log(n) + log(log(n))) = O( n*log^2(n) + n*log(n)*log(log(n)) = O(n*log^2(n)). If i did this out correctly then this is pretty efficient.
+c. for the simple case of inserting n copies with this list method would be O(n). to do one subset of the n log(n) elements takes log(n). linear time is larger then log time so lets ignore the amount of time it takes to find the list to insert on. we have to insert n log(n) elements. each insert takes O(n) time. Overall we have O(n^2 log(n) ) plus some n log(n)* O(h) to find the insert locations which is smaller then O(n^2 +log(n)). Overall: O(n^2 log(n))
+d. Again examine the case where we simply insert n identical elements. The worst case is if they all get inserted on the same side. say this happens for all of the elements. Then we basically have a linked list. so thats just O(n * log(n)) or O(number of elements)
+As demonstrated in CLRS pg300 the expected height of a random left right choice is log(n). in which case the expected run time is similar to b, but probably slightly higher.
+</VERBATIM>
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  | 50   |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |   9 |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  43  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  | 40   |
+
+Does this graph exhibit the triangle inequality? 
+
+THIS GRAPH DISPLAYS THE TRIANGLE INEQUALITY.
+
+the shortest path to any node is the direct one and you can't take any short cuts
+---++!! 2b
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  | NONE (head)  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+Kruskal's MST has these edges:
+(PHO, LIB, 4) - > (LIB,CN, 8) - > (CN, MAN, 33) -> ( MAN, SUN, 29)  - > (SUN, ITZ, 16)
+total weight : 90
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  head  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+tree is same because a was selected as head again
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+Describe your algorithm here. Pseudocode is preferred.
+</VERBATIM>
+<VERBATIM>
+myMST(G):
+G.V = RadixSort(G.V)
+A = emptySet()
+for each v in G.V: makeSet(V)
+
+for each edge in the ordered edge set:
+    if the edge does not form a cycle (findSet(v) != findSet(V):
+          A = A U ( (u,v))
+          union(u,v)
+return
+
+
+
+for this, this is just kruskal, but you radix sort the edges.
+
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+Descrbie and analyze your algorithm.
+</VERBATIM>
+
+Due to the extra constraint on the values of the edges we can thus sort in linear time using radix sort. We can then apply Kruskal's algo, using an optimized disjoint set.
+This gives us essentially O (E*inverseAckerman(V)) this is really constant so we get O(E). This is great. for a complete graph, thats O(V^2).
+
+Analysis:
+Radix Sort take O(V) time.
+Making a set out of all vertices is O(V) time
+the interior of the loop takes three set operations, which can be shown to each take O(inverseAckerman(V)) time which is basically constant. this occurs E times
+
+so thats O(V) + EO(1) so thats O(E) overall which is for a complete graph and at most O(V^2)
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+Counterexample or Running time
+</VERBATIM>
+Maybe MST A is correct. A begins with the whole graph. let S be a MST in G. for all edges in G, either it is in S or it is not. So starting from the greatest edge we can pop off edges as long as they don't make the tree S disconnected. Edges of greatest weights will always be deleted and in the end we will have an MST.
+
+Run time:
+first step is to sort the edges. this takes on the standard Elog(E) bound. Let's ignore that to focus more on the main portion of the algorithm
+The for loop goes over all the edges for a factor of E,
+the inside scans the entire current tree of edges. Lets use DFS to check for disconnectedness, that takes O(V+E).  Overall thats Elog(E) + E(V+E) Elog(E) + EV + E^2. Overall : O(V^2)
+---++!! b
+<VERBATIM>
+Counterexample or Running time
+</VERBATIM>
+
+Maybe MST B is not correct. It is similar to Kruskal's but it can take edges in arbitrary order, as opposed to prioritizing minimum order.
+In kruskal every time you want to add an edge you take the minimum edge, as opposed to the arbitrary one in Maybe B.
+
+Ex this graph as an adjacency list
+A (B,100) (C,1) 
+B (A,100) (C,2)
+C (B,2) (A,1)
+
+the correct spanning tree is, B,C,A with weight 3
+kruskal will correcty produce 3 because it prioritizes minimal edges
+but maybe B could possibly come up with weight =101 or 102, selecting the 100 weight edge
+---++!! c
+<VERBATIM>
+Counterexample or Running time
+</VERBATIM>
+
+Maybe C is a complete algorithm. We add edges till we have a cycle, then swap the largest edge in the cycle with the minimum edge, guaranteeing that the new tree has a smaller weight then the old one. Eventually when the tree gets large enough, we will be making cycles everywhere and constantly swapping out edges until we cover all edges. Doing this several times will give us a correct tree.
+
+scanning every edge takes a factor of E time
+say adding an edge is contant time
+cycle detection is DFS (O(V+E)) = O(V)
+
+so multiply out and overall we get: O(EV)
+
+---++!! Grader comments *[18/20]*
+<VERBATIM>
+First running time is O(E^2).
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+Describe and analyze the algorithm.
+</VERBATIM>
+
+This problem can be formatted in terms of an Eulerian cycle. Given a set of L reads, we make the reads the vertices and connect two vertices with an edge if they overlap. When we connect two vertices we get an entire word for example: world_ and _wide are connected because they share _ and by connecting them we get: world_wide. finding an eulerian path findsthe correct relative order in which to traverse the graph. By doing this we are able to apply Eulerian cycle algorithms to find an answer. In terms of steps we need to first make the graph and then find an eulerian cycle.
+
+<VERBATIM>
+def findPhrase(S):
+      G = Graph(S)
+ //Convert the set into a Graph, with the proper connections. to do this we need to iterate through all the vertices and all the possible connections between them which in the worst cast is a
+//complete graph so thats O(V+E) = O(n + n^2) = O(n^2) n = number of vertices
+      path x = G.findEulerianPath()  // this depends on what algorithm you use, Let's say Heirholzer's algorithm which takes O(n) time.
+
+print (x)
+
+This Algorithm therefore takes: O(n^2) time
+
+overall the major bottle neck lies in populating the graph, but constants matter, so the real key is in the implementation
+
+
+
+</VERBATIM>
+
+
+
+
+
+ref: http://www.time.mk/trajkovski/teaching/eurm/bio/lecture3.pdf
+---+++!! ii
+<VERBATIM>
+Provide your result here.
+</VERBATIM>
+
+Found: How on earth are you ever going to explain in terms of chemistry and physics so important a biological phenomenon as first love?
+==
+
+“No, this trick won't work... How on earth are you ever going to explain in terms of chemistry and physics so important a biological phenomenon as first love? ” 
+&#8213; Albert Einstein
+
+
+
+and
+
+%CODE{"cpp"}%
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <streambuf>
+#include <vector>
+#include "Graph.h"
+
+
+
+int main(){
+
+  std::vector<std::string> Reads;
+
+  std::ifstream file("reads4.txt");
+  std::string fileString((std::istreambuf_iterator<char>(file)),
+                 std::istreambuf_iterator<char>());
+
+  file.close();
+
+  for(int i=0; i <fileString.length(); i++){
+    if(fileString[i]=='['){
+      std::string read = fileString.substr(i+1,5);
+      //std::cout << read << std::endl;
+      Reads.push_back(read);
+    }
+  }
+
+
+  //init a graph and add all the reads as vertices
+
+  Graph Brujin;
+
+  for(int i=0;i<Reads.size();i++){
+    Brujin.addVertex(Reads[i]);
+  }
+
+  //cout << Brujin.print() << endl;
+
+  //connect all the vertices together to form a complete graph
+
+  set< std::string> vertices = Brujin.getVertices();
+
+  for(vertexIterator vert1 = vertices.begin(); vert1 != vertices.end();vert1++){
+    for(vertexIterator vert2 = vertices.begin();vert2 != vertices.end();vert2++){
+      std::string tex1, tex2;
+
+      tex1 = *vert1;
+      tex2 = *vert2;
+
+      int oneLen = tex1.length();
+      int twoLen = tex2.length();
+
+      //cout << tex1 << " " << tex2 << endl;
+      //cout << "|" << tex1[oneLen-1] << "|" << tex2[0] << "|" <<endl;
+
+      if(tex1[oneLen-1] == tex2[0]){
+        directedEdge newEdge( tex1 , tex2 );
+        Brujin.addEdge(newEdge);
+        //cout << tex1 << " " << tex2 << endl;
+        //cout << "|" << tex1[oneLen-1] << "|" << tex2[0] << "|" <<endl;
+        //std::string merged = tex1.substr(0,oneLen-1)+=tex2;
+        //cout << merged << endl;
+
+      }
+
+    }//if loop end
+
+  } //end for
+
+  //graph is now populated with edges that have common
+  //ends and begins
+
+  cout << Brujin.print() << endl;
+
+  //Brujin.findEulerianCycle();
+
+  //std::cout << Brujin.isEulerian() << std::endl;
+
+  //cout << Brujin.print() << endl;
+  
+
+  
+
+}
+/////end main
+
+////Graph header
+#include "Graph.h"
+#include <iostream>
+#include <string>
+#include <map>
+
+using namespace std;
+
+Graph::Graph(){
+   set<std::string> vertices; /** The set of vertices of the graph. */
+   set< directedEdge > edges; /** A set of edges of the graph. */
+   map<std::string, set<std::string> > adjList; /** The adjacency lists*/
+}
+
+int Graph::addVertex(std::string read){
+
+   vertices.insert(read);
+   set<std::string> empty;
+   adjList[read] = empty;
+   
+}
+
+void Graph::addEdge(directedEdge newEdge){
+   std::string x = newEdge.first;
+   std::string y = newEdge.second;
+
+   vertexIterator one = vertices.find(x);
+   vertexIterator two = vertices.find(y);
+
+   if( one!=vertices.end() && two !=vertices.end() ){   
+
+      set<directedEdge>::iterator it = edges.find(newEdge);
+      
+      if(it == edges.end()){
+         edges.insert(newEdge);
+         adjList[x].insert(y);
+
+      }
+   }
+
+
+}
+
+bool Graph::isEdge(directedEdge newEdge){
+
+   if( edges.find(newEdge) != edges.end() ){
+      return true;
+   }
+   else{
+      return false;
+   }
+}
+
+set< std::string> Graph::getVertices(){
+   return vertices;
+}
+
+bool Graph::isEulerian(){
+
+   bool isEuler = true;
+
+for (vertexIterator vert1=vertices.begin(); vert1 != vertices.end(); vert1++) {
+   int inEdges = 0;
+   int outEdges = 0;
+
+   std::string testedVertexs = *vert1;
+
+   for(edgeIterator edge1=edges.begin(); edge1!=edges.end();edge1++){
+      std::string startVertex;
+      std::string endVertex;
+
+      if(startVertex==testedVertexs){
+         outEdges++;
+      }
+
+      else if(endVertex==testedVertexs){
+         inEdges++;
+      }
+
+   }
+
+   if(inEdges!=outEdges){
+      isEuler = false;
+   }
+
+
+}
+
+
+
+   return isEuler;
+}
+
+
+
+edgeSet Graph::findEulerianCycle(){
+
+   edgeSet toVisit = edges;
+
+   edgeSet visited;
+
+   //std::string firstVertex = *(vertices.begin());
+
+   //std::string currentVertex = firstVertex;
+   //std::string startVertex = firstVertex;
+
+   //vertexSet availableVertices = adjList[currentVertex];
+
+   std::string nextVertex;
+
+   std::map< std::string , std::vector<directedEdge> > levels;
+
+   for(vertexSet it=vertices.begin(); it!=vertices.begin(); it++){
+
+   }
+
+
+
+}
+
+std::string Graph::print(){
+
+   stringstream result;
+   for (vertexIterator vert1=vertices.begin(); vert1 != vertices.end(); vert1++) {
+      result << *vert1 << ": ";
+      set<std::string> adjacent = adjList[*vert1];
+      for(set<std::string>::iterator x = adjacent.begin(); x!=adjacent.end();x++){
+         result << *x << ",";
+      }
+      result << endl;
+
+   }
+
+   return result.str();
+
+
+
+}
+
+// std::string Graph::print() {
+//    stringstream result;
+//    for (vertexIterator vert1=vertices.begin(); vert1 != vertices.end(); vert1++) {
+//       result << *vert1 << ": ";
+//       for (vertexIterator vert2 = vertices.begin(); vert2 != vertices.end(); vert2++)
+//          if (isEdge (directedEdge(*vert1, *vert2)))
+//             result << *vert2 << " ";
+//       result << endl;
+//    }
+//       return result.str();
+// }
+
+
+
+
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+Describe and analyze the modification
+</VERBATIM>
+
+If you apply the above graph based algorithm, I don't think that much will change. Here are a few possibilities:
+i) split the longer string into substrings that are about the same size as the other vertices, then proceed. Overall this does not change the runtime, but it just changes the number of vertices you have to go through.
+ii) do not split and just proceed by adding this longer string as a vertex. This again just adds another vertex, but does not change the asymptotic behavior, but it just increases the number of edges and vertices.
+iii) change the rules about how to connect the vertices. I am not to sure about how to do that exactly, but this just changes how all the edges are connected which in the worst case is completely connected which is still O(n^2)
+
+From my current perspective, the above graph algorithm appears to be fairly robust in the sense that adding different length strings does not change to asymptotic running time, but it does increase running time by changing the number of edges and vertices.
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+
+By using the graph approach, the fact that you have duplicate reads is irrelevant as all the vertices are unique. this complication poses no issue to the previously described graph based solution. If two reads have the same value then you can just ignore one, and only insert one unique vertex.
+---+++!! ii
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+
+Errors near the end of the reads, seem like a big deal for the graph algorithm, but lets examine it further. Changing the ends means that you end up having erroneous and many more edges. You'll probably end up getting the wrong result. It won't affect the basic algorithm, but it does make it "incorrect". My best suggestion is to preprocess the reads to check for errors. I place an w(n) on the preprocess time. n = number of reads. Perhaps when we populate the graph we adjust the rules for how vertices are connected. maybe to be connected they need to satisfy more constraints like last 3 characters need to match, or reject read fix if invalid combination occurs. Although corrupting the reads gives an incorrect answer, What ever we do the graph algo is still O(n^2) because all we ever do is change the number of edges which in the worst case is O(n^2).
+Perhaps instead of finding a complete eulerian cycle, we can somehow figure out how to ignore invalid edges. This requires more knowledge about genetics, but this could give us the correct result. Computationally, we could maintain a data struct ( set) that tells us whether or not a read is valid and choose to reject it. This does not change the O(n) bound on the search for an eulerian circuit.
+We could also perform some kind of stochastic analysis on how likely reads are to be corrupted and use that in our preprocessing, maybe that narrows the possibilities.
+
+---+++!! Grader comments
+<VERBATIM>Question 4 Results:
+
+Total Grade: 20
+
+	10        		
+	5         		
+	5         		
+
+
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle
+
+
+---+++!! Grader comments
+<VERBATIM>Question 5 Results:
+
+Total Grade: 0
+
+	0         		Grades from submission
+	0         		
+
+
+</VERBATIM>
+

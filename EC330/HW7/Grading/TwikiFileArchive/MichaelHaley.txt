@@ -1,0 +1,269 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  theta(nlog^2(n))  |
+|  c  |  theta(nlog(n))  |
+|  d  |  theta(n^2log(n))  |
+---++ Explanation
+<VERBATIM>
+
+In general, to insert log(n) copies of the numbers 1,2,3...n (aka n(n+1)/2) 
+is log(n) (1s) + log(n) (2s) + log(n) (3s) + ..... log(n) (ns)
+
+We are inserting nlog(n) copies in total.
+
+Then, the total runtime based upon each individual method b,c, and d is
+changed by the runtimes of each method. 
+ 
+b) 
+Because the value of x.b alternates, the tree and levels will be balanced and end up 
+with height log(n). The runtime of inserting one element is just the height. 
+
+The overall runtime is the time to insert each copy x the number of copies,
+
+is theta(nlog^2(n))
+
+c) 
+In this case, insertion consists of adding the the end of a linked list - constant time.
+
+The overall runtime will simply be the number of copies,
+is theta(nlog(n))
+
+
+d)
+Since x is randomly set to x.left or x.right, the worst case is that 
+EVERY x is x.left or EVERY x is x.right, where the runtime 
+of inserting one element is the height (n)
+
+So the overall runtime is theta(n^2log(n))
+
+
+
+
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  57   |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  9  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  44  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  40  |
+
+Does this graph exhibit the triangle inequality? 
+
+Yes, there is no case where one edge of a triangle is greater then the sum of the other 2 for this graph. 
+---++!! 2b
+ 
+a  = Photonics Center,8 St Marys St, Boston, MA 02215   
+
+b  = Chichen Itza, Yuc., Mexico     
+
+c  = CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada   
+ 
+d  = Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  
+
+e  = Statue of Liberty National Monument, Liberty Island, New York, NY  
+
+f   = Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119    
+
+Edges included in minimum spanning graph:
+
+{e,a}, {c,e}, {b,d}, {f,d}, {f,c} 
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  r  |
+|  b  |  Chichen Itza, Yuc., Mexico  | d   |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+
+Source: https://www.ics.uci.edu/~eppstein/161/960206.html
+
+make a list L of n trees, (each a single vertex)
+    while L is not one tree
+        for each T in L, find the smallest edge connecting T to the growing tree (MST)
+        add all those edges to the growing tree (MST)
+        (causing pairs of trees in L to merge)
+
+
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+
+Source: http://en.wikipedia.org/wiki/Bor%C5%AFvka%27s_algorithm
+
+The outer loop is proven to take logV time, so overall 
+the complexity will be theta(ElogV) time. 
+
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+
+Not a MST. Counterexample: CLRS Figure 23.5 Page 635
+
+</VERBATIM>
+---++!! b
+<VERBATIM>
+
+Not a MST. Counterexample: CLRS Figure 23.5 Page 635 (if the heavily weighted edges are chosen early). 
+
+</VERBATIM>
+---++!! c
+<VERBATIM>
+
+O(EV)
+
+
+</VERBATIM>
+
+---++!! Grader comments *[13/20]*
+<VERBATIM>
+(a) works correctly.
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+
+string S //string to be completed
+Put all 5-letter substrs into list L
+S = substr1 (initializing S as first substring)
+delete substr1 from L
+while L is not empty
+     for each substr in L
+        if substr is in L
+            delete substr
+        if(substr(0,3) in L)
+            S = S + substr[4]
+            delete substr
+        if(substr(1,4) in L)
+            S = substr[0] +  S 
+            delete substr
+        if(substr(0,2) in L)
+            S = S + substr[3] + substr[4]
+            delete substr
+        if(substr(2,4) in L)
+            S = substr[0] + substr[1] +  S  
+            delete substr
+
+
+Analyzing:
+
+number of substrings  = N
+length of string S = L
+           
+Outer loop average time = logN
+Inside the loop- takes time L for each substring length check across string S
+....theta(L+L+L....+L) = theta(L)
+
+Total time complexity is theta(LlogN)
+
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+Provide your result here.
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+// paste your code here
+
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+
+New algorithm: 
+
+string S //string to be completed
+Put all 5-letter substrs into list L
+S = substr1 (initializing S as first substring)
+delete substr1 from L
+while L is not empty
+     for each substr in L
+        if substr is in L //checking length of substr
+            delete substr
+        if(substr(0,length-2) in L) //checking length-1 front end
+            S = S + substr[4]
+            delete substr
+        if(substr(1,length-1) in L) //checking length-1 back end
+            S = substr[0] +  S 
+            delete substr
+      .
+      .
+      .
+      .
+      .
+        if(substr(0,3) in L) //checking length 4 front end
+            S = S + substr[4]
+            delete substr
+        if(substr(1,4) in L) //checking length 4 back end
+            S = substr[0] +  S 
+            delete substr
+        if(substr(0,2) in L) //length 3 FE
+            S = S + substr[3] + substr[4] 
+            delete substr
+        if(substr(2,4) in L) //length 4 BE
+            S = substr[0] + substr[1] +  S  
+            delete substr
+
+
+
+Analyzing:
+
+Same asymptotic time complexity theta(LlogN) because the only change is more linear operations across L within the while loop
+theta(L+L+L+L+L+L) is asymptotically same as theta(L+L+L+L+L+L+......+L+L+L)
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle

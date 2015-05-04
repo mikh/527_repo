@@ -1,0 +1,312 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+Worked with Christine Low
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  nlog(n)log(log(n))  |
+|  c  |  nlog(n)  |
+|  d  |  nlog<sup>2</sup>n  |
+---++ Explanation
+<VERBATIM>
+Provide explanation for partial credits
+</VERBATIM>
+
+So we have the number n, and we want to insert log(n) copies of the numbers from 1 to n log(n) times each. So in general we can use two for loops, the first one to loop from 1 to n and the second for loop should be within it to loop from 1 to log(n), because that is the number of copies we need for each element. Therefore, the total number of elements we want to insert into the initially empty binary search tree is nlog(n).<br>
+
+So we want to insert log(n) elements with identical keys n times, because there are n different types of elements.<br>
+Let log(n) be r. Therefore we want to insert r identical values into a binary search tree. <br>
+
+For part b, the algorithm goes through the tree till it finds an empty spot and compares it to the boolean value of x to decide whether it should set x to left or right. This takes O(h) running time, where h is the height of the tree and it does it r times, where r is the number of items that need to be inserted. The height of the tree is log(r) in terms of the number of nodes. Hence overall, this takes rlog(r) time, but r = log(n).<br>
+So it takes log(n)log(log(n)) time to insert log(n) identical elements, but there are n such elements which gives a running time of <b>O(nlog(n)log(log(n)))</b>. <br>
+
+For part c, a list of the equal values is being kept at x and the new value z is inserted to it if its equal to the value of x. The list will be of size r, because there are r identical items e want to insert. And inserting into a list requires going through the size of the list, so this will take O(r) time. But we want to this n times for all the different elements, which will take O(nr) time.<br>
+So overall time it will take is <b>O(nlog(n))</b>, because r = log(n). <br>
+
+For part d, the algorithm is similar to that of part b. But this time, x is being set to left or right randomly instead of being determined from its boolean value. So the chances that what x is set to is incorrect is r because the algorithm no longer depends on the height of the tree, rather now it depends on the number of nodes. So there are r identical values to be inserted, and there are r nodes. Hence overall worst case time is O(r<sup>2</sup>) which needs to be done n times, so the worst case time is <b>O(nlog<sup>2</sup>n)</b> in terms of n. <br>
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+All estimated driving times were according to without traffic.<br>
+
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  56 hours  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  8 hours  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  42 hours  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4 hours  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  38 hours  |
+
+Does this graph exhibit the triangle inequality? 
+
+Yes, this graph exhibits the triangle inequality since its a complete graph and its always shorter to go from a node a to c directly than to go from a node a to b then to c. 
+---++!! 2b
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |    |
+|  b  |  Chichen Itza, Yuc., Mexico  |    |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |    |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |    |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |    |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |    |
+
+| Edges | Weight |
+| a - e | 4 hours |
+| a - c | 8 hours |
+| c - f | 31 hours |
+| f - d | 28 hours |
+| d - b | 16 hours |
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  source node  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  a  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+Describe your algorithm here. Pseudocode is preferred.
+</VERBATIM>
+
+Since this is a complete graph, there are 2(n-1) edges if there are n vertices. This makes the graph very dense as there are much more edges than nodes. So Kruskal's algorithm will not be the best here, because Kruskal's looks at the edges and selects the lightest one and so forth. Boruvka's looks at every node and finds the smallest path tot he next node without caring about edges it has seen before, this will not be so great because this is a dense graph with much more edges then nodes. <br>
+The better option is to use Prim's algorithm and shown in the Algorithms textbook, because Prim's looks at each node and finds the smallest path to a node it has not visited before. This is faster in this case because the nodes are much less than the edges and the weights are not greater than 100.
+---+++!! Analysis
+<VERBATIM>
+Descrbie and analyze your algorithm.
+</VERBATIM>
+
+Since this is a complete graph, it is a form of dense graph. So when using Prim's algorithm, using an adjacency list with linked lists will give a faster running time than that with an adjacent list and heap. Hence the overall running time will be &theta;(V<sup>2</sup> + E) where V is the number of vertices and E is the number of edges.
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+Counterexample or Running time
+</VERBATIM>
+This algorithm will always produce a minimum spanning tree. <br>
+Sorting the edges will take worst case time O(E<sup>2</sup>).<br>
+The for loop will take O(E) as it is going through each edge, then it check to see it the edge is connected to a vertex which will take V time as there are V vertices.<br>
+So the overall running time is O(E<sup>2</sup> + EV).<br>
+---++!! b
+<VERBATIM>
+Counterexample or Running time
+</VERBATIM>
+This algorithm will not always produce a minimum spanning tree. It randomly takes an edge and checks if ti connected, but it doesn't account for whether its the shortest possible edge or not. Hence it will produce a tree but not necessarily the minimum one. 
+---++!! c
+<VERBATIM>
+Counterexample or Running time
+</VERBATIM>
+
+This algorithm will always produce a minimum spanning tree.<br>
+The loop goes through the edges and this takes time E. Then it checks if its connected and not a cycle, so this takes time V since there are V vertices. And if it has a cycle it gets rid of the maximum weight from the cycle, so this keeps track of the minimum edges, giving a minimum spanning tree. Hence the overall running time is O(VE).
+---++!! Grader comments *[20/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+Describe and analyze the algorithm.
+</VERBATIM>
+
+I treat each substring like a vertex of the graph and store them in an array. Then I start from the beginning and check the suffix of the current node and the prefix of the next node, if they are equal then that node must come after the current node. I keep doing this till I find a cycle and that gives me the actual string from the substrings. 
+---+++!! ii
+<VERBATIM>
+Provide your result here.
+</VERBATIM>
+
+Reading, after a certain age, diverts the mind too much from its creative pursuits.<br>
+
+and
+
+%CODE{"cpp"}%
+// paste your code here
+
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <streambuf>
+#include <vector>
+using namespace std;
+
+
+class Vertex{
+public:
+
+	Vertex(int num, string val)
+	{
+		this->num = num;
+		this->next_vert = -1;
+		this->val = val;
+		this->prev_vert = -1;
+	}
+
+	string val;
+	int next_vert, prev_vert, num;
+};
+
+
+void print_string(string* sub_strings, int sub_num)
+{
+	int sub_length = sub_strings[0].length();
+	vector<Vertex> vertices;
+
+	for (int ii = 0; ii < sub_num; ii++)
+	{
+		vertices.push_back(Vertex(ii, sub_strings[ii]));
+	}
+
+//compare the suffix to another strings prefix. If they are equal that must be the next node in the graph.
+	for (int ii = 0; ii < sub_num; ii++)
+	{
+		for (int jj = 0; jj < sub_num; jj++)
+		{
+			string str_1 = vertices[ii].val;
+			string str_2 = vertices[jj].val;
+			
+			if (str_1.substr(1, sub_length - 1) == str_2.substr(0, sub_length - 1))
+			{
+				vertices[ii].next_vert = jj;
+				vertices[jj].prev_vert = ii;
+			}
+		}
+	}
+
+	int count = 0;
+	int index = 0;
+
+	for (int ii = 0; ii < sub_num; ii++)
+	{
+		if(vertices[ii].prev_vert == -1)
+		{
+			index = ii;
+		}
+	}
+	
+	while (count < sub_num)
+	{
+		string new_str = vertices[index].val;
+		if (count == sub_num - 1)
+		{
+			cout << new_str;
+		}
+		else
+		{
+			cout << new_str.at(0);
+		}
+		index = vertices[index].next_vert;
+		count++;
+	}
+
+	cout << endl;
+}
+
+
+int main()
+{	
+	ifstream input("reads3.txt", ios::in|ios::binary);
+	string quote;
+
+	if(input)
+	{
+		input.seekg(0, ios::end);
+		quote.resize(input.tellg());
+		input.seekg(0, ios::beg);
+		input.read(&quote[0], quote.size());
+		input.close();
+	}
+
+	string quote_strings[79]; 
+	int ii = 1;
+	int jj = 0;
+
+	while (ii < quote.length())
+	{
+		string strn = quote.substr(ii, 5);
+		quote_strings[jj] = strn;
+		ii = ii + 8;
+		jj++;
+	}
+
+	print_string(quote_strings, jj);
+	return 0;
+}
+
+%ENDCODE%
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+Describe and analyze the modification
+</VERBATIM>
+
+When storing the substrings in an array, each substring can be stored in an array which can then be stored in a huge array, this way we can get the length of each substring as they will be different. 
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+Keep track of the substrings that have been visited, probably by storing them in a set so if one repeats we know we already have that and a node that comes after that. And is a suffix doesn't exactly match a suffix, we can find the next best sequence and this will help us get the actual sequence of the DNA.
+---+++!! ii
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+
+For the random errors, create as many possible accurate sequences as possible and check what best fits the sequence preceding the erroneous part. 
+
+---+++!! Grader comments
+<VERBATIM>Question 4 Results:
+
+Total Grade: 20
+
+	10        		
+	5         		
+	5         		
+
+
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle
+
+The cost of the trip is: 173097<br>
+First I found the minimum spanning tree of the graph, as that will connect all the vertices with the smallest weighted edges together, and then I found a path that connects the end node back to the beginning node to form a cycle keeping in mind that none of the vertices can be touched twice, as we want a hamiltonian cycle. 
+
+   * [[%ATTACHURLPATH%/problem5.zip][problem5.zip]]: problem5.zip
+
+
+---+++!! Grader comments
+<VERBATIM>Question 5 Results:
+
+Total Grade: 18
+
+	13        		Grades from submission
+	5         		
+
+
+</VERBATIM>
+

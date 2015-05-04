@@ -1,0 +1,284 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+Collaborator: Annie Lane
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  n^2log(n)*log(log(n))  |
+|  c  |  n^2 log(n)  |
+|  d  |  (nlog(n))^2  |
+---++ Explanation
+<VERBATIM>
+Provide explanation for partial credits
+</VERBATIM>
+
+b: height of mini subtrees are log(log(n)), and since there are n submissions, each one being nlog(n), it will be O(n^2log(n)*log(log(n))).
+c: height of the tree is n, and there are nlog(n) insertions
+d: the insertions to the tree are happening randomly, so the worst case scenario would be where all of the node are added to the right. This would create a tree that is nlog(n) tall, and since each operation will take nlog(n) time, it will be O(nlog(n))^2 
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |   56  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  9  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  43  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  40  |
+
+Does this graph exhibit the triangle inequality? 
+Yes
+---++!! 2b
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  SOURCE  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+Edge List
+|  Start |  End   |
+|  a  |  e  |
+|  c  |  f  |
+|  d  |  b  |
+|  e  |  c  |
+|  f  |  d  |
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  | SOURCE  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+Describe your algorithm here. Pseudocode is preferred.
+</VERBATIM>
+
+Because the graph is very dense, it would be more efficient to use Prim's algorithms. 
+
+%CODE{"python"}%
+findBestRoute(Graph G)
+	#Effectively Prim's algorithm
+	#Where V are the vertices of graph V
+	for V = 0 to numVertices
+		Queue.enqueue(V)	#Where Queue is Linked List
+		Key[V] = infinity
+	Key[Source] = 0
+	while Queue != empty
+		U = extract-minimum(Q)
+		for each V adjacent to U
+			if V in Q && w(U,V) < Key[V}
+				Key[V] = w(u, v)
+				Pi[V] = U	#Predecessor Array
+	return Pi
+
+%ENDCODE%
+---+++!! Analysis
+<VERBATIM>
+Descrbie and analyze your algorithm.
+</VERBATIM>
+
+Prim's algorithm = O(V^2 + E) when using a linked list.
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+Counterexample or Running time
+</VERBATIM>
+This is inverse Kruskals. ElogE + E(E+V) (checking graph is connected)
+---++!! b
+<VERBATIM>
+Counterexample or Running time
+</VERBATIM>
+
+Counter example: Chooses heaviest edges, so it will not necessarily be the MST. Counterexample is in a triangle with edges 2, 3, 4. The algorithm might pick the edges 3, and 4 which would clearly not yield the minimum spanning tree.
+---++!! c
+<VERBATIM>
+Counterexample or Running time
+</VERBATIM>
+
+Runtime will be E^2 + EV
+---++!! Grader comments *[18/20]*
+<VERBATIM>
+First running time should be O(E^2).
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+Describe and analyze the algorithm.
+</VERBATIM>
+
+Algorithm uses the graph implementation similar to that seen in the last homeworks and the midterm. I read from the file and put each of the fragments into a vector. Each of the fragments becomes a vertex in the graph. Directed edges are added by matching the last 4 characters of the strings with the first 4 characters of each string. The algorithm starts by using the last fragment which ends with a '.' character. From there, it finds whichever vertex the edge is pointing to, and then adds that first value of the vertex to final "quote" string. Using a stack, it will use a depth first search algorithm to go through all of the options until the final quote is discovered. 
+
+Finding all of the matching edges uses a double for loop, and finding the match for each vertex runs through all of the rest of the vertices to find a matching edge each time. Building the graph takes O(V^2) time, while the stack will run through all the vertices for each vertex, which is also O(V^2) time. Total it is O(2(v^2)) time, which is O(V^2) time. 
+---+++!! ii
+<VERBATIM>
+In order that every man present his views without penaltyn there must be spirit of tolerance in the entire population.
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <stack>
+#include <vector>
+#include <set>
+#include <sstream>
+#include <iterator>
+
+using namespace std;
+//using a similar implementation from exam Graph.h
+typedef pair<string,string> directedEdge;
+typedef set<int>::iterator vertexIterator;
+
+class Graph {
+ public:
+	//changed all int to string
+  	Graph() {}
+  	void addVertex(string name) {
+    	vertices.push_back(name);
+  	}
+  	void addEdge(directedEdge newEdge) {
+    	edges.insert(newEdge);
+  	}
+  	bool isEdge(directedEdge newEdge) {
+    	return edges.find(newEdge) != edges.end();
+  	}
+	//added deleteEdge function for Depth First Search
+  	void deleteEdge(directedEdge newEdge){
+		edges.erase(newEdge);
+  	}
+	vector<string> vertices;
+	set< directedEdge > edges;
+};
+
+int main() {
+	Graph graph;
+	string node, text, quote, fragment, top;
+	vector<string> pieces; //working vector of fragments of strings
+	stack<string> pile; //stack for the matching
+	ifstream file ("text.txt");
+	while(getline(file,node)){
+		text = node;
+	}
+	file.close();
+	//break text into segments between the "[" and "]"
+	for(int i = 0; i < text.length(); i++){
+		if(text[i] == '['){
+			fragment = text.substr(i+1,5);
+			pieces.push_back(fragment);
+			graph.addVertex(fragment);
+			//find the last word
+			if(fragment[4] == '.'){
+				quote += text.substr(i+1, 5);
+				top = text.substr(i+1, 5);
+			}
+		}
+	}
+	//find all options for each string
+	//start from the last work and work forwards
+	//ii is 'from' node
+	//jj is 'to' node
+	for(int ii = 0; ii < pieces.size(); ii++){
+		for(int jj = 0; jj < pieces.size(); jj++){
+			if((pieces[ii].substr(1,4)) == (pieces[jj].substr(0,4)) && ii != jj){
+				//create backwards directed edges
+				directedEdge newEdge(pieces[jj],pieces[ii]);
+				graph.addEdge(newEdge);
+			}
+		}
+	}
+	string temp, current;
+	pile.push(top);
+	while(!pile.empty()){
+		int options = 0;
+		top = pile.top();
+		for(int ii = 0; ii < pieces.size(); ii++){
+			directedEdge test(top, pieces[ii]);
+			if(graph.isEdge(test)){
+				current = pieces[ii];
+				//add to the final quote string
+				temp = quote;
+				quote = current[0] + temp;
+				pile.push(current);			//new top of stack
+				graph.deleteEdge(test);		//delete seen edges
+				options++;					//flag for popping off the stack
+				break;
+			}
+		}
+		if(options == 0){
+			pile.pop();
+		}
+	}
+	//output final string
+	cout << quote.substr(1,quote.length()-1) <<  endl;
+	return 0;
+}
+
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+Describe and analyze the modification
+</VERBATIM>
+
+Modifications that can be made to the algorithm for 4a would be that instead of only looking for matches in the last four characters to the first four characters of another, it will look for all string matches after the first character to all string options before the last character of the destination vertex. Where L is the length of each fragment, this algorithm will take O(L^2) time, because all options from 1 character, to L-1 character must be tested resulting in the arithmetic series for each for loop iteration. The runtime for the algorithm is thus O(V^2 * L^2). 
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+
+In the case where not all possible substrings are produced it would be very hard to find the correct string. Possible options could be found by using the same implementation as parts a and b, but to confirm it is a correct string, the strings produced would have to be queried with a database of existing Albert Einstein quotes to find the correct match. In the case where some substrings are replicated several times, the replicas could either be ignored and have the algorithm run normally. Another method would be to run a search for quotes accounting for all n repeats, then (n-1), then (n-2), all the way to one time. This would n^2 time, where n is the number of times the substring is repeated. Thus, the total runtime would be O(V^2 * L^2 * n^2), where V is the number of vertices, and L is the length of the string being tested. 
+
+
+---+++!! ii
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+
+In the case where the read contains random errors, it would be very hard to find the correct quote unless a few assumptions can be made. First being that the quote formed at the end may not necessarily be the correct quote because DNA sequencing can only produce a result that is X_Percent accurate. With this in mind, the longest string that could be formed without using any repeated fragments could be considered to be the final correct string. This string could then be queried with a database of already existing quotes to try to find a percentage match of the ordering and fragments entered into the string. The runtime for this algorithm would be the same as the last part, O(V^2 * L^2 * n^2), and then for the string matching with a database of quotes, this could add variable time depending on the depth of the search. 
+---+ Problem 5.  Traveling salesperson *[20 points]*
+
+Note: execute Makefile with the expression "make"
+
+EXPLANATION: 
+The main goal is to start and end at ETWC at a low cost.
+The current destination becomes the next origin. The edges with the new origin are considered. Ideally, the minimum cost edge will be to a vertex which has not been visited yet.
+If that's not possible, then the minimum edge of the previously visited vertices is used. This avoid creating mini cycles. This "best" edge is then added to "newGraph". The selected vertex is also printed to the file "result.txt".
+
+I created a variation of the Graph implementation from pervious assignments called TravelGraph, which also has the class WeightedEdges. Preprocessing of the map.txt file involves reading each edge and adding it as a Weighted Edge to "myGraph". Then a "newGraph" is built using the process above to select the next vertex.
+
+Final Cycle Weight: $105,005
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle

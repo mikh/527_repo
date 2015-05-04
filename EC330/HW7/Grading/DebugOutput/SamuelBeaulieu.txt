@@ -1,0 +1,387 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  <latex>O(n^2\log(\log(n))\log(n))</latex>  |
+|  c  |  <latex>O(n^2\log(n))</latex>  |
+|  d  |  <latex>O(n^2\log(n)\log(n))</latex>  |
+---++ Explanation
+<VERBATIM>
+Approach b).
+</VERBATIM>
+Inserting <latex>n\log(n)</latex> items into tree with asymptotic average height of <latex>n\log(\log(n))</latex>
+
+<VERBATIM>
+Approach c).
+</VERBATIM>
+Inserting <latex>n\log(n)</latex> items into tree with asymptotic average height of <latex>n</latex>
+
+<VERBATIM>
+Approach d).
+</VERBATIM>
+Inserting <latex>n\log(n)</latex> items into tree with worst case asymptotic average height of <latex>n\log(n)</latex>
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  56  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  8  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  42  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  38  |
+
+Does this graph exhibit the triangle inequality? 
+
+Yes. It is impossible to get to one place faster by going through another location instead of going directly.
+---++!! 2b
+|  Index  |  Location   |  Connected Vertices  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  e  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e,f  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  b,f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a,c  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  d,c  |
+
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  e  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  f  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  c  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  NIL  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+A slightly modified version of Prims algorithm from page 634 in our course text.
+The pseudo code for this can be seen below:
+
+MST-PRIM-FIB (G,w,r)
+1     for each u in set G.V
+2           u.key = 1000
+3           u.pi = NIL
+4     r.key = 0
+5     Q = G.V
+6     while Q not empty;
+7          u = EXTRACT-MIN(Q)
+8          for each  v in set G.Adj[u]
+9               if  v is in Q and w(u,v) < v.key
+10                     v.pi = u
+11                     DECREASE-KEY(Q,v,w(u,v))
+
+Where Q is implemented with a Fibonacci heap.
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+The algorithm is essentially the same as Prims algorithm; it starts at a root node
+and adds vertices to the tree by first finding the edge of least weight that is attached
+to any single node in the tree. Then it adds the vertex that is not in the tree but
+attached to that edge to the tree. By using a Fibonacci heap, we can reduce the
+running time from what it would be for a min-heap. This is explained on page 636
+in the text.
+
+Running Time:
+
+MST-PRIM-FIB (G,w,r)
+1     for each u in set G.V        \
+2           u.key = 1000            \
+3           u.pi = NIL               |=> V time
+4     r.key = 0                     /
+5     Q = G.V                      /
+6     while Q not empty;
+7          u = EXTRACT-MIN(Q)                )=> Run V times, runs in lg(V) time for a total of Vlg(V)
+8          for each  v in set G.Adj[u]                           \
+9               if  v is in Q and w(u,v) < v.key                  \=> Goes through each edge once and each
+10                     v.pi = u    )=> constant                   /   edge takes constant time so E time
+11                     DECREASE-KEY(Q,v,w(u,v))   )=> constant   /
+
+When added up, we get theta of V+Vlg(V)+E. Since V<=E, we do not need the V term.
+This gives the total running time of:
+</VERBATIM>
+<latex>\Theta(E+Vlg(V))</latex>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+Sorting: Elog(E)
+
+Each edge needs either a modified breadth first search or depth first 
+search to check for connectivity but each vertex must only be checked 
+once regardless of how many edges. Time: EV
+
+ElogE is asymptotically less than or equal to EV so the total run time is:
+</VERBATIM> 
+
+<latex>\Theta(EV)</latex>
+
+---++!! b
+%ATTACHURL%/6n-graf.svg.png
+<VERBATIM>
+For the graph above, if the edges happen to arbitrarily be chosen in 
+non-increasing order (starting at 8 and ending with a 1), the two edges
+with the least weights (3-2) and (5-1) will never be added to T because
+they create cycles. However, the tree returned could be made shorter
+by including edge (3-2) instead of (4-3) and edge (5-1) instead of (1-2).
+Therefore, the minimum spanning tree is not always returned by this 
+function.
+</VERBATIM>
+---++!! c
+<VERBATIM>
+For each edge, a modified depth first search or breadth first search 
+can be run to check for a cycle. Therefore, for each edge, it takes 
+V+E time giving EV+EE. Since EV is asymptotically less than or equal 
+to EE, total run time is:
+</VERBATIM>
+<latex>\Theta(E^2)</latex>
+
+---++!! Grader comments *[20/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+Algorithm:
+1. Add a word fragment to a given workspace (implemented using some type of container)
+2. Continue to add word fragments, checking the workspace to see if it can be added to a 
+     string already there. If so, check to see if that addition allows that string to be connected
+     to another. If so, make the connection and delete the other entry. If no connections can 
+     be made for that fragment, add it to the workspace by itself.
+
+Running time:
+Each fragment is looked at once while it is added to the workspace. Once in the workspace,
+if a maximum of the number of fragments given can be looked at (if there are no connections 
+to be made and the added fragment is the last one). This makes worst case time N squared, 
+however it is possible to get linear time if all the fragments are in the right order because it is
+instantly added to the string and there are no other strings to look at in the workspace once
+added.
+
+Best Case:
+</VERBATIM>
+<latex>\Theta(N)</latex>
+<VERBATIM>
+Worst Case:
+</VERBATIM>
+<latex>\Theta(N^2)</latex>
+<VERBATIM>
+Average is somewhere in between, likely closer to linear because each fragment can be added
+as a prefix or suffix, increasing the likelihood it's added.
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+In order that every man present his views without penalty there must be spirit of tolerance in the entire population.
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <list>
+
+using namespace std;
+
+int main()
+{
+	//Data input to list of word fragments
+	string input;
+	list<string> fragments;
+	ifstream file("shotgun.txt");
+	if (file.is_open())
+	{
+		while (getline(file,input,'['))
+		{
+			if (input.size()>4)
+				fragments.push_back(input.substr(0, 5));
+		}
+		file.close();
+	}
+
+	//Put first word in final list and remove from parts list
+	list<string> fin;
+	fin.push_back(fragments.front());
+	fragments.pop_front();
+
+	//Add word fragments to working final list
+	for (list<string>::iterator ii = fragments.begin(); ii != fragments.end(); ++ii)
+	{
+		bool added = false;
+		string frag = *ii;
+		
+		for (list<string>::iterator jj = fin.begin(); jj != fin.end(); jj++)
+		{
+			//If the fragment goes before a word
+			if (jj->substr(0, 4) == frag.substr(1, 5))
+			{
+				added = true;
+
+				//Add the first letter to the beginning of the word
+				*jj = frag.substr(0, 1) + *jj;
+
+				//Check to see if the new word can be connected to another one
+				//Connection would be at end of other word
+				list<string>::iterator kk = jj;
+				kk++;
+				for (; kk != fin.end(); ++kk)
+				{
+					if (kk->substr(kk->size() - 4, kk->size()) == jj->substr(0, 4))
+					{
+						//Add the words together and remove extra word from finished list
+						(*jj) = kk->substr(0, kk->size() - 4) + *jj;
+						fin.erase(kk);
+						break;
+					}
+				}
+				break;
+			}
+			//If the fragment goes after a word
+			else if (jj->substr(jj->size()-4, jj->size()) == frag.substr(0, 4))
+			{
+				added = true;
+
+				//Add the last letter to the end of the word
+				*jj = *jj + frag.substr(4, 5);
+
+				//Check to see if the new fin word can be connected to another one
+				//Connection would be at beginning of other word
+				list<string>::iterator kk = jj;
+				kk++;
+				for (; kk != fin.end(); kk++)
+				{
+					if (kk->substr(0, 4) == jj->substr(jj->size() - 4, jj->size()))
+					{
+						//Add the words together and remove extra word from finished list
+						(*jj) = *jj + kk->substr(4, kk->size());
+						fin.erase(kk);
+						break;
+					}
+				}
+				break;
+			}
+		}
+		//If the word fragment doesn't match up with anything, add it to the working list
+		if (!added)
+		{
+			fin.push_back(frag);
+		}
+	}
+
+	//Print the strings of words the fragments can make (should be at least one string)
+	for (list<string>::iterator ii = fin.begin(); ii != fin.end(); ii++)
+		cout << *ii << endl;
+
+}
+
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+I would keep roughly the same algorithm, only, for each comparison between words - either
+fragments or strings - I would use one less than the size of the smaller of the two as the size
+of the substrings to be compared instead of the hard coded 4 I am currently using. Since the
+string::size() method runs in constant time, this would not change the asymptotic running time
+of the algorithm.
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+The physical process creates two main issues. 
+
+1. Not All Fragments are Extracted and Duplicates:
+This would not be an issue for the my algorithm or how I implemented it. It would
+mean that one would get multiple strings in the final work space instead of just 1. 
+Any extra strings that are very small in comparison to the longest one (1/10th the 
+size for instance depending on what the user wants) could be discarded while the
+others could be assumed to be independent parts of the original string that the 
+sequencing produced.
+
+2. Reads Contain Random Errors:
+To deal with this I would override the == operator that is used (or implement another 
+comparison operator) so that it returns true if the two strings have a high enough 
+percentage overlap (character for character). Depending on the degree of accuracy
+that the user wanted, one could input the percentage that determines string independence.
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+1) At most, this would add one more iteration of the work space
+at the very end and would add an n to the run time. Since this is asymptotically less
+than or equal to the algorithms run time, it would not affect the algorithm's asymptotic
+running time. 
+
+2) This modified comparison method would take no more time than the standard 
+one as in both all characters of each string have to be compared. The only difference
+would be that the modified method would not require all to be the same, only a "high
+enough" percentage of them. Therefor, it would not affect the algorithm's asymptotic
+running time.
+</VERBATIM>
+
+
+---+++!! Grader comments
+<VERBATIM>Question 4 Results:
+
+Total Grade: 20
+
+	10        		
+	5         		
+	5         		
+
+
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+<VERBATIM>
+My approach was to take a city and find its nearest neighbor that wasn't 
+already used. I did this using every city as a starting point and hoping all 
+the cities would be used up which they eventually were. After finding a
+short path that way, I tried randomizing the choice of city (so it might take
+the second nearest neighbor or third at decreasing percentages) but that
+did not give any better solutions. The shortest resulting cycle weight I was
+able to achieve was: 96431.
+</VERBATIM>
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle
+
+   * [[%ATTACHURLPATH%/problem5.zip][problem5.zip]]: problem5.zip
+
+
+---+++!! Grader comments
+<VERBATIM>Question 5 Results:
+
+Total Grade: 20
+
+	15        		Grades from submission
+	5         		
+
+
+</VERBATIM>
+

@@ -1,0 +1,179 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  Theta(nlog(n)*nlog(log(n))) |
+|  c  |  Theta(n*n*log(n))   |
+|  d  |  Theta(nlog(n)*nlog(n))   |
+---++ Explanation
+<VERBATIM>
+Provide explanation for partial credits
+
+since the worst case run time for binary search trees without replication of keys is Theta_(h) where h is the height of the tree which can range anywhere from log(n) (the case in a full binary search tree) to n (the case in a tree where each node has only one child). The worst case insert time is Theta_(n). Since we are inserting log(n) copies of each number 1 through n. We are inserting nlog(n) numbers in total.
+
+b) This insertion method uses a boolean flag that chooses x.b as either x.left or x.right and then does a regular insert on the tree going either left of the equal key, or right of it. since the replicas are being added to the tree as if they were regular numbers the insertion time for equal keys will be the same, except for checking the boolean which can be done in constant time. 
+Thus Theta of insertion of equal keys will be equal to Theta of insertion of any other key. Worst case will still be Theta(h) where h is the hieght of the tree.
+ However, since we know in which order the numbers will be inserted we know how tall the tree should be. Since they are going to be inserting log(n) copies of each number alternating inserting on the left and right sides of the equal keys, they will create a full binary sub-tree of copies of each number . This means that the height for each sub-tree will be log(number of replicas). since we know they are inserting log(n) replicas for each number this expands out to a height of n(log(log(n)). 
+Thus the time for one insert will be Theta(n*log(log(n))) and you will perform nlog(n) inserts
+
+c) In this method insertion would first require finding an equal key and then traversing the list of equal nodes. 
+Finding the equal key can be done in Theta(n) since the numbers are being added in ascending order so each will the be right child of the last - making the tree have height n. 
+Once the equal node is found it will take constant time to insert the node in the linked list. This means that worst case time for one insert will be Theta(n) and there will be nlog(n) inserts. 
+ 
+d) This method is similar to the method in part b) except instead of a boolean x.left and x.right are randomly selected. The worst case senario would be that x.right was selected every time and each node was only given one child and therefore the height of the tree was nlog(n). therefore the run time for one insert will be Theta(nlog(n)) and there will be nlog(n) inserts
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  56  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  8   |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  44   |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4   |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  40  |
+
+Does this graph exhibit the triangle inequality? 
+
+no this graph doesn't exhibit the triangle inequality
+---++!! 2b
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  null  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  null   |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  1   |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  2  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  1  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  4  |
+
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  3  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  4  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  4  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  6  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  1  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  null  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+Describe your algorithm here. Pseudocode is preferred.
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+Descrbie and analyze your algorithm.
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+assuming that non-increasing order means a random order that is not increasing. Then this will not create a minimum spanning tree. Taking random edges out from the spanning tree will not result in a minimum spanning tree. 
+</VERBATIM>
+---++!! b
+<VERBATIM>
+Counterexample or Running time
+
+This will not create a minimum spanning tree. since the edges are just chosen randomly so long as they dont create a cycle. If the largest edges happen to be chosen first then they will be added to the graph even if there are better options. Example - if node c has not been added to the tree and it has a edge connecting to the tree at one node with a value of 6 and another edge with a value of 12. Since the added edges are chosen at random 12 could be considered first and then added to the graph. Even though 6 has the smaller edge weight.
+
+</VERBATIM>
+---++!! c
+<VERBATIM>
+
+This will create a minimum spanning tree by the idea that replacing an edge in a  spanning tree (i.e a tree connecting all nodes without any cycles) with a smaller edge until you've seen all edges will make sure the smallest spanning tree is created.
+
+run time: worst case Theta(E^2)
+</VERBATIM>
+
+---++!! Grader comments *[13/20]*
+<VERBATIM>
+(a) works correctly.
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+Describe and analyze the algorithm.
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+Provide your result here.
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+// paste your code here
+
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+Describe and analyze the modification
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+
+
+---+++!! Grader comments
+<VERBATIM>Question 4 Results:
+
+Total Grade: 0
+
+	0         		
+	0         		
+	0         		
+
+
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle
+
+
+---+++!! Grader comments
+<VERBATIM>Question 5 Results:
+
+Total Grade: 0
+
+	0         		Grades from submission
+	0         		
+
+
+</VERBATIM>
+

@@ -1,0 +1,152 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  n^2logn*log(logn)  |
+|  c  |  n^2logn  |
+|  d  |  (nlogn)^2  |
+---++ Explanation
+
+For part b - The resulting tree will be a line of little trees of height log(logn). There will be n of these trees. Inserting into this tree will take nlogn insertions in total. When combining these values, you get the worst case runtime of <latex> \Theta(n^{2}log(n)log(log(n))) </latex>
+For part c - Since the height of the tree will be n, there will be nlogn insertions so the worst case runtime is <latex> \Theta(n^{2}log(n)) </latex>
+For part d - The worst case is you get a tree of height nlogn. There will be nlogn insertions so the worst case runtime is <latex> \Theta((nlog(n))^{2}) </latex>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  56  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  9  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  43  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  40  |
+
+Does this graph exhibit the triangle inequality? Yes
+---++!! 2b
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  src  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  src  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  d  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  e  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  f  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  a  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  c  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+Use Prim's algorithm
+</VERBATIM>
+---+++!! Analysis
+<VERBATIM>
+Prim's algorithm with a linked list has the runtime V^2+E
+</VERBATIM>
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+<VERBATIM>
+This algorithm is an inverse Kruskal's algorithm so it is functional. The aggregate runtime is ElogE (sort the edges) + E (for loop through each edge) * (E+V (checking if graph is connected))
+</VERBATIM>
+---++!! b
+<VERBATIM>
+If you had a graph with 3 vertices (1,2,3) and the edges {vertex,vertex,weight} ({1,2,3},{1,3,2},{2,3,1}) if you select the two heaviest edges 2,3 it will not be a minimum spanning tree
+</VERBATIM>
+---++!! c
+<VERBATIM>
+The runtime will be E^2 + EV
+</VERBATIM>
+
+---++!! Grader comments *[20/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+This algorithm will run in n^2 time where n is the number of fragments of the quote. You loop through almost every fragment twice. Where the a fragment shares 4 characters with one of the ends of the quote, it will add the fifth character to the quote and remove it from the vector of fragments. When the number of fragments reaches 2 (this symbolizes there are no more fragments) you have your quote.
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+Reading, after a certain age, diverts the mind too much from its creative pursuits.
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+        ifstream seqs;
+	seqs.open("text.txt");
+	string line;
+        
+	vector<string> fragments;
+	while (getline(seqs,line,'[')) { // get all of the fragments
+		fragments.push_back(line.substr(0,5));
+	}
+	quote = fragments[1]; //start the quote with the first fragment
+	while (fragments.size() > 2) {
+		for (int j = 1; j < fragments.size(); j++) {
+			if (quote.substr(0,4) == fragments[j].substr(1,4)) { // the beginning of the quote matches the last 4 characters of the fragment and add the fifth character to the beginning of the quote
+				quote = fragments[j][0] + quote;
+				fragments.erase(fragments.begin() + j);
+			} else if (quote.substr(quote.length()-4,4) == fragments[j].substr(0,4)) {  // the end of the quote and the first 4 characters of the fragment and add the fifth character to the end of the quote
+				quote += fragments[j][4];
+				fragments.erase(fragments.begin() + j);
+			}
+		}
+	}
+	cout << quote << endl;  // print the quote at the end
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+So for this modification you need to change up the code so it is not hard coded to the length 5. Everything will be dependent on the length of the fragment of the quote. The quote matching will remain the same. The runtime will still be n^2 where n is the number of fragments of the quote.
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+If not all of the fragments exist, and some are repeated multiple times, you will need to change the algorithm to look at wider ranges and tentatively test when you add a fragment to see if you complete the quote. Quote completion means that the number of remaining fragments is 0. This will add another level of complexity to the algorithm. So it will be n^3 where n is the number of fragments provided. 
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+This implementation needs to have a checker of some sort to check if the quote is logical and makes sense. The checker will add more runtime to the algorithm. Pushing the runtime to n^3 where n is the number of fragments of the quote. The checker might run a search on the potential quote since most of it will be correct except towards the end. The best result from the search will help see if the quote is close to correct.
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle

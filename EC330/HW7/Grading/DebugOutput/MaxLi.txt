@@ -1,0 +1,165 @@
+---+EC330 - Spring 2015 - Homework 7
+%TOC%
+
+---++_Assigned:_  Thursday, April 9
+---++_Due:_  Tuesday, April 21 _at the beginning of class._
+
+<!--
+PHI1=6..15
+PHI2=1..5
+   * Set PHI = %CALCULATE{$HEX2DEC($LEFTSTRING($HEXENCODE(%WIKINAME%),7))}%
+   * Set PHI1 = %CALCULATE{$EVAL(6+$MOD(%PHI%,10))}%
+   * Set PHI2 = %CALCULATE{$EVAL(1+$MOD(%PHI%,5))}%
+-->
+---+ Total Grade *[/100]*
+---+ Problem 1. Binary Search Trees *[10 points]*
+|  Approach   |  Running time  |
+|  b  |  O ((log(n))(lg(log(n))))  |
+|  c  |  O (log(n))  |
+|  d  |  O ((log(n))^2)  |
+---++ Explanation
+<VERBATIM>
+b) This constructs a balanced binary tree, because every time, it creates the left child first, then the right child, and so on, vice versa. This has a running time of O(n lg(n))
+c) This produces a line of nodes, which is the same as a normal tree- insert. This has a running time of O(n). 
+d) If set randomly, the worst case would be O(n^2), but the average case is actually O (nlog(n)).
+I plugged in log(n) for n in all these cases. 
+</VERBATIM>
+
+---++!! Grader comments *[/10]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 2.  Distance Graphs *[20 points]*
+---++!! 2a 
+|  Location   |  Driving time(Hr)  |
+|  Chichen Itza, Yuc., Mexico  |  57  |
+|  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  8  |
+|  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  43  |
+|  Statue of Liberty National Monument, Liberty Island, New York, NY  |  4  |
+|  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  39  |
+
+Does this graph exhibit the triangle inequality? 
+Yes
+---++!! 2b
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  Starting Point  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  Pyramid of the Sun  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  Statue of Liberty  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  Las Vegas  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  Photonics  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  CN Tower  |
+
+---++!! 2c
+|  Index  |  Location   |  &pi;  |
+|  a  |  Photonics Center,8 St Marys St, Boston, MA 02215  |  Statue of Liberty  |
+|  b  |  Chichen Itza, Yuc., Mexico  |  Pyramid of the Sun  |
+|  c  |  CN Tower, 301 Front Street West, Toronto, ON M5V 2T6, Canada  |  Photonics  |
+|  d  |  Pyramid of the Sun, San Juan Teotihuacán, 55800 Teotihuacán de Arista, State of Mexico, Mexico  |  Las Vegas  |
+|  e  |  Statue of Liberty National Monument, Liberty Island, New York, NY  |  Starting Point  |
+|  f  |  Mandalay Bay, 3950 South Las Vegas Boulevard, Las Vegas, NV 89119  |  CN Tower  |
+
+---++!! 2d
+---+++!! Algorithm
+<VERBATIM>
+make-set (x)   // makes component containing only c
+union (x, y)   //joins the connected components containing x and y
+find-set (x)   //returns the representative of x
+
+Kruskals()
+make-set (v) for each v in V
+for each edge e: u -> v
+    if find-set (u) != find-set (v)
+        union (u, v)
+</VERBATIM>
+---+++!! Analysis
+I used Kruskal's algorithm. I chose to use Kruskal's instead of Prim's algorithm because Kruskal's algorithm performs better with sparse graphs since it uses simpler data structures.
+
+
+---++!! Grader comments *[/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 3.  Minimum Spanning Trees *[10 points]*
+---++!! a
+This gives a minimum spanning tree. We can use an adjacency list representation. We can sort the edges in O (E log(E)) time. We can then use depth first search, which will take O (V + E) time. Once the edges are sorted, depth first search is done E times, so total running time is O (E^2). 
+
+---++!! b
+It doesn't give a minimum spanning tree. For example, if a graph has edges (w, u) and (v, w) with a weight of 3, then it will add edges in a random order, it could add edges (u, v) and (v, w), and then try to add (w, u), but this will form a cycle. 
+
+---++!! c
+It gives a minimum spanning tree. It adds edges in a random order and if a cycle is detected, it removes the maximum weight edge. I will use an adjacency list, and for each edge, I will add it to a graph and check for cycles. I will use depth first search. The total running time is O (EV). 
+
+---++!! Grader comments *[20/20]*
+<VERBATIM>
+Reserved for the grader
+</VERBATIM>
+
+---+ Problem 4.  DNA sequencing *[20 points]*
+
+---++ 4a.  Simple case [10 points]
+---+++!! i
+<VERBATIM>
+Describe and analyze the algorithm.
+</VERBATIM>
+
+---+++!! ii
+<VERBATIM>
+Provide your result here.
+</VERBATIM>
+
+and
+
+%CODE{"cpp"}%
+// paste your code here
+
+%ENDCODE%
+
+---++ 4b.  Complications [5 points]
+<VERBATIM>
+Describe and analyze the modification
+</VERBATIM>
+
+---++ 4c.  More complications [5 points]
+---+++!! i
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+---+++!! ii
+<VERBATIM>
+Descrbie and analyze the modification.
+</VERBATIM>
+
+
+---+++!! Grader comments
+<VERBATIM>Question 4 Results:
+
+Total Grade: 0
+
+	0         		
+	0         		
+	0         		
+
+
+</VERBATIM>
+
+---+ Problem 5.  Traveling salesperson *[20 points]*
+Provide a _short_ explanation of your approach here and the resulting cycle weight you found.
+
+Also attach your code as =problem5.zip=, containing at least these files
+   * =Makefile= :  running "make all" should compile your code to an executable =test=, which, when run, should produce your solution.
+   * =result.txt= : the result file with one vertex name per line denoting the vertices of your cycle
+
+
+---+++!! Grader comments
+<VERBATIM>Question 5 Results:
+
+Total Grade: 0
+
+	0         		Grades from submission
+	0         		
+
+
+</VERBATIM>
+
