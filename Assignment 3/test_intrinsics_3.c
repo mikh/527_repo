@@ -279,7 +279,7 @@ void ArrayDot(data_t* pArray1,       // [in] 1st source array
   __m128*  pDest = (__m128*) pResult;
 
   for (i = 0; i < nLoop; i++){
-    m9 = _mm_dp_ps(*pSrc1, *pSrc1, 0xff);
+    m1 = _mm_dp_ps(*pSrc1, *pSrc1, 0xff);
     *pDest = _mm_add_ps(m1,m0_5);
 
     pSrc1++;
