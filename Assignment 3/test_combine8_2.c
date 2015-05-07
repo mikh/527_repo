@@ -1,5 +1,5 @@
 /*****************************************************************************/
-// gcc -O1 -o test_combine8 test_combine8.c -lrt -lm
+// gcc -O1 -o test_combine8_2 test_combine8_2.c -lrt -lm
 // 
 // combine4   -- base scalar code
 // combine6_5 -- unrolled 5 times with 5 accumulators -- best scalar code
@@ -22,7 +22,7 @@
 #define DELTA 32
 #define BASE 0
 
-#define OPTIONS 4       // NEED TO MODIFY
+#define OPTIONS 6       // NEED TO MODIFY
 #define IDENT 1.0
 #define OP +
 
@@ -67,6 +67,8 @@ main(int argc, char *argv[])
   void combine6_5(vec_ptr v, data_t *dest);
   void combine8(vec_ptr v, data_t *dest);
   void combine8_4(vec_ptr v, data_t *dest);
+  void combine8_2(vec_ptr v, data_t *dest);
+  void combine8_8(vec_ptr v, data_t *dest);
 
   long int i, j, k;
   long long int time_sec, time_ns;
@@ -116,8 +118,26 @@ main(int argc, char *argv[])
     time_stamp[OPTION][i] = diff(time1,time2);
   }
 
+    OPTION++;
+  for (i = 0; i < ITERS; i++) {
+    set_vec_length(v0,BASE+(i+1)*DELTA);
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1);
+    combine8_2(v0, data_holder);
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time2);
+    time_stamp[OPTION][i] = diff(time1,time2);
+  }
+
+    OPTION++;
+  for (i = 0; i < ITERS; i++) {
+    set_vec_length(v0,BASE+(i+1)*DELTA);
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1);
+    combine8_8(v0, data_holder);
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time2);
+    time_stamp[OPTION][i] = diff(time1,time2);
+  }
+
   /* output times */
-  printf("\nsize, c4, c6_5,  c8,  c8_4");
+  printf("\nsize, c4, c6_5,  c8,  c8_4, c8_2, c8_8");
   for (i = 0; i < ITERS; i++) {
     printf("\n%d, ", BASE+(i+1)*DELTA);
     for (j = 0; j < OPTIONS; j++) {
@@ -360,3 +380,121 @@ void combine8_4(vec_ptr v, data_t *dest)
   *dest = result;
 }
 
+/* Combine8_2:  Vector 2x unrolled version */
+void combine8_2(vec_ptr v, data_t *dest)
+{
+  long int i;
+  pack_t xfer;
+  vec_t accum0;
+  vec_t accum1;
+  data_t *data = get_vec_start(v);
+  long int cnt = get_vec_length(v);
+  data_t result = IDENT;
+
+  /* Initialize accum entries to IDENT */
+  for (i = 0; i < VSIZE; i++) xfer.d[i] = IDENT;
+  accum0 = xfer.v;
+  accum1 = xfer.v;
+
+  /* Single step until we have memory alignment */
+  while (((long) data) % (2*VBYTES) && cnt) {
+    result = result OP *data++;
+    cnt--;
+  }
+
+  /* Step through data with VSIZE-way parallelism */
+  while (cnt >= 2*VSIZE) {
+    vec_t chunk0 = *((vec_t *) data);
+    vec_t chunk1 = *((vec_t *) data+VSIZE);
+    accum0 = accum0 OP chunk0;
+    accum1 = accum1 OP chunk1;
+    data += 2*VSIZE;
+    cnt -= 2*VSIZE;
+  }
+
+  /* Single-step through the remaining elements */
+  while (cnt) {
+    result = result OP *data++;
+    cnt--;
+  }
+
+  /* Combine elements of accumulator vectors */
+  xfer.v = (accum0 OP accum1);
+
+  for (i = 0; i < VSIZE; i++)
+    result = result OP xfer.d[i];
+
+  /* store result */
+  *dest = result;
+}
+/* Combine8_8:  Vector 8x unrolled version */
+void combine8_8(vec_ptr v, data_t *dest)
+{
+  long int i;
+  pack_t xfer;
+  vec_t accum0;
+  vec_t accum1;
+  vec_t accum2;
+  vec_t accum3;
+  vec_t accum4;
+  vec_t accum5;
+  vec_t accum6;
+  vec_t accum7;
+  data_t *data = get_vec_start(v);
+  long int cnt = get_vec_length(v);
+  data_t result = IDENT;
+
+  /* Initialize accum entries to IDENT */
+  for (i = 0; i < VSIZE; i++) xfer.d[i] = IDENT;
+  accum0 = xfer.v;
+  accum1 = xfer.v;
+  accum2 = xfer.v;
+  accum3 = xfer.v;
+  accum4 = xfer.v;
+  accum5 = xfer.v;
+  accum6 = xfer.v;
+  accum7 = xfer.v;
+
+  /* Single step until we have memory alignment */
+  while (((long) data) % (8*VBYTES) && cnt) {
+    result = result OP *data++;
+    cnt--;
+  }
+
+  /* Step through data with VSIZE-way parallelism */
+  while (cnt >= 8*VSIZE) {
+    vec_t chunk0 = *((vec_t *) data);
+    vec_t chunk1 = *((vec_t *) data+VSIZE);
+    vec_t chunk2 = *((vec_t *) data+2*VSIZE);
+    vec_t chunk3 = *((vec_t *) data+3*VSIZE);
+    vec_t chunk4 = *((vec_t *) data+4*VSIZE);
+    vec_t chunk5 = *((vec_t *) data+5*VSIZE);
+    vec_t chunk6 = *((vec_t *) data+6*VSIZE);
+    vec_t chunk7 = *((vec_t *) data+7*VSIZE);
+    accum0 = accum0 OP chunk0;
+    accum1 = accum1 OP chunk1;
+    accum2 = accum2 OP chunk2;
+    accum3 = accum3 OP chunk3;
+    accum4 = accum4 OP chunk4;
+    accum5 = accum5 OP chunk5;
+    accum6 = accum6 OP chunk6;
+    accum7 = accum7 OP chunk7;
+    data += 8*VSIZE;
+    cnt -= 8*VSIZE;
+  }
+
+  /* Single-step through the remaining elements */
+  while (cnt) {
+    result = result OP *data++;
+    cnt--;
+  }
+
+  /* Combine elements of accumulator vectors */
+  xfer.v = ((accum0 OP accum1) OP (accum2 OP accum3)) OP ((accum4 OP accum5) OP (accum6 OP accum7));
+
+  for (i = 0; i < VSIZE; i++)
+    result = result OP xfer.d[i];
+
+  /* store result */
+  *dest = result;
+}
