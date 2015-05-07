@@ -8,7 +8,7 @@
 #include <math.h>
 #include <assert.h>
 #include <xmmintrin.h>
-#include <smmintrin.h>
+//#include <smmintrin.h>
 
 #define FALSE 0
 #define TRUE 1
