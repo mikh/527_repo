@@ -72,6 +72,8 @@ main(int argc, char *argv[])
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1);
 
     /* NEW CODE GOES HERE */
+    for(i = 0; i < 100; i+=3)
+      x3[i] = (1.3 + x3[i+1]) + x3[i+2];
 
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time2);
     time_stamp[OPTION][k] = diff(time1,time2);
