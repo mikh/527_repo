@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <time.h>
 #include <math.h>
+#include <xmmintrin.h>
 
 #define GIG 1000000000
 #define CPG 2.0           // Cycles per GHz -- Adjust to your computer
@@ -238,8 +239,24 @@ void transpose_sse_blocking(vec_ptr v0, vec_ptr v1)
   long int length = get_vec_length(v0);
   data_t *data0 = get_vec_start(v0);
   data_t *data1 = get_vec_start(v1);
+  __m128 r1,r2,r3,r4;
+  const int BLOCKSIZE = 4;
 
-  for (i = 0; i < length; i++)
-    for (j = 0; j < length; j++)
-      data1[j*length+i] = data0[i*length+j];
+  __m128* pSrc1 = (__m128*) data0;
+  __m128* pDest = (__m128*) data1;
+
+
+  for (i = 0; i < length; i+= BLOCKSIZE)
+    for (j = 0; j < length; j+=BLOCKSIZE){
+      r1 = pSrc1[j*length/BLOCKSIZE+i];
+      r2 = pSrc1[(j+1)*length/BLOCKSIZE+i];
+      r3 = pSrc1[(j+2)*length/BLOCKSIZE+i];
+      r4 = pSrc1[(j+3)*length/BLOCKSIZE+i];
+
+      _MM_TRANSPOSE4_PS(r1,r2,r3,r4);
+      pDest[j*length/BLOCKSIZE+i] = r1;
+      pDest[(j+1)*length/BLOCKSIZE+i] = r2;
+      pDest[(j+2)*length/BLOCKSIZE+i] = r3;
+      pDest[(j+3)*length/BLOCKSIZE+i] = r4;
+    }
 }

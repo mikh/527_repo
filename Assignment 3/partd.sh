@@ -10,7 +10,7 @@ gcc -w -O1 -o test_transpose test_transpose.c -lrt
 
 
 echo "P2"
-gcc -w -O1 -o test_transpose_2 test_transpose_2.c -lrt
+gcc -w -O1 -o test_transpose_2 test_transpose_2.c -lrt -lm
 ./test_transpose_2 > p4/pd_2.txt
 
 
