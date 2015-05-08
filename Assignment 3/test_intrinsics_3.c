@@ -8,6 +8,7 @@
 #include <math.h>
 #include <assert.h>
 #include <xmmintrin.h>
+
 //#include <smmintrin.h>
 
 #define FALSE 0
@@ -267,8 +268,7 @@ void ArrayDot(data_t* pArray1,       // [in] 1st source array
     data_t* pResult,       // [out] result array
     long int nSize)            // [in] size of all arrays
 {
-  int  i, nLoop = nSize/4;
-  int m9;
+  int  i, nLoop = nSize/4, j;
 
   __m128   m1, m2, m3, m4;
   __m128   m0_5 = _mm_set_ps1(0.0f);
@@ -279,8 +279,11 @@ void ArrayDot(data_t* pArray1,       // [in] 1st source array
   __m128*  pDest = (__m128*) pResult;
 
   for (i = 0; i < nLoop; i++){
-    m1 = _mm_dp_ps(*pSrc1, *pSrc1, 0xff);
-    *pDest = _mm_add_ps(m1,m0_5);
+
+    *pDest = _mm_mul_ps(*pSrc1, *pSrc2);
+
+    for(j = i*4+1; j < (i+1)*4; j++)
+      pResult[i*4] += pResult[j];
 
     pSrc1++;
     pSrc2++;
