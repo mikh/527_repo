@@ -1,7 +1,3 @@
-
- Hello World -- Transpose 
-
-size,   ij,   ji, block = 10
 100, 82924, 60890
 200, 347922, 183582
 300, 713736, 430180

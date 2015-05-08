@@ -1,5 +1,3 @@
-
-Hello World!  SSE Test
 32, 1620, 670
 64, 1094, 776
 96, 1136, 690
@@ -30,4 +28,3 @@ Hello World!  SSE Test
 896, 6078, 2122
 928, 6274, 2270
 960, 6480, 2222
- Goodbye World!
